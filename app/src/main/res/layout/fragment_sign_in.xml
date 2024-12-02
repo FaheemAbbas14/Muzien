@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo" />
+
+    <ImageView
+        android:id="@+id/imgPicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3"
+        app:srcCompat="@drawable/muzien_text_black" />
+
+    <TextView
+        android:id="@+id/txtLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:background="@android:color/transparent"
+        android:fontFamily="@font/manrope_bold"
+        android:text="Login"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imgPicture" />
+
+    <TextView
+        android:id="@+id/txtText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="30dp"
+        android:fontFamily="@font/manrope_regular"
+        android:gravity="center"
+        android:text="Enter your phone number to login"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtLabel" />
+
+
+    <LinearLayout
+        android:id="@+id/llFullName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/rounded_white_grey"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="60dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtText">
+
+
+        <com.hbb20.CountryCodePicker
+            android:id="@+id/country_spinner"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|left"
+            app:ccp_showFlag="true"
+            app:ccp_showFullName="true"
+            app:ccp_showNameCode="false"
+            app:ccp_showPhoneCode="true" />
+
+        <TextView
+            android:id="@+id/txtCountryCode"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center"
+            android:hint="+92"
+            android:inputType="phone"
+            android:textColor="@color/colorTextDefault"
+            android:textFontWeight="600"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/edtPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center|left"
+            android:hint=""
+            android:inputType="phone"
+            android:paddingRight="10dp"
+            android:textColor="@color/colorTextDefault"
+            android:textFontWeight="600"
+            android:textSize="16sp" />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/llLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/rounded_blue_button"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="60dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llFullName">
+        <TextView
+            android:id="@+id/txtAction"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/manrope_bold"
+            android:gravity="center"
+            android:text="Login"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/txtType"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="30dp"
+        android:fontFamily="@font/manrope_regular"
+        android:gravity="center"
+        android:text="Don’t have any account? Sign up"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llLogin" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="-10dp"
+        android:background="@color/white"
+        android:fontFamily="@font/manrope_regular"
+        android:text="Mobile Number"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toTopOf="@+id/llFullName"
+        app:layout_constraintStart_toStartOf="@+id/llFullName" />
+
+    <TextView
+        android:id="@+id/txtPrivacy"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="@font/manrope_regular"
+        android:gravity="center"
+        android:text="By continuing you agree to our TC and Privacy Policy"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

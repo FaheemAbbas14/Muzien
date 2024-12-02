@@ -1,0 +1,18 @@
+pluginManagement {
+  repositories {
+    gradlePluginPortal()
+    google() // For Android dependencies
+    mavenCentral() // For libraries hosted on Maven Central
+    maven { url 'https://jitpack.io' } // Add JitPack for AnyChart
+  }
+}
+dependencyResolutionManagement {
+  repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+  repositories {
+    google() // For Android dependencies
+    mavenCentral() // For libraries hosted on Maven Central
+    maven { url 'https://jitpack.io' } // Add JitPack for AnyChart
+  }
+}
+rootProject.name = "Muzien"
+include ':app'

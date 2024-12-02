@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ui.home.FragmentFilter">
+
+    <LinearLayout
+        android:id="@+id/llBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/manrope_bold"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:src="@drawable/back_button"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/manrope_bold"
+            android:text="Back"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            tools:layout_editor_absoluteX="38dp"
+            tools:layout_editor_absoluteY="21dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/manrope_bold"
+            android:gravity="center"
+            android:text="Filter"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            tools:layout_editor_absoluteX="38dp"
+            tools:layout_editor_absoluteY="21dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llTimePeriod"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:orientation="vertical"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/llBack"
+        app:layout_constraintTop_toBottomOf="@+id/llBack">
+
+        <TextView
+            android:id="@+id/selectedOptionText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/manrope_bold"
+            android:paddingBottom="8dp"
+            android:text="Time Period: "
+            android:textColor="@color/colorTextLabelDefault"
+            android:textSize="16sp" />
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:orientation="vertical">
+
+
+            <!-- Custom RadioButton for Week -->
+            <RadioButton
+                android:id="@+id/rbWeek"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:drawableRight="@drawable/custom_tick_button"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:text="This Week"
+                android:textSize="14sp"
+                android:fontFamily="@font/manrope_regular"
+                android:textColor="@color/colorTextLabelDefault"/>
+
+            <!-- Custom RadioButton for Month -->
+            <RadioButton
+                android:id="@+id/rbMonth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:drawableRight="@drawable/custom_tick_button"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:text="This Month"
+
+                android:textSize="14sp"
+                android:fontFamily="@font/manrope_regular"
+                android:textColor="@color/colorTextLabelDefault"/>
+
+            <!-- Custom RadioButton for Custom -->
+            <RadioButton
+                android:id="@+id/rbCustom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:drawableRight="@drawable/custom_tick_button"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:text="Custome Time Period"
+
+                android:textSize="14sp"
+                android:fontFamily="@font/manrope_regular"
+                android:textColor="@color/colorTextLabelDefault" />
+
+        </RadioGroup>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llFrom"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/rounded_white_grey"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="60dp"
+
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llTimePeriod">
+
+
+        <TextView
+            android:id="@+id/txtFrom"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center|left"
+            android:hint="Select Date"
+            android:inputType="text"
+            android:paddingRight="10dp"
+            android:textColor="@color/colorTextDefault"
+            android:textFontWeight="600"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtFromLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="-10dp"
+        android:background="@color/white"
+        android:fontFamily="@font/manrope_regular"
+        android:text="From"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textSize="11sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/llFrom"
+        app:layout_constraintStart_toStartOf="@+id/llFrom" />
+
+    <LinearLayout
+        android:id="@+id/llTo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/rounded_white_grey"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="60dp"
+
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llFrom">
+
+
+        <TextView
+            android:id="@+id/txtTo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center|left"
+            android:hint="Select Date"
+            android:inputType="text"
+            android:paddingRight="10dp"
+            android:textColor="@color/colorTextDefault"
+            android:textFontWeight="600"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtToLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="-10dp"
+        android:background="@color/white"
+        android:fontFamily="@font/manrope_regular"
+        android:text="To"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textSize="11sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/llTo"
+        app:layout_constraintStart_toStartOf="@+id/llTo" />
+
+    <LinearLayout
+        android:id="@+id/llApply"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/rounded_blue_button"
+
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="60dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/manrope_bold"
+            android:gravity="center"
+            android:text="Apply Filter"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

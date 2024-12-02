@@ -1,0 +1,73 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/top_rounded_corners"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="8dp"
+        android:src="@drawable/add_new_icon"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/manrope_bold"
+        android:gravity="center"
+        android:paddingBottom="8dp"
+        android:text="Add New"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textSize="22sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:background="@color/grey_border"
+        android:gravity="center"
+        android:paddingBottom="8dp"
+        android:textColor="@color/colorTextHintDefault"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/txtSaloon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/manrope_regular"
+        android:gravity="center"
+        android:paddingBottom="8dp"
+        android:layout_marginTop="20dp"
+        android:text="Saloon"
+        android:textColor="@color/colorTextHintDefault"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/txtMember"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/manrope_regular"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:paddingBottom="8dp"
+        android:text="Member"
+        android:textColor="@color/colorTextHintDefault"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/txtService"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/manrope_regular"
+        android:gravity="center"
+
+        android:layout_marginTop="10dp"
+        android:paddingBottom="8dp"
+        android:text="Service"
+        android:textColor="@color/colorTextHintDefault"
+        android:textSize="14sp" />
+</LinearLayout>
