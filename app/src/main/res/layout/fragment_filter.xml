@@ -131,7 +131,19 @@
 
         </RadioGroup>
 
-
+        <TextView
+            android:id="@+id/txtSelectionError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:background="@color/white"
+            android:fontFamily="@font/manrope_regular"
+            android:text="Select a option"
+            android:textColor="@color/red_text"
+            android:textSize="13sp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/llFrom"
+            app:layout_constraintTop_toBottomOf="@+id/llFrom" />
     </LinearLayout>
 
     <LinearLayout
@@ -186,7 +198,19 @@
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/llFrom"
         app:layout_constraintStart_toStartOf="@+id/llFrom" />
-
+    <TextView
+        android:id="@+id/txtFromError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:background="@color/white"
+        android:fontFamily="@font/manrope_regular"
+        android:text="Select a date"
+        android:textColor="@color/red_text"
+        android:textSize="13sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/llFrom"
+        app:layout_constraintTop_toBottomOf="@+id/llFrom" />
     <LinearLayout
         android:id="@+id/llTo"
         android:layout_width="0dp"
@@ -239,6 +263,19 @@
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/llTo"
         app:layout_constraintStart_toStartOf="@+id/llTo" />
+    <TextView
+        android:id="@+id/txtToError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:background="@color/white"
+        android:fontFamily="@font/manrope_regular"
+        android:text="Select a date"
+        android:textColor="@color/red_text"
+        android:textSize="13sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/llTo"
+        app:layout_constraintTop_toBottomOf="@+id/llTo" />
 
     <DatePicker
         android:id="@+id/datePicker"

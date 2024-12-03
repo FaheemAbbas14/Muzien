@@ -100,12 +100,24 @@
         android:textSize="13sp"
         app:layout_constraintBottom_toTopOf="@+id/llFullName"
         app:layout_constraintStart_toStartOf="@+id/llFullName" />
-
+    <TextView
+        android:id="@+id/txtNameError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:background="@color/white"
+        android:fontFamily="@font/manrope_regular"
+        android:text="Enter full name"
+        android:textColor="@color/red_text"
+        android:textSize="13sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/llFullName"
+        app:layout_constraintTop_toBottomOf="@+id/llFullName" />
     <LinearLayout
         android:id="@+id/llEmail"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="25dp"
         android:background="@drawable/rounded_white_grey"
         android:clickable="true"
         android:focusable="true"
@@ -149,7 +161,19 @@
         android:textSize="13sp"
         app:layout_constraintBottom_toTopOf="@+id/llEmail"
         app:layout_constraintStart_toStartOf="@+id/llEmail" />
-
+    <TextView
+        android:id="@+id/txtEmailError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:background="@color/white"
+        android:fontFamily="@font/manrope_regular"
+        android:text="Enter valid email"
+        android:textColor="@color/red_text"
+        android:textSize="13sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/llEmail"
+        app:layout_constraintTop_toBottomOf="@+id/llEmail" />
     <TextView
         android:id="@+id/textviewRole"
         android:layout_width="0dp"
@@ -210,12 +234,24 @@
             android:text="Service Provider" />
 
     </RadioGroup>
-
+    <TextView
+        android:id="@+id/txtRoleError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:background="@color/white"
+        android:fontFamily="@font/manrope_regular"
+        android:text="Select a role"
+        android:textColor="@color/red_text"
+        android:textSize="13sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/rdoRole"
+        app:layout_constraintTop_toBottomOf="@+id/rdoRole" />
     <LinearLayout
         android:id="@+id/llCountry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/rounded_white_grey"
         android:clickable="true"
         android:focusable="true"
@@ -256,12 +292,24 @@
         android:textSize="13sp"
         app:layout_constraintBottom_toTopOf="@+id/llCountry"
         app:layout_constraintStart_toStartOf="@+id/llCountry" />
-
+    <TextView
+        android:id="@+id/txtCountryError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:background="@color/white"
+        android:fontFamily="@font/manrope_regular"
+        android:text="Select a country"
+        android:textColor="@color/red_text"
+        android:textSize="13sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/llCountry"
+        app:layout_constraintTop_toBottomOf="@+id/llCountry" />
     <LinearLayout
         android:id="@+id/llSave"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/rounded_blue_button"
         android:clickable="true"
         android:focusable="true"

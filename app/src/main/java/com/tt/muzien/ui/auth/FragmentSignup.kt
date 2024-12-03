@@ -23,7 +23,8 @@ import com.tt.muzien.data.network.AuthApi
 import com.tt.muzien.data.repository.AuthRepository
 import com.tt.muzien.databinding.FragmentSignupBinding
 import com.tt.muzien.ui.base.BaseFragment
-import com.tt.muzien.ui.enable
+import com.tt.muzien.ui.home.HomeActivity
+import com.tt.muzien.ui.startNewActivity
 import com.tt.muzien.utilities.InputValidator
 
 
@@ -38,6 +39,7 @@ class FragmentSignup : BaseFragment<AuthViewModel, FragmentSignupBinding, AuthRe
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         binding.rdoRole.setOnCheckedChangeListener { group, checkedId ->
             if (checkedId == R.id.RdoOwner) {
                 role = "Owner"
@@ -57,11 +59,11 @@ class FragmentSignup : BaseFragment<AuthViewModel, FragmentSignupBinding, AuthRe
                 binding.RdoOwner.background = resources.getDrawable(R.drawable.rounded_white_grey)
                 binding.RdoOwner.setTextColor(resources.getColor(R.color.colorTextDefault))
             }
-            checkValidation()
+            // checkValidation()
         }
         binding.countrySpinner.setOnCountryChangeListener {
             country = binding.countrySpinner.selectedCountryName
-            checkValidation()
+            // checkValidation()
         }
         binding.edtName.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -71,7 +73,7 @@ class FragmentSignup : BaseFragment<AuthViewModel, FragmentSignupBinding, AuthRe
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
 
-                checkValidation()
+                //checkValidation()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -86,7 +88,7 @@ class FragmentSignup : BaseFragment<AuthViewModel, FragmentSignupBinding, AuthRe
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
 
-                checkValidation()
+                // checkValidation()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -101,25 +103,55 @@ class FragmentSignup : BaseFragment<AuthViewModel, FragmentSignupBinding, AuthRe
 
             uploadImage()
         }
-        checkValidation()
+        binding.llSave.setOnClickListener {
+
+            if (checkValidation()) {
+                val activity = HomeActivity::class.java
+                requireActivity().startNewActivity(activity)
+                requireActivity().finish()
+            }
+        }
+        // checkValidation()
     }
 
-    private fun checkValidation() {
-        var isValid = false
-        if (binding.edtName.text.toString() != "" && binding.edtEmail.text.toString() != "" && InputValidator.isValidEmail(
-                binding.edtEmail.text.toString()
-            ) && role != ""
-        ) {
-            isValid = true
-        }
-        if (role == "Service Provider" && country == "") {
+    private fun checkValidation(): Boolean {
+        var isValid = true
+        if (binding.edtName.text.toString() == "") {
+            binding.txtNameError.visibility = View.VISIBLE
             isValid = false
-        }
-        if (isValid) {
-            binding.llSave.enable(true)
         } else {
-            binding.llSave.enable(false)
+            binding.txtNameError.visibility = View.GONE
         }
+        if (binding.edtEmail.text.toString() == "") {
+            binding.txtEmailError.visibility = View.VISIBLE
+            isValid = false
+        } else {
+            binding.txtEmailError.visibility = View.GONE
+        }
+        if (!InputValidator.isValidEmail(
+                binding.edtEmail.text.toString()
+            )
+        ) {
+            binding.txtEmailError.visibility = View.VISIBLE
+            isValid = false
+        } else {
+            binding.txtEmailError.visibility = View.GONE
+        }
+        if (role == "") {
+            binding.txtRoleError.visibility = View.VISIBLE
+            isValid = false
+        } else {
+            binding.txtRoleError.visibility = View.GONE
+        }
+
+        if (role == "Service Provider" && country == "") {
+            binding.txtCountryError.visibility = View.VISIBLE
+            isValid = false
+        } else {
+            binding.txtCountryError.visibility = View.GONE
+        }
+
+        return isValid
     }
 
     override fun getViewModel(): Class<AuthViewModel> {

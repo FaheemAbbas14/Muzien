@@ -18,7 +18,6 @@ import com.tt.muzien.data.network.AuthApi
 import com.tt.muzien.data.repository.AuthRepository
 import com.tt.muzien.databinding.FragmentSignInBinding
 import com.tt.muzien.ui.base.BaseFragment
-import com.tt.muzien.ui.enable
 import com.tt.muzien.utilities.InputValidator
 
 
@@ -32,12 +31,14 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
         super.onActivityCreated(savedInstanceState)
         setdata()
         binding.llLogin.setOnClickListener {
-            var phone =
-                binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString()
-            var nextFragment = FragmentOTP()
-            nextFragment.isFromSignup = isFromSignup
-            nextFragment.phone = phone
-            (activity as AuthActivity?)?.loadFragment(nextFragment)
+            if (checkValidation()) {
+                var phone =
+                    binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString()
+                var nextFragment = FragmentOTP()
+                nextFragment.isFromSignup = isFromSignup
+                nextFragment.phone = phone
+                (activity as AuthActivity?)?.loadFragment(nextFragment)
+            }
         }
         binding.countrySpinner.setOnCountryChangeListener {
             selectedCountry = binding.countrySpinner.selectedCountryName
@@ -58,15 +59,14 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
 
 
-                checkValidation()
+                //checkValidation()
 
 
             }
         })
-        checkValidation()
     }
 
-    private fun checkValidation() {
+    private fun checkValidation(): Boolean {
         var isValid = false
 
         if (binding.edtPhoneNumber.text.isNotEmpty() && InputValidator.isValidPhoneNumber(
@@ -77,11 +77,13 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
             isValid = true
         }
 
-        if (isValid) {
-            binding.llLogin.enable(true)
-        } else {
-            binding.llLogin.enable(false)
+        if (!isValid) {
+            binding.txtError.visibility = View.VISIBLE
         }
+        else{
+            binding.txtError.visibility = View.GONE
+        }
+        return isValid
 
     }
 
@@ -92,13 +94,13 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
         if (isFromSignup) {
             start = 24
             text = "Already have an account? Sign in"
-            binding.txtAction.text="Verify Your Number"
+            binding.txtAction.text = "Verify Your Number"
             binding.txtLabel.text = "Sign up"
             binding.txtText.text = "We will use your phone number to\n" +
                     "register and log into the app."
 
         } else {
-            binding.txtAction.text="Login"
+            binding.txtAction.text = "Login"
             binding.txtLabel.text = "Login"
             binding.txtText.text = "Enter your phone number to login"
         }

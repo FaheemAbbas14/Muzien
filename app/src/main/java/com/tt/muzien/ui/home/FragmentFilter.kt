@@ -11,7 +11,6 @@ import com.tt.muzien.data.repository.AuthRepository
 import com.tt.muzien.databinding.FragmentFilterBinding
 import com.tt.muzien.ui.auth.AuthViewModel
 import com.tt.muzien.ui.base.BaseFragment
-import com.tt.muzien.ui.enable
 
 
 class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRepository>() {
@@ -62,15 +61,17 @@ class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRe
             binding.datePicker.visibility = View.VISIBLE
         }
         binding.llApply.setOnClickListener {
-            // Inside your current fragment before popping
-            val resultBundle = Bundle().apply {
-                putString("selection", selection) // Replace with your data
-                putString("fromDate", fromDate) // Replace with your data
-                putString("toDate", toDate) // Replace with your data
-            }
+            if (checkValidation()) {
+                // Inside your current fragment before popping
+                val resultBundle = Bundle().apply {
+                    putString("selection", selection) // Replace with your data
+                    putString("fromDate", fromDate) // Replace with your data
+                    putString("toDate", toDate) // Replace with your data
+                }
 
-            setFragmentResult("requestKey", resultBundle)
-            (activity as HomeActivity?)?.popFragment()
+                setFragmentResult("requestKey", resultBundle)
+                (activity as HomeActivity?)?.popFragment()
+            }
         }
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
@@ -88,25 +89,34 @@ class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRe
                 binding.txtTo.text = toDate
             }
             binding.datePicker.visibility = View.GONE
-            checkValidation()
+           // checkValidation()
         }
-        checkValidation()
+       // checkValidation()
     }
 
 
-    private fun checkValidation() {
-        var isValid = false
-        if (selection != "") {
-            isValid = true
-        }
-        if (selection == "Custom" && (fromDate == "" || toDate == "")) {
+    private fun checkValidation(): Boolean {
+        var isValid = true
+        if (selection == "") {
+            binding.txtSelectionError.visibility = View.VISIBLE
             isValid = false
-        }
-        if (isValid) {
-            binding.llApply.enable(true)
         } else {
-            binding.llApply.enable(false)
+            binding.txtSelectionError.visibility = View.GONE
         }
+        if (selection == "Custom" && fromDate == "") {
+            isValid = false
+            binding.txtFromError.visibility = View.VISIBLE
+        } else {
+            binding.txtFromError.visibility = View.GONE
+        }
+        if (selection == "Custom" && toDate == "") {
+            binding.txtToError.visibility = View.VISIBLE
+            isValid = false
+        } else {
+            binding.txtToError.visibility = View.GONE
+        }
+
+        return isValid
     }
 
     override fun getViewModel(): Class<AuthViewModel> {

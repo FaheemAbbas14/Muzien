@@ -19,7 +19,8 @@ import com.tt.muzien.data.network.AuthApi
 import com.tt.muzien.data.repository.AuthRepository
 import com.tt.muzien.databinding.FragmentOTPBinding
 import com.tt.muzien.ui.base.BaseFragment
-import com.tt.muzien.ui.enable
+import com.tt.muzien.ui.home.HomeActivity
+import com.tt.muzien.ui.startNewActivity
 
 class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthRepository>() {
     private var countDownTimer: CountDownTimer? = null
@@ -40,11 +41,16 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
         setdata()
         binding.edtInput1.requestFocus()
         binding.llNext.setOnClickListener {
-            if (isFromSignup) {
-                var nextFragment = FragmentSignup()
-                (activity as AuthActivity?)?.loadFragment(nextFragment)
-            } else {
-                Toast.makeText(requireContext(), "Login success", Toast.LENGTH_SHORT).show()
+            if (checkValidation()) {
+                if (isFromSignup) {
+                    var nextFragment = FragmentSignup()
+                    (activity as AuthActivity?)?.loadFragment(nextFragment)
+                } else {
+                    val activity = HomeActivity::class.java
+                    requireActivity().startNewActivity(activity)
+                    requireActivity().finish()
+                    Toast.makeText(requireContext(), "Login success", Toast.LENGTH_SHORT).show()
+                }
             }
         }
         binding.edtInput1.addTextChangedListener(object : TextWatcher {
@@ -59,7 +65,7 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
                     binding.edtInput2.requestFocus()
                 }
 
-                checkValidation()
+               // checkValidation()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -79,7 +85,7 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
                 } else {
                     binding.edtInput1.requestFocus()
                 }
-                checkValidation()
+               // checkValidation()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -99,7 +105,7 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
                 } else {
                     binding.edtInput2.requestFocus()
                 }
-                checkValidation()
+               // checkValidation()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -119,14 +125,14 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
                 } else {
                     binding.edtInput3.requestFocus()
                 }
-                checkValidation()
+              //  checkValidation()
             }
 
             override fun afterTextChanged(s: Editable?) {
 
             }
         })
-        checkValidation()
+        // checkValidation()
         startTimer()
     }
 
@@ -188,12 +194,17 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
         }
     }
 
-    private fun checkValidation() {
+    private fun checkValidation(): Boolean {
+        var isValid = false
         if (binding.edtInput1.text.isNotEmpty() && binding.edtInput2.text.isNotEmpty() && binding.edtInput3.text.isNotEmpty() && binding.edtInput4.text.isNotEmpty()) {
-            binding.llNext.enable(true)
-        } else {
-            binding.llNext.enable(false)
+            isValid = true
         }
+        if (!isValid) {
+            binding.txtError.visibility = View.VISIBLE
+        } else {
+            binding.txtError.visibility = View.GONE
+        }
+        return isValid
     }
 
     override fun getViewModel(): Class<AuthViewModel> {
