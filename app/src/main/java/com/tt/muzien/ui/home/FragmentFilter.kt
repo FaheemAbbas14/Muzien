@@ -1,6 +1,5 @@
 package com.tt.muzien.ui.home
 
-import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,13 +12,13 @@ import com.tt.muzien.databinding.FragmentFilterBinding
 import com.tt.muzien.ui.auth.AuthViewModel
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.enable
-import java.util.Calendar
 
 
 class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRepository>() {
     var selection: String = ""
     var fromDate: String = ""
     var toDate: String = ""
+    var isFrom: Boolean = true
 
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -54,8 +53,14 @@ class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRe
                 }
             }
         }
-        binding.txtFrom.setOnClickListener { showFromToDatePicker(true) }
-        binding.txtTo.setOnClickListener { showFromToDatePicker(false) }
+        binding.txtFrom.setOnClickListener {
+            isFrom = true
+            binding.datePicker.visibility = View.VISIBLE
+        }
+        binding.txtTo.setOnClickListener {
+            isFrom = false
+            binding.datePicker.visibility = View.VISIBLE
+        }
         binding.llApply.setOnClickListener {
             // Inside your current fragment before popping
             val resultBundle = Bundle().apply {
@@ -70,18 +75,11 @@ class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRe
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
         }
-        checkValidation()
-    }
-
-    private fun showFromToDatePicker(isFrom: Boolean) {
-        val calendar = Calendar.getInstance()
-        val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH)
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
-
-        // Show "From" DatePickerDialog
-        DatePickerDialog(requireContext(), { _, fromYear, fromMonth, fromDay ->
-            val date = "$fromDay/${fromMonth + 1}/$fromYear"
+        // Add the date change listener
+        binding.datePicker.init(
+            binding.datePicker.year, binding.datePicker.month, binding.datePicker.dayOfMonth
+        ) { _, year, monthOfYear, dayOfMonth ->
+            val date = "$dayOfMonth/${monthOfYear + 1}/$year"
             if (isFrom) {
                 fromDate = date
                 binding.txtFrom.text = fromDate
@@ -89,10 +87,12 @@ class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRe
                 toDate = date
                 binding.txtTo.text = toDate
             }
+            binding.datePicker.visibility = View.GONE
             checkValidation()
-
-        }, year, month, day).show()
+        }
+        checkValidation()
     }
+
 
     private fun checkValidation() {
         var isValid = false

@@ -1,26 +1,82 @@
 package com.tt.muzien.ui.saloon
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import com.tt.muzien.R
+import androidx.fragment.app.setFragmentResultListener
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.tt.muzien.data.dto.SaloonDto
 import com.tt.muzien.data.network.AuthApi
 import com.tt.muzien.data.repository.AuthRepository
 import com.tt.muzien.databinding.FragmentSaloonBinding
-import com.tt.muzien.databinding.FragmentTutorialBinding
-import com.tt.muzien.ui.auth.AuthActivity
+import com.tt.muzien.ui.adopters.SaloonListAdopter
 import com.tt.muzien.ui.auth.AuthViewModel
 import com.tt.muzien.ui.base.BaseFragment
-import com.tt.muzien.ui.onboarding.FragmentOnBoarding
+import com.tt.muzien.ui.home.FragmentFilter
+import com.tt.muzien.ui.home.HomeActivity
+import com.zabihah.ui.ui.interfaces.OnItemClickListner
 
 
 class FragmentSaloon : BaseFragment<AuthViewModel, FragmentSaloonBinding, AuthRepository>() {
+    private val saloonsList = arrayListOf<SaloonDto>()
+    private var fromDate: String = ""
+    private var toDate: String = ""
+    private var bookingDuration: String = ""
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        setSaloonAdopter()
+        binding.imgFilter.setOnClickListener {
+            var nextFragment = FragmentFilter()
+            (activity as HomeActivity?)?.loadFragment(nextFragment)
+        }
+        setFragmentResultListener("requestKey") { key, bundle ->
+            val selection = bundle.getString("selection")
+            val fromDateFilter = bundle.getString("fromDate")
+            val toDateFilter = bundle.getString("toDate")
+            if (selection != "") {
+                bookingDuration = selection.toString()
+                fromDate = fromDateFilter.toString()
+                toDate = toDateFilter.toString()
+                setSaloonAdopter()
+            }
 
+        }
+    }
+
+    private fun setSaloonAdopter() {
+        saloonsList.clear()
+        for (i in 0..10) {
+            println("Index: $i")
+            saloonsList.add(
+                SaloonDto(
+                    "https://graph.facebook.com/580534664534485/picture?type=large",
+                    "The Style Zone $i",
+                    if (i % 2 == 0) true else false,
+                    "Location $i",
+                    "Rating $i",
+                    "Timing $i"
+                )
+            )
+        }
+        binding.txtHeading.text = "Salons(${saloonsList.size})"
+        val clickListener = object : OnItemClickListner {
+            override fun onItemClick(position: Int) {
+//                var nextFragment = FragmentPlaceDetails()
+//                nextFragment.itemId = featuredItemsList[position].id
+//                nextFragment.placeType = EnumItemListType.Featured
+//                (activity as DashboardActivity?)?.loadFragment(nextFragment)
+
+            }
+        }
+        binding.rcySaloons.layoutManager =
+            LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
+        binding.rcySaloons.adapter =
+            SaloonListAdopter(
+                saloonsList,
+                requireContext(),
+                clickListener
+            )
     }
 
     override fun getViewModel(): Class<AuthViewModel> {

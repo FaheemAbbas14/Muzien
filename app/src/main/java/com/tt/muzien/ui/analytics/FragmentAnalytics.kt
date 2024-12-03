@@ -49,9 +49,7 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
         super.onActivityCreated(savedInstanceState)
         lineChart = binding.lineChart
         setdata()
-        binding.imgRevenueFilter.setOnClickListener {
-            isRevenueFilter = true
-        }
+
         binding.imgBookingFilter.setOnClickListener {
             isRevenueFilter = false
             var nextFragment = FragmentFilter()
@@ -217,9 +215,9 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
                 )
             )
         }
-        binding.rcyFeatured.layoutManager =
+        binding.rcyTopPerformer.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
-        binding.rcyFeatured.adapter =
+        binding.rcyTopPerformer.adapter =
             PerformerListAdopter(
                 topPerformerList,
                 requireContext(),
