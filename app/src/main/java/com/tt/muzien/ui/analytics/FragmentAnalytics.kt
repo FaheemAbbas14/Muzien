@@ -140,7 +140,7 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
             labels = getDatesInRange(revenueFromDate, revenueToDate)
         }
 
-        val customValues = generateRandomFloatList(10f, 60f, labels.size)
+        val customValues = generateRandomFloatList(10f, 59f, labels.size)
 
         // Generate entries with custom values and sine wave
         val entries = mutableListOf<Entry>()

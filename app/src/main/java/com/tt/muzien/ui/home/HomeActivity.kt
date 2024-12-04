@@ -9,8 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.tt.muzien.R
 import com.tt.muzien.databinding.ActivityHomeBinding
-import com.tt.muzien.ui.FragmentBookings
+import com.tt.muzien.ui.bookings.FragmentBookings
 import com.tt.muzien.ui.bottomSheets.AddBottomSheet
+import com.tt.muzien.ui.notifications.FragmentNotifications
+import com.tt.muzien.ui.profile.FragmentProfile
 import com.tt.muzien.ui.views.CustomLoadingIndicator
 import com.tt.muzien.utilities.FragmentManager
 
@@ -47,6 +49,12 @@ class HomeActivity : AppCompatActivity() {
         binding.imgadd.setOnClickListener {
             val bottomSheet = AddBottomSheet(this)
             bottomSheet.show(supportFragmentManager, bottomSheet.tag)
+        }
+        binding.imgNotifications.setOnClickListener {
+            loadFragment(FragmentNotifications())
+        }
+        binding.imgProfile.setOnClickListener {
+            loadFragment(FragmentProfile())
         }
     }
 

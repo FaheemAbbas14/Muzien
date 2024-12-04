@@ -1,4 +1,4 @@
-package com.tt.muzien.ui
+package com.tt.muzien.ui.bookings
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

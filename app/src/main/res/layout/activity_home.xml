@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/imgProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -41,7 +41,7 @@
             app:civ_border_color="@color/white"
             app:civ_border_width="3dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imageView2"
+            app:layout_constraintStart_toEndOf="@+id/imgProfile"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/user_placeholder" />
 
@@ -72,7 +72,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
         <ImageView
-            android:id="@+id/imageView5"
+            android:id="@+id/imgNotifications"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
