@@ -7,6 +7,15 @@
     android:background="@color/light_grey"
     tools:context=".ui.home.HomeActivity">
 
+    <View
+        android:id="@+id/topView"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
@@ -16,7 +25,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/topView">
 
         <ImageView
             android:id="@+id/imgProfile"
@@ -115,7 +124,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/llHome"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -127,10 +136,24 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
+                android:id="@+id/home_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/selected_tab_bg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
                 android:id="@+id/home_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/home_selected" />
+                android:layout_marginTop="20dp"
+                android:src="@drawable/home_selected"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/home_title"
@@ -140,10 +163,13 @@
                 android:gravity="center"
                 android:text="Home"
                 android:textColor="@color/colorPrimary"
-                android:textSize="12sp" />
-        </LinearLayout>
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/home_icon" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/llBookings"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -155,10 +181,25 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
+                android:id="@+id/booking_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:visibility="invisible"
+                android:src="@drawable/selected_tab_bg"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
                 android:id="@+id/booking_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/booking_unselected" />
+                android:layout_marginTop="20dp"
+                android:src="@drawable/booking_unselected"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/booking_title"
@@ -168,8 +209,13 @@
                 android:gravity="center"
                 android:text="Bookings"
                 android:textColor="@color/colorTextLabelDefault"
-                android:textSize="12sp" />
-        </LinearLayout>
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/booking_icon" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView

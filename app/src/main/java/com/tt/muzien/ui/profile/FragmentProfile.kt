@@ -9,16 +9,13 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.tt.muzien.R
 import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.data.repository.HomeRepository
-import com.tt.muzien.databinding.FragmentBookingsBinding
 import com.tt.muzien.databinding.FragmentProfileBinding
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.HomeActivity
@@ -30,6 +27,7 @@ class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, Home
     private val REQUEST_GALLERY = 2
     private val REQUEST_PERMISSIONS = 3
     private var image_uri: Uri? = null
+
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -44,6 +42,9 @@ class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, Home
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
         }
+        binding.llLogout.setOnClickListener {
+            logout()
+        }
     }
 
     override fun getViewModel(): Class<HomeViewModel> {
@@ -57,6 +58,7 @@ class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, Home
 
     override fun getFragmentRepository() =
         HomeRepository(remoteDataSource.buildApi(HomeApi::class.java), userPreferences)
+
     override fun onResume() {
         super.onResume()
         (activity as HomeActivity?)?.hideTabs()
@@ -66,6 +68,7 @@ class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, Home
         super.onPause()
         (activity as HomeActivity?)?.showTabs()
     }
+
     private fun uploadImage() {
         if (checkPermissions()) {
             showImagePickerDialog()

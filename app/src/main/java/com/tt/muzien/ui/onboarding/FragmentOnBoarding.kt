@@ -20,6 +20,8 @@ class FragmentOnBoarding :
     private var screenNumber: Int = 1
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        // Set alpha directly
+        binding.imgAbackground.alpha = 0.1f
         binding.imgPrevious.setOnClickListener {
             if (screenNumber == 1) {
                 (activity as AuthActivity?)?.popFragment()

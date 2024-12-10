@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -21,10 +22,13 @@ import com.tt.muzien.utilities.PreferenceManager
 class AuthActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAuthBinding
     private lateinit var customLoadingIndicator: CustomLoadingIndicator
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAuthBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        enableEdgeToEdge()
+        changeStatusBarColor(R.color.colorPrimary)
         customLoadingIndicator = CustomLoadingIndicator(this, Color.WHITE)
         var tutorialShown =
             PreferenceManager.getInstance(this).getBoolean(Keys.Tutorial_Shown, false)
@@ -33,6 +37,7 @@ class AuthActivity : AppCompatActivity() {
         } else {
             loadFragment(FragmentWelcome())
         }
+
     }
 
     fun showLoadingIndicator() {

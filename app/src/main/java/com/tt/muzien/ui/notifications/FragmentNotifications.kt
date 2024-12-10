@@ -40,7 +40,7 @@ class FragmentNotifications :
                     null,
                     R.drawable.salon_icon,
                     "Heading $i",
-                    "Description $i", EnumNotificationType.Category
+                    "Description $i", EnumNotificationType.Category, false
                 )
 
             )
@@ -52,7 +52,7 @@ class FragmentNotifications :
                     "https://graph.facebook.com/580534664534485/picture?type=large",
                     null,
                     "Heading $i",
-                    "Description $i", EnumNotificationType.Plan
+                    "Description $i", EnumNotificationType.Plan, true
                 )
 
             )

@@ -12,12 +12,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import com.tt.muzien.R
 import com.tt.muzien.data.network.AuthApi
 import com.tt.muzien.data.repository.AuthRepository
 import com.tt.muzien.databinding.FragmentSignInBinding
 import com.tt.muzien.ui.base.BaseFragment
+import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.utilities.InputValidator
 
 
@@ -40,6 +42,7 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
                 (activity as AuthActivity?)?.loadFragment(nextFragment)
             }
         }
+        binding.countrySpinner.setCountryForNameCode("SA")
         binding.countrySpinner.setOnCountryChangeListener {
             selectedCountry = binding.countrySpinner.selectedCountryName
             val countryCode = binding.countrySpinner.selectedCountryCode
@@ -64,6 +67,18 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
 
             }
         })
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    val fragmentCount = requireActivity().supportFragmentManager.backStackEntryCount
+                    (activity as AuthActivity?)?.popFragment()
+                    if (fragmentCount == 1) {
+                        requireActivity().finish()
+                    }
+
+                }
+            })
     }
 
     private fun checkValidation(): Boolean {

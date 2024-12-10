@@ -13,7 +13,6 @@ import com.tt.muzien.R
 import com.tt.muzien.data.dto.NotificationDto
 import com.tt.muzien.enums.EnumNotificationType
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
-import de.hdodenhof.circleimageview.CircleImageView
 
 
 /**
@@ -32,11 +31,13 @@ class NotificationListAdopter(
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
-        val imgProfilePic: CircleImageView = itemView.findViewById(R.id.imgProfilePic)
+        val imgSeen: ImageView = itemView.findViewById(R.id.imgSeen)
+        val imgProfilePic: ImageView = itemView.findViewById(R.id.imgProfilePic)
         val txtHeading: TextView = itemView.findViewById(R.id.txtHeading)
         val txtDescription: TextView = itemView.findViewById(R.id.txtDescription)
         val imgNext: ImageView = itemView.findViewById(R.id.imageView7)
         val divider: TextView = itemView.findViewById(R.id.divider)
+
         init {
             itemView.setOnClickListener(this)
         }
@@ -66,7 +67,7 @@ class NotificationListAdopter(
             holder.divider.visibility = View.VISIBLE
             Glide.with(holder.imgProfilePic)
                 .load(item.icon)
-                .centerInside()
+                .placeholder(R.drawable.salon_icon)
                 .into(holder.imgProfilePic)
 
         } else {
@@ -74,11 +75,16 @@ class NotificationListAdopter(
             holder.divider.visibility = View.GONE
             Glide.with(holder.imgProfilePic)
                 .load(item.profileUrl)
-                .centerCrop()
-                .placeholder(R.drawable.user_placeholder)
+                .circleCrop()
+                .placeholder(R.drawable.salon_icon)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)  // Cache both original & transformed image
                 .skipMemoryCache(false)  // Cache in memory
                 .into(holder.imgProfilePic)
+        }
+        if (item.isSeen) {
+            holder.imgSeen.visibility = View.INVISIBLE
+        } else {
+            holder.imgSeen.visibility = View.VISIBLE
         }
     }
 

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.tt.muzien.constants.Keys
@@ -23,20 +24,20 @@ class SplashActivity : AppCompatActivity() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        enableEdgeToEdge()
         binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         val userPreferences = PreferenceManager.getInstance(this)
-        userPreferences.putString(Keys.Access_Token,"Faheem")
+//        userPreferences.putString(Keys.Access_Token,"Faheem")
         Handler(Looper.getMainLooper()).postDelayed({
 
             lifecycleScope.launch {
                 Log.d("Sample", "Loading Auth Token")
                 val authToken = userPreferences.getString(Keys.Access_Token)
                 val activity =
-                    if (authToken == null) AuthActivity::class.java else HomeActivity::class.java
+                    if (authToken == null || authToken =="") AuthActivity::class.java else HomeActivity::class.java
                 startNewActivity(activity)
                 finish()
             }

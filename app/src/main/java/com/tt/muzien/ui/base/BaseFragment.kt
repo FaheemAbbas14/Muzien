@@ -41,9 +41,9 @@ abstract class BaseFragment<VM : BaseViewModel, B : ViewBinding, R : BaseReposit
         binding = getFragmentBinding(inflater, container)
         val factory = ViewModelFactory(getFragmentRepository())
         viewModel = ViewModelProvider(this, factory).get(getViewModel())
-        lifecycleScope.launch {
-            userPreferences.getString(Keys.Access_Token)?.first()
-        }
+//        lifecycleScope.launch {
+//            userPreferences.getString(Keys.Access_Token)?.first()
+//        }
         return binding.root
 
     }
@@ -55,6 +55,7 @@ abstract class BaseFragment<VM : BaseViewModel, B : ViewBinding, R : BaseReposit
             viewModel.logout(api)
             userPreferences.putString(Keys.Access_Token, "")
             requireActivity().startNewActivity(AuthActivity::class.java)
+            requireActivity().finish()
         }
     }
 

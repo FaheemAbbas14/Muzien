@@ -5,8 +5,22 @@
     android:layout_width="match_parent"
     android:paddingRight="20dp"
     android:layout_height="wrap_content">
-
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
+        android:id="@+id/imgSeen"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/circular_red"
+        app:civ_border_color="#E9E9E9"
+        android:scaleType="centerInside"
+        app:civ_border_width="3dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
         android:id="@+id/imgProfilePic"
         android:layout_width="60dp"
         android:layout_height="60dp"
@@ -17,11 +31,11 @@
         android:background="@drawable/circular_light_grey"
         android:src="@drawable/salon_icon"
         app:civ_border_color="#E9E9E9"
+        android:scaleType="centerInside"
         app:civ_border_width="3dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/user_placeholder" />
+        app:layout_constraintStart_toEndOf="@+id/imgSeen"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/txtHeading"

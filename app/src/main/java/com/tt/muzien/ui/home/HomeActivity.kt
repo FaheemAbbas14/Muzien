@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -26,6 +27,7 @@ class HomeActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         changeStatusBarColor(R.color.white)
@@ -33,13 +35,19 @@ class HomeActivity : AppCompatActivity() {
         // Default fragment
         loadFragment(HomeFragment())
         binding.llHome.setOnClickListener {
+            binding.homeBg.visibility = View.VISIBLE
+            binding.bookingBg.visibility = View.INVISIBLE
             binding.homeIcon.setImageDrawable(resources.getDrawable(R.drawable.home_selected))
             binding.homeTitle.setTextColor(resources.getColor(R.color.colorPrimary))
             binding.bookingIcon.setImageDrawable(resources.getDrawable(R.drawable.booking_unselected))
             binding.bookingTitle.setTextColor(resources.getColor(R.color.colorTextLabelDefault))
-            loadFragment(HomeFragment())
+            for (i in 0 until supportFragmentManager.backStackEntryCount - 1) {
+                popFragment()
+            }
         }
         binding.llBookings.setOnClickListener {
+            binding.homeBg.visibility = View.INVISIBLE
+            binding.bookingBg.visibility = View.VISIBLE
             binding.homeIcon.setImageDrawable(resources.getDrawable(R.drawable.home_unselected))
             binding.homeTitle.setTextColor(resources.getColor(R.color.colorTextLabelDefault))
             binding.bookingIcon.setImageDrawable(resources.getDrawable(R.drawable.booking_selected))

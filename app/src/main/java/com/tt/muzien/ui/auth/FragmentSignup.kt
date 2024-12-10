@@ -19,6 +19,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.tt.muzien.R
+import com.tt.muzien.constants.Keys
 import com.tt.muzien.data.network.AuthApi
 import com.tt.muzien.data.repository.AuthRepository
 import com.tt.muzien.databinding.FragmentSignupBinding
@@ -26,6 +27,7 @@ import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.startNewActivity
 import com.tt.muzien.utilities.InputValidator
+import com.tt.muzien.utilities.PreferenceManager
 
 
 class FragmentSignup : BaseFragment<AuthViewModel, FragmentSignupBinding, AuthRepository>() {
@@ -106,6 +108,8 @@ class FragmentSignup : BaseFragment<AuthViewModel, FragmentSignupBinding, AuthRe
         binding.llSave.setOnClickListener {
 
             if (checkValidation()) {
+                val userPreferences = PreferenceManager.getInstance(requireActivity())
+                userPreferences.putString(Keys.Access_Token, "Faheem")
                 val activity = HomeActivity::class.java
                 requireActivity().startNewActivity(activity)
                 requireActivity().finish()

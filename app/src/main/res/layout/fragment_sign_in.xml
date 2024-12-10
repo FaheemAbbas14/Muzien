@@ -96,7 +96,7 @@
             android:background="@android:color/transparent"
             android:fontFamily="@font/manrope_regular"
             android:gravity="center"
-            android:hint="+92"
+            android:hint="+966"
             android:inputType="phone"
             android:textColor="@color/colorTextDefault"
             android:textFontWeight="600"

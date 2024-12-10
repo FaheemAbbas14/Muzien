@@ -89,9 +89,9 @@ class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRe
                 binding.txtTo.text = toDate
             }
             binding.datePicker.visibility = View.GONE
-           // checkValidation()
+            checkValidation()
         }
-       // checkValidation()
+        // checkValidation()
     }
 
 
@@ -109,7 +109,7 @@ class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRe
         } else {
             binding.txtFromError.visibility = View.GONE
         }
-        if (selection == "Custom" && toDate == "") {
+        if (selection == "Custom" && toDate == "" && fromDate != "") {
             binding.txtToError.visibility = View.VISIBLE
             isValid = false
         } else {

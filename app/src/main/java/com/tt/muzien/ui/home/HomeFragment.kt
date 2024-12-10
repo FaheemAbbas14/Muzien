@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.tabs.TabLayout
@@ -29,6 +30,19 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, HomeReposi
         tabLayout = binding.tabLayout
         fragmentManager = requireActivity().supportFragmentManager
         seTabs()
+        // Register a callback for the back button
+        requireActivity().onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    val fragmentCount = requireActivity().supportFragmentManager.backStackEntryCount
+                    (activity as HomeActivity?)?.popFragment()
+                    if (fragmentCount == 1) {
+                        requireActivity().finish()
+                    }
+
+                }
+            })
     }
 
     private fun seTabs() {

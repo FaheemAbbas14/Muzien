@@ -15,12 +15,14 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.tt.muzien.R
+import com.tt.muzien.constants.Keys
 import com.tt.muzien.data.network.AuthApi
 import com.tt.muzien.data.repository.AuthRepository
 import com.tt.muzien.databinding.FragmentOTPBinding
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.startNewActivity
+import com.tt.muzien.utilities.PreferenceManager
 
 class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthRepository>() {
     private var countDownTimer: CountDownTimer? = null
@@ -46,6 +48,8 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
                     var nextFragment = FragmentSignup()
                     (activity as AuthActivity?)?.loadFragment(nextFragment)
                 } else {
+                    val userPreferences = PreferenceManager.getInstance(requireActivity())
+                    userPreferences.putString(Keys.Access_Token, "Faheem")
                     val activity = HomeActivity::class.java
                     requireActivity().startNewActivity(activity)
                     requireActivity().finish()
@@ -65,7 +69,7 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
                     binding.edtInput2.requestFocus()
                 }
 
-               // checkValidation()
+                // checkValidation()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -85,7 +89,7 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
                 } else {
                     binding.edtInput1.requestFocus()
                 }
-               // checkValidation()
+                // checkValidation()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -105,7 +109,7 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
                 } else {
                     binding.edtInput2.requestFocus()
                 }
-               // checkValidation()
+                // checkValidation()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -125,7 +129,7 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
                 } else {
                     binding.edtInput3.requestFocus()
                 }
-              //  checkValidation()
+                //  checkValidation()
             }
 
             override fun afterTextChanged(s: Editable?) {

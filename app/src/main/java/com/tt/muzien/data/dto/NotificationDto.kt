@@ -10,4 +10,4 @@ import com.tt.muzien.enums.EnumNotificationType
  * faheem.abbas@bajcotechnologies.com
  * +923115284424
  */
-data class NotificationDto(val profileUrl: String?=null,val icon: Int?=null,val heading: String,val description: String,val type: EnumNotificationType)
+data class NotificationDto(val profileUrl: String?=null,val icon: Int?=null,val heading: String,val description: String,val type: EnumNotificationType,val isSeen: Boolean)
