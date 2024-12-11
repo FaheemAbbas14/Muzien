@@ -50,12 +50,12 @@ class FragmentSaloon : BaseFragment<AuthViewModel, FragmentSaloonBinding, AuthRe
             println("Index: $i")
             saloonsList.add(
                 SaloonDto(
-                    "https://graph.facebook.com/580534664534485/picture?type=large",
-                    "The Style Zone $i",
+                    "",
+                    "The Style Zone",
                     if (i % 2 == 0) true else false,
-                    "Location $i",
-                    "Rating $i",
-                    "Timing $i"
+                    "Rd. 2121 Alamal Dist. 12643 Riyadh SA",
+                    "4.5 (2398 reviews)",
+                    "10:00 AM - 11:00 PM"
                 )
             )
         }

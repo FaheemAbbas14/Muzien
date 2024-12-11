@@ -93,12 +93,12 @@
                 android:layout_height="wrap_content"
                 android:button="@null"
                 android:drawableRight="@drawable/custom_tick_button"
+                android:fontFamily="@font/manrope_regular"
                 android:gravity="center_vertical"
                 android:padding="16dp"
                 android:text="This Week"
-                android:textSize="14sp"
-                android:fontFamily="@font/manrope_regular"
-                android:textColor="@color/colorTextLabelDefault"/>
+                android:textColor="@color/colorTextLabelDefault"
+                android:textSize="14sp" />
 
             <!-- Custom RadioButton for Month -->
             <RadioButton
@@ -107,13 +107,13 @@
                 android:layout_height="wrap_content"
                 android:button="@null"
                 android:drawableRight="@drawable/custom_tick_button"
+                android:fontFamily="@font/manrope_regular"
                 android:gravity="center_vertical"
                 android:padding="16dp"
-                android:text="This Month"
 
-                android:textSize="14sp"
-                android:fontFamily="@font/manrope_regular"
-                android:textColor="@color/colorTextLabelDefault"/>
+                android:text="This Month"
+                android:textColor="@color/colorTextLabelDefault"
+                android:textSize="14sp" />
 
             <!-- Custom RadioButton for Custom -->
             <RadioButton
@@ -122,13 +122,13 @@
                 android:layout_height="wrap_content"
                 android:button="@null"
                 android:drawableRight="@drawable/custom_tick_button"
+                android:fontFamily="@font/manrope_regular"
                 android:gravity="center_vertical"
                 android:padding="16dp"
-                android:text="Custome Time Period"
 
-                android:textSize="14sp"
-                android:fontFamily="@font/manrope_regular"
-                android:textColor="@color/colorTextLabelDefault" />
+                android:text="Custome Time Period"
+                android:textColor="@color/colorTextLabelDefault"
+                android:textSize="14sp" />
 
         </RadioGroup>
 
@@ -151,14 +151,14 @@
         android:id="@+id/llFrom"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="30dp"
+        android:layout_marginEnd="15dp"
         android:background="@drawable/rounded_white_grey"
         android:clickable="true"
+
         android:focusable="true"
         android:minHeight="60dp"
-
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
         android:orientation="horizontal"
         android:paddingHorizontal="10dp"
         android:paddingVertical="10dp"
@@ -199,6 +199,7 @@
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/llFrom"
         app:layout_constraintStart_toStartOf="@+id/llFrom" />
+
     <TextView
         android:id="@+id/txtFromError"
         android:layout_width="wrap_content"
@@ -212,18 +213,19 @@
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/llFrom"
         app:layout_constraintTop_toBottomOf="@+id/llFrom" />
+
     <LinearLayout
         android:id="@+id/llTo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="30dp"
+        android:layout_marginEnd="15dp"
         android:background="@drawable/rounded_white_grey"
         android:clickable="true"
+
         android:focusable="true"
         android:minHeight="60dp"
-
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
         android:orientation="horizontal"
         android:paddingHorizontal="10dp"
         android:paddingVertical="10dp"
@@ -264,6 +266,7 @@
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/llTo"
         app:layout_constraintStart_toStartOf="@+id/llTo" />
+
     <TextView
         android:id="@+id/txtToError"
         android:layout_width="wrap_content"
@@ -296,11 +299,11 @@
         android:id="@+id/llApply"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/rounded_blue_button"
-
         android:layout_marginStart="15dp"
         android:layout_marginEnd="15dp"
+
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/rounded_blue_button"
         android:clickable="true"
         android:focusable="true"
         android:minHeight="60dp"

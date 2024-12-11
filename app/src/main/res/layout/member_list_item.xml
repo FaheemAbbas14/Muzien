@@ -7,7 +7,7 @@ android:layout_margin="10dp"
     android:background="@drawable/white_rounded"
     android:layout_height="wrap_content">
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/imgProfilePic"
         android:layout_width="85dp"
         android:layout_height="85dp"
@@ -16,14 +16,11 @@ android:layout_margin="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:background="@drawable/circuler_grey"
-        android:src="@drawable/user_placeholder"
+        android:src="@drawable/topperformer"
         app:civ_border_color="@color/white"
-        app:civ_border_width="3dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/user_placeholder" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/llStatus"

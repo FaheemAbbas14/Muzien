@@ -4,11 +4,13 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.LinearGradient
 import android.graphics.Shader
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.mikephil.charting.charts.LineChart
@@ -140,7 +142,7 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
             labels = getDatesInRange(revenueFromDate, revenueToDate)
         }
 
-        val customValues = generateRandomFloatList(10f, 59f, labels.size)
+        val customValues = generateRandomFloatList(10f, 55f, labels.size)
 
         // Generate entries with custom values and sine wave
         val entries = mutableListOf<Entry>()
@@ -154,18 +156,16 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
 
         // Create dataset
         val dataSet = LineDataSet(entries, "").apply {
-            color = resources.getColor(R.color.colorPrimary)
+            color = Color.parseColor("#001DFF")
             valueTextColor = Color.BLACK
-            lineWidth = 2f
+            lineWidth = 1f
             setDrawCircles(false)
             setDrawFilled(true)
-            // Apply gradient fill
-            val gradient = LinearGradient(
-                0f, 0f, 0f, 100f,
-                Color.parseColor("#00BCD4"), Color.parseColor("#4CAF50"),
-                Shader.TileMode.MIRROR
-            )
-            fillDrawable = resources.getDrawable(R.drawable.gradient_fill)
+            setDrawValues(false)
+            mode=LineDataSet.Mode.CUBIC_BEZIER
+            // Apply gradient drawable as fill
+            val gradientDrawable: Drawable? = ContextCompat.getDrawable(requireContext(), R.drawable.gradient_fill)
+            fillDrawable = gradientDrawable
         }
 
         // Set the data to the chart
@@ -193,6 +193,9 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
             }
         }
 
+        // Remove horizontal grid lines
+        lineChart?.axisLeft?.setDrawGridLines(false)
+        lineChart?.axisRight?.setDrawGridLines(false)
         // Customize Y-axis to be positive only
         lineChart?.axisLeft?.axisMinimum = 1f
         lineChart?.axisRight?.isEnabled = false
@@ -207,9 +210,9 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
             println("Index: $i")
             topPerformerList.add(
                 PersonDto(
-                    "https://graph.facebook.com/580534664534485/picture?type=large",
-                    "Name $i",
-                    "Profession $i",
+                    "",
+                    "Jennifer Austin",
+                    "Hair Stylist",
                     "${10 * i} Bookings",
                     "SAR ${5 * i}"
                 )

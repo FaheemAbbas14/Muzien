@@ -48,16 +48,7 @@ abstract class BaseFragment<VM : BaseViewModel, B : ViewBinding, R : BaseReposit
 
     }
 
-    fun logout() {
-        lifecycleScope.launch {
-            val authToken = userPreferences.getString(Keys.Access_Token)
-            val api = remoteDataSource.buildApi(UserApi::class.java, authToken)
-            viewModel.logout(api)
-            userPreferences.putString(Keys.Access_Token, "")
-            requireActivity().startNewActivity(AuthActivity::class.java)
-            requireActivity().finish()
-        }
-    }
+
 
     abstract fun getViewModel(): Class<VM>
 

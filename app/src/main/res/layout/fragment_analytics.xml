@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-
+    android:scrollbars="none"
     android:layout_height="match_parent"
     android:background="@color/light_grey">
 
@@ -22,9 +22,10 @@
                 android:id="@+id/txtDuration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="15dp"
                 android:layout_marginTop="10dp"
-                android:fontFamily="@font/manrope_bold"
+                android:textFontWeight="700"
+                android:fontFamily="@font/manrope_regular"
                 android:text="This Week"
                 android:textColor="@color/colorTextLabelDefault"
                 android:textSize="16sp"
@@ -45,7 +46,7 @@
                 android:id="@+id/cnstBookings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="15dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="10dp"
                 android:background="@drawable/white_rounded"
@@ -60,7 +61,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
-                    android:fontFamily="@font/manrope_bold"
+                    android:textFontWeight="700"
+                    android:fontFamily="@font/manrope_regular"
                     android:text="Bookings"
                     android:textColor="@color/colorTextLabelDefault"
                     android:textSize="14sp"
@@ -79,7 +81,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="15dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginEnd="10dp"
                     android:layout_marginBottom="5dp"
@@ -103,6 +105,7 @@
                             android:fontFamily="@font/manrope_regular"
                             android:gravity="center|left"
                             android:text="Scheduled"
+                            android:textFontWeight="500"
                             android:textColor="@color/blue_text"
                             android:textSize="11sp" />
 
@@ -112,6 +115,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/manrope_regular"
                             android:gravity="center|left"
+                            android:textFontWeight="700"
                             android:text="30"
                             android:textColor="@color/blue_text"
                             android:textSize="22sp" />
@@ -129,6 +133,7 @@
                             android:fontFamily="@font/manrope_regular"
                             android:gravity="center|left"
                             android:text="Overdue"
+                            android:textFontWeight="500"
                             android:textColor="@color/red_text"
                             android:textSize="11sp" />
 
@@ -139,6 +144,7 @@
                             android:fontFamily="@font/manrope_regular"
                             android:gravity="center|left"
                             android:text="30"
+                            android:textFontWeight="700"
                             android:textColor="@color/red_text"
                             android:textSize="22sp" />
                     </LinearLayout>
@@ -154,6 +160,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/manrope_regular"
                             android:gravity="center|left"
+                            android:textFontWeight="500"
                             android:text="Completed"
                             android:textColor="@color/green_text"
                             android:textSize="11sp" />
@@ -164,6 +171,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/manrope_regular"
                             android:gravity="center|left"
+                            android:textFontWeight="700"
                             android:text="30"
                             android:textColor="@color/green_text"
                             android:textSize="22sp" />
@@ -181,6 +189,7 @@
                             android:fontFamily="@font/manrope_regular"
                             android:gravity="center|left"
                             android:text="Cancelled"
+                            android:textFontWeight="500"
                             android:textColor="@color/black_text"
                             android:textSize="11sp" />
 
@@ -191,6 +200,7 @@
                             android:fontFamily="@font/manrope_regular"
                             android:gravity="center|left"
                             android:text="30"
+                            android:textFontWeight="700"
                             android:textColor="@color/black_text"
                             android:textSize="22sp" />
                     </LinearLayout>
@@ -250,9 +260,10 @@
                     android:id="@+id/txtPerformerLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="15dp"
                     android:layout_marginTop="10dp"
-                    android:fontFamily="@font/manrope_bold"
+                    android:textFontWeight="700"
+                    android:fontFamily="@font/manrope_regular"
                     android:text="Top 5 Performers"
                     android:textColor="@color/colorTextLabelDefault"
                     android:textSize="14sp"
@@ -273,8 +284,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentTop="true"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="15dp"
                     android:layout_marginTop="5dp"
+                    android:layout_marginEnd="5dp"
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -298,10 +310,11 @@
                     android:id="@+id/txtEarningLable"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="15dp"
                     android:layout_marginTop="10dp"
-                    android:fontFamily="@font/manrope_bold"
+                    android:fontFamily="@font/manrope_regular"
                     android:text="Earnings"
+                    android:textFontWeight="700"
                     android:textColor="@color/colorTextLabelDefault"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -319,7 +332,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="15dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="5dp"
                     android:orientation="vertical"
@@ -335,8 +348,9 @@
                         android:fontFamily="@font/manrope_regular"
                         android:gravity="center|left"
                         android:text="SAR"
+                        android:textFontWeight="400"
                         android:textColor="@color/black_text"
-                        android:textSize="11sp" />
+                        android:textSize="12sp" />
 
                     <TextView
                         android:id="@+id/txtEarningAmount"
@@ -345,6 +359,7 @@
                         android:fontFamily="@font/manrope_regular"
                         android:gravity="center|left"
                         android:text="1340"
+                        android:textFontWeight="700"
                         android:textColor="@color/black_text"
                         android:textSize="22sp" />
                 </LinearLayout>
@@ -354,9 +369,10 @@
                 android:id="@+id/txtRevenue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="15dp"
                 android:layout_marginTop="30dp"
-                android:fontFamily="@font/manrope_bold"
+                android:fontFamily="@font/manrope_regular"
+                android:textFontWeight="700"
                 android:text="Revenue"
                 android:textColor="@color/colorTextLabelDefault"
                 android:textSize="16sp"
@@ -377,12 +393,13 @@
                 android:id="@+id/txtRevenueType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="15dp"
                 android:layout_marginTop="3dp"
                 android:fontFamily="@font/manrope_regular"
                 android:text="Monthly"
                 android:textColor="@color/lightblack"
                 android:textSize="12sp"
+                android:textFontWeight="400"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txtRevenue" />
 

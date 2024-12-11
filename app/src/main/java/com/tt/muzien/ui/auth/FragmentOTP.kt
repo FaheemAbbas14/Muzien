@@ -1,5 +1,6 @@
 package com.tt.muzien.ui.auth
 
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -37,6 +38,7 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        (activity as AuthActivity?)?.changeBackground(Color.WHITE)
         binding.llBack.setOnClickListener {
             (activity as AuthActivity?)?.popFragment()
         }
@@ -66,7 +68,11 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
 
                 if (s.isNotEmpty()) {
+                    binding.edtInput1.setBackgroundDrawable(resources.getDrawable(R.drawable.rounded_white_primary))
                     binding.edtInput2.requestFocus()
+                }
+                else{
+                    binding.edtInput1.setBackgroundDrawable(resources.getDrawable(R.drawable.rounded_white_grey))
                 }
 
                 // checkValidation()
@@ -85,8 +91,10 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
 
                 if (s.isNotEmpty()) {
+                    binding.edtInput2.setBackgroundDrawable(resources.getDrawable(R.drawable.rounded_white_primary))
                     binding.edtInput3.requestFocus()
                 } else {
+                    binding.edtInput2.setBackgroundDrawable(resources.getDrawable(R.drawable.rounded_white_grey))
                     binding.edtInput1.requestFocus()
                 }
                 // checkValidation()
@@ -105,8 +113,10 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
 
                 if (s.isNotEmpty()) {
+                    binding.edtInput3.setBackgroundDrawable(resources.getDrawable(R.drawable.rounded_white_primary))
                     binding.edtInput4.requestFocus()
                 } else {
+                    binding.edtInput3.setBackgroundDrawable(resources.getDrawable(R.drawable.rounded_white_grey))
                     binding.edtInput2.requestFocus()
                 }
                 // checkValidation()
@@ -125,8 +135,9 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
 
                 if (s.isNotEmpty()) {
-
+                    binding.edtInput4.setBackgroundDrawable(resources.getDrawable(R.drawable.rounded_white_primary))
                 } else {
+                    binding.edtInput4.setBackgroundDrawable(resources.getDrawable(R.drawable.rounded_grey))
                     binding.edtInput3.requestFocus()
                 }
                 //  checkValidation()
@@ -234,8 +245,14 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
                 }
             }"
             var spannableString = SpannableString(text)
+
+            var start = 21
+            spannableString.setSpan(
+                ForegroundColorSpan(requireActivity().getColor(R.color.colorPrimary)),
+                start, start + 7,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
             if (resendEnabled) {
-                var start = 21
                 // Make "here" clickable and change its color
                 val clickableSpan = object : ClickableSpan() {
                     override fun onClick(widget: View) {
@@ -253,11 +270,7 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
                     start + 6,
                     Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
-                spannableString.setSpan(
-                    ForegroundColorSpan(requireActivity().getColor(R.color.colorPrimary)),
-                    start, start + 7,
-                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-                )
+
 
             }
             binding.txtType.text = spannableString

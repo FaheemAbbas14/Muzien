@@ -22,6 +22,7 @@ import com.tt.muzien.utilities.PreferenceManager
 class AuthActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAuthBinding
     private lateinit var customLoadingIndicator: CustomLoadingIndicator
+
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +39,10 @@ class AuthActivity : AppCompatActivity() {
             loadFragment(FragmentWelcome())
         }
 
+    }
+
+    fun changeBackground(color: Int) {
+        binding.mainLayout.setBackgroundColor(color)
     }
 
     fun showLoadingIndicator() {

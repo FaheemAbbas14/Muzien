@@ -50,12 +50,12 @@ class FragmentMembers : BaseFragment<AuthViewModel, FragmentMembersBinding, Auth
             println("Index: $i")
             membersList.add(
                 MemberDto(
-                    "https://graph.facebook.com/580534664534485/picture?type=large",
+                    "",
                     if (i % 2 == 0) true else false,
-                    "Name $i",
-                    "Profession $i",
-                    "Rating $i",
-                    "Stype $i",
+                    "Jennifer Austin",
+                    "Hair Stylist",
+                    "4.1 (50 reviews)",
+                    "Store  Tye Style Zone",
                     4
                 )
             )

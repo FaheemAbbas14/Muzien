@@ -22,7 +22,6 @@ import com.bumptech.glide.request.target.Target
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.MemberDto
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
-import de.hdodenhof.circleimageview.CircleImageView
 
 
 /**
@@ -41,7 +40,7 @@ class MembersListAdopter(
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
-        val imgProfilePic: CircleImageView = itemView.findViewById(R.id.imgProfilePic)
+        val imgProfilePic: ImageView = itemView.findViewById(R.id.imgProfilePic)
         val txtName: TextView = itemView.findViewById(R.id.txtName)
         val llStatus: LinearLayout = itemView.findViewById(R.id.llStatus)
         val txtStatusTexts: TextView = itemView.findViewById(R.id.txtStatusTexts)
@@ -128,7 +127,8 @@ class MembersListAdopter(
         }
         Glide.with(holder.imgProfilePic)
             .load(item.profilePic)
-            .placeholder(R.drawable.user_placeholder)
+            .circleCrop()
+            .placeholder(R.drawable.topperformer)
             .listener(iconRequestListener)
             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)  // Cache both original & transformed image
             .skipMemoryCache(false)  // Cache in memory

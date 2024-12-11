@@ -92,13 +92,14 @@
 
     <LinearLayout
         android:id="@+id/llOTP"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="20dp"
         android:clickable="true"
         android:focusable="true"
+        android:gravity="center"
         android:minHeight="60dp"
         android:orientation="horizontal"
         android:paddingHorizontal="10dp"
@@ -107,30 +108,30 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtText">
+
         <EditText
 
             android:id="@+id/edtInput1"
-            android:layout_width="0dp"
-            android:layout_height="80dp"
-            android:layout_weight="2.4"
+            android:layout_width="65dp"
+            android:layout_height="48dp"
             android:background="@drawable/rounded_white_grey"
             android:fontFamily="@font/manrope_regular"
             android:gravity="center"
             android:hint="*"
             android:inputType="number"
             android:maxLength="1"
-            android:textColor="@color/colorTextDefault"
+            android:textColor="@color/otpblack"
+            android:textColorHighlight="@color/otpblack"
             android:textColorHint="#D0D5DD"
             android:textFontWeight="500"
-            android:textSize="48dp" />
+            android:textSize="14sp" />
 
         <EditText
 
             android:id="@+id/edtInput2"
-            android:layout_width="0dp"
-            android:layout_height="80dp"
+            android:layout_width="65dp"
+            android:layout_height="48dp"
             android:layout_marginLeft="10dp"
-            android:layout_weight="2.4"
             android:background="@drawable/rounded_white_grey"
             android:fontFamily="@font/manrope_regular"
             android:gravity="center"
@@ -138,46 +139,47 @@
             android:inputType="number"
 
             android:maxLength="1"
-            android:textColor="@color/colorTextDefault"
+            android:textColor="@color/otpblack"
+            android:textColorHighlight="@color/otpblack"
             android:textColorHint="#D0D5DD"
             android:textFontWeight="500"
-            android:textSize="48dp" />
+            android:textSize="14sp" />
 
         <EditText
 
             android:id="@+id/edtInput3"
-            android:layout_width="0dp"
-            android:layout_height="80dp"
+            android:layout_width="65dp"
+            android:layout_height="48dp"
             android:layout_marginLeft="10dp"
-            android:layout_weight="2.4"
             android:background="@drawable/rounded_white_grey"
             android:fontFamily="@font/manrope_regular"
             android:gravity="center"
             android:hint="*"
             android:inputType="number"
             android:maxLength="1"
-            android:textColor="@color/colorTextDefault"
+            android:textColor="@color/otpblack"
+            android:textColorHighlight="@color/otpblack"
             android:textColorHint="#D0D5DD"
             android:textFontWeight="500"
-            android:textSize="48dp" />
+            android:textSize="14sp" />
 
         <EditText
 
             android:id="@+id/edtInput4"
-            android:layout_width="0dp"
-            android:layout_height="80dp"
+            android:layout_width="65dp"
+            android:layout_height="48dp"
             android:layout_marginLeft="10dp"
-            android:layout_weight="2.4"
             android:background="@drawable/rounded_white_grey"
             android:fontFamily="@font/manrope_regular"
             android:gravity="center"
             android:hint="*"
             android:inputType="number"
             android:maxLength="1"
-            android:textColor="@color/colorTextDefault"
+            android:textColor="@color/otpblack"
+            android:textColorHighlight="@color/otpblack"
             android:textColorHint="#D0D5DD"
             android:textFontWeight="500"
-            android:textSize="48dp" />
+            android:textSize="14sp" />
     </LinearLayout>
     <TextView
         android:id="@+id/txtError"
@@ -192,13 +194,12 @@
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/llOTP"
         app:layout_constraintTop_toBottomOf="@+id/llOTP" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/llNext"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginTop="15dp"
         android:background="@drawable/rounded_blue_button"
         android:clickable="true"
         android:focusable="true"
@@ -207,9 +208,9 @@
         android:paddingHorizontal="10dp"
         android:paddingVertical="10dp"
         android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/llOTP"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/llOTP"
         app:layout_constraintTop_toBottomOf="@+id/llOTP">
 
         <TextView

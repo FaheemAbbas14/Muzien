@@ -36,7 +36,7 @@ class PerformerListAdopter(
     RecyclerView.Adapter<PerformerListAdopter.MyViewHolder>() {
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val imgProfilePic: CircleImageView = itemView.findViewById(R.id.imgProfilePic)
+        val imgProfilePic: ImageView = itemView.findViewById(R.id.imgProfilePic)
         val txtName: TextView = itemView.findViewById(R.id.txtName)
         val txtProfesstion: TextView = itemView.findViewById(R.id.txtProfesstion)
         val txtBookings: TextView = itemView.findViewById(R.id.txtBookings)
@@ -81,7 +81,7 @@ class PerformerListAdopter(
             ): Boolean {
                 Log.d("imageLoaded", "success ${item.name}")
 
-                holder.imgProfilePic.scaleType = ImageView.ScaleType.CENTER_CROP
+              //  holder.imgProfilePic.scaleType = ImageView.ScaleType.CENTER_CROP
                 return false
             }
 
@@ -92,7 +92,7 @@ class PerformerListAdopter(
                 target: Target<Drawable>,
                 isFirstResource: Boolean
             ): Boolean {
-                holder.imgProfilePic.scaleType = ImageView.ScaleType.CENTER_INSIDE
+//                holder.imgProfilePic.scaleType = ImageView.ScaleType.CENTER_INSIDE
                 Log.d("imageLoaded", "failed ${item.name}")
                 return false
             }
@@ -102,7 +102,8 @@ class PerformerListAdopter(
         Glide.with(holder.imgProfilePic)
             .load(item.profilePicUrl)
             .listener(iconRequestListener)
-            .placeholder(R.drawable.user_placeholder)
+            .circleCrop()
+            .placeholder(R.drawable.topperformer)
             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)  // Cache both original & transformed image
             .skipMemoryCache(false)  // Cache in memory
             .into(holder.imgProfilePic)

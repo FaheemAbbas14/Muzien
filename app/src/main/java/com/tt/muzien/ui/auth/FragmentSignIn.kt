@@ -1,5 +1,6 @@
 package com.tt.muzien.ui.auth
 
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -19,7 +20,6 @@ import com.tt.muzien.data.network.AuthApi
 import com.tt.muzien.data.repository.AuthRepository
 import com.tt.muzien.databinding.FragmentSignInBinding
 import com.tt.muzien.ui.base.BaseFragment
-import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.utilities.InputValidator
 
 
@@ -31,6 +31,7 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        (activity as AuthActivity?)?.changeBackground(Color.WHITE)
         setdata()
         binding.llLogin.setOnClickListener {
             if (checkValidation()) {
@@ -94,8 +95,7 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
 
         if (!isValid) {
             binding.txtError.visibility = View.VISIBLE
-        }
-        else{
+        } else {
             binding.txtError.visibility = View.GONE
         }
         return isValid

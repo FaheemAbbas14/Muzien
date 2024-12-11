@@ -53,6 +53,9 @@ class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRe
             }
         }
         binding.txtFrom.setOnClickListener {
+            binding.txtFromError.visibility = View.GONE
+            binding.llTo.visibility = View.GONE
+            binding.txtToLabel.visibility = View.GONE
             isFrom = true
             binding.datePicker.visibility = View.VISIBLE
         }
@@ -82,6 +85,9 @@ class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRe
         ) { _, year, monthOfYear, dayOfMonth ->
             val date = "$dayOfMonth/${monthOfYear + 1}/$year"
             if (isFrom) {
+                binding.txtFromError.visibility = View.VISIBLE
+                binding.llTo.visibility = View.VISIBLE
+                binding.txtToLabel.visibility = View.VISIBLE
                 fromDate = date
                 binding.txtFrom.text = fromDate
             } else {

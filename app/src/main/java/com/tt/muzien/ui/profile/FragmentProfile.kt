@@ -14,12 +14,15 @@ import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.tt.muzien.R
+import com.tt.muzien.constants.Keys
 import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.data.repository.HomeRepository
 import com.tt.muzien.databinding.FragmentProfileBinding
+import com.tt.muzien.ui.auth.AuthActivity
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.home.HomeViewModel
+import com.tt.muzien.ui.startNewActivity
 
 
 class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, HomeRepository>() {
@@ -45,6 +48,13 @@ class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, Home
         binding.llLogout.setOnClickListener {
             logout()
         }
+    }
+
+    private fun logout() {
+        userPreferences.putString(Keys.Access_Token, "")
+        requireActivity().startNewActivity(AuthActivity::class.java)
+        requireActivity().finish()
+
     }
 
     override fun getViewModel(): Class<HomeViewModel> {

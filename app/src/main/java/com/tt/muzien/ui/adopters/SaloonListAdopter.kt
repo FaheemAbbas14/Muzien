@@ -117,7 +117,7 @@ class SaloonListAdopter(
                 target: Target<Drawable>,
                 isFirstResource: Boolean
             ): Boolean {
-                holder.imgIcon.scaleType = ImageView.ScaleType.CENTER_INSIDE
+                holder.imgIcon.scaleType = ImageView.ScaleType.CENTER_CROP
                 Log.d("imageLoaded", "failed ${item.name}")
                 return false
             }
@@ -126,7 +126,7 @@ class SaloonListAdopter(
         }
         Glide.with(holder.imgIcon)
             .load(item.icon)
-            .placeholder(R.drawable.user_placeholder)
+            .placeholder(R.drawable.salonplaceholder)
             .listener(iconRequestListener)
             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)  // Cache both original & transformed image
             .skipMemoryCache(false)  // Cache in memory

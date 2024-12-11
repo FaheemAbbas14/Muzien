@@ -6,6 +6,7 @@ import android.app.AlertDialog
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -41,7 +42,7 @@ class FragmentSignup : BaseFragment<AuthViewModel, FragmentSignupBinding, AuthRe
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
+        (activity as AuthActivity?)?.changeBackground(Color.WHITE)
         binding.rdoRole.setOnCheckedChangeListener { group, checkedId ->
             if (checkedId == R.id.RdoOwner) {
                 role = "Owner"
@@ -184,7 +185,8 @@ class FragmentSignup : BaseFragment<AuthViewModel, FragmentSignupBinding, AuthRe
 
     private fun uploadImage() {
         if (checkPermissions()) {
-            showImagePickerDialog()
+           // showImagePickerDialog()
+            openGallery()
         }
     }
 
