@@ -35,10 +35,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:fontFamily="@font/manrope_bold"
+            android:fontFamily="@font/manrope_regular"
             android:text="Back"
             android:textColor="@color/black"
             android:textSize="16sp"
+            android:textFontWeight="700"
             tools:layout_editor_absoluteX="38dp"
             tools:layout_editor_absoluteY="21dp" />
 
@@ -46,12 +47,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:fontFamily="@font/manrope_bold"
+            android:fontFamily="@font/manrope_regular"
             android:gravity="center"
             android:paddingRight="50dp"
             android:text="Filter"
             android:textColor="@color/black"
             android:textSize="16sp"
+            android:textFontWeight="700"
             tools:layout_editor_absoluteX="38dp"
             tools:layout_editor_absoluteY="21dp" />
     </LinearLayout>
@@ -72,8 +74,9 @@
             android:id="@+id/selectedOptionText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/manrope_bold"
+            android:fontFamily="@font/manrope_regular"
             android:paddingBottom="8dp"
+            android:textFontWeight="700"
             android:text="Time Period: "
             android:textColor="@color/colorTextLabelDefault"
             android:textSize="16sp" />
@@ -98,7 +101,8 @@
                 android:padding="16dp"
                 android:text="This Week"
                 android:textColor="@color/colorTextLabelDefault"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:textFontWeight="500"/>
 
             <!-- Custom RadioButton for Month -->
             <RadioButton
@@ -110,7 +114,7 @@
                 android:fontFamily="@font/manrope_regular"
                 android:gravity="center_vertical"
                 android:padding="16dp"
-
+                android:textFontWeight="500"
                 android:text="This Month"
                 android:textColor="@color/colorTextLabelDefault"
                 android:textSize="14sp" />
@@ -125,7 +129,7 @@
                 android:fontFamily="@font/manrope_regular"
                 android:gravity="center_vertical"
                 android:padding="16dp"
-
+                android:textFontWeight="500"
                 android:text="Custome Time Period"
                 android:textColor="@color/colorTextLabelDefault"
                 android:textSize="14sp" />
@@ -141,7 +145,8 @@
             android:fontFamily="@font/manrope_regular"
             android:text="Select a option"
             android:textColor="@color/red_text"
-            android:textSize="13sp"
+            android:textSize="11sp"
+            android:textFontWeight="500"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="@+id/llFrom"
             app:layout_constraintTop_toBottomOf="@+id/llFrom" />
@@ -181,7 +186,7 @@
             android:inputType="text"
             android:paddingRight="10dp"
             android:textColor="@color/colorTextDefault"
-            android:textFontWeight="600"
+            android:textFontWeight="400"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -196,6 +201,7 @@
         android:text="From"
         android:textColor="@color/colorTextLabelDefault"
         android:textSize="11sp"
+        android:textFontWeight="500"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/llFrom"
         app:layout_constraintStart_toStartOf="@+id/llFrom" />
@@ -248,7 +254,7 @@
             android:inputType="text"
             android:paddingRight="10dp"
             android:textColor="@color/colorTextDefault"
-            android:textFontWeight="600"
+            android:textFontWeight="400"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -263,6 +269,7 @@
         android:text="To"
         android:textColor="@color/colorTextLabelDefault"
         android:textSize="11sp"
+        android:textFontWeight="500"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/llTo"
         app:layout_constraintStart_toStartOf="@+id/llTo" />
@@ -322,6 +329,7 @@
             android:gravity="center"
             android:text="Apply Filter"
             android:textColor="@color/white"
+            android:textFontWeight="700"
             android:textSize="14sp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

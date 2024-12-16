@@ -27,8 +27,9 @@
         android:layout_marginTop="10dp"
         android:fontFamily="@font/manrope_regular"
         android:text="Faheem Abbas"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/blue_text"
         android:textSize="11sp"
+        android:textFontWeight="500"
         app:layout_constraintStart_toEndOf="@+id/imgProfilePic"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -37,11 +38,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="2dp"
         android:fontFamily="@font/manrope_regular"
         android:text="Owner"
-        android:textColor="@color/lightblack"
+        android:textColor="@color/black_shade2"
         android:textSize="11sp"
+        android:textFontWeight="500"
         app:layout_constraintStart_toEndOf="@+id/imgProfilePic"
         app:layout_constraintTop_toBottomOf="@+id/txtName" />
     <TextView
@@ -52,8 +53,9 @@
         android:layout_marginTop="8dp"
         android:fontFamily="@font/manrope_regular"
         android:text="Owner"
-        android:textColor="@color/lightblack"
+        android:textColor="@color/black_shade2"
         android:textSize="8sp"
+        android:textFontWeight="500"
         app:layout_constraintStart_toEndOf="@+id/imgProfilePic"
         app:layout_constraintTop_toBottomOf="@+id/txtProfesstion" />
     <TextView
@@ -61,11 +63,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="2dp"
         android:fontFamily="@font/manrope_regular"
         android:text="Owner"
-        android:textColor="@color/colorTextLabelDefault"
+        android:textColor="@color/black_shade2"
         android:textSize="8sp"
+        android:textFontWeight="500"
         app:layout_constraintStart_toEndOf="@+id/imgProfilePic"
         app:layout_constraintTop_toBottomOf="@+id/txtBookings" />
 </androidx.constraintlayout.widget.ConstraintLayout>

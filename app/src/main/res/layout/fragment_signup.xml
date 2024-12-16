@@ -236,7 +236,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_white_grey"
-                    android:button="@drawable/custom_radio_button"
+                    android:button="@drawable/custom_radio_widget"
                     android:drawablePadding="8dp"
                     android:paddingStart="8dp"
                     android:text="Business\nOwner" />
@@ -248,7 +248,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_white_grey"
-                    android:button="@drawable/custom_radio_button"
+                    android:button="@drawable/custom_radio_widget"
                     android:drawablePadding="8dp"
                     android:paddingStart="8dp"
                     android:text="Service\nProvider" />

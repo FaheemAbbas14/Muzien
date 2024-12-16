@@ -48,6 +48,7 @@ class MembersListAdopter(
         val txtRating: TextView = itemView.findViewById(R.id.txtRating)
         val txtStyle: TextView = itemView.findViewById(R.id.txtStyle)
         val txtBookings: TextView = itemView.findViewById(R.id.txtBookings)
+        val txtManager: TextView = itemView.findViewById(R.id.txtManager)
         val imgMenu: ImageView = itemView.findViewById(R.id.imageView4)
 
         init {
@@ -76,11 +77,16 @@ class MembersListAdopter(
         holder.txtProfesstion.text = item.profession
         holder.txtRating.text = item.rating
         holder.txtStyle.text = item.style
+        if (position == 0) {
+            holder.txtManager.visibility = View.VISIBLE
+        } else {
+            holder.txtManager.visibility = View.GONE
+        }
         if (item.status) {
             holder.llStatus.setBackgroundDrawable(
                 ResourcesCompat.getDrawable(
                     context.resources,
-                    R.drawable.rounded_green,
+                    R.drawable.green_70_rounded,
                     context.theme
                 )
             )
@@ -89,7 +95,7 @@ class MembersListAdopter(
             holder.llStatus.setBackgroundDrawable(
                 ResourcesCompat.getDrawable(
                     context.resources,
-                    R.drawable.rounded_red,
+                    R.drawable.red_70_rounded,
                     context.theme
                 )
             )

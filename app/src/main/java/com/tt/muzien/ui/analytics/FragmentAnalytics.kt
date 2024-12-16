@@ -202,7 +202,16 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
 
         // Chart appearance
         lineChart?.description?.isEnabled = false
-        lineChart?.animateX(1500)
+       // lineChart?.animateX(1500)
+        // Disable pinch zoom (zooming with two fingers)
+        lineChart?.setPinchZoom(false)
+
+// Disable scaling on X and Y axes
+        lineChart?.isScaleXEnabled = false
+        lineChart?.isScaleYEnabled = false
+
+// Optional: Disable double-tap zoom
+        lineChart?.isDoubleTapToZoomEnabled = false
     }
 
     private fun setPerformerAdopter() {

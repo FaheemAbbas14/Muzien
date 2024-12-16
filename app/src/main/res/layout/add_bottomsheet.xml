@@ -16,10 +16,11 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/manrope_bold"
+        android:fontFamily="@font/manrope_regular"
         android:gravity="center"
         android:paddingBottom="8dp"
         android:text="Add New"
+        android:textFontWeight="700"
         android:textColor="@color/colorTextLabelDefault"
         android:textSize="22sp" />
 
@@ -43,7 +44,8 @@
         android:paddingBottom="8dp"
         android:layout_marginTop="20dp"
         android:text="Saloon"
-        android:textColor="@color/colorTextHintDefault"
+        android:textFontWeight="500"
+        android:textColor="@color/textsurface"
         android:textSize="14sp" />
 
     <TextView
@@ -55,7 +57,8 @@
         android:layout_marginTop="10dp"
         android:paddingBottom="8dp"
         android:text="Member"
-        android:textColor="@color/colorTextHintDefault"
+        android:textFontWeight="500"
+        android:textColor="@color/textsurface"
         android:textSize="14sp" />
 
     <TextView
@@ -68,6 +71,7 @@
         android:layout_marginTop="10dp"
         android:paddingBottom="8dp"
         android:text="Service"
-        android:textColor="@color/colorTextHintDefault"
+        android:textFontWeight="500"
+        android:textColor="@color/textsurface"
         android:textSize="14sp" />
 </LinearLayout>

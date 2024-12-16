@@ -199,7 +199,7 @@
         android:id="@+id/llNext"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/rounded_blue_button"
         android:clickable="true"
         android:focusable="true"

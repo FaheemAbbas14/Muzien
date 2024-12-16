@@ -39,8 +39,8 @@ class FragmentNotifications :
                 NotificationDto(
                     null,
                     R.drawable.salon_icon,
-                    "Heading $i",
-                    "Description $i", EnumNotificationType.Category, false
+                    "Salons",
+                    "Salon “All Ways Hair” has been approved", EnumNotificationType.Category, false
                 )
 
             )
@@ -49,10 +49,11 @@ class FragmentNotifications :
             println("Index: $i")
             notificationList.add(
                 NotificationDto(
-                    "https://graph.facebook.com/580534664534485/picture?type=large",
+                    "",
                     null,
-                    "Heading $i",
-                    "Description $i", EnumNotificationType.Plan, true
+                    "Booking Pending Approval",
+                    "Customer: David Garcia\n" +
+                            "Salon: The Style Zone", EnumNotificationType.Plan, true
                 )
 
             )

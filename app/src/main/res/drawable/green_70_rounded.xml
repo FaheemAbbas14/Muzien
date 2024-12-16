@@ -3,7 +3,7 @@
     <item>
         <shape android:shape="rectangle">
             <solid android:color="@color/green_text" />
-            <corners android:radius="5dp" /> <!-- Adjust the corner radius as needed -->
+            <corners android:radius="70dp" /> <!-- Adjust the corner radius as needed -->
         </shape>
     </item>
 
@@ -14,7 +14,7 @@
             <stroke
                 android:width="2dp"
                 android:color="@color/green_text" /> <!-- Adjust the border width and color as needed -->
-            <corners android:radius="5dp" /> <!-- Match the corner radius of the background layer -->
+            <corners android:radius="70dp" /> <!-- Match the corner radius of the background layer -->
         </shape>
     </item>
 </layer-list>

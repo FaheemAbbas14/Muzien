@@ -35,10 +35,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:fontFamily="@font/manrope_bold"
+            android:fontFamily="@font/manrope_regular"
             android:text="Back"
             android:textColor="@color/black"
             android:textSize="16sp"
+            android:textFontWeight="700"
             tools:layout_editor_absoluteX="38dp"
             tools:layout_editor_absoluteY="21dp" />
 
@@ -46,12 +47,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:fontFamily="@font/manrope_bold"
+            android:fontFamily="@font/manrope_regular"
             android:gravity="center"
             android:paddingRight="50dp"
             android:text="Profile"
             android:textColor="@color/black"
             android:textSize="16sp"
+            android:textFontWeight="700"
             tools:layout_editor_absoluteX="38dp"
             tools:layout_editor_absoluteY="21dp" />
     </LinearLayout>
@@ -106,10 +108,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:fontFamily="@font/manrope_bold"
+                    android:fontFamily="@font/manrope_regular"
                     android:text="Faheem Abbas"
                     android:textColor="@color/black"
                     android:textSize="22sp"
+                    android:textFontWeight="700"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/imgProfilePic" />
@@ -118,11 +121,11 @@
                     android:id="@+id/txtProfession"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
                     android:fontFamily="@font/manrope_regular"
                     android:text="Salon owner"
                     android:textColor="@color/colorTextLabelDefault"
                     android:textSize="12sp"
+                    android:textFontWeight="400"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/txtName" />
@@ -159,6 +162,7 @@
                         android:text="My Account"
                         android:textColor="@color/colorTextLabelDefault"
                         android:textSize="14sp"
+                        android:textFontWeight="400"
                         app:layout_constraintStart_toEndOf="@+id/imageView5"
                         tools:layout_editor_absoluteY="0dp" />
 
@@ -215,6 +219,7 @@
                         android:text="Notification Settings"
                         android:textColor="@color/colorTextLabelDefault"
                         android:textSize="14sp"
+                        android:textFontWeight="400"
                         app:layout_constraintStart_toEndOf="@+id/imageView6"
                         tools:layout_editor_absoluteY="0dp" />
 
@@ -271,6 +276,7 @@
                         android:text="Manage Subscriptions"
                         android:textColor="@color/colorTextLabelDefault"
                         android:textSize="14sp"
+                        android:textFontWeight="400"
                         app:layout_constraintStart_toEndOf="@+id/imageView7"
                         tools:layout_editor_absoluteY="0dp" />
 
@@ -327,6 +333,7 @@
                         android:text="Contact Us"
                         android:textColor="@color/colorTextLabelDefault"
                         android:textSize="14sp"
+                        android:textFontWeight="400"
                         app:layout_constraintStart_toEndOf="@+id/imageView8"
                         tools:layout_editor_absoluteY="0dp" />
 
@@ -383,6 +390,7 @@
                         android:text="About Muzien"
                         android:textColor="@color/colorTextLabelDefault"
                         android:textSize="14sp"
+                        android:textFontWeight="400"
                         app:layout_constraintStart_toEndOf="@+id/imageView9"
                         tools:layout_editor_absoluteY="0dp" />
 
@@ -439,6 +447,7 @@
                         android:text="Privacy Policy"
                         android:textColor="@color/colorTextLabelDefault"
                         android:textSize="14sp"
+                        android:textFontWeight="400"
                         app:layout_constraintStart_toEndOf="@+id/imageView10"
                         tools:layout_editor_absoluteY="0dp" />
 
@@ -496,6 +505,7 @@
                         android:text="Change Language"
                         android:textColor="@color/colorTextLabelDefault"
                         android:textSize="14sp"
+                        android:textFontWeight="400"
                         app:layout_constraintStart_toEndOf="@+id/imageView11"
                         tools:layout_editor_absoluteY="0dp" />
 

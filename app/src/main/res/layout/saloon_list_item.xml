@@ -3,9 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="10dp"
     android:layout_marginTop="15dp"
-    android:layout_marginRight="10dp"
     android:layout_marginBottom="3dp"
     android:background="@color/white"
     app:cardCornerRadius="10dp"
@@ -19,7 +17,7 @@
         <ImageView
             android:id="@+id/imgIcon"
             android:layout_width="match_parent"
-            android:layout_height="124dp"
+            android:layout_height="130dp"
             android:background="@color/light_grey"
             android:scaleType="centerInside"
             app:layout_constraintEnd_toEndOf="parent"
@@ -38,6 +36,7 @@
             android:text="The Style Zone"
             android:textColor="@color/colorTextDefault"
             android:textSize="14sp"
+            android:textFontWeight="700"
             app:layout_constraintEnd_toStartOf="@+id/llStatus"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imgIcon" />
@@ -62,6 +61,9 @@
                 android:paddingRight="10dp"
                 android:text="open today"
                 android:gravity="center"
+                android:textSize="11sp"
+                android:textFontWeight="500"
+                android:fontFamily="@font/manrope_regular"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/imgIcon" />
@@ -107,6 +109,7 @@
                         android:layout_marginStart="10dp"
                         android:fontFamily="@font/manrope_regular"
                         android:paddingLeft="5dp"
+                        android:textFontWeight="400"
                         android:text="Rd. 2121 Alamal Dist. 12643 Riyadh SA"
                         android:textColor="@color/colorTextLabelDefault"
                         android:textSize="12sp" />
@@ -136,6 +139,7 @@
                         android:layout_marginStart="10dp"
                         android:fontFamily="@font/manrope_regular"
                         android:paddingLeft="5dp"
+                        android:textFontWeight="400"
                         android:text="4.5(10 reviews)"
                         android:textColor="@color/colorTextLabelDefault"
                         android:textSize="12sp" />
@@ -165,6 +169,7 @@
                         android:layout_marginStart="10dp"
                         android:fontFamily="@font/manrope_regular"
                         android:paddingLeft="5dp"
+                        android:textFontWeight="400"
                         android:text="10:00 AM - 11:00 PM"
                         android:textColor="@color/colorTextLabelDefault"
                         android:textSize="12sp" />

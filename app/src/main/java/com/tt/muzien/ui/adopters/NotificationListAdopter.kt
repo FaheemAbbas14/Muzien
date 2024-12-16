@@ -76,7 +76,7 @@ class NotificationListAdopter(
             Glide.with(holder.imgProfilePic)
                 .load(item.profileUrl)
                 .circleCrop()
-                .placeholder(R.drawable.salon_icon)
+                .placeholder(R.drawable.topperformer)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)  // Cache both original & transformed image
                 .skipMemoryCache(false)  // Cache in memory
                 .into(holder.imgProfilePic)
