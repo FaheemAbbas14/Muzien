@@ -1,31 +1,36 @@
-package com.tt.muzien.ui.saloon
+package com.tt.muzien.ui.saloon.tabs
 
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.tt.muzien.data.dto.SaloonDto
-import com.tt.muzien.data.network.AuthApi
-import com.tt.muzien.data.repository.AuthRepository
-import com.tt.muzien.databinding.FragmentSaloonBinding
-import com.tt.muzien.ui.adopters.SaloonListAdopter
-import com.tt.muzien.ui.auth.AuthViewModel
+import com.tt.muzien.R
+import com.tt.muzien.data.dto.MemberDto
+import com.tt.muzien.data.network.HomeApi
+import com.tt.muzien.data.repository.HomeRepository
+import com.tt.muzien.databinding.FragmentSaloonBookingsBinding
+import com.tt.muzien.databinding.FragmentSaloonMembersBinding
+import com.tt.muzien.ui.adopters.MembersListAdopter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.FragmentFilter
 import com.tt.muzien.ui.home.HomeActivity
+import com.tt.muzien.ui.home.HomeViewModel
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 
 
-class FragmentSaloon : BaseFragment<AuthViewModel, FragmentSaloonBinding, AuthRepository>() {
-    private val saloonsList = arrayListOf<SaloonDto>()
+class FragmentSaloonMembers : BaseFragment<HomeViewModel, FragmentSaloonMembersBinding, HomeRepository>() {
+    private val membersList = arrayListOf<MemberDto>()
     private var fromDate: String = ""
     private var toDate: String = ""
     private var bookingDuration: String = ""
+
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        setSaloonAdopter()
+        setMemberAdopter()
         binding.imgFilter.setOnClickListener {
             var nextFragment = FragmentFilter()
             (activity as HomeActivity?)?.loadFragment(nextFragment)
@@ -38,57 +43,58 @@ class FragmentSaloon : BaseFragment<AuthViewModel, FragmentSaloonBinding, AuthRe
                 bookingDuration = selection.toString()
                 fromDate = fromDateFilter.toString()
                 toDate = toDateFilter.toString()
-                setSaloonAdopter()
+                setMemberAdopter()
             }
 
         }
     }
 
-    private fun setSaloonAdopter() {
-        saloonsList.clear()
-        for (i in 0..10) {
+    private fun setMemberAdopter() {
+        membersList.clear()
+        for (i in 1..10) {
             println("Index: $i")
-            saloonsList.add(
-                SaloonDto(
+            membersList.add(
+                MemberDto(
                     "",
-                    "The Style Zone",
                     if (i % 2 == 0) true else false,
-                    "Rd. 2121 Alamal Dist. 12643 Riyadh SA",
-                    "4.5 (2398 reviews)",
-                    "10:00 AM - 11:00 PM"
+                    "Jennifer Austin",
+                    "Hair Stylist",
+                    "4.1 (50 reviews)",
+                    "Store  Tye Style Zone",
+                    4
                 )
             )
         }
-        binding.txtHeading.text = "Salons(${saloonsList.size})"
+        binding.txtHeading.text = "Members(${membersList.size})"
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(position: Int) {
-                var nextFragment = FragmentSaloonDetails()
-                nextFragment.selectedSaloon=saloonsList[position]
-                (activity as HomeActivity?)?.loadFragment(nextFragment)
+//                var nextFragment = FragmentPlaceDetails()
+//                nextFragment.itemId = featuredItemsList[position].id
+//                nextFragment.placeType = EnumItemListType.Featured
+//                (activity as DashboardActivity?)?.loadFragment(nextFragment)
 
             }
         }
-        binding.rcySaloons.layoutManager =
+        binding.rcyMembers.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
-        binding.rcySaloons.adapter =
-            SaloonListAdopter(
-                saloonsList,
+        binding.rcyMembers.adapter =
+            MembersListAdopter(
+                membersList,
                 requireContext(),
-                clickListener
+                clickListener,true
             )
     }
 
-    override fun getViewModel(): Class<AuthViewModel> {
-        return AuthViewModel::class.java
+    override fun getViewModel(): Class<HomeViewModel> {
+        return HomeViewModel::class.java
     }
 
     override fun getFragmentBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ) = FragmentSaloonBinding.inflate(inflater, container, false)
+    ) = FragmentSaloonMembersBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        AuthRepository(remoteDataSource.buildApi(AuthApi::class.java), userPreferences)
-
+        HomeRepository(remoteDataSource.buildApi(HomeApi::class.java), userPreferences)
 
 }

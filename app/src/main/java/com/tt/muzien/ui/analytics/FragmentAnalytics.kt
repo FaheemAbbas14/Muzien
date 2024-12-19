@@ -49,6 +49,7 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+       // binding.homeLayout.setBackgroundColor(Color.argb(10, 30, 69, 148))
         lineChart = binding.lineChart
         setdata()
 
