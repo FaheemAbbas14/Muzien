@@ -4,17 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.saloon.tabs.FragmentSaloonAnalytics">
+    android:background="@color/light_grey"
+    tools:context=".ui.saloon.FragmentSaloon">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+
+    <ExpandableListView
+        android:id="@+id/rcyServices"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scrollbars="none"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:background="@android:color/transparent"
+        android:orientation="vertical"
+        android:groupIndicator="@null"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:text="Saloon Services"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

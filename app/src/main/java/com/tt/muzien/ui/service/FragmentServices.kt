@@ -4,21 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.setFragmentResultListener
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.tt.muzien.data.dto.ServiceDto
+import com.tt.muzien.data.dto.ServiceInfo
 import com.tt.muzien.data.network.AuthApi
 import com.tt.muzien.data.repository.AuthRepository
 import com.tt.muzien.databinding.FragmentServicesBinding
-import com.tt.muzien.ui.adopters.ServiceListAdopter
+import com.tt.muzien.ui.adopters.ExpandServiceListAdopter
 import com.tt.muzien.ui.auth.AuthViewModel
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.FragmentFilter
 import com.tt.muzien.ui.home.HomeActivity
-import com.zabihah.ui.ui.interfaces.OnItemClickListner
 
 
 class FragmentServices : BaseFragment<AuthViewModel, FragmentServicesBinding, AuthRepository>() {
-    private val servicesList = arrayListOf<ServiceDto>()
+    private val servicesMap = HashMap<String, List<ServiceInfo>>()
     private var fromDate: String = ""
     private var toDate: String = ""
     private var bookingDuration: String = ""
@@ -26,7 +24,7 @@ class FragmentServices : BaseFragment<AuthViewModel, FragmentServicesBinding, Au
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        setMemberAdopter()
+        setServicesAdopter()
         binding.imgFilter.setOnClickListener {
             var nextFragment = FragmentFilter()
             (activity as HomeActivity?)?.loadFragment(nextFragment)
@@ -39,38 +37,46 @@ class FragmentServices : BaseFragment<AuthViewModel, FragmentServicesBinding, Au
                 bookingDuration = selection.toString()
                 fromDate = fromDateFilter.toString()
                 toDate = toDateFilter.toString()
-                setMemberAdopter()
+                setServicesAdopter()
             }
 
         }
     }
 
-    private fun setMemberAdopter() {
-        servicesList.clear()
-        for (i in 1..10) {
-            println("Index: $i")
-            servicesList.add(
-                ServiceDto("Service $i", i * 5)
-            )
-        }
-        //  binding.txtHeading.text = "Members(${membersList.size})"
-        val clickListener = object : OnItemClickListner {
-            override fun onItemClick(position: Int) {
-//                var nextFragment = FragmentPlaceDetails()
-//                nextFragment.itemId = featuredItemsList[position].id
-//                nextFragment.placeType = EnumItemListType.Featured
-//                (activity as DashboardActivity?)?.loadFragment(nextFragment)
-
+    private fun setServicesAdopter() {
+        servicesMap.clear()
+        val groupTitles = listOf("Hair Service", "Facial", "Nails", "Manicure", "Massage")
+        for (type in groupTitles) {
+            val servicesList = arrayListOf<ServiceInfo>()
+            for (i in 1..4) {
+                println("Index: $i")
+                servicesList.add(
+                    ServiceInfo("", "Buzz cut", "Duration: 45mins", "SAR 10")
+                )
             }
+            servicesMap.put(type, servicesList)
         }
-        binding.rcyServices.layoutManager =
-            LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
-        binding.rcyServices.adapter =
-            ServiceListAdopter(
-                servicesList,
-                requireContext(),
-                clickListener
-            )
+        val adapter = ExpandServiceListAdopter(requireContext(), groupTitles, servicesMap)
+        binding.rcyServices.setAdapter(adapter)
+
+        // Handle child clicks
+        binding.rcyServices.setOnChildClickListener { _, _, groupPosition, childPosition, _ ->
+            val group = groupTitles[groupPosition]
+            val child = servicesMap[group]?.get(childPosition)
+//            Toast.makeText(requireContext(), "Selected: $child in $group", Toast.LENGTH_SHORT)
+//                .show()
+            true
+        }
+
+        // Handle group expansion
+        binding.rcyServices.setOnGroupExpandListener { groupPosition ->
+//            Toast.makeText(
+//                requireContext(),
+//                "Expanded: ${groupTitles[groupPosition]}",
+//                Toast.LENGTH_SHORT
+//            ).show()
+        }
+
     }
 
     override fun getViewModel(): Class<AuthViewModel> {
