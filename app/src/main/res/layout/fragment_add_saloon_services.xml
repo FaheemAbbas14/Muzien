@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/llBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/manrope_bold"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:src="@drawable/back_button"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/manrope_regular"
+            android:text="Back"
+            android:textColor="@color/black"
+            android:textFontWeight="700"
+            android:textSize="16sp"
+            tools:layout_editor_absoluteX="38dp"
+            tools:layout_editor_absoluteY="21dp" />
+
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llBack"
+        app:srcCompat="@drawable/add_member_icon" />
+
+
+    <TextView
+        android:id="@+id/txtLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/transparent"
+        android:fontFamily="@font/manrope_bold"
+        android:text="Add Service"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textFontWeight="700"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+
+    <TextView
+        android:id="@+id/txtText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="30dp"
+        android:fontFamily="@font/manrope_regular"
+        android:gravity="center"
+        android:text="Provide the information to add\n a service"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textFontWeight="400"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtLabel" />
+
+    <LinearLayout
+        android:id="@+id/llCategory"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/rounded_white_grey"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="60dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="@+id/txtText"
+        app:layout_constraintStart_toStartOf="@+id/txtText"
+        app:layout_constraintTop_toBottomOf="@+id/txtText">
+
+
+        <EditText
+            android:id="@+id/edtCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center|left"
+            android:hint="Hair Service"
+            android:inputType="text"
+            android:paddingRight="10dp"
+            android:textColor="@color/colorTextDefault"
+            android:textFontWeight="400"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="8dp"
+            app:srcCompat="@drawable/ddl_icon" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="-10dp"
+        android:background="@color/white"
+        android:fontFamily="@font/manrope_regular"
+        android:inputType="textEmailAddress"
+        android:text="Select Category"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textFontWeight="500"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toTopOf="@+id/llCategory"
+        app:layout_constraintStart_toStartOf="@+id/llCategory" />
+
+    <LinearLayout
+        android:id="@+id/llServiceName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/rounded_white_grey"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="60dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="@+id/llCategory"
+        app:layout_constraintStart_toStartOf="@+id/llCategory"
+        app:layout_constraintTop_toBottomOf="@+id/llCategory">
+
+
+        <EditText
+            android:id="@+id/edtServiceName"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center|left"
+            android:hint="Fauxhawk"
+            android:inputType="text"
+            android:paddingRight="10dp"
+            android:textColor="@color/colorTextDefault"
+            android:textFontWeight="400"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="8dp"
+            app:srcCompat="@drawable/search_icon" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="-10dp"
+        android:background="@color/white"
+        android:fontFamily="@font/manrope_regular"
+        android:inputType="text"
+        android:text="Service Namey"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textFontWeight="500"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toTopOf="@+id/llServiceName"
+        app:layout_constraintStart_toStartOf="@+id/llServiceName" />
+
+    <LinearLayout
+        android:id="@+id/llDuration"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/rounded_white_grey"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="60dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="@+id/llServiceName"
+        app:layout_constraintStart_toStartOf="@+id/llServiceName"
+        app:layout_constraintTop_toBottomOf="@+id/llServiceName">
+
+
+        <EditText
+            android:id="@+id/edtDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center|left"
+            android:hint="45 mins"
+            android:inputType="text"
+            android:paddingRight="10dp"
+            android:textColor="@color/colorTextDefault"
+            android:textFontWeight="400"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="8dp"
+            app:srcCompat="@drawable/ddl_icon" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="-10dp"
+        android:background="@color/white"
+        android:fontFamily="@font/manrope_regular"
+        android:inputType="textEmailAddress"
+        android:text="Duration"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textFontWeight="500"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toTopOf="@+id/llDuration"
+        app:layout_constraintStart_toStartOf="@+id/llDuration" />
+
+    <LinearLayout
+        android:id="@+id/llPrice"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/rounded_white_grey"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="60dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="@+id/llDuration"
+        app:layout_constraintStart_toStartOf="@+id/llDuration"
+        app:layout_constraintTop_toBottomOf="@+id/llDuration">
+
+        <TextView
+            android:id="@+id/txtCurrency"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:background="@color/white"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center"
+            android:inputType="textEmailAddress"
+            android:text="SAR"
+            android:textColor="@color/black_shade3"
+            android:textFontWeight="400"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@+id/llPrice"
+            app:layout_constraintStart_toStartOf="@+id/llPrice" />
+
+        <EditText
+            android:id="@+id/edtPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center|left"
+            android:hint="20"
+            android:inputType="text"
+            android:paddingLeft="5dp"
+            android:textColor="@color/colorTextDefault"
+            android:textFontWeight="400"
+            android:textSize="14sp" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="-10dp"
+        android:background="@color/white"
+        android:fontFamily="@font/manrope_regular"
+        android:inputType="textEmailAddress"
+        android:text="Price"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textFontWeight="500"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toTopOf="@+id/llPrice"
+        app:layout_constraintStart_toStartOf="@+id/llPrice" />
+
+    <LinearLayout
+        android:id="@+id/llSave"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="28dp"
+        android:background="@drawable/rounded_blue_button"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="60dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/llCategory"
+        app:layout_constraintStart_toStartOf="@+id/llCategory">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/manrope_bold"
+            android:gravity="center"
+            android:text="Save &amp; Add New"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imgPhoto"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/doted_blue_border"
+        android:paddingStart="30dp"
+        android:paddingTop="15dp"
+        android:paddingEnd="30dp"
+        android:paddingBottom="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/llSave"
+        app:layout_constraintEnd_toEndOf="@+id/llPrice"
+        app:layout_constraintStart_toStartOf="@+id/llPrice"
+        app:layout_constraintTop_toBottomOf="@+id/llPrice"
+        app:srcCompat="@drawable/add_image_placeholder" />
+</androidx.constraintlayout.widget.ConstraintLayout>

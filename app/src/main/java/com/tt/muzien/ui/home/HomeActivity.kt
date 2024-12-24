@@ -80,6 +80,14 @@ class HomeActivity : AppCompatActivity() {
         FragmentManager().loadFragment(newFragment, supportFragmentManager)
     }
 
+    fun loadFragment(
+        fragment: Fragment,
+        container: Int,
+    ) {
+        FragmentManager()
+            .loadFragment(fragment, supportFragmentManager, container)
+    }
+
     fun showTabs() {
         binding.constraintLayout2.visibility = View.VISIBLE
         binding.constraintLayout.visibility = View.VISIBLE

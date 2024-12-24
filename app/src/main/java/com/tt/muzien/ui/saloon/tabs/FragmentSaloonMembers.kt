@@ -1,17 +1,13 @@
 package com.tt.muzien.ui.saloon.tabs
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.tt.muzien.R
 import com.tt.muzien.data.dto.MemberDto
 import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.data.repository.HomeRepository
-import com.tt.muzien.databinding.FragmentSaloonBookingsBinding
 import com.tt.muzien.databinding.FragmentSaloonMembersBinding
 import com.tt.muzien.ui.adopters.MembersListAdopter
 import com.tt.muzien.ui.base.BaseFragment
@@ -21,7 +17,8 @@ import com.tt.muzien.ui.home.HomeViewModel
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 
 
-class FragmentSaloonMembers : BaseFragment<HomeViewModel, FragmentSaloonMembersBinding, HomeRepository>() {
+class FragmentSaloonMembers :
+    BaseFragment<HomeViewModel, FragmentSaloonMembersBinding, HomeRepository>() {
     private val membersList = arrayListOf<MemberDto>()
     private var fromDate: String = ""
     private var toDate: String = ""
@@ -33,6 +30,10 @@ class FragmentSaloonMembers : BaseFragment<HomeViewModel, FragmentSaloonMembersB
         setMemberAdopter()
         binding.imgFilter.setOnClickListener {
             var nextFragment = FragmentFilter()
+            (activity as HomeActivity?)?.loadFragment(nextFragment)
+        }
+        binding.llAdd.setOnClickListener {
+            var nextFragment = FragmentAddSaloonMember()
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
         setFragmentResultListener("requestKey") { key, bundle ->
@@ -81,7 +82,7 @@ class FragmentSaloonMembers : BaseFragment<HomeViewModel, FragmentSaloonMembersB
             MembersListAdopter(
                 membersList,
                 requireContext(),
-                clickListener,true
+                clickListener, true
             )
     }
 

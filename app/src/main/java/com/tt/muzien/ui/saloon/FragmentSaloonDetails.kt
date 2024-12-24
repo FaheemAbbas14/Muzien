@@ -11,24 +11,20 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.google.android.material.tabs.TabLayout
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.SaloonDto
 import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.data.repository.HomeRepository
 import com.tt.muzien.databinding.FragmentSaloonDetailsBinding
-import com.tt.muzien.ui.analytics.FragmentAnalytics
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.home.HomeViewModel
-import com.tt.muzien.ui.member.FragmentMembers
 import com.tt.muzien.ui.saloon.tabs.FragmentSaloonAnalytics
 import com.tt.muzien.ui.saloon.tabs.FragmentSaloonBookings
 import com.tt.muzien.ui.saloon.tabs.FragmentSaloonInfo
 import com.tt.muzien.ui.saloon.tabs.FragmentSaloonMembers
 import com.tt.muzien.ui.saloon.tabs.FragmentSaloonReviews
 import com.tt.muzien.ui.saloon.tabs.FragmentSaloonServices
-import com.tt.muzien.ui.service.FragmentServices
 
 
 class FragmentSaloonDetails :
@@ -36,12 +32,13 @@ class FragmentSaloonDetails :
 
     var selectedSaloon: SaloonDto? = null
     private lateinit var fragmentManager: FragmentManager
+
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         fragmentManager = requireActivity().supportFragmentManager
-       // setStatusBar(view)
+        // setStatusBar(view)
         binding.imgMore.setOnClickListener {
 
             //   uploadImage()
@@ -53,7 +50,7 @@ class FragmentSaloonDetails :
         binding.imgBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
         }
-        fragmentManager.beginTransaction().replace(R.id.tab_container, FragmentSaloonAnalytics()).commit()
+        (activity as HomeActivity?)?.loadFragment(FragmentSaloonAnalytics(), R.id.tab_container)
         binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
             val selectedRadioButton = group.findViewById<RadioButton>(checkedId)
             val fragment: Fragment = when (selectedRadioButton?.id) {
@@ -72,31 +69,37 @@ class FragmentSaloonDetails :
                     binding.rdoBookings.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoBookings.setTextColor(resources.getColor(R.color.white))
                 }
-                R.id.rdoStoreInfo ->{
+
+                R.id.rdoStoreInfo -> {
                     binding.rdoStoreInfo.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoStoreInfo.setTextColor(resources.getColor(R.color.white))
                 }
+
                 R.id.rdoReviews -> {
                     binding.rdoReviews.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoReviews.setTextColor(resources.getColor(R.color.white))
                 }
-                R.id.rdoServices ->{
+
+                R.id.rdoServices -> {
                     binding.rdoServices.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoServices.setTextColor(resources.getColor(R.color.white))
                 }
+
                 R.id.rdoMembers -> {
                     binding.rdoMembers.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoMembers.setTextColor(resources.getColor(R.color.white))
                 }
+
                 else -> {
                     binding.rdoAnalytics.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoAnalytics.setTextColor(resources.getColor(R.color.white))
                 }
             }
-            // (activity as DashboardActivity?)?.loadFragment(fragment,R.id.container,fragmentManager)
-            fragmentManager.beginTransaction().replace(R.id.tab_container, fragment).commit()
+            (activity as HomeActivity?)?.loadFragment(fragment, R.id.tab_container)
+            // fragmentManager.beginTransaction().replace(R.id.tab_container, fragment).commit()
         }
     }
+
     private fun resetTabs() {
         binding.rdoAnalytics.setBackgroundDrawable(resources.getDrawable(R.drawable.rounded_grey))
         binding.rdoAnalytics.setTextColor(resources.getColor(R.color.colorTextLabelDefault))
@@ -113,6 +116,7 @@ class FragmentSaloonDetails :
 
 
     }
+
     private fun setStatusBar(view: View) {
 // Enable full-screen mode
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {

@@ -46,6 +46,7 @@ class FragmentServices : BaseFragment<AuthViewModel, FragmentServicesBinding, Au
     private fun setServicesAdopter() {
         servicesMap.clear()
         val groupTitles = listOf("Hair Service", "Facial", "Nails", "Manicure", "Massage")
+        val groupServices = listOf("30", "10", "5", "8", "100")
         for (type in groupTitles) {
             val servicesList = arrayListOf<ServiceInfo>()
             for (i in 1..4) {
@@ -56,7 +57,7 @@ class FragmentServices : BaseFragment<AuthViewModel, FragmentServicesBinding, Au
             }
             servicesMap.put(type, servicesList)
         }
-        val adapter = ExpandServiceListAdopter(requireContext(), groupTitles, servicesMap)
+        val adapter = ExpandServiceListAdopter(requireContext(), groupTitles, servicesMap,true,groupServices )
         binding.rcyServices.setAdapter(adapter)
 
         // Handle child clicks

@@ -10,6 +10,7 @@ import com.tt.muzien.data.repository.HomeRepository
 import com.tt.muzien.databinding.FragmentSaloonServicesBinding
 import com.tt.muzien.ui.adopters.ExpandServiceListAdopter
 import com.tt.muzien.ui.base.BaseFragment
+import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.home.HomeViewModel
 
 
@@ -21,6 +22,10 @@ class FragmentSaloonServices :
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setServicesAdopter()
+        binding.llAdd.setOnClickListener {
+            var nextFragment = FragmentAddSaloonServices()
+            (activity as HomeActivity?)?.loadFragment(nextFragment)
+        }
     }
 
     private fun setServicesAdopter() {

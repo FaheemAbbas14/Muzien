@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ui.home.FragmentFilter">
+
+    <LinearLayout
+        android:id="@+id/llBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/manrope_bold"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:src="@drawable/back_button"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/manrope_regular"
+            android:text="Back"
+            android:textColor="@color/black"
+            android:textFontWeight="700"
+            android:textSize="16sp"
+            tools:layout_editor_absoluteX="38dp"
+            tools:layout_editor_absoluteY="21dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center"
+            android:paddingRight="50dp"
+            android:text="Filter"
+            android:textColor="@color/black"
+            android:textFontWeight="700"
+            android:textSize="16sp"
+            tools:layout_editor_absoluteX="38dp"
+            tools:layout_editor_absoluteY="21dp" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:background="@color/light_grey"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toTopOf="@+id/llApply"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/llBack"
+        app:layout_constraintTop_toBottomOf="@+id/llBack">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/manrope_regular"
+                        android:paddingBottom="8dp"
+                        android:text="Booking Status"
+                        android:textColor="@color/colorTextLabelDefault"
+                        android:textFontWeight="700"
+                        android:textSize="16sp" />
+
+                    <RadioGroup
+                        android:id="@+id/radioBookingStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:orientation="vertical">
+
+
+                        <!-- Custom RadioButton for Week -->
+                        <RadioButton
+                            android:id="@+id/rbPending"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:button="@null"
+                            android:drawableRight="@drawable/custom_tick_button"
+                            android:fontFamily="@font/manrope_regular"
+                            android:gravity="center_vertical"
+                            android:padding="16dp"
+                            android:text="Pending Approval"
+                            android:textColor="@color/colorTextLabelDefault"
+                            android:textFontWeight="500"
+                            android:textSize="14sp" />
+                        <!-- Divider -->
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="10dp"
+                            android:background="@color/light_grey_border" />
+                        <!-- Custom RadioButton for Month -->
+                        <RadioButton
+                            android:id="@+id/rbScheduled"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:button="@null"
+                            android:drawableRight="@drawable/custom_tick_button"
+                            android:fontFamily="@font/manrope_regular"
+                            android:gravity="center_vertical"
+                            android:padding="16dp"
+                            android:text="Scheduled"
+                            android:textColor="@color/colorTextLabelDefault"
+                            android:textFontWeight="500"
+                            android:textSize="14sp" />
+                        <!-- Divider -->
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="10dp"
+                            android:background="@color/light_grey_border" />
+                        <!-- Custom RadioButton for Custom -->
+                        <RadioButton
+                            android:id="@+id/rbOverdue"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:button="@null"
+                            android:drawableRight="@drawable/custom_tick_button"
+                            android:fontFamily="@font/manrope_regular"
+                            android:gravity="center_vertical"
+                            android:padding="16dp"
+                            android:text="Overdue/Incomplete"
+                            android:textColor="@color/colorTextLabelDefault"
+                            android:textFontWeight="500"
+                            android:textSize="14sp" />
+                        <!-- Divider -->
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="10dp"
+                            android:background="@color/light_grey_border" />
+                        <!-- Custom RadioButton for Month -->
+                        <RadioButton
+                            android:id="@+id/rbCompleted"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:button="@null"
+                            android:drawableRight="@drawable/custom_tick_button"
+                            android:fontFamily="@font/manrope_regular"
+                            android:gravity="center_vertical"
+                            android:padding="16dp"
+                            android:text="Completed"
+                            android:textColor="@color/colorTextLabelDefault"
+                            android:textFontWeight="500"
+                            android:textSize="14sp" />
+                        <!-- Divider -->
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="10dp"
+                            android:background="@color/light_grey_border" />
+
+                        <!-- Custom RadioButton for Custom -->
+                        <RadioButton
+                            android:id="@+id/rbCancelled"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:button="@null"
+                            android:drawableRight="@drawable/custom_tick_button"
+                            android:fontFamily="@font/manrope_regular"
+                            android:gravity="center_vertical"
+                            android:padding="16dp"
+                            android:text="Cancelled"
+                            android:textColor="@color/colorTextLabelDefault"
+                            android:textFontWeight="500"
+                            android:textSize="14sp" />
+                        <!-- Divider -->
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="10dp"
+                            android:background="@color/light_grey_border" />
+                    </RadioGroup>
+
+                    <TextView
+                        android:id="@+id/txtBookingStatusError"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:background="@color/white"
+                        android:fontFamily="@font/manrope_regular"
+                        android:text="Select a option"
+                        android:textColor="@color/red_text"
+                        android:textFontWeight="500"
+                        android:textSize="11sp"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toStartOf="@+id/llFrom"
+                        app:layout_constraintTop_toBottomOf="@+id/llFrom" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/selectedOptionText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/manrope_regular"
+                        android:paddingBottom="8dp"
+                        android:text="Time Period"
+                        android:textColor="@color/colorTextLabelDefault"
+                        android:textFontWeight="700"
+                        android:textSize="16sp" />
+
+                    <RadioGroup
+                        android:id="@+id/radioGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+
+                        android:orientation="vertical">
+
+                        <!-- Custom RadioButton for Month -->
+                        <RadioButton
+                            android:id="@+id/rbAll"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:button="@null"
+                            android:drawableRight="@drawable/custom_tick_button"
+                            android:fontFamily="@font/manrope_regular"
+                            android:gravity="center_vertical"
+                            android:padding="16dp"
+                            android:text="All"
+                            android:textColor="@color/colorTextLabelDefault"
+                            android:textFontWeight="500"
+                            android:textSize="14sp" />
+                        <!-- Divider -->
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="10dp"
+                            android:background="@color/light_grey_border" />
+                        <!-- Custom RadioButton for Week -->
+                        <RadioButton
+                            android:id="@+id/rbWeek"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:button="@null"
+                            android:drawableRight="@drawable/custom_tick_button"
+                            android:fontFamily="@font/manrope_regular"
+                            android:gravity="center_vertical"
+                            android:padding="16dp"
+                            android:text="This Week"
+                            android:textColor="@color/colorTextLabelDefault"
+                            android:textFontWeight="500"
+                            android:textSize="14sp" />
+
+                        <!-- Divider -->
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="10dp"
+                            android:background="@color/light_grey_border" />
+                        <!-- Custom RadioButton for Custom -->
+                        <RadioButton
+                            android:id="@+id/rbCustom"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:button="@null"
+                            android:drawableRight="@drawable/custom_tick_button"
+                            android:fontFamily="@font/manrope_regular"
+                            android:gravity="center_vertical"
+                            android:padding="16dp"
+                            android:text="Custome Time Period"
+                            android:textColor="@color/colorTextLabelDefault"
+                            android:textFontWeight="500"
+                            android:textSize="14sp" />
+                        <!-- Divider -->
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="10dp"
+                            android:background="@color/light_grey_border" />
+                    </RadioGroup>
+
+                    <TextView
+                        android:id="@+id/txtSelectionError"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:background="@color/white"
+                        android:fontFamily="@font/manrope_regular"
+                        android:text="Select a option"
+                        android:textColor="@color/red_text"
+                        android:textFontWeight="500"
+                        android:textSize="11sp"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toStartOf="@+id/llFrom"
+                        app:layout_constraintTop_toBottomOf="@+id/llFrom" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/llFrom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@drawable/rounded_white_grey"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:minHeight="60dp"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="10dp"
+                    android:visibility="gone"
+                    app:layout_constraintBottom_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="parent">
+
+
+                    <TextView
+                        android:id="@+id/txtFrom"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:background="@android:color/transparent"
+                        android:fontFamily="@font/manrope_regular"
+                        android:gravity="center|left"
+                        android:hint="Select Date"
+                        android:inputType="text"
+                        android:paddingRight="10dp"
+                        android:textColor="@color/colorTextDefault"
+                        android:textFontWeight="400"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/txtFromError"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:background="@color/white"
+                    android:fontFamily="@font/manrope_regular"
+                    android:text="Select a date"
+                    android:textColor="@color/red_text"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
+
+
+                <LinearLayout
+                    android:id="@+id/llTo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginEnd="15dp"
+                    android:background="@drawable/rounded_white_grey"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:minHeight="60dp"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="10dp"
+                    android:visibility="gone">
+
+
+                    <TextView
+                        android:id="@+id/txtTo"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:background="@android:color/transparent"
+                        android:fontFamily="@font/manrope_regular"
+                        android:gravity="center|left"
+                        android:hint="Select Date"
+                        android:inputType="text"
+                        android:paddingRight="10dp"
+                        android:textColor="@color/colorTextDefault"
+                        android:textFontWeight="400"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+
+                <TextView
+                    android:id="@+id/txtToError"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:background="@color/white"
+                    android:fontFamily="@font/manrope_regular"
+                    android:text="Select a date"
+                    android:textColor="@color/red_text"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
+
+                <DatePicker
+                    android:id="@+id/datePicker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="10dp"
+                    android:calendarViewShown="true"
+                    android:spinnersShown="true"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/manrope_regular"
+                    android:paddingBottom="8dp"
+                    android:text="Service Providers"
+                    android:textColor="@color/colorTextLabelDefault"
+                    android:textFontWeight="700"
+                    android:textSize="16sp" />
+
+                <RadioGroup
+                    android:id="@+id/radioServiceProvider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:orientation="vertical">
+
+
+                    <!-- Custom RadioButton for Week -->
+                    <RadioButton
+                        android:id="@+id/rbAllProvider"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:button="@null"
+                        android:drawableRight="@drawable/custom_tick_button"
+                        android:fontFamily="@font/manrope_regular"
+                        android:gravity="center_vertical"
+                        android:padding="16dp"
+                        android:text="All"
+                        android:textColor="@color/colorTextLabelDefault"
+                        android:textFontWeight="500"
+                        android:textSize="14sp" />
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="10dp"
+                        android:background="@color/light_grey_border" />
+                    <!-- Custom RadioButton for Month -->
+                    <RadioButton
+                        android:id="@+id/rbSpecific"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:button="@null"
+                        android:drawableRight="@drawable/custom_tick_button"
+                        android:fontFamily="@font/manrope_regular"
+                        android:gravity="center_vertical"
+                        android:padding="16dp"
+                        android:text="Select Specific"
+                        android:textColor="@color/colorTextLabelDefault"
+                        android:textFontWeight="500"
+                        android:textSize="14sp" />
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginStart="10dp"
+                        android:background="@color/light_grey_border" />
+                </RadioGroup>
+
+                <TextView
+                    android:id="@+id/txtServiceProviderError"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:background="@color/white"
+                    android:fontFamily="@font/manrope_regular"
+                    android:text="Select a option"
+                    android:textColor="@color/red_text"
+                    android:textFontWeight="500"
+                    android:textSize="11sp"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="@+id/llFrom"
+                    app:layout_constraintTop_toBottomOf="@+id/llFrom" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/llApply"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/rounded_blue_button"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="60dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/manrope_bold"
+            android:gravity="center"
+            android:text="Apply Filter"
+            android:textColor="@color/white"
+            android:textFontWeight="700"
+            android:textSize="14sp" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

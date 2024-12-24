@@ -30,7 +30,9 @@ import com.tt.muzien.data.dto.ServiceInfo
 class ExpandServiceListAdopter(
     private val context: Context,
     private val groupTitles: List<String>,
-    private val childItems: Map<String, List<ServiceInfo>>
+    private val childItems: Map<String, List<ServiceInfo>>,
+    private val isFromMain: Boolean = false,
+    private val servicesCount: List<String>?=null,
 ) : BaseExpandableListAdapter() {
 
     override fun getGroupCount(): Int = groupTitles.size
@@ -41,6 +43,7 @@ class ExpandServiceListAdopter(
     }
 
     override fun getGroup(groupPosition: Int): Any = groupTitles[groupPosition]
+    fun getGroupServices(groupPosition: Int): Any = servicesCount?.get(groupPosition) ?: 0
 
     override fun getChild(groupPosition: Int, childPosition: Int): ServiceInfo? {
         val groupTitle = groupTitles[groupPosition]
@@ -59,8 +62,20 @@ class ExpandServiceListAdopter(
         convertView: View?,
         parent: ViewGroup?
     ): View {
-        val view =
+        var view =
             convertView ?: LayoutInflater.from(context).inflate(R.layout.group_item, parent, false)
+        if (isFromMain) {
+            view = LayoutInflater.from(context).inflate(R.layout.main_service_item, parent, false)
+
+            // Change background based on expanded/collapsed state
+            if (isExpanded) {
+                view.setBackgroundDrawable(context.resources.getDrawable(R.drawable.top_rounded_corners))
+            } else {
+                view.setBackgroundDrawable(context.resources.getDrawable(R.drawable.white_rounded10))
+            }
+            val servicesCount = view.findViewById<TextView>(R.id.servicesCount)
+            servicesCount.text = getGroupServices(groupPosition).toString()
+        }
         val groupTitle = view.findViewById<TextView>(R.id.group_title)
         val groupIcon = view.findViewById<ImageView>(R.id.group_icon)
 
@@ -79,6 +94,11 @@ class ExpandServiceListAdopter(
     ): View {
         val view =
             convertView ?: LayoutInflater.from(context).inflate(R.layout.child_item, parent, false)
+        if (isFromMain) {
+            view.setBackgroundDrawable(context.resources.getDrawable(R.color.white))
+        }
+
+
         val imgProfilePic = view.findViewById<ImageView>(R.id.imgProfilePic)
         val txtName = view.findViewById<TextView>(R.id.txtName)
         val txtDuration = view.findViewById<TextView>(R.id.txtDuration)

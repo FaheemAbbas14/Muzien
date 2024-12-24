@@ -3,6 +3,7 @@ package com.tt.muzien.ui.saloon.tabs
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tt.muzien.data.SaloonBookingData
 import com.tt.muzien.data.network.HomeApi
@@ -10,6 +11,8 @@ import com.tt.muzien.data.repository.HomeRepository
 import com.tt.muzien.databinding.FragmentSaloonBookingsBinding
 import com.tt.muzien.ui.adopters.SaloonBookingAdopter
 import com.tt.muzien.ui.base.BaseFragment
+import com.tt.muzien.ui.home.FragmentFilter
+import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.home.HomeViewModel
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 
@@ -20,11 +23,38 @@ class FragmentSaloonBookings :
     private var fromDate: String = ""
     private var toDate: String = ""
     private var bookingDuration: String = ""
+    private var bookingStatus: String = ""
+    private var bookingServiceProvider: String = ""
 
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setSaloonAdopter()
+        binding.imgBookingFilter.setOnClickListener {
+            var nextFragment = FragmentSaloonFilter()
+            (activity as HomeActivity?)?.loadFragment(nextFragment)
+        }
+        setFragmentResultListener("requestKey") { key, bundle ->
+            val selection = bundle.getString("selection")
+            val bookingStatusSelected = bundle.getString("bookingStatus")
+            val serviceProvider = bundle.getString("serviceProvider")
+            val fromDateFilter = bundle.getString("fromDate")
+            val toDateFilter = bundle.getString("toDate")
+            if (selection != "") {
+                bookingDuration = selection.toString()
+                bookingStatus = bookingStatusSelected.toString()
+                bookingServiceProvider = serviceProvider.toString()
+                fromDate = fromDateFilter.toString()
+                toDate = toDateFilter.toString()
+                if (selection == "Custom") {
+                    binding.txtMonth.text = "$fromDate To ${toDate}"
+                } else {
+                    binding.txtMonth.text = selection
+                }
+                setSaloonAdopter()
+            }
+
+        }
     }
 
     private fun setSaloonAdopter() {
