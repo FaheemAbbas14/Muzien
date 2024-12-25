@@ -6,11 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.setFragmentResult
 import com.tt.muzien.R
+import com.tt.muzien.data.dto.FilterData
 import com.tt.muzien.data.network.AuthApi
 import com.tt.muzien.data.repository.AuthRepository
 import com.tt.muzien.databinding.FragmentFilterBinding
 import com.tt.muzien.ui.auth.AuthViewModel
 import com.tt.muzien.ui.base.BaseFragment
+import com.tt.muzien.utilities.FilterSelection
 
 
 class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRepository>() {
@@ -18,7 +20,7 @@ class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRe
     var fromDate: String = ""
     var toDate: String = ""
     var isFrom: Boolean = true
-
+    var isFromRevenue: Boolean = false
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -65,14 +67,8 @@ class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRe
         }
         binding.llApply.setOnClickListener {
             if (checkValidation()) {
-                // Inside your current fragment before popping
-                val resultBundle = Bundle().apply {
-                    putString("selection", selection) // Replace with your data
-                    putString("fromDate", fromDate) // Replace with your data
-                    putString("toDate", toDate) // Replace with your data
-                }
-
-                setFragmentResult("requestKey", resultBundle)
+                FilterSelection.filterData =
+                    FilterData(selection, fromDate, toDate,isFromRevenue)
                 (activity as HomeActivity?)?.popFragment()
             }
         }

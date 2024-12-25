@@ -17,22 +17,24 @@ class FragmentManager {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
 
 //        // Hide all fragments
-//        supportFragmentManager.fragments.forEach { fragment ->
-//            fragmentTransaction.hide(fragment)
-//        }
+        supportFragmentManager.fragments.forEach { fragment ->
+            fragmentTransaction.hide(fragment)
+        }
 //
-//        val fragmentTag = newFragment::class.java.simpleName
-//        val existingFragment = supportFragmentManager.findFragmentByTag(fragmentTag)
+        val fragmentTag = newFragment::class.java.simpleName
+        val existingFragment = supportFragmentManager.findFragmentByTag(fragmentTag)
 //        // Check if the fragment is already added
-//        if (existingFragment != null) {
-//            fragmentTransaction.add(R.id.fragment_container, newFragment, fragmentTag)
-//        } else {
-//            fragmentTransaction.add(R.id.fragment_container, newFragment, fragmentTag)
-//        }
-        fragmentTransaction.replace(R.id.fragment_container, newFragment)
-            .addToBackStack(null)
-            .commit()
-//        fragmentTransaction.addToBackStack(null).commit()
+        if (existingFragment != null) {
+            fragmentTransaction.replace(R.id.fragment_container, newFragment, fragmentTag)
+        } else {
+            fragmentTransaction.replace(R.id.fragment_container, newFragment, fragmentTag)
+        }
+
+        fragmentTransaction.addToBackStack(null).commit()
+//        fragmentTransaction.replace(R.id.fragment_container, newFragment)
+//            .addToBackStack(null)
+//            .commit()
+
     }
 
     fun popFragment(supportFragmentManager: FragmentManager) {
@@ -48,23 +50,23 @@ class FragmentManager {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
 //
 //        // Hide all fragments
-//        supportFragmentManager.fragments.forEach { fragment ->
-//            fragmentTransaction.hide(fragment)
-//        }
-//        val fragmentTag = newFragment::class.java.simpleName
-//        val existingFragment = supportFragmentManager.findFragmentByTag(fragmentTag)
+        supportFragmentManager.fragments.forEach { fragment ->
+            fragmentTransaction.hide(fragment)
+        }
+        val fragmentTag = newFragment::class.java.simpleName
+        val existingFragment = supportFragmentManager.findFragmentByTag(fragmentTag)
 //        // Check if the fragment is already added
-//        if (existingFragment != null) {
-//            fragmentTransaction.add(container, newFragment, fragmentTag)
-//        } else {
-//            fragmentTransaction.add(container, newFragment, fragmentTag)
-//        }
+        if (existingFragment != null) {
+            fragmentTransaction.replace(container, newFragment, fragmentTag)
+        } else {
+            fragmentTransaction.replace(container, newFragment, fragmentTag)
+        }
 //
-//        fragmentTransaction.addToBackStack(null).commit()
+        fragmentTransaction.addToBackStack(null).commit()
 
-        fragmentTransaction.replace(container, newFragment)
-            .addToBackStack(null)
-            .commit()
+//        fragmentTransaction.replace(container, newFragment)
+//            .addToBackStack(null)
+//            .commit()
     }
 
 }

@@ -13,6 +13,7 @@ import com.tt.muzien.ui.auth.AuthViewModel
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.FragmentFilter
 import com.tt.muzien.ui.home.HomeActivity
+import com.tt.muzien.utilities.FilterSelection
 
 
 class FragmentServices : BaseFragment<AuthViewModel, FragmentServicesBinding, AuthRepository>() {
@@ -29,10 +30,10 @@ class FragmentServices : BaseFragment<AuthViewModel, FragmentServicesBinding, Au
             var nextFragment = FragmentFilter()
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
-        setFragmentResultListener("requestKey") { key, bundle ->
-            val selection = bundle.getString("selection")
-            val fromDateFilter = bundle.getString("fromDate")
-            val toDateFilter = bundle.getString("toDate")
+        if (FilterSelection.filterData!=null){
+            val selection = FilterSelection.filterData!!.selection
+            val fromDateFilter = FilterSelection.filterData!!.from
+            val toDateFilter =FilterSelection.filterData!!.to
             if (selection != "") {
                 bookingDuration = selection.toString()
                 fromDate = fromDateFilter.toString()

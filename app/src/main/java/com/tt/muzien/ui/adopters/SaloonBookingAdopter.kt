@@ -8,8 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -33,6 +35,7 @@ class SaloonBookingAdopter(
     private val itemList: List<SaloonBookingData>,
     private val context: Context,
     private val listener: OnItemClickListner,
+    private var bookingStatus: String,
 ) :
     RecyclerView.Adapter<SaloonBookingAdopter.MyViewHolder>() {
 
@@ -43,6 +46,22 @@ class SaloonBookingAdopter(
         val txtStyle: TextView = itemView.findViewById(R.id.txtStyle)
         val txtUserName: TextView = itemView.findViewById(R.id.txtUserName)
         val txtService: TextView = itemView.findViewById(R.id.txtService)
+
+        val llReview: CardView = itemView.findViewById(R.id.llReview)
+        val imgItemIcon: ImageView = itemView.findViewById(R.id.imgItemIcon)
+        val txtItemName: TextView = itemView.findViewById(R.id.txtItemName)
+        val txtAddedOn: TextView = itemView.findViewById(R.id.txtAddedOn)
+        val txtReview: TextView = itemView.findViewById(R.id.txtReview)
+        val txtRatings: TextView = itemView.findViewById(R.id.txtRatings)
+        val rcyPhotos: RecyclerView = itemView.findViewById(R.id.rcyPhotos)
+
+        val llCancel: LinearLayout = itemView.findViewById(R.id.llCancel)
+        val txtCancelBy: TextView = itemView.findViewById(R.id.txtCancelBy)
+        val txtReason: TextView = itemView.findViewById(R.id.txtReason)
+
+        val llPending: LinearLayout = itemView.findViewById(R.id.llPending)
+        val txtReject: TextView = itemView.findViewById(R.id.txtReject)
+        val txtApprove: TextView = itemView.findViewById(R.id.txtApprove)
 
         init {
             itemView.setOnClickListener(this)
@@ -59,13 +78,21 @@ class SaloonBookingAdopter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         var itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.saloon_booking_item, parent, false)
-
+        if (bookingStatus == "Overdue/Incomplete") {
+            itemView.setBackgroundColor(context.resources.getColor(R.color.overduebg))
+        }
         return MyViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         var item: SaloonBookingData = itemList[position]
-
+        if (bookingStatus == "Completed") {
+            holder.llReview.visibility = View.VISIBLE
+        } else if (bookingStatus == "Cancelled") {
+            holder.llCancel.visibility = View.VISIBLE
+        } else if (bookingStatus == "Pending Approval") {
+            holder.llPending.visibility = View.VISIBLE
+        }
         holder.txtName.text = item.name
         holder.txtStyle.text = item.style
         holder.txtUserName.text = item.personName
@@ -111,6 +138,9 @@ class SaloonBookingAdopter(
             .into(holder.imgProfilePic)
     }
 
+    fun setBookingStatus(status: String) {
+        bookingStatus = status
+    }
 
     override fun getItemCount() = itemList.size
 }

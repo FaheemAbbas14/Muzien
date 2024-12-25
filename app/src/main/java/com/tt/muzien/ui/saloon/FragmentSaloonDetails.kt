@@ -25,6 +25,7 @@ import com.tt.muzien.ui.saloon.tabs.FragmentSaloonInfo
 import com.tt.muzien.ui.saloon.tabs.FragmentSaloonMembers
 import com.tt.muzien.ui.saloon.tabs.FragmentSaloonReviews
 import com.tt.muzien.ui.saloon.tabs.FragmentSaloonServices
+import com.tt.muzien.utilities.FilterSelection
 
 
 class FragmentSaloonDetails :
@@ -48,9 +49,11 @@ class FragmentSaloonDetails :
             //  uploadImage()
         }
         binding.imgBack.setOnClickListener {
+            FilterSelection.filterData=null
             (activity as HomeActivity?)?.popFragment()
         }
-        (activity as HomeActivity?)?.loadFragment(FragmentSaloonAnalytics(), R.id.tab_container)
+      //  (activity as HomeActivity?)?.loadFragment(FragmentSaloonAnalytics(), R.id.tab_container)
+        fragmentManager.beginTransaction().replace(R.id.tab_container, FragmentSaloonAnalytics()).commit()
         binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
             val selectedRadioButton = group.findViewById<RadioButton>(checkedId)
             val fragment: Fragment = when (selectedRadioButton?.id) {
@@ -95,8 +98,8 @@ class FragmentSaloonDetails :
                     binding.rdoAnalytics.setTextColor(resources.getColor(R.color.white))
                 }
             }
-            (activity as HomeActivity?)?.loadFragment(fragment, R.id.tab_container)
-            // fragmentManager.beginTransaction().replace(R.id.tab_container, fragment).commit()
+           // (activity as HomeActivity?)?.loadFragment(fragment, R.id.tab_container)
+             fragmentManager.beginTransaction().replace(R.id.tab_container, fragment).commit()
         }
     }
 
@@ -156,6 +159,6 @@ class FragmentSaloonDetails :
 
     override fun onPause() {
         super.onPause()
-        (activity as HomeActivity?)?.showTabs()
+       // (activity as HomeActivity?)?.showTabs()
     }
 }

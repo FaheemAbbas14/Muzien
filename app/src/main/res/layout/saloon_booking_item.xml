@@ -5,22 +5,23 @@
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
     android:background="@color/white"
-    app:cardElevation="4dp"
     app:cardCornerRadius="10dp"
+    app:cardElevation="4dp"
     app:layout_goneMarginTop="10dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:id="@+id/llDateTime"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
+            android:orientation="horizontal"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" >
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:layout_width="12dp"
@@ -41,12 +42,13 @@
                 android:textFontWeight="400"
                 android:textSize="12sp" />
         </LinearLayout>
+
         <ImageView
             android:id="@+id/imgProfilePic"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_marginTop="10dp"
             android:layout_centerInParent="true"
+            android:layout_marginTop="10dp"
             android:src="@drawable/topperformer"
             app:civ_border_color="@color/white"
             app:civ_border_width="3dp"
@@ -163,6 +165,221 @@
                     android:textFontWeight="400"
                     android:textSize="12sp" />
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llCancel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@drawable/rounded_grey"
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+
+                <TextView
+                    android:id="@+id/txtCancelBy"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center|left"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/manrope_regular"
+                    android:paddingLeft="5dp"
+                    android:text="Cancelled by Customer"
+                    android:textColor="@color/red"
+                    android:textFontWeight="700"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center|left"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/manrope_regular"
+                    android:paddingLeft="5dp"
+                    android:text="Reason"
+                    android:textColor="@color/black_text"
+                    android:textFontWeight="400"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/txtReason"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center|left"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="@font/manrope_regular"
+                    android:paddingLeft="5dp"
+                    android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text
+
+\n\n12/12/2023"
+                    android:textColor="@color/black_shade2"
+                    android:textFontWeight="400"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/llPending"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="10"
+                android:visibility="gone"
+                android:layout_marginTop="30dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txtReject"
+                    android:layout_width="0dp"
+                    android:layout_weight="4.8"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:background="@drawable/rounded_white_blue"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/manrope_regular"
+                    android:paddingLeft="5dp"
+                    android:text="Reject"
+                    android:textColor="@color/colorPrimary"
+                    android:textFontWeight="700"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/txtApprove"
+                    android:layout_width="0dp"
+                    android:layout_weight="4.8"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:background="@drawable/rounded_blue_100"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/manrope_regular"
+                    android:paddingLeft="5dp"
+                    android:text="Approve"
+                    android:textColor="@color/white"
+                    android:textFontWeight="700"
+                    android:textSize="14sp" />
+            </LinearLayout>
+            <androidx.cardview.widget.CardView
+                android:id="@+id/llReview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="9dp"
+                android:visibility="gone"
+                android:background="@color/light_grey"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="4dp">
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <ImageView
+                        android:id="@+id/imgItemIcon"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:src="@drawable/topperformer"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/txtItemName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:fontFamily="@font/manrope_regular"
+                        android:text="Jennifer Austin"
+                        android:textColor="@color/textBlack"
+                        android:textFontWeight="700"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toTopOf="@+id/txtAddedOn"
+                        app:layout_constraintEnd_toStartOf="@+id/imageView2"
+                        app:layout_constraintStart_toEndOf="@+id/imgItemIcon"
+                        app:layout_constraintTop_toTopOf="@+id/imgItemIcon" />
+
+                    <TextView
+                        android:id="@+id/txtAddedOn"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/manrope_regular"
+                        android:text="Added on: 12/12/2023"
+                        android:textColor="@color/black_shade2"
+                        android:textFontWeight="400"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="@+id/txtRatings"
+                        app:layout_constraintStart_toStartOf="@+id/imgItemIcon"
+                        app:layout_constraintTop_toBottomOf="@+id/imgItemIcon" />
+
+
+                    <TextView
+                        android:id="@+id/txtReview"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/manrope_regular"
+                        android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text"
+                        android:textColor="@color/black_shade2"
+                        android:textFontWeight="400"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="@+id/txtAddedOn"
+                        app:layout_constraintStart_toStartOf="@+id/txtAddedOn"
+                        app:layout_constraintTop_toBottomOf="@+id/txtAddedOn" />
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcyPhotos"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="15dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/txtRatings"
+                        app:layout_constraintStart_toStartOf="@+id/imgItemIcon"
+                        app:layout_constraintTop_toBottomOf="@+id/txtReview" />
+
+                    <TextView
+                        android:id="@+id/txtRatings"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:fontFamily="@font/manrope_regular"
+                        android:text="4.5"
+                        android:textColor="@color/textBlack"
+                        android:textFontWeight="700"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/txtItemName"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/txtItemName" />
+
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginEnd="5dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/txtRatings"
+                        app:layout_constraintEnd_toStartOf="@+id/txtRatings"
+                        app:layout_constraintTop_toTopOf="@+id/txtRatings"
+                        app:srcCompat="@drawable/yellow_star" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.cardview.widget.CardView>
         </LinearLayout>
 
 

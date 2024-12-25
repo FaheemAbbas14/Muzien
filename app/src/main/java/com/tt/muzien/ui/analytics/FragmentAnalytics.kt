@@ -28,6 +28,7 @@ import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.FragmentFilter
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.home.HomeViewModel
+import com.tt.muzien.utilities.FilterSelection
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -61,14 +62,15 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
         binding.imgRevenueFilter.setOnClickListener {
             isRevenueFilter = true
             var nextFragment = FragmentFilter()
+            nextFragment.isFromRevenue=true
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
-        setFragmentResultListener("requestKey") { key, bundle ->
-            val selection = bundle.getString("selection")
-            val fromDate = bundle.getString("fromDate")
-            val toDate = bundle.getString("toDate")
+        if (FilterSelection.filterData!=null){
+            val selection = FilterSelection.filterData!!.selection
+            val fromDate = FilterSelection.filterData!!.from
+            val toDate =FilterSelection.filterData!!.to
             if (selection != "") {
-                if (!isRevenueFilter) {
+                if (!FilterSelection.filterData!!.fromRevenue) {
                     bookingDuration = selection.toString()
                     bookingFromDate = fromDate.toString()
                     bookingToDate = toDate.toString()
@@ -88,8 +90,7 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
                     }
                 }
                 setdata()
-            }
-
+        }
         }
     }
 

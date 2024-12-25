@@ -42,6 +42,19 @@
         app:layout_constraintStart_toEndOf="@+id/imgPrevious"
         app:layout_constraintTop_toTopOf="@+id/imgPrevious" />
 
+    <TextView
+        android:id="@+id/txtBookingStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:fontFamily="@font/manrope_regular"
+        android:text=""
+        android:textColor="@color/colorTextLabelDefault"
+        android:textFontWeight="700"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imgBookingFilter"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imgBookingFilter" />
     <ImageView
         android:id="@+id/imgNext"
         android:layout_marginStart="10dp"
@@ -62,7 +75,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtMonth" />
+        app:layout_constraintTop_toBottomOf="@+id/imgBookingFilter" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

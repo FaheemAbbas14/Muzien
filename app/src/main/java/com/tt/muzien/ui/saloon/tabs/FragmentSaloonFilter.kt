@@ -1,22 +1,22 @@
 package com.tt.muzien.ui.saloon.tabs
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.setFragmentResult
 import com.tt.muzien.R
-import com.tt.muzien.data.network.AuthApi
-import com.tt.muzien.data.repository.AuthRepository
-import com.tt.muzien.databinding.FragmentFilterBinding
+import com.tt.muzien.data.dto.FilterData
+import com.tt.muzien.data.network.HomeApi
+import com.tt.muzien.data.repository.HomeRepository
 import com.tt.muzien.databinding.FragmentSaloonFilterBinding
-import com.tt.muzien.ui.auth.AuthViewModel
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.HomeActivity
+import com.tt.muzien.ui.home.HomeViewModel
+import com.tt.muzien.utilities.FilterSelection
 
 
-class FragmentSaloonFilter : BaseFragment<AuthViewModel, FragmentSaloonFilterBinding, AuthRepository>() {
+class FragmentSaloonFilter :
+    BaseFragment<HomeViewModel, FragmentSaloonFilterBinding, HomeRepository>() {
     var selection: String = ""
     var bookingStatus: String = ""
     var serviceProvider: String = ""
@@ -24,26 +24,26 @@ class FragmentSaloonFilter : BaseFragment<AuthViewModel, FragmentSaloonFilterBin
     var toDate: String = ""
     var isFrom: Boolean = true
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.radioBookingStatus.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.rbPending -> {
-                    bookingStatus = "Pending"
-                   // checkValidation()
+                    bookingStatus = "Pending Approval"
+                    // checkValidation()
                 }
 
                 R.id.rbScheduled -> {
                     bookingStatus = "Scheduled"
-                   // checkValidation()
+                    // checkValidation()
                 }
 
                 R.id.rbOverdue -> {
-                    bookingStatus = "Overdue"
-                   // checkValidation()
+                    bookingStatus = "Overdue/Incomplete"
+                    // checkValidation()
 
                 }
+
                 R.id.rbCompleted -> {
                     bookingStatus = "Completed"
                     //checkValidation()
@@ -59,12 +59,12 @@ class FragmentSaloonFilter : BaseFragment<AuthViewModel, FragmentSaloonFilterBin
             when (checkedId) {
                 R.id.rbAllProvider -> {
                     serviceProvider = "AllProvider"
-                   // checkValidation()
+                    // checkValidation()
                 }
 
                 R.id.rbSpecific -> {
                     serviceProvider = "Specific"
-                   // checkValidation()
+                    // checkValidation()
                 }
 
             }
@@ -89,7 +89,7 @@ class FragmentSaloonFilter : BaseFragment<AuthViewModel, FragmentSaloonFilterBin
                     selection = "Custom"
                     checkValidation()
                     binding.llFrom.visibility = View.VISIBLE
-                   // binding.llTo.visibility = View.VISIBLE
+                    // binding.llTo.visibility = View.VISIBLE
                 }
             }
         }
@@ -105,16 +105,18 @@ class FragmentSaloonFilter : BaseFragment<AuthViewModel, FragmentSaloonFilterBin
         }
         binding.llApply.setOnClickListener {
             if (checkValidation()) {
-                // Inside your current fragment before popping
-                val resultBundle = Bundle().apply {
-                    putString("selection", selection) // Replace with your data
-                    putString("bookingStatus", bookingStatus) // Replace with your data
-                    putString("serviceProvider", serviceProvider) // Replace with your data
-                    putString("fromDate", fromDate) // Replace with your data
-                    putString("toDate", toDate) // Replace with your data
-                }
-
-                setFragmentResult("requestKey", resultBundle)
+//                val result = Bundle().apply {
+//                    putString("selection", selection) // Replace with your data
+//                    putString("bookingStatus", bookingStatus) // Replace with your data
+//                    putString("serviceProvider", serviceProvider) // Replace with your data
+//                    putString("fromDate", fromDate) // Replace with your data
+//                    putString("toDate", toDate) // Replace with your data
+//                }
+//
+//// Set the result before popping the current fragment
+//                parentFragmentManager.setFragmentResult("requestKey", result)
+                FilterSelection.filterData =
+                    FilterData(selection, fromDate, toDate, false,bookingStatus, serviceProvider)
                 (activity as HomeActivity?)?.popFragment()
             }
         }
@@ -144,30 +146,30 @@ class FragmentSaloonFilter : BaseFragment<AuthViewModel, FragmentSaloonFilterBin
 
     private fun checkValidation(): Boolean {
         var isValid = true
-        if (selection == "") {
-            binding.txtSelectionError.visibility = View.VISIBLE
-            isValid = false
-        } else {
-            binding.txtSelectionError.visibility = View.GONE
-        }
-        if (selection == "Custom" && fromDate == "") {
-            isValid = false
-            binding.txtFromError.visibility = View.VISIBLE
-        } else {
-            binding.txtFromError.visibility = View.GONE
-        }
-        if (selection == "Custom" && toDate == "" && fromDate != "") {
-            binding.txtToError.visibility = View.VISIBLE
-            isValid = false
-        } else {
-            binding.txtToError.visibility = View.GONE
-        }
+//        if (selection == "") {
+//            binding.txtSelectionError.visibility = View.VISIBLE
+//            isValid = false
+//        } else {
+//            binding.txtSelectionError.visibility = View.GONE
+//        }
+//        if (selection == "Custom" && fromDate == "") {
+//            isValid = false
+//            binding.txtFromError.visibility = View.VISIBLE
+//        } else {
+//            binding.txtFromError.visibility = View.GONE
+//        }
+//        if (selection == "Custom" && toDate == "" && fromDate != "") {
+//            binding.txtToError.visibility = View.VISIBLE
+//            isValid = false
+//        } else {
+//            binding.txtToError.visibility = View.GONE
+//        }
 
         return isValid
     }
 
-    override fun getViewModel(): Class<AuthViewModel> {
-        return AuthViewModel::class.java
+    override fun getViewModel(): Class<HomeViewModel> {
+        return HomeViewModel::class.java
     }
 
     override fun getFragmentBinding(
@@ -176,7 +178,7 @@ class FragmentSaloonFilter : BaseFragment<AuthViewModel, FragmentSaloonFilterBin
     ) = FragmentSaloonFilterBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        AuthRepository(remoteDataSource.buildApi(AuthApi::class.java), userPreferences)
+        HomeRepository(remoteDataSource.buildApi(HomeApi::class.java), userPreferences)
 
     override fun onResume() {
         super.onResume()
