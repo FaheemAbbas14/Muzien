@@ -22,6 +22,9 @@
         android:splashScreenTheme="@null"
         android:enableOnBackInvokedCallback="true"
         tools:targetApi="m">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDAighSARnemopvNYobuS4kftykr3RdREU"/>
         <activity
             android:name=".ui.splash.SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

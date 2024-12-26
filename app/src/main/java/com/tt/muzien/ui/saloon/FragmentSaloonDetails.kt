@@ -37,7 +37,7 @@ class FragmentSaloonDetails :
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        setStatusBar(view)
         fragmentManager = requireActivity().supportFragmentManager
         // setStatusBar(view)
         binding.imgMore.setOnClickListener {
@@ -49,11 +49,12 @@ class FragmentSaloonDetails :
             //  uploadImage()
         }
         binding.imgBack.setOnClickListener {
-            FilterSelection.filterData=null
+            FilterSelection.filterData = null
             (activity as HomeActivity?)?.popFragment()
         }
-      //  (activity as HomeActivity?)?.loadFragment(FragmentSaloonAnalytics(), R.id.tab_container)
-        fragmentManager.beginTransaction().replace(R.id.tab_container, FragmentSaloonAnalytics()).commit()
+        //  (activity as HomeActivity?)?.loadFragment(FragmentSaloonAnalytics(), R.id.tab_container)
+        fragmentManager.beginTransaction().replace(R.id.tab_container, FragmentSaloonAnalytics())
+            .commit()
         binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
             val selectedRadioButton = group.findViewById<RadioButton>(checkedId)
             val fragment: Fragment = when (selectedRadioButton?.id) {
@@ -98,8 +99,8 @@ class FragmentSaloonDetails :
                     binding.rdoAnalytics.setTextColor(resources.getColor(R.color.white))
                 }
             }
-           // (activity as HomeActivity?)?.loadFragment(fragment, R.id.tab_container)
-             fragmentManager.beginTransaction().replace(R.id.tab_container, fragment).commit()
+            // (activity as HomeActivity?)?.loadFragment(fragment, R.id.tab_container)
+            fragmentManager.beginTransaction().replace(R.id.tab_container, fragment).commit()
         }
     }
 
@@ -159,6 +160,6 @@ class FragmentSaloonDetails :
 
     override fun onPause() {
         super.onPause()
-       // (activity as HomeActivity?)?.showTabs()
+        (activity as HomeActivity?)?.showTabs()
     }
 }
