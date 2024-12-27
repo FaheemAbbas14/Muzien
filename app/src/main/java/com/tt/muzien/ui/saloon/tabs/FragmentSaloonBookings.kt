@@ -33,6 +33,9 @@ class FragmentSaloonBookings :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setSaloonAdopter()
+        binding.customCalendarView.setOnDaySelectedListener { selectedDay ->
+           // Toast.makeText(requireContext(), "Selected: ${selectedDay}", Toast.LENGTH_SHORT).show()
+        }
         binding.imgBookingFilter.setOnClickListener {
             var nextFragment = FragmentSaloonFilter()
             (activity as HomeActivity?)?.loadFragment(nextFragment)
@@ -47,9 +50,9 @@ class FragmentSaloonBookings :
 
                 bookingDuration = FilterSelection.filterData!!.selection.toString()
                 if (bookingDuration == "Custom") {
-                    binding.txtMonth.text = "$fromDate To ${toDate}"
+                  //  binding.txtMonth.text = "$fromDate To ${toDate}"
                 } else {
-                    binding.txtMonth.text = bookingDuration
+                   // binding.txtMonth.text = bookingDuration
                 }
 
             }
@@ -58,9 +61,8 @@ class FragmentSaloonBookings :
                     R.drawable.blue_cancel
                 )
                 binding.txtBookingStatus.text = "$bookingStatus Bookings"
-                binding.txtMonth.visibility = View.GONE
-                binding.imgNext.visibility = View.GONE
-                binding.imgPrevious.visibility = View.GONE
+                binding.customCalendarView.visibility = View.GONE
+
             }
             adopter?.setBookingStatus(bookingStatus)
             adopter?.notifyDataSetChanged()

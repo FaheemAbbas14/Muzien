@@ -17,6 +17,7 @@ import com.tt.muzien.data.repository.HomeRepository
 import com.tt.muzien.databinding.FragmentSaloonInfoBinding
 import com.tt.muzien.ui.adopters.WorkingHoursAdopter
 import com.tt.muzien.ui.base.BaseFragment
+import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.home.HomeViewModel
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 
@@ -30,7 +31,14 @@ class FragmentSaloonInfo : BaseFragment<HomeViewModel, FragmentSaloonInfoBinding
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
+        binding.imgAddHoliday.setOnClickListener {
+            var nextFragment = FragmentAddHoliday()
+            (activity as HomeActivity?)?.loadFragment(nextFragment)
+        }
+        binding.imgAddWorkingHour.setOnClickListener {
+            var nextFragment = FragmentAddWorkingDay()
+            (activity as HomeActivity?)?.loadFragment(nextFragment)
+        }
         // Initialize the SupportMapFragment and request the map.
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
