@@ -1,4 +1,4 @@
-package com.tt.muzien.ui.adopters
+package com.tt.muzien.ui.adapters
 
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -27,7 +27,7 @@ import com.tt.muzien.data.dto.ServiceInfo
  * faheem.abbas@bajcotechnologies.com
  * +923115284424
  */
-class ExpandServiceListAdopter(
+class ExpandServiceListAdapter(
     private val context: Context,
     private val groupTitles: List<String>,
     private val childItems: Map<String, List<ServiceInfo>>,

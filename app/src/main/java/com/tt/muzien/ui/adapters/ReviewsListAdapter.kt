@@ -1,4 +1,4 @@
-package com.tt.muzien.ui.adopters
+package com.tt.muzien.ui.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -74,7 +74,7 @@ class ReviewsListAdapter(
         rcyPhotos.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         rcyPhotos.adapter =
-            PhotosListAdopter(photosList, context, null)
+            PhotosListAdapter(photosList, context, null)
 
     }
 

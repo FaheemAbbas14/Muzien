@@ -3,12 +3,11 @@ package com.tt.muzien.ui.saloon.tabs
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import com.tt.muzien.data.dto.ServiceInfo
 import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.data.repository.HomeRepository
 import com.tt.muzien.databinding.FragmentSaloonServicesBinding
-import com.tt.muzien.ui.adopters.ExpandServiceListAdopter
+import com.tt.muzien.ui.adapters.ExpandServiceListAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.home.HomeViewModel
@@ -41,7 +40,7 @@ class FragmentSaloonServices :
             }
             servicesMap.put(type, servicesList)
         }
-        val adapter = ExpandServiceListAdopter(requireContext(), groupTitles, servicesMap)
+        val adapter = ExpandServiceListAdapter(requireContext(), groupTitles, servicesMap)
         binding.rcyServices.setAdapter(adapter)
 
         // Handle child clicks

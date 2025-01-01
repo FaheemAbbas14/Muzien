@@ -8,7 +8,7 @@ import com.tt.muzien.data.dto.ReviewsInfo
 import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.data.repository.HomeRepository
 import com.tt.muzien.databinding.FragmentSaloonReviewsBinding
-import com.tt.muzien.ui.adopters.ReviewsListAdapter
+import com.tt.muzien.ui.adapters.ReviewsListAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.HomeViewModel
 import com.zabihah.ui.ui.interfaces.OnItemClickListner

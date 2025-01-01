@@ -1,22 +1,27 @@
 package com.tt.muzien.ui.saloon.tabs
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.tt.muzien.R
+
 import com.tt.muzien.data.SaloonBookingData
 import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.data.repository.HomeRepository
 import com.tt.muzien.databinding.FragmentSaloonBookingsBinding
-import com.tt.muzien.ui.adopters.SaloonBookingAdopter
+import com.tt.muzien.ui.adapters.SaloonBookingAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.home.HomeViewModel
 import com.tt.muzien.utilities.FilterSelection
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
+import com.tt.muzien.R
+import com.tt.muzien.data.dto.CalendarDay
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 
 class FragmentSaloonBookings :
@@ -27,7 +32,7 @@ class FragmentSaloonBookings :
     private var bookingDuration: String = ""
     private var bookingStatus: String = ""
     private var bookingServiceProvider: String = ""
-    private var adopter: SaloonBookingAdopter? = null
+    private var adopter: SaloonBookingAdapter? = null
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,6 +41,7 @@ class FragmentSaloonBookings :
         binding.customCalendarView.setOnDaySelectedListener { selectedDay ->
            // Toast.makeText(requireContext(), "Selected: ${selectedDay}", Toast.LENGTH_SHORT).show()
         }
+        binding.customCalendarView.setDays(generateDaysWithEvents())
         binding.imgBookingFilter.setOnClickListener {
             var nextFragment = FragmentSaloonFilter()
             (activity as HomeActivity?)?.loadFragment(nextFragment)
@@ -93,7 +99,7 @@ class FragmentSaloonBookings :
 
             }
         }
-        adopter = SaloonBookingAdopter(
+        adopter = SaloonBookingAdapter(
             saloonsBookingList,
             requireContext(),
             clickListener,
@@ -123,4 +129,28 @@ class FragmentSaloonBookings :
             // Use the data
         }
     }
+    private fun generateDaysWithEvents(): List<CalendarDay> {
+        val days = mutableListOf<CalendarDay>()
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.DAY_OF_MONTH, 1)
+        val maxDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
+
+        for (day in 1..maxDay) {
+            val dayOfWeek = SimpleDateFormat("EEE", Locale.getDefault()).format(calendar.time)
+
+            // Example dot data for specific days
+            val eventDotColors = when (day) {
+                5 -> listOf(Color.RED, Color.GREEN) // Two dots
+                10 -> listOf(Color.BLUE) // One dot
+                15 -> listOf(Color.YELLOW, Color.MAGENTA, Color.CYAN) // Three dots
+                else -> emptyList()
+            }
+
+            days.add(CalendarDay(dayOfWeek, day, eventDotColors = eventDotColors))
+            calendar.add(Calendar.DAY_OF_MONTH, 1)
+        }
+
+        return days
+    }
+
 }

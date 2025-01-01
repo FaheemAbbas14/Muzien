@@ -3,19 +3,36 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="false"
     android:background="@color/light_grey">
 
-    <ImageView
-        android:id="@+id/imgIcon"
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="190dp"
+        android:layout_height="240dp"
         android:background="@color/light_grey"
-        android:scaleType="centerCrop"
+        android:clipToPadding="false"
+        android:clipChildren="false"
+        android:layout_marginTop="0dp"
+        android:layout_alignParentTop="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/salonplaceholder" />
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+        android:id="@+id/dotIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-20dp"
+        app:dotsColor="@color/white"
+        app:dotsSize="8dp"
+        app:dotsSpacing="2dp"
+        app:dotsWidthFactor="4"
+        app:layout_constraintStart_toStartOf="@+id/imgBack"
+        app:layout_constraintTop_toBottomOf="@+id/view_pager"
+        app:progressMode="false"
+        app:selectedDotColor="@color/white" />
     <TextView
         android:id="@+id/txtItemName"
         android:layout_width="0dp"
@@ -30,7 +47,7 @@
         android:textSize="14sp"
         app:layout_constraintEnd_toStartOf="@+id/llStatus"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgIcon" />
+        app:layout_constraintTop_toBottomOf="@+id/view_pager" />
 
     <LinearLayout
         android:id="@+id/llStatus"
@@ -41,7 +58,7 @@
         android:background="@drawable/rounded_green"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgIcon">
+        app:layout_constraintTop_toBottomOf="@+id/view_pager">
 
 
         <TextView
@@ -57,7 +74,7 @@
             android:textFontWeight="500"
             android:textSize="11sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imgIcon" />
+            app:layout_constraintTop_toBottomOf="@+id/view_pager" />
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -176,7 +193,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="50dp"
         android:background="@drawable/transparent_circle"
         android:paddingStart="7dp"
         android:paddingTop="8dp"

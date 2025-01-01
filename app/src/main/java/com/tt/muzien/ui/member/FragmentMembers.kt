@@ -3,13 +3,12 @@ package com.tt.muzien.ui.member
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tt.muzien.data.dto.MemberDto
 import com.tt.muzien.data.network.AuthApi
 import com.tt.muzien.data.repository.AuthRepository
 import com.tt.muzien.databinding.FragmentMembersBinding
-import com.tt.muzien.ui.adopters.MembersListAdopter
+import com.tt.muzien.ui.adapters.MembersListAdapter
 import com.tt.muzien.ui.auth.AuthViewModel
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.FragmentFilter
@@ -31,10 +30,10 @@ class FragmentMembers : BaseFragment<AuthViewModel, FragmentMembersBinding, Auth
             var nextFragment = FragmentFilter()
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
-        if (FilterSelection.filterData!=null){
+        if (FilterSelection.filterData != null) {
             val selection = FilterSelection.filterData!!.selection
             val fromDateFilter = FilterSelection.filterData!!.from
-            val toDateFilter =FilterSelection.filterData!!.to
+            val toDateFilter = FilterSelection.filterData!!.to
             if (selection != "") {
                 bookingDuration = selection.toString()
                 fromDate = fromDateFilter.toString()
@@ -64,17 +63,16 @@ class FragmentMembers : BaseFragment<AuthViewModel, FragmentMembersBinding, Auth
         binding.txtHeading.text = "Members(${membersList.size})"
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(position: Int) {
-//                var nextFragment = FragmentPlaceDetails()
-//                nextFragment.itemId = featuredItemsList[position].id
-//                nextFragment.placeType = EnumItemListType.Featured
-//                (activity as DashboardActivity?)?.loadFragment(nextFragment)
+//                var nextFragment = FragmentViewMember()
+//                nextFragment.member = membersList[position]
+//                (activity as HomeActivity?)?.loadFragment(nextFragment)
 
             }
         }
         binding.rcyMembers.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
         binding.rcyMembers.adapter =
-            MembersListAdopter(
+            MembersListAdapter(
                 membersList,
                 requireContext(),
                 clickListener

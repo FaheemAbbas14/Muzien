@@ -1,5 +1,6 @@
 package com.tt.muzien.ui.saloon
 
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,6 +17,8 @@ import com.tt.muzien.data.dto.SaloonDto
 import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.data.repository.HomeRepository
 import com.tt.muzien.databinding.FragmentSaloonDetailsBinding
+import com.tt.muzien.ui.adapters.ViewPagerAdapter
+import com.tt.muzien.ui.analytics.FragmentAnalytics
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.home.HomeViewModel
@@ -37,7 +40,7 @@ class FragmentSaloonDetails :
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setStatusBar(view)
+        // setStatusBar(view)
         fragmentManager = requireActivity().supportFragmentManager
         // setStatusBar(view)
         binding.imgMore.setOnClickListener {
@@ -53,12 +56,12 @@ class FragmentSaloonDetails :
             (activity as HomeActivity?)?.popFragment()
         }
         //  (activity as HomeActivity?)?.loadFragment(FragmentSaloonAnalytics(), R.id.tab_container)
-        fragmentManager.beginTransaction().replace(R.id.tab_container, FragmentSaloonAnalytics())
+        fragmentManager.beginTransaction().replace(R.id.tab_container, FragmentAnalytics())
             .commit()
         binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
             val selectedRadioButton = group.findViewById<RadioButton>(checkedId)
             val fragment: Fragment = when (selectedRadioButton?.id) {
-
+                R.id.rdoAnalytics -> FragmentAnalytics()
                 R.id.rdoBookings -> FragmentSaloonBookings()
                 R.id.rdoStoreInfo -> FragmentSaloonInfo()
                 R.id.rdoReviews -> FragmentSaloonReviews()
@@ -102,6 +105,18 @@ class FragmentSaloonDetails :
             // (activity as HomeActivity?)?.loadFragment(fragment, R.id.tab_container)
             fragmentManager.beginTransaction().replace(R.id.tab_container, fragment).commit()
         }
+        setViewPager()
+    }
+
+    private fun setViewPager() {
+
+        // Sample data for ViewPager
+        val items = listOf("", "", "", "")
+        val adapter = ViewPagerAdapter(items)
+        binding.viewPager.adapter = adapter
+
+        // Attach the DotsIndicator to the ViewPager
+        binding.dotIndicator.attachTo(binding.viewPager)
     }
 
     private fun resetTabs() {
@@ -153,13 +168,19 @@ class FragmentSaloonDetails :
     override fun getFragmentRepository() =
         HomeRepository(remoteDataSource.buildApi(HomeApi::class.java), userPreferences)
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onResume() {
         super.onResume()
+        (activity as HomeActivity?)?.setSystemWindow(false)
+        (activity as HomeActivity?)?.changeStatusBarColor(Color.TRANSPARENT)
         (activity as HomeActivity?)?.hideTabs()
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onPause() {
         super.onPause()
+       (activity as HomeActivity?)?.setSystemWindow(true)
+        (activity as HomeActivity?)?.changeStatusBarColor(Color.WHITE)
         (activity as HomeActivity?)?.showTabs()
     }
 }

@@ -41,6 +41,7 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, HomeReposi
                 else -> FragmentAnalytics()
             }
             resetTabs()
+            (activity as HomeActivity?)?.setSelectedTab(selectedRadioButton?.id)
             when (selectedRadioButton?.id) {
 
                 R.id.rdoSaloons -> {

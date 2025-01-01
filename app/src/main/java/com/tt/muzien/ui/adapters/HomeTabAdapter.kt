@@ -1,4 +1,4 @@
-package com.tt.muzien.ui.adopters
+package com.tt.muzien.ui.adapters
 
 
 /**

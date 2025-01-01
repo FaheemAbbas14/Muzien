@@ -30,7 +30,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
-                    android:id="@+id/txtAbout"
+                    android:id="@+id/txtAboutLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/manrope_regular"
@@ -47,20 +47,21 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/edit_icon"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/txtAbout" />
+                    app:layout_constraintTop_toTopOf="@+id/txtAboutLabel" />
 
                 <TextView
+                    android:id="@+id/txtAbout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:fontFamily="@font/manrope_regular"
-                    android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type READ MORE"
+                    android:text=""
                     android:textColor="@color/black_shade2"
                     android:textFontWeight="500"
                     android:textSize="12sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="@+id/txtAbout"
-                    app:layout_constraintTop_toBottomOf="@+id/txtAbout" />
+                    app:layout_constraintStart_toStartOf="@+id/txtAboutLabel"
+                    app:layout_constraintTop_toBottomOf="@+id/txtAboutLabel" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout

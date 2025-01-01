@@ -2,12 +2,21 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/llMainView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:background="@color/light_grey"
+    android:fitsSystemWindows="false"
     tools:context=".ui.home.HomeActivity">
 
+    <View
+        android:id="@+id/statusBar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -18,7 +27,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/statusBar">
 
         <ImageView
             android:id="@+id/imgProfile"
@@ -53,11 +62,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:textFontWeight="700"
-            android:gravity="center"
             android:fontFamily="@font/manrope_regular"
+            android:gravity="center"
             android:text="Welcome Idrees"
             android:textColor="@color/textBlack"
+            android:textFontWeight="700"
             android:textSize="22sp"
             app:layout_constraintStart_toEndOf="@+id/imgProfilePic"
             app:layout_constraintTop_toTopOf="parent" />
@@ -67,10 +76,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:textFontWeight="500"
             android:fontFamily="@font/manrope_regular"
             android:text="Owner"
             android:textColor="@color/textBlack"
+            android:textFontWeight="500"
             android:textSize="11sp"
             app:layout_constraintStart_toEndOf="@+id/imgProfilePic"
             app:layout_constraintTop_toBottomOf="@+id/textView3" />
@@ -156,12 +165,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:fontFamily="@font/manrope_regular"
                 android:gravity="center"
                 android:text="Home"
-                android:fontFamily="@font/manrope_regular"
                 android:textColor="@color/colorPrimary"
-                android:textSize="12sp"
                 android:textFontWeight="800"
+                android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/home_icon" />
@@ -183,8 +192,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:visibility="invisible"
                 android:src="@drawable/selected_tab_bg"
+                android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -204,11 +213,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:fontFamily="@font/manrope_regular"
                 android:gravity="center"
                 android:text="Bookings"
-                android:textFontWeight="800"
-                android:fontFamily="@font/manrope_regular"
                 android:textColor="@color/colorTextLabelDefault"
+                android:textFontWeight="800"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

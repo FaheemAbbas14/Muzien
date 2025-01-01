@@ -159,15 +159,13 @@
         android:layout_marginTop="30dp"
         android:layout_marginEnd="10dp"
         android:background="@drawable/rounded_white_grey"
-
         android:clickable="true"
         android:focusable="true"
         android:minHeight="60dp"
         android:orientation="horizontal"
         android:paddingHorizontal="10dp"
         android:paddingVertical="10dp"
-
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/llTimePeriod"
         app:layout_constraintStart_toStartOf="@+id/llTimePeriod"
         app:layout_constraintTop_toBottomOf="@+id/llTimePeriod">
@@ -233,7 +231,7 @@
         android:orientation="horizontal"
         android:paddingHorizontal="10dp"
         android:paddingVertical="10dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/llTimePeriod"
         app:layout_constraintStart_toStartOf="@+id/llTimePeriod"
         app:layout_constraintTop_toBottomOf="@+id/llFrom">
@@ -288,7 +286,7 @@
 
     <com.tt.muzien.ui.views.CustomCalendar
         android:id="@+id/customCalendar"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
@@ -296,8 +294,8 @@
         android:spinnersShown="true"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/llApply"
-        app:layout_constraintEnd_toEndOf="@+id/llTimePeriod"
-        app:layout_constraintStart_toStartOf="@+id/llTimePeriod"
+        app:layout_constraintEnd_toEndOf="@+id/llFrom"
+        app:layout_constraintStart_toStartOf="@+id/llFrom"
         app:layout_constraintTop_toBottomOf="@+id/llTo" />
 
 
@@ -309,10 +307,10 @@
         android:layout_marginEnd="15dp"
 
         android:layout_marginBottom="20dp"
-        android:background="@drawable/rounded_blue_button"
+        android:background="@drawable/rounded_blue_100"
         android:clickable="true"
         android:focusable="true"
-        android:minHeight="60dp"
+        android:minHeight="50dp"
         android:orientation="horizontal"
         android:paddingHorizontal="10dp"
         android:paddingVertical="10dp"

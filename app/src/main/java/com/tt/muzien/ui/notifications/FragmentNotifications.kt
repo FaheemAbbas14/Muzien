@@ -10,7 +10,7 @@ import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.data.repository.HomeRepository
 import com.tt.muzien.databinding.FragmentNotificationsBinding
 import com.tt.muzien.enums.EnumNotificationType
-import com.tt.muzien.ui.adopters.NotificationListAdopter
+import com.tt.muzien.ui.adapters.NotificationListAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.home.HomeViewModel
@@ -70,7 +70,7 @@ class FragmentNotifications :
         binding.rcyNotifications.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
         binding.rcyNotifications.adapter =
-            NotificationListAdopter(
+            NotificationListAdapter(
                 notificationList,
                 requireContext(),
                 clickListener,

@@ -11,12 +11,11 @@ package com.tt.muzien.ui.views
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tt.muzien.ui.adopters.HorizontalCalenderAdopter
+import com.tt.muzien.ui.adapters.HorizontalCalenderAdapter
 import java.text.SimpleDateFormat
 import java.util.*
 import com.tt.muzien.R
@@ -29,7 +28,7 @@ class HorizontalCalendarView @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
     private val recyclerView: RecyclerView
-    private val adapter: HorizontalCalenderAdopter
+    private val adapter: HorizontalCalenderAdapter
     private val tvMonthYear: TextView
     private val btnPreviousMonth: TextView
     private val btnNextMonth: TextView
@@ -46,7 +45,7 @@ class HorizontalCalendarView @JvmOverloads constructor(
         btnPreviousMonth = findViewById(R.id.prevMonth)
         btnNextMonth = findViewById(R.id.nextMonth)
 
-        adapter = HorizontalCalenderAdopter(emptyList()) { position ->
+        adapter = HorizontalCalenderAdapter(emptyList()) { position ->
             onDaySelectedListener?.invoke(adapter.getDay(position))
         }
 
@@ -98,6 +97,7 @@ class HorizontalCalendarView @JvmOverloads constructor(
 
         for (day in 1..maxDay) {
             val dayOfWeek = SimpleDateFormat("EEE", Locale.getDefault()).format(tempCalendar.time)
+
             days.add(CalendarDay(dayOfWeek, day))
             tempCalendar.add(Calendar.DAY_OF_MONTH, 1)
         }
@@ -109,5 +109,8 @@ class HorizontalCalendarView @JvmOverloads constructor(
         selectedCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
         val dateFormatter = SimpleDateFormat(format, Locale.getDefault())
         return dateFormatter.format(selectedCalendar.time)
+    }
+    fun setDays(days: List<CalendarDay>) {
+        adapter.setDays(days)
     }
 }

@@ -12,6 +12,7 @@ import com.tt.muzien.databinding.FragmentSaloonFilterBinding
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.home.HomeViewModel
+import com.tt.muzien.ui.views.CustomCalendar
 import com.tt.muzien.utilities.FilterSelection
 
 
@@ -97,11 +98,11 @@ class FragmentSaloonFilter :
             binding.txtFromError.visibility = View.GONE
             binding.llTo.visibility = View.GONE
             isFrom = true
-            binding.datePicker.visibility = View.VISIBLE
+            binding.customCalendar.visibility = View.VISIBLE
         }
         binding.txtTo.setOnClickListener {
             isFrom = false
-            binding.datePicker.visibility = View.VISIBLE
+            binding.customCalendar.visibility = View.VISIBLE
         }
         binding.llApply.setOnClickListener {
             if (checkValidation()) {
@@ -123,24 +124,23 @@ class FragmentSaloonFilter :
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
         }
-        // Add the date change listener
-        binding.datePicker.init(
-            binding.datePicker.year, binding.datePicker.month, binding.datePicker.dayOfMonth
-        ) { _, year, monthOfYear, dayOfMonth ->
-            val date = "$dayOfMonth/${monthOfYear + 1}/$year"
-            if (isFrom) {
-                binding.txtFromError.visibility = View.VISIBLE
-                binding.llTo.visibility = View.VISIBLE
-                fromDate = date
-                binding.txtFrom.text = fromDate
-            } else {
-                toDate = date
-                binding.txtTo.text = toDate
+        binding.customCalendar.setOnDateSelectedListener(object : CustomCalendar.OnDateSelectedListener {
+            override fun onDateSelected(date: String) {
+                // Handle the selected date
+                if (isFrom) {
+                    binding.txtFromError.visibility = View.VISIBLE
+                    binding.llTo.visibility = View.VISIBLE
+                    fromDate = date
+                    binding.txtFrom.text = fromDate
+                } else {
+                    toDate = date
+                    binding.txtTo.text = toDate
+                }
+                binding.customCalendar.visibility = View.GONE
+                checkValidation()
             }
-            binding.datePicker.visibility = View.GONE
-            checkValidation()
-        }
-        // checkValidation()
+        })
+
     }
 
 

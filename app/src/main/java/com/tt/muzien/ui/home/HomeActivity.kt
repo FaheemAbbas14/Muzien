@@ -7,11 +7,12 @@ import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.tt.muzien.R
 import com.tt.muzien.databinding.ActivityHomeBinding
 import com.tt.muzien.ui.bookings.FragmentBookings
-import com.tt.muzien.ui.bottomSheets.AddBottomSheet
 import com.tt.muzien.ui.notifications.FragmentNotifications
 import com.tt.muzien.ui.profile.FragmentProfile
 import com.tt.muzien.ui.views.CustomLoadingIndicator
@@ -23,6 +24,7 @@ import com.tt.muzien.utilities.FragmentManager
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var customLoadingIndicator: CustomLoadingIndicator
+    var selectedTab: Int = R.id.rdoAnalytics
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +32,8 @@ class HomeActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        changeStatusBarColor(R.color.white)
+        changeStatusBarColor(Color.TRANSPARENT)
+        setSystemWindow(true)
         customLoadingIndicator = CustomLoadingIndicator(this, Color.WHITE)
         // Default fragment
         loadFragment(HomeFragment())
@@ -55,14 +58,47 @@ class HomeActivity : AppCompatActivity() {
             loadFragment(FragmentBookings())
         }
         binding.imgadd.setOnClickListener {
-            val bottomSheet = AddBottomSheet(this)
-            bottomSheet.show(supportFragmentManager, bottomSheet.tag)
+//            when (selectedTab) {
+//
+//                R.id.rdoSaloons -> {
+//                    var nextFragment = FragmentAddSaloonMember()
+//                    loadFragment(nextFragment)
+//                }
+//
+//                R.id.rdoMembers -> {
+//                    var nextFragment = FragmentAddSaloonMember()
+//                    loadFragment(nextFragment)
+//                }
+//
+//                R.id.rdoServices -> {
+//                    var nextFragment = FragmentAddSaloonServices()
+//                    loadFragment(nextFragment)
+//                }
+//
+//                else -> {
+//                    val bottomSheet = AddBottomSheet(this)
+//                    bottomSheet.show(supportFragmentManager, bottomSheet.tag)
+//                }
+            // }
+
         }
         binding.imgNotifications.setOnClickListener {
             loadFragment(FragmentNotifications())
         }
         binding.imgProfile.setOnClickListener {
             loadFragment(FragmentProfile())
+        }
+        ViewCompat.setOnApplyWindowInsetsListener(binding.llMainView) { v, insets ->
+            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            // Adjust the image padding if needed
+            v.setPadding(0, 0, 0, systemBarsInsets.bottom)
+            insets
+        }
+    }
+
+    fun setSelectedTab(selected: Int?) {
+        if (selected != null) {
+            selectedTab = selected
         }
     }
 
@@ -104,10 +140,18 @@ class HomeActivity : AppCompatActivity() {
         FragmentManager().popFragment(supportFragmentManager)
     }
 
+    fun setSystemWindow(value: Boolean) {
+        if (value) {
+            binding.statusBar.visibility = View.VISIBLE
+        } else {
+            binding.statusBar.visibility = View.GONE
+        }
+    }
+
     @RequiresApi(Build.VERSION_CODES.M)
     fun changeStatusBarColor(colorResId: Int) {
-        window.statusBarColor = resources.getColor(colorResId, theme)
-        if (colorResId == R.color.white) {
+        window.statusBarColor = colorResId
+        if (colorResId == Color.WHITE) {
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         } else {
             window.decorView.systemUiVisibility = 0

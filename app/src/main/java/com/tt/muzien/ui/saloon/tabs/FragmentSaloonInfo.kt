@@ -1,7 +1,12 @@
 package com.tt.muzien.ui.saloon.tabs
 
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -15,7 +20,7 @@ import com.tt.muzien.data.dto.WorkingHourData
 import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.data.repository.HomeRepository
 import com.tt.muzien.databinding.FragmentSaloonInfoBinding
-import com.tt.muzien.ui.adopters.WorkingHoursAdopter
+import com.tt.muzien.ui.adapters.WorkingHoursAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.home.HomeViewModel
@@ -26,11 +31,12 @@ class FragmentSaloonInfo : BaseFragment<HomeViewModel, FragmentSaloonInfoBinding
     OnMapReadyCallback {
     private lateinit var map: GoogleMap
     private val workingHourrList = arrayListOf<WorkingHourData>()
-    private var workingHoursAdopter: WorkingHoursAdopter? = null
-
+    private var workingHoursAdopter: WorkingHoursAdapter? = null
+    private var isExpanded = false
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        setAboutData()
         binding.imgAddHoliday.setOnClickListener {
             var nextFragment = FragmentAddHoliday()
             (activity as HomeActivity?)?.loadFragment(nextFragment)
@@ -44,6 +50,58 @@ class FragmentSaloonInfo : BaseFragment<HomeViewModel, FragmentSaloonInfoBinding
         mapFragment.getMapAsync(this)
         setData()
     }
+
+    private fun setAboutData() {
+        val fullText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type"
+
+        // Truncated text preview (show first 100 chars)
+        val previewText = fullText.substring(0, 100) + "..." // Truncated preview text
+
+        // Set initial text with "Read More" link
+        setTextWithToggle(previewText, fullText)
+    }
+    private fun setTextWithToggle(previewText: String, fullText: String) {
+        val spannable = SpannableString(previewText + " Read More")
+
+        // Set click listener on "Read More" text
+        spannable.setSpan(object : ClickableSpan() {
+            override fun onClick(widget: View) {
+                toggleText(fullText, previewText)
+            }
+        }, previewText.length, spannable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        binding.txtAbout.text = spannable
+        binding.txtAbout.movementMethod = LinkMovementMethod.getInstance() // Enable clicking the text
+    }
+
+    private fun toggleText(fullText: String, previewText: String) {
+        val spannable: SpannableString
+        if (isExpanded) {
+            // Show preview text with "Read More"
+            spannable = SpannableString(previewText + " Read More")
+            // Set click listener for "Read More"
+            spannable.setSpan(object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    toggleText(fullText, previewText)
+                }
+            }, previewText.length, spannable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        } else {
+            // Show full text with "Read Less"
+            spannable = SpannableString(fullText + " Read Less")
+            // Set click listener for "Read Less"
+            spannable.setSpan(object : ClickableSpan() {
+                override fun onClick(widget: View) {
+                    toggleText(fullText, previewText)
+                }
+            }, fullText.length, spannable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+
+        binding.txtAbout.text = spannable
+        binding.txtAbout.movementMethod = LinkMovementMethod.getInstance() // Enable clicking the text
+
+        isExpanded = !isExpanded // Toggle state between expanded and collapsed
+    }
+
 
     private fun setData() {
         setWorkingHourAdopter()
@@ -60,7 +118,7 @@ class FragmentSaloonInfo : BaseFragment<HomeViewModel, FragmentSaloonInfoBinding
         }
         binding.rcyWorkingHours.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
-        workingHoursAdopter = WorkingHoursAdopter(
+        workingHoursAdopter = WorkingHoursAdapter(
             workingHourrList,
             requireContext(),
             clickListener

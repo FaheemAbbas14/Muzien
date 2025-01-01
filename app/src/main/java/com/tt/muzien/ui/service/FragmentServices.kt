@@ -3,12 +3,11 @@ package com.tt.muzien.ui.service
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.fragment.app.setFragmentResultListener
 import com.tt.muzien.data.dto.ServiceInfo
 import com.tt.muzien.data.network.AuthApi
 import com.tt.muzien.data.repository.AuthRepository
 import com.tt.muzien.databinding.FragmentServicesBinding
-import com.tt.muzien.ui.adopters.ExpandServiceListAdopter
+import com.tt.muzien.ui.adapters.ExpandServiceListAdapter
 import com.tt.muzien.ui.auth.AuthViewModel
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.FragmentFilter
@@ -58,7 +57,7 @@ class FragmentServices : BaseFragment<AuthViewModel, FragmentServicesBinding, Au
             }
             servicesMap.put(type, servicesList)
         }
-        val adapter = ExpandServiceListAdopter(requireContext(), groupTitles, servicesMap,true,groupServices )
+        val adapter = ExpandServiceListAdapter(requireContext(), groupTitles, servicesMap,true,groupServices )
         binding.rcyServices.setAdapter(adapter)
 
         // Handle child clicks

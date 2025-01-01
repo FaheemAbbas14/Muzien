@@ -3,13 +3,12 @@ package com.tt.muzien.ui.saloon
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tt.muzien.data.dto.SaloonDto
 import com.tt.muzien.data.network.AuthApi
 import com.tt.muzien.data.repository.AuthRepository
 import com.tt.muzien.databinding.FragmentSaloonBinding
-import com.tt.muzien.ui.adopters.SaloonListAdopter
+import com.tt.muzien.ui.adapters.SaloonListAdapter
 import com.tt.muzien.ui.auth.AuthViewModel
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.FragmentFilter
@@ -72,7 +71,7 @@ class FragmentSaloon : BaseFragment<AuthViewModel, FragmentSaloonBinding, AuthRe
         binding.rcySaloons.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
         binding.rcySaloons.adapter =
-            SaloonListAdopter(
+            SaloonListAdapter(
                 saloonsList,
                 requireContext(),
                 clickListener

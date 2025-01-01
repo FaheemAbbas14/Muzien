@@ -1,4 +1,4 @@
-package com.tt.muzien.ui.adopters
+package com.tt.muzien.ui.adapters
 
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -22,7 +22,6 @@ import com.bumptech.glide.request.target.Target
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.SaloonDto
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
-import de.hdodenhof.circleimageview.CircleImageView
 
 
 /**
@@ -32,12 +31,12 @@ import de.hdodenhof.circleimageview.CircleImageView
  * faheem.abbas@bajcotechnologies.com
  * +923115284424
  */
-class SaloonListAdopter(
+class SaloonListAdapter(
     private val itemList: List<SaloonDto>,
     private val context: Context,
     private val listener: OnItemClickListner,
 ) :
-    RecyclerView.Adapter<SaloonListAdopter.MyViewHolder>() {
+    RecyclerView.Adapter<SaloonListAdapter.MyViewHolder>() {
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) ,
         View.OnClickListener {

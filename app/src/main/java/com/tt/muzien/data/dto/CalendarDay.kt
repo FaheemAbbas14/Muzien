@@ -8,4 +8,4 @@ package com.tt.muzien.data.dto
  * faheem.abbas@bajcotechnologies.com
  * +923115284424
  */
-data class CalendarDay(val dayOfWeek: String, val dayOfMonth: Int)
+data class CalendarDay(val dayOfWeek: String, val dayOfMonth: Int, val eventDotColors: List<Int> = emptyList())

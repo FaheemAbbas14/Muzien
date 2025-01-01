@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView
 import java.text.SimpleDateFormat
 import java.util.*
 import com.tt.muzien.R
-import com.tt.muzien.ui.adopters.CalendarAdapter
+import com.tt.muzien.ui.adapters.CalendarAdapter
 
 class CustomCalendar @JvmOverloads constructor(
     context: Context,

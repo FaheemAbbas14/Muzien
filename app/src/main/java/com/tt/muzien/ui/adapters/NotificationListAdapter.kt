@@ -1,4 +1,4 @@
-package com.tt.muzien.ui.adopters
+package com.tt.muzien.ui.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -22,12 +22,12 @@ import com.zabihah.ui.ui.interfaces.OnItemClickListner
  * faheem.abbas@bajcotechnologies.com
  * +923115284424
  */
-class NotificationListAdopter(
+class NotificationListAdapter(
     private val itemList: List<NotificationDto>,
     private val context: Context,
     private val listener: OnItemClickListner,
 ) :
-    RecyclerView.Adapter<NotificationListAdopter.MyViewHolder>() {
+    RecyclerView.Adapter<NotificationListAdapter.MyViewHolder>() {
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {

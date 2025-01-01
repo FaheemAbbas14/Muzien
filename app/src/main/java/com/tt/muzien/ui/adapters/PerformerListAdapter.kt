@@ -1,4 +1,4 @@
-package com.tt.muzien.ui.adopters
+package com.tt.muzien.ui.adapters
 
 import android.content.Context
 import android.graphics.drawable.Drawable
@@ -19,7 +19,6 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.PersonDto
-import de.hdodenhof.circleimageview.CircleImageView
 
 
 /**
@@ -29,11 +28,11 @@ import de.hdodenhof.circleimageview.CircleImageView
  * faheem.abbas@bajcotechnologies.com
  * +923115284424
  */
-class PerformerListAdopter(
+class PerformerListAdapter(
     private val itemList: List<PersonDto>,
     private val context: Context,
 ) :
-    RecyclerView.Adapter<PerformerListAdopter.MyViewHolder>() {
+    RecyclerView.Adapter<PerformerListAdapter.MyViewHolder>() {
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imgProfilePic: ImageView = itemView.findViewById(R.id.imgProfilePic)

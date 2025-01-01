@@ -2,8 +2,6 @@ package com.tt.muzien.ui.analytics
 
 import android.annotation.SuppressLint
 import android.graphics.Color
-import android.graphics.LinearGradient
-import android.graphics.Shader
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
@@ -11,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
@@ -23,7 +20,7 @@ import com.tt.muzien.data.dto.PersonDto
 import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.data.repository.HomeRepository
 import com.tt.muzien.databinding.FragmentAnalyticsBinding
-import com.tt.muzien.ui.adopters.PerformerListAdopter
+import com.tt.muzien.ui.adapters.PerformerListAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.FragmentFilter
 import com.tt.muzien.ui.home.HomeActivity
@@ -232,7 +229,7 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
         binding.rcyTopPerformer.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
         binding.rcyTopPerformer.adapter =
-            PerformerListAdopter(
+            PerformerListAdapter(
                 topPerformerList,
                 requireContext(),
             )

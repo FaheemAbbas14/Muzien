@@ -1,4 +1,4 @@
-package com.tt.muzien.ui.adopters
+package com.tt.muzien.ui.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -18,12 +18,12 @@ import com.zabihah.ui.ui.interfaces.OnItemClickListner
  * faheem.abbas@bajcotechnologies.com
  * +923115284424
  */
-class ServiceListAdopter(
+class ServiceListAdapter(
     private val itemList: List<ServiceDto>,
     private val context: Context,
     private val listener: OnItemClickListner,
 ) :
-    RecyclerView.Adapter<ServiceListAdopter.MyViewHolder>() {
+    RecyclerView.Adapter<ServiceListAdapter.MyViewHolder>() {
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {

@@ -3,13 +3,12 @@ package com.tt.muzien.ui.saloon.tabs
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tt.muzien.data.dto.MemberDto
 import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.data.repository.HomeRepository
 import com.tt.muzien.databinding.FragmentSaloonMembersBinding
-import com.tt.muzien.ui.adopters.MembersListAdopter
+import com.tt.muzien.ui.adapters.MembersListAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.FragmentFilter
 import com.tt.muzien.ui.home.HomeActivity
@@ -80,7 +79,7 @@ class FragmentSaloonMembers :
         binding.rcyMembers.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
         binding.rcyMembers.adapter =
-            MembersListAdopter(
+            MembersListAdapter(
                 membersList,
                 requireContext(),
                 clickListener, true
