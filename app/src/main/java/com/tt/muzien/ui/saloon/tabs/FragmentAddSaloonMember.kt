@@ -22,9 +22,8 @@ import com.tt.muzien.utilities.PreferenceManager
 
 class FragmentAddSaloonMember :
     BaseFragment<HomeViewModel, FragmentAddSaloonMemberBinding, HomeRepository>() {
-    @Deprecated("Deprecated in Java")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
         }

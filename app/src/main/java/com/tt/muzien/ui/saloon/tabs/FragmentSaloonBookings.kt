@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.tt.muzien.data.SaloonBookingData
@@ -68,12 +69,26 @@ class FragmentSaloonBookings :
                 )
                 binding.txtBookingStatus.text = "$bookingStatus Bookings"
                 binding.customCalendarView.visibility = View.GONE
+                setMargins()
 
             }
             adopter?.setBookingStatus(bookingStatus)
             adopter?.notifyDataSetChanged()
            // Toast.makeText(requireContext(), "data received", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun setMargins() {
+        val layoutParams = ConstraintLayout.LayoutParams(
+            ConstraintLayout.LayoutParams.MATCH_PARENT,
+            ConstraintLayout.LayoutParams.WRAP_CONTENT
+        ).apply {
+            setMargins(40, 100, 40, 0) // Left, Top, Right, Bottom in pixels
+            startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+            topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+        }
+
+        binding.rcyBookings.layoutParams = layoutParams
     }
 
     private fun setSaloonAdopter() {

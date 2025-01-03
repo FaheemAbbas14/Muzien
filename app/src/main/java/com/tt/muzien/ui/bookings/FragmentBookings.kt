@@ -16,9 +16,8 @@ import com.tt.muzien.ui.home.HomeViewModel
 
 class FragmentBookings : BaseFragment<HomeViewModel, FragmentBookingsBinding, HomeRepository>() {
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
     }
 
     override fun getViewModel(): Class<HomeViewModel> {

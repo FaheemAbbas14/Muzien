@@ -2,6 +2,7 @@ package com.tt.muzien.ui.onboarding
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.tt.muzien.R
 import com.tt.muzien.constants.Keys
@@ -16,10 +17,9 @@ import com.tt.muzien.utilities.PreferenceManager
 
 class FragmentOnBoarding :
     BaseFragment<AuthViewModel, FragmentOnBoardingBinding, AuthRepository>() {
-    @Deprecated("Deprecated in Java")
     private var screenNumber: Int = 1
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         // Set alpha directly
         binding.imgAbackground.alpha = 0.1f
         binding.imgPrevious.setOnClickListener {

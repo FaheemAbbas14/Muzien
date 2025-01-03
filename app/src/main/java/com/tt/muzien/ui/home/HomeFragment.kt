@@ -2,6 +2,7 @@ package com.tt.muzien.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.activity.OnBackPressedCallback
@@ -23,9 +24,8 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, HomeReposi
     private lateinit var tabLayout: TabLayout
     private lateinit var fragmentManager: FragmentManager
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         tabLayout = binding.tabLayout
         fragmentManager = requireActivity().supportFragmentManager
         //seTabs()

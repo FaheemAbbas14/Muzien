@@ -19,9 +19,8 @@ import com.tt.muzien.ui.views.CustomCalendar
 
 class FragmentAddHoliday :
     BaseFragment<HomeViewModel, FragmentAddHolidayBinding, HomeRepository>() {
-    @Deprecated("Deprecated in Java")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
         }

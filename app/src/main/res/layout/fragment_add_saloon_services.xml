@@ -201,7 +201,7 @@
         android:background="@color/white"
         android:fontFamily="@font/manrope_regular"
         android:inputType="text"
-        android:text="Service Namey"
+        android:text="Service Name"
         android:textColor="@color/colorTextLabelDefault"
         android:textFontWeight="500"
         android:textSize="11sp"
@@ -336,10 +336,10 @@
         app:layout_constraintStart_toStartOf="@+id/llPrice" />
 
     <LinearLayout
-        android:id="@+id/llSave"
+        android:id="@+id/llSaveAdd"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="28dp"
+        android:layout_marginTop="20dp"
         android:background="@drawable/rounded_blue_100"
         android:clickable="true"
         android:focusable="true"
@@ -348,9 +348,9 @@
         android:paddingHorizontal="10dp"
         android:paddingVertical="10dp"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/llCategory"
-        app:layout_constraintStart_toStartOf="@+id/llCategory">
+        app:layout_constraintStart_toStartOf="@+id/llCategory"
+        app:layout_constraintTop_toBottomOf="@+id/imgPhoto">
 
         <TextView
             android:layout_width="match_parent"
@@ -359,23 +359,53 @@
             android:gravity="center"
             android:text="Save &amp; Add New"
             android:textColor="@color/white"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            tools:layout_editor_absoluteX="14dp"
+            tools:layout_editor_absoluteY="530dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llSave"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="50dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="@+id/llCategory"
+        app:layout_constraintStart_toStartOf="@+id/llCategory"
+        app:layout_constraintTop_toBottomOf="@+id/llSaveAdd">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/manrope_bold"
+            android:gravity="center"
+            android:text="Save"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="14sp"
+            tools:layout_editor_absoluteX="14dp"
+            tools:layout_editor_absoluteY="530dp" />
     </LinearLayout>
 
     <ImageView
         android:id="@+id/imgPhoto"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="150dp"
         android:layout_marginTop="15dp"
-        android:layout_marginBottom="5dp"
         android:background="@drawable/doted_blue_border"
         android:paddingStart="30dp"
         android:paddingTop="15dp"
         android:paddingEnd="30dp"
         android:paddingBottom="15dp"
-        app:layout_constraintBottom_toTopOf="@+id/llSave"
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="@+id/llPrice"
         app:layout_constraintStart_toStartOf="@+id/llPrice"
         app:layout_constraintTop_toBottomOf="@+id/llPrice"
         app:srcCompat="@drawable/add_image_placeholder" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

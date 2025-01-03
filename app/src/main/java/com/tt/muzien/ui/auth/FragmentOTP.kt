@@ -35,9 +35,8 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
     var isFromSignup: Boolean = false
 
     @RequiresApi(Build.VERSION_CODES.M)
-    @Deprecated("Deprecated in Java")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         (activity as AuthActivity?)?.changeBackground(Color.WHITE)
         binding.llBack.setOnClickListener {
             (activity as AuthActivity?)?.popFragment()

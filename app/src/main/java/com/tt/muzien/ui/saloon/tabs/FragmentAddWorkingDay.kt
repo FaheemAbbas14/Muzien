@@ -2,6 +2,7 @@ package com.tt.muzien.ui.saloon.tabs
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.tt.muzien.R
 import com.tt.muzien.data.network.HomeApi
@@ -16,9 +17,8 @@ class FragmentAddWorkingDay :
     BaseFragment<HomeViewModel, FragmentAddWorkingDayBinding, HomeRepository>() {
     var selectedDays = arrayListOf<String>()
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
         }

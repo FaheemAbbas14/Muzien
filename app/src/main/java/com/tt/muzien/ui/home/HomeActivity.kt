@@ -13,8 +13,11 @@ import androidx.fragment.app.Fragment
 import com.tt.muzien.R
 import com.tt.muzien.databinding.ActivityHomeBinding
 import com.tt.muzien.ui.bookings.FragmentBookings
+import com.tt.muzien.ui.bottomSheets.AddBottomSheet
 import com.tt.muzien.ui.notifications.FragmentNotifications
 import com.tt.muzien.ui.profile.FragmentProfile
+import com.tt.muzien.ui.saloon.tabs.FragmentAddSaloonMember
+import com.tt.muzien.ui.saloon.tabs.FragmentAddSaloonServices
 import com.tt.muzien.ui.views.CustomLoadingIndicator
 import com.tt.muzien.utilities.FragmentManager
 
@@ -58,28 +61,29 @@ class HomeActivity : AppCompatActivity() {
             loadFragment(FragmentBookings())
         }
         binding.imgadd.setOnClickListener {
-//            when (selectedTab) {
-//
-//                R.id.rdoSaloons -> {
-//                    var nextFragment = FragmentAddSaloonMember()
-//                    loadFragment(nextFragment)
-//                }
-//
-//                R.id.rdoMembers -> {
-//                    var nextFragment = FragmentAddSaloonMember()
-//                    loadFragment(nextFragment)
-//                }
-//
-//                R.id.rdoServices -> {
-//                    var nextFragment = FragmentAddSaloonServices()
-//                    loadFragment(nextFragment)
-//                }
-//
-//                else -> {
-//                    val bottomSheet = AddBottomSheet(this)
-//                    bottomSheet.show(supportFragmentManager, bottomSheet.tag)
-//                }
-            // }
+
+            when (selectedTab) {
+
+                R.id.rdoSaloons -> {
+                    var nextFragment = FragmentAddSaloonMember()
+                    loadFragment(nextFragment)
+                }
+
+                R.id.rdoMembers -> {
+                    var nextFragment = FragmentAddSaloonMember()
+                    loadFragment(nextFragment)
+                }
+
+                R.id.rdoServices -> {
+                    var nextFragment = FragmentAddSaloonServices()
+                    loadFragment(nextFragment)
+                }
+
+                else -> {
+                    val bottomSheet = AddBottomSheet(this)
+                    bottomSheet.show(supportFragmentManager, bottomSheet.tag)
+                }
+             }
 
         }
         binding.imgNotifications.setOnClickListener {

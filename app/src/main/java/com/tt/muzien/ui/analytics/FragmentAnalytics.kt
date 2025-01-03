@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
@@ -44,10 +45,9 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
     private var bookingToDate: String = ""
 
     @RequiresApi(Build.VERSION_CODES.O)
-    @Deprecated("Deprecated in Java")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-       // binding.homeLayout.setBackgroundColor(Color.argb(10, 30, 69, 148))
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // binding.homeLayout.setBackgroundColor(Color.argb(10, 30, 69, 148))
         lineChart = binding.lineChart
         setdata()
 
@@ -59,13 +59,13 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
         binding.imgRevenueFilter.setOnClickListener {
             isRevenueFilter = true
             var nextFragment = FragmentFilter()
-            nextFragment.isFromRevenue=true
+            nextFragment.isFromRevenue = true
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
-        if (FilterSelection.filterData!=null){
+        if (FilterSelection.filterData != null) {
             val selection = FilterSelection.filterData!!.selection
             val fromDate = FilterSelection.filterData!!.from
-            val toDate =FilterSelection.filterData!!.to
+            val toDate = FilterSelection.filterData!!.to
             if (selection != "") {
                 if (!FilterSelection.filterData!!.fromRevenue) {
                     bookingDuration = selection.toString()
@@ -87,7 +87,7 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
                     }
                 }
                 setdata()
-        }
+            }
         }
     }
 
@@ -103,18 +103,24 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
         endDate: String,
         dateFormat: String = "d/M/yyyy"
     ): ArrayList<String> {
-        val formatter = DateTimeFormatter.ofPattern(dateFormat, Locale.getDefault())
-        val start = LocalDate.parse(startDate, formatter)
-        val end = LocalDate.parse(endDate, formatter)
-        val desiredFormatter = DateTimeFormatter.ofPattern("d/M", Locale.getDefault())
-        val dates = arrayListOf<String>()
-        var currentDate = start
-        while (!currentDate.isAfter(end)) {
-            dates.add(currentDate.format(desiredFormatter))
-            currentDate = currentDate.plusDays(1)
-        }
+        try {
+            val formatter = DateTimeFormatter.ofPattern(dateFormat, Locale.getDefault())
+            val start = LocalDate.parse(startDate, formatter)
+            val end = LocalDate.parse(endDate, formatter)
+            val desiredFormatter = DateTimeFormatter.ofPattern("d/M", Locale.getDefault())
+            val dates = arrayListOf<String>()
+            var currentDate = start
+            while (!currentDate.isAfter(end)) {
+                dates.add(currentDate.format(desiredFormatter))
+                currentDate = currentDate.plusDays(1)
+            }
 
-        return dates
+            return dates
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return listOf<String>() as ArrayList<String>
     }
 
     fun generateRandomFloatList(min: Float, max: Float, count: Int): List<Float> {
@@ -161,9 +167,10 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
             setDrawCircles(false)
             setDrawFilled(true)
             setDrawValues(false)
-            mode=LineDataSet.Mode.CUBIC_BEZIER
+            mode = LineDataSet.Mode.CUBIC_BEZIER
             // Apply gradient drawable as fill
-            val gradientDrawable: Drawable? = ContextCompat.getDrawable(requireContext(), R.drawable.gradient_fill)
+            val gradientDrawable: Drawable? =
+                ContextCompat.getDrawable(requireContext(), R.drawable.gradient_fill)
             fillDrawable = gradientDrawable
         }
 
@@ -201,7 +208,7 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
 
         // Chart appearance
         lineChart?.description?.isEnabled = false
-       // lineChart?.animateX(1500)
+        // lineChart?.animateX(1500)
         // Disable pinch zoom (zooming with two fingers)
         lineChart?.setPinchZoom(false)
 

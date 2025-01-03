@@ -2,14 +2,17 @@ package com.tt.muzien.ui.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.CalendarDay
+import com.tt.muzien.utilities.Helper
 
 /**
  * Created by Faheem Abbas on 27/12/2024.
@@ -37,6 +40,7 @@ class HorizontalCalenderAdapter(
         return CalendarViewHolder(view)
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onBindViewHolder(holder: CalendarViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val day = days[position]
         holder.dayOfWeek.text = day.dayOfWeek
@@ -59,8 +63,8 @@ class HorizontalCalenderAdapter(
 
             day.eventDotColors.forEach { color ->
                 val dot = View(holder.itemView.context).apply {
-                    layoutParams = LinearLayout.LayoutParams(8.dpToPx(holder.itemView.context), 8.dpToPx(holder.itemView.context)).apply {
-                        marginEnd = 4.dpToPx(holder.itemView.context)
+                    layoutParams = LinearLayout.LayoutParams(Helper.dpToPx(holder.itemView.context,8), Helper.dpToPx(holder.itemView.context,8)).apply {
+                        marginEnd = Helper.dpToPx(holder.itemView.context,4)
                     }
                     background = holder.itemView.context.getDrawable(R.drawable.event_dot_shape)
                     background?.setTint(color) // Set the dot color dynamically

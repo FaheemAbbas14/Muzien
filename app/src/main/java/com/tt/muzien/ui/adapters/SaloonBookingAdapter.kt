@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -41,13 +42,14 @@ class SaloonBookingAdapter(
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
+        val mainCard: CardView = itemView.findViewById(R.id.mainCard)
         val imgProfilePic: ImageView = itemView.findViewById(R.id.imgProfilePic)
         val txtName: TextView = itemView.findViewById(R.id.txtName)
         val txtStyle: TextView = itemView.findViewById(R.id.txtStyle)
         val txtUserName: TextView = itemView.findViewById(R.id.txtUserName)
         val txtService: TextView = itemView.findViewById(R.id.txtService)
 
-        val llReview: CardView = itemView.findViewById(R.id.llReview)
+        val llReview: ConstraintLayout = itemView.findViewById(R.id.llReview)
         val imgItemIcon: ImageView = itemView.findViewById(R.id.imgItemIcon)
         val txtItemName: TextView = itemView.findViewById(R.id.txtItemName)
         val txtAddedOn: TextView = itemView.findViewById(R.id.txtAddedOn)
@@ -78,13 +80,11 @@ class SaloonBookingAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         var itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.saloon_booking_item, parent, false)
-        if (bookingStatus == "Overdue/Incomplete") {
-            itemView.setBackgroundColor(context.resources.getColor(R.color.overduebg))
-        }
         return MyViewHolder(itemView)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        try{
         var item: SaloonBookingData = itemList[position]
         if (bookingStatus == "Completed") {
             holder.llReview.visibility = View.VISIBLE
@@ -92,6 +92,9 @@ class SaloonBookingAdapter(
             holder.llCancel.visibility = View.VISIBLE
         } else if (bookingStatus == "Pending Approval") {
             holder.llPending.visibility = View.VISIBLE
+        }
+        else if (bookingStatus == "Overdue/Incomplete") {
+            holder.mainCard.setBackgroundDrawable(context.resources.getDrawable(R.drawable.rounded_overdue))
         }
         holder.txtName.text = item.name
         holder.txtStyle.text = item.style
@@ -136,6 +139,10 @@ class SaloonBookingAdapter(
             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)  // Cache both original & transformed image
             .skipMemoryCache(false)  // Cache in memory
             .into(holder.imgProfilePic)
+
+        }catch (e: Exception){
+            e.printStackTrace()
+        }
     }
 
     fun setBookingStatus(status: String) {

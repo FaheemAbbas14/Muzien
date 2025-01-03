@@ -28,9 +28,8 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
     private lateinit var selectedCountry: String
 
     @RequiresApi(Build.VERSION_CODES.M)
-    @Deprecated("Deprecated in Java")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         (activity as AuthActivity?)?.changeBackground(Color.WHITE)
         setdata()
         binding.llLogin.setOnClickListener {
@@ -44,6 +43,7 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
             }
         }
         binding.countrySpinner.setCountryForNameCode("SA")
+        selectedCountry = binding.countrySpinner.selectedCountryName
         binding.countrySpinner.setOnCountryChangeListener {
             selectedCountry = binding.countrySpinner.selectedCountryName
             val countryCode = binding.countrySpinner.selectedCountryCode

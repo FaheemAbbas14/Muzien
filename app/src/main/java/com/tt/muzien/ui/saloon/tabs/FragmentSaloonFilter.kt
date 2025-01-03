@@ -60,11 +60,13 @@ class FragmentSaloonFilter :
             when (checkedId) {
                 R.id.rbAllProvider -> {
                     serviceProvider = "AllProvider"
+                    binding.llProvider.visibility=View.GONE
                     // checkValidation()
                 }
 
                 R.id.rbSpecific -> {
                     serviceProvider = "Specific"
+                    binding.llProvider.visibility=View.VISIBLE
                     // checkValidation()
                 }
 
@@ -128,7 +130,7 @@ class FragmentSaloonFilter :
             override fun onDateSelected(date: String) {
                 // Handle the selected date
                 if (isFrom) {
-                    binding.txtFromError.visibility = View.VISIBLE
+                   // binding.txtFromError.visibility = View.VISIBLE
                     binding.llTo.visibility = View.VISIBLE
                     fromDate = date
                     binding.txtFrom.text = fromDate
@@ -152,18 +154,18 @@ class FragmentSaloonFilter :
 //        } else {
 //            binding.txtSelectionError.visibility = View.GONE
 //        }
-//        if (selection == "Custom" && fromDate == "") {
-//            isValid = false
-//            binding.txtFromError.visibility = View.VISIBLE
-//        } else {
-//            binding.txtFromError.visibility = View.GONE
-//        }
-//        if (selection == "Custom" && toDate == "" && fromDate != "") {
-//            binding.txtToError.visibility = View.VISIBLE
-//            isValid = false
-//        } else {
-//            binding.txtToError.visibility = View.GONE
-//        }
+        if (selection == "Custom" && fromDate == "") {
+            isValid = false
+            binding.txtFromError.visibility = View.VISIBLE
+        } else {
+            binding.txtFromError.visibility = View.GONE
+        }
+        if (selection == "Custom" && toDate == "" && fromDate != "") {
+            binding.txtToError.visibility = View.VISIBLE
+            isValid = false
+        } else {
+            binding.txtToError.visibility = View.GONE
+        }
 
         return isValid
     }

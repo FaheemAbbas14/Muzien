@@ -33,9 +33,8 @@ class FragmentSaloonInfo : BaseFragment<HomeViewModel, FragmentSaloonInfoBinding
     private val workingHourrList = arrayListOf<WorkingHourData>()
     private var workingHoursAdopter: WorkingHoursAdapter? = null
     private var isExpanded = false
-    @Deprecated("Deprecated in Java")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setAboutData()
         binding.imgAddHoliday.setOnClickListener {
             var nextFragment = FragmentAddHoliday()
@@ -52,7 +51,8 @@ class FragmentSaloonInfo : BaseFragment<HomeViewModel, FragmentSaloonInfoBinding
     }
 
     private fun setAboutData() {
-        val fullText = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type"
+        val fullText =
+            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type"
 
         // Truncated text preview (show first 100 chars)
         val previewText = fullText.substring(0, 100) + "..." // Truncated preview text
@@ -60,6 +60,7 @@ class FragmentSaloonInfo : BaseFragment<HomeViewModel, FragmentSaloonInfoBinding
         // Set initial text with "Read More" link
         setTextWithToggle(previewText, fullText)
     }
+
     private fun setTextWithToggle(previewText: String, fullText: String) {
         val spannable = SpannableString(previewText + " Read More")
 
@@ -71,35 +72,43 @@ class FragmentSaloonInfo : BaseFragment<HomeViewModel, FragmentSaloonInfoBinding
         }, previewText.length, spannable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
         binding.txtAbout.text = spannable
-        binding.txtAbout.movementMethod = LinkMovementMethod.getInstance() // Enable clicking the text
+        binding.txtAbout.movementMethod =
+            LinkMovementMethod.getInstance() // Enable clicking the text
     }
 
     private fun toggleText(fullText: String, previewText: String) {
-        val spannable: SpannableString
-        if (isExpanded) {
-            // Show preview text with "Read More"
-            spannable = SpannableString(previewText + " Read More")
-            // Set click listener for "Read More"
-            spannable.setSpan(object : ClickableSpan() {
-                override fun onClick(widget: View) {
-                    toggleText(fullText, previewText)
-                }
-            }, previewText.length, spannable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        } else {
-            // Show full text with "Read Less"
-            spannable = SpannableString(fullText + " Read Less")
-            // Set click listener for "Read Less"
-            spannable.setSpan(object : ClickableSpan() {
-                override fun onClick(widget: View) {
-                    toggleText(fullText, previewText)
-                }
-            }, fullText.length, spannable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        try {
+
+            val spannable: SpannableString
+            if (isExpanded) {
+                // Show preview text with "Read More"
+                spannable = SpannableString(previewText + " Read More")
+                // Set click listener for "Read More"
+                spannable.setSpan(object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        toggleText(fullText, previewText)
+                    }
+                }, previewText.length, spannable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            } else {
+                // Show full text with "Read Less"
+                spannable = SpannableString(fullText + " Read Less")
+                // Set click listener for "Read Less"
+                spannable.setSpan(object : ClickableSpan() {
+                    override fun onClick(widget: View) {
+                        toggleText(fullText, previewText)
+                    }
+                }, fullText.length, spannable.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+
+            binding.txtAbout.text = spannable
+            binding.txtAbout.movementMethod =
+                LinkMovementMethod.getInstance() // Enable clicking the text
+
+            isExpanded = !isExpanded // Toggle state between expanded and collapsed
+
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
-
-        binding.txtAbout.text = spannable
-        binding.txtAbout.movementMethod = LinkMovementMethod.getInstance() // Enable clicking the text
-
-        isExpanded = !isExpanded // Toggle state between expanded and collapsed
     }
 
 
@@ -123,7 +132,7 @@ class FragmentSaloonInfo : BaseFragment<HomeViewModel, FragmentSaloonInfoBinding
             requireContext(),
             clickListener
         )
-        binding.rcyWorkingHours.adapter =workingHoursAdopter
+        binding.rcyWorkingHours.adapter = workingHoursAdopter
 
 
     }

@@ -3,6 +3,7 @@ package com.tt.muzien.ui.saloon.tabs
 import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.Dialog
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -10,7 +11,10 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.view.Window
+import android.widget.Button
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.tt.muzien.R
@@ -29,9 +33,8 @@ class FragmentAddSaloonServices :
     private val REQUEST_PERMISSIONS = 3
     private var image_uri: Uri? = null
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
         }
@@ -41,15 +44,38 @@ class FragmentAddSaloonServices :
         binding.llSave.setOnClickListener {
 
             if (checkValidation()) {
-//                val userPreferences = PreferenceManager.getInstance(requireActivity())
-//                userPreferences.putString(Keys.Access_Token, "Faheem")
-//                val activity = HomeActivity::class.java
-//                requireActivity().startNewActivity(activity)
-//                requireActivity().finish()
+                showPopupDialog()
             }
         }
         // checkValidation()
 
+    }
+
+    private fun showPopupDialog() {
+        // Create Dialog
+        val dialog = Dialog(requireContext())
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        val view = LayoutInflater.from(requireContext()).inflate(R.layout.add_service_popup, null)
+        dialog.setContentView(view)
+
+        // Make dialog background transparent
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        // Find buttons and handle click events
+        val notNowButton = view.findViewById<Button>(R.id.not_now_button)
+        val proceedButton = view.findViewById<Button>(R.id.proceed_button)
+
+        notNowButton.setOnClickListener {
+            dialog.dismiss() // Dismiss the dialog
+        }
+
+        proceedButton.setOnClickListener {
+            // Add your logic here (e.g., enable the service)
+            dialog.dismiss()
+        }
+
+        // Show the dialog
+        dialog.show()
     }
 
     private fun checkValidation(): Boolean {

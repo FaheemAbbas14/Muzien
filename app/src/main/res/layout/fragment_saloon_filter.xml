@@ -430,8 +430,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
-                    android:layout_marginEnd="15dp"
                     android:layout_marginTop="10dp"
+                    android:layout_marginEnd="15dp"
                     android:layout_marginBottom="10dp"
                     android:calendarViewShown="true"
                     android:spinnersShown="true"
@@ -497,16 +497,84 @@
                         android:textColor="@color/colorTextLabelDefault"
                         android:textFontWeight="500"
                         android:textSize="14sp" />
-
-                    <!-- Divider -->
-                    <View
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/llProvider"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginStart="10dp"
-                        android:background="@color/light_grey_border" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:visibility="gone">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/rounded_white_grey"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:minHeight="60dp"
+                            android:layout_marginTop="10dp"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="10dp"
+                            android:paddingVertical="10dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+
+                            <EditText
+                                android:id="@+id/edtProvider"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="5dp"
+                                android:layout_weight="1"
+                                android:background="@android:color/transparent"
+                                android:fontFamily="@font/manrope_regular"
+                                android:gravity="center|left"
+                                android:hint="Provider"
+                                android:inputType="text"
+                                android:paddingRight="10dp"
+                                android:textColor="@color/colorTextDefault"
+                                android:textFontWeight="400"
+                                android:textSize="14sp" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:padding="8dp"
+                                app:srcCompat="@drawable/search_icon" />
+
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginBottom="-20dp"
+                            android:background="@color/white"
+                            android:fontFamily="@font/manrope_regular"
+                            android:inputType="textEmailAddress"
+                            android:text="Select Provider"
+                            android:textColor="@color/colorTextLabelDefault"
+                            android:textFontWeight="500"
+                            android:textSize="11sp"
+                            app:layout_constraintBottom_toTopOf="@+id/llProvider"
+                            app:layout_constraintStart_toStartOf="@+id/llProvider" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                    <!--                    &lt;!&ndash; Divider &ndash;&gt;-->
+<!--                    <View-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="1dp"-->
+<!--                        android:layout_marginStart="10dp"-->
+<!--                        android:background="@color/light_grey_border" />-->
                 </RadioGroup>
 
-                <TextView
+                 <TextView
                     android:id="@+id/txtServiceProviderError"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -530,8 +598,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="15dp"
-
         android:layout_marginBottom="20dp"
         android:background="@drawable/rounded_blue_100"
         android:clickable="true"

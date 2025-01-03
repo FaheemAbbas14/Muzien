@@ -1,4 +1,4 @@
-package com.tt.muzien.ui.saloon.tabs
+package com.tt.muzien.ui.saloon
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,12 +8,13 @@ import android.view.ViewGroup
 import com.tt.muzien.R
 import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.data.repository.HomeRepository
-import com.tt.muzien.databinding.FragmentSaloonAnalyticsBinding
-import com.tt.muzien.databinding.FragmentSaloonBookingsBinding
+import com.tt.muzien.databinding.FragmentAddSaloonBinding
+import com.tt.muzien.databinding.FragmentBookingsBinding
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.HomeViewModel
 
-class FragmentSaloonAnalytics  : BaseFragment<HomeViewModel, FragmentSaloonAnalyticsBinding, HomeRepository>() {
+
+class FragmentAddSaloon: BaseFragment<HomeViewModel, FragmentAddSaloonBinding, HomeRepository>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -26,7 +27,7 @@ class FragmentSaloonAnalytics  : BaseFragment<HomeViewModel, FragmentSaloonAnaly
     override fun getFragmentBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ) = FragmentSaloonAnalyticsBinding.inflate(inflater, container, false)
+    ) = FragmentAddSaloonBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
         HomeRepository(remoteDataSource.buildApi(HomeApi::class.java), userPreferences)

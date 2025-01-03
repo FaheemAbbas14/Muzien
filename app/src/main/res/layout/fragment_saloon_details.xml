@@ -1,387 +1,401 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nestedScrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="false"
-    android:background="@color/light_grey">
-
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="240dp"
-        android:background="@color/light_grey"
-        android:clipToPadding="false"
-        android:clipChildren="false"
-        android:layout_marginTop="0dp"
-        android:layout_alignParentTop="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
-        android:id="@+id/dotIndicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-20dp"
-        app:dotsColor="@color/white"
-        app:dotsSize="8dp"
-        app:dotsSpacing="2dp"
-        app:dotsWidthFactor="4"
-        app:layout_constraintStart_toStartOf="@+id/imgBack"
-        app:layout_constraintTop_toBottomOf="@+id/view_pager"
-        app:progressMode="false"
-        app:selectedDotColor="@color/white" />
-    <TextView
-        android:id="@+id/txtItemName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:fontFamily="@font/manrope_bold"
-        android:maxLines="1"
-        android:text="The Style Zone"
-        android:textColor="@color/colorTextDefault"
-        android:textFontWeight="700"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toStartOf="@+id/llStatus"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_pager" />
+    android:background="@color/light_grey"
+    android:fillViewport="true"
+    android:fitsSystemWindows="false">
 
     <LinearLayout
-        android:id="@+id/llStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="10dp"
-        android:background="@drawable/rounded_green"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_pager">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/txtStatusTexts"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/manrope_regular"
-            android:gravity="center"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:text="open today"
-            android:textColor="@color/white"
-            android:textFontWeight="500"
-            android:textSize="11sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view_pager" />
-    </LinearLayout>
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="0dp"
+                android:background="@color/light_grey"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/llContent"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/llStatus">
+            <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
+                android:id="@+id/dotIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-20dp"
+                app:dotsColor="@color/white"
+                app:dotsSize="8dp"
+                app:dotsSpacing="2dp"
+                app:dotsWidthFactor="4"
+                app:layout_constraintStart_toStartOf="@+id/imgBack"
+                app:layout_constraintTop_toBottomOf="@+id/view_pager"
+                app:progressMode="false"
+                app:selectedDotColor="@color/white" />
 
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            <TextView
+                android:id="@+id/txtItemName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/manrope_bold"
+                android:maxLines="1"
+                android:text="The Style Zone"
+                android:textColor="@color/colorTextDefault"
+                android:textFontWeight="700"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toStartOf="@+id/llStatus"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_pager" />
 
             <LinearLayout
+                android:id="@+id/llStatus"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="20dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/rounded_green"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@+id/view_pager">
 
-                <ImageView
-                    android:layout_width="12dp"
-                    android:layout_height="16dp"
-                    android:layout_gravity="center"
-                    app:srcCompat="@drawable/location" />
 
                 <TextView
-                    android:id="@+id/txtLocation"
+                    android:id="@+id/txtStatusTexts"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center|left"
-                    android:layout_marginStart="10dp"
                     android:fontFamily="@font/manrope_regular"
-                    android:paddingLeft="5dp"
-                    android:text="Rd. 2121 Alamal Dist. 12643 Riyadh SA"
-                    android:textColor="@color/colorTextLabelDefault"
-                    android:textFontWeight="400"
-                    android:textSize="12sp" />
+                    android:gravity="center"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="open today"
+                    android:textColor="@color/white"
+                    android:textFontWeight="500"
+                    android:textSize="11sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_pager" />
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/llContent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/llStatus">
 
-                <ImageView
-                    android:layout_width="12dp"
-                    android:layout_height="16dp"
-                    android:layout_gravity="center"
-                    app:srcCompat="@drawable/star" />
-
-                <TextView
-                    android:id="@+id/txtRating"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:id="@+id/linearLayout"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center|left"
-                    android:layout_marginStart="10dp"
-                    android:fontFamily="@font/manrope_regular"
-                    android:paddingLeft="5dp"
-                    android:text="4.5(10 reviews)"
-                    android:textColor="@color/colorTextLabelDefault"
-                    android:textFontWeight="400"
-                    android:textSize="12sp" />
-            </LinearLayout>
+                    android:layout_marginBottom="10dp"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="20dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:layout_width="12dp"
-                    android:layout_height="16dp"
-                    android:layout_gravity="center"
-                    app:srcCompat="@drawable/clock" />
+                        <ImageView
+                            android:layout_width="12dp"
+                            android:layout_height="16dp"
+                            android:layout_gravity="center"
+                            app:srcCompat="@drawable/location" />
 
-                <TextView
-                    android:id="@+id/txtTiming"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center|left"
-                    android:layout_marginStart="10dp"
-                    android:fontFamily="@font/manrope_regular"
-                    android:paddingLeft="5dp"
-                    android:text="10:00 AM - 11:00 PM"
-                    android:textColor="@color/colorTextLabelDefault"
-                    android:textFontWeight="400"
-                    android:textSize="12sp" />
-            </LinearLayout>
-        </LinearLayout>
+                        <TextView
+                            android:id="@+id/txtLocation"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center|left"
+                            android:layout_marginStart="10dp"
+                            android:fontFamily="@font/manrope_regular"
+                            android:paddingLeft="5dp"
+                            android:text="Rd. 2121 Alamal Dist. 12643 Riyadh SA"
+                            android:textColor="@color/colorTextLabelDefault"
+                            android:textFontWeight="400"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:layout_width="12dp"
+                            android:layout_height="16dp"
+                            android:layout_gravity="center"
+                            app:srcCompat="@drawable/star" />
+
+                        <TextView
+                            android:id="@+id/txtRating"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center|left"
+                            android:layout_marginStart="10dp"
+                            android:fontFamily="@font/manrope_regular"
+                            android:paddingLeft="5dp"
+                            android:text="4.5(10 reviews)"
+                            android:textColor="@color/colorTextLabelDefault"
+                            android:textFontWeight="400"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="5dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:layout_width="12dp"
+                            android:layout_height="16dp"
+                            android:layout_gravity="center"
+                            app:srcCompat="@drawable/clock" />
+
+                        <TextView
+                            android:id="@+id/txtTiming"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center|left"
+                            android:layout_marginStart="10dp"
+                            android:fontFamily="@font/manrope_regular"
+                            android:paddingLeft="5dp"
+                            android:text="10:00 AM - 11:00 PM"
+                            android:textColor="@color/colorTextLabelDefault"
+                            android:textFontWeight="400"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ImageView
-        android:id="@+id/imgBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/transparent_circle"
-        android:paddingStart="7dp"
-        android:paddingTop="8dp"
-        android:paddingEnd="7dp"
-        android:paddingBottom="8dp"
-        android:src="@drawable/white_left_arrow"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/imgMore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="13dp"
-        android:layout_marginBottom="25dp"
-        android:background="@drawable/transparent_circle"
-        android:padding="6dp"
-        android:src="@drawable/white_three_dots"
-        app:layout_constraintBottom_toTopOf="@+id/llStatus"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <ImageView
-        android:id="@+id/imgCamera"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="5dp"
-        android:background="@drawable/transparent_circle"
-        android:padding="6dp"
-        android:src="@drawable/white_camera_icon"
-        app:layout_constraintBottom_toBottomOf="@+id/imgMore"
-        app:layout_constraintEnd_toStartOf="@+id/imgMore"
-        app:layout_constraintTop_toTopOf="@+id/imgMore" />
-
-    <HorizontalScrollView
-        android:id="@+id/horizentalTabs"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:scrollbars="none"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/llContent">
-
-        <RadioGroup
-            android:id="@+id/radioGroup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <RadioButton
-                android:id="@+id/rdoAnalytics"
+            <ImageView
+                android:id="@+id/imgBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/blue_rounded"
-                android:button="@android:color/transparent"
-                android:checked="true"
-                android:fontFamily="@font/manrope_regular"
-                android:gravity="center"
-                android:paddingStart="10dp"
-                android:paddingTop="5dp"
-                android:paddingEnd="10dp"
-                android:paddingBottom="5dp"
-                android:text="Analytics"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/white"
-                android:textFontWeight="500"
-                android:textSize="12sp" />
+                android:layout_marginTop="50dp"
+                android:background="@drawable/transparent_circle"
+                android:paddingStart="7dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="7dp"
+                android:paddingBottom="8dp"
+                android:src="@drawable/white_left_arrow"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <RadioButton
-                android:id="@+id/rdoBookings"
+            <ImageView
+                android:id="@+id/imgMore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/rounded_grey"
-                android:button="@android:color/transparent"
-                android:fontFamily="@font/manrope_regular"
-                android:gravity="center"
-                android:paddingStart="10dp"
-                android:paddingTop="5dp"
-                android:paddingEnd="10dp"
-                android:paddingBottom="5dp"
-                android:text="Bookings"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/colorTextLabelDefault"
-                android:textFontWeight="500"
-                android:textSize="12sp" />
+                android:layout_marginEnd="13dp"
+                android:layout_marginBottom="25dp"
+                android:background="@drawable/transparent_circle"
+                android:padding="6dp"
+                android:src="@drawable/white_three_dots"
+                app:layout_constraintBottom_toTopOf="@+id/llStatus"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-            <RadioButton
-                android:id="@+id/rdoStoreInfo"
+            <ImageView
+                android:id="@+id/imgCamera"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/rounded_grey"
-                android:button="@android:color/transparent"
-                android:fontFamily="@font/manrope_regular"
-                android:gravity="center"
-                android:paddingStart="10dp"
-                android:paddingTop="5dp"
-                android:paddingEnd="10dp"
-                android:paddingBottom="5dp"
-                android:text="Store Info"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/colorTextLabelDefault"
-                android:textFontWeight="500"
-                android:textSize="12sp" />
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/transparent_circle"
+                android:padding="6dp"
+                android:src="@drawable/white_camera_icon"
+                app:layout_constraintBottom_toBottomOf="@+id/imgMore"
+                app:layout_constraintEnd_toStartOf="@+id/imgMore"
+                app:layout_constraintTop_toTopOf="@+id/imgMore" />
 
-            <RadioButton
-                android:id="@+id/rdoReviews"
-                android:layout_width="wrap_content"
+            <HorizontalScrollView
+                android:id="@+id/horizentalTabs"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/rounded_grey"
-                android:button="@android:color/transparent"
-                android:fontFamily="@font/manrope_regular"
-                android:gravity="center"
-                android:paddingStart="10dp"
-                android:paddingTop="5dp"
-                android:paddingEnd="10dp"
+                android:scrollbars="none"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/llContent">
 
-                android:paddingBottom="5dp"
-                android:text="Reviews"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/colorTextLabelDefault"
-                android:textFontWeight="500"
-                android:textSize="12sp" />
+                <RadioGroup
+                    android:id="@+id/radioGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
 
-            <RadioButton
-                android:id="@+id/rdoServices"
-                android:layout_width="wrap_content"
+                    <RadioButton
+                        android:id="@+id/rdoAnalytics"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/blue_rounded"
+                        android:button="@android:color/transparent"
+                        android:checked="true"
+                        android:fontFamily="@font/manrope_regular"
+                        android:gravity="center"
+                        android:paddingStart="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="5dp"
+                        android:text="Analytics"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/white"
+                        android:textFontWeight="500"
+                        android:textSize="12sp" />
+
+                    <RadioButton
+                        android:id="@+id/rdoBookings"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/rounded_grey"
+                        android:button="@android:color/transparent"
+                        android:fontFamily="@font/manrope_regular"
+                        android:gravity="center"
+                        android:paddingStart="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="5dp"
+                        android:text="Bookings"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/colorTextLabelDefault"
+                        android:textFontWeight="500"
+                        android:textSize="12sp" />
+
+                    <RadioButton
+                        android:id="@+id/rdoStoreInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/rounded_grey"
+                        android:button="@android:color/transparent"
+                        android:fontFamily="@font/manrope_regular"
+                        android:gravity="center"
+                        android:paddingStart="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="5dp"
+                        android:text="Store Info"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/colorTextLabelDefault"
+                        android:textFontWeight="500"
+                        android:textSize="12sp" />
+
+                    <RadioButton
+                        android:id="@+id/rdoReviews"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/rounded_grey"
+                        android:button="@android:color/transparent"
+                        android:fontFamily="@font/manrope_regular"
+                        android:gravity="center"
+                        android:paddingStart="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingEnd="10dp"
+
+                        android:paddingBottom="5dp"
+                        android:text="Reviews"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/colorTextLabelDefault"
+                        android:textFontWeight="500"
+                        android:textSize="12sp" />
+
+                    <RadioButton
+                        android:id="@+id/rdoServices"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/rounded_grey"
+                        android:button="@android:color/transparent"
+                        android:fontFamily="@font/manrope_regular"
+                        android:gravity="center"
+                        android:paddingStart="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="5dp"
+                        android:text="Services"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/colorTextLabelDefault"
+                        android:textFontWeight="500"
+                        android:textSize="12sp" />
+
+                    <RadioButton
+                        android:id="@+id/rdoMembers"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/rounded_grey"
+                        android:button="@android:color/transparent"
+                        android:fontFamily="@font/manrope_regular"
+                        android:gravity="center"
+                        android:paddingStart="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="5dp"
+                        android:text="Members"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="@color/colorTextLabelDefault"
+                        android:textFontWeight="500"
+                        android:textSize="12sp" />
+                </RadioGroup>
+            </HorizontalScrollView>
+
+            <FrameLayout
+                android:id="@+id/tab_container"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/rounded_grey"
-                android:button="@android:color/transparent"
-                android:fontFamily="@font/manrope_regular"
-                android:gravity="center"
-                android:paddingStart="10dp"
-                android:paddingTop="5dp"
-                android:paddingEnd="10dp"
-                android:paddingBottom="5dp"
-                android:text="Services"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/colorTextLabelDefault"
-                android:textFontWeight="500"
-                android:textSize="12sp" />
+                android:background="@color/light_grey"
+                android:nestedScrollingEnabled="false"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/horizentalTabs" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
 
-            <RadioButton
-                android:id="@+id/rdoMembers"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"
-                android:background="@drawable/rounded_grey"
-                android:button="@android:color/transparent"
-                android:fontFamily="@font/manrope_regular"
-                android:gravity="center"
-                android:paddingStart="10dp"
-                android:paddingTop="5dp"
-                android:paddingEnd="10dp"
-                android:paddingBottom="5dp"
-                android:text="Members"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/colorTextLabelDefault"
-                android:textFontWeight="500"
-                android:textSize="12sp" />
-        </RadioGroup>
-    </HorizontalScrollView>
-
-    <FrameLayout
-        android:id="@+id/tab_container"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@color/light_grey"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/horizentalTabs" />
-</androidx.constraintlayout.widget.ConstraintLayout>

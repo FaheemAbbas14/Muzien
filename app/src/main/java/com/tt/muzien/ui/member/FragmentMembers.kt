@@ -2,6 +2,7 @@ package com.tt.muzien.ui.member
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tt.muzien.data.dto.MemberDto
@@ -22,9 +23,8 @@ class FragmentMembers : BaseFragment<AuthViewModel, FragmentMembersBinding, Auth
     private var toDate: String = ""
     private var bookingDuration: String = ""
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setMemberAdopter()
         binding.imgFilter.setOnClickListener {
             var nextFragment = FragmentFilter()

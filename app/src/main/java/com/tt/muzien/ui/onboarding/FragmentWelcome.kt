@@ -2,6 +2,7 @@ package com.tt.muzien.ui.onboarding
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.tt.muzien.data.network.AuthApi
 import com.tt.muzien.data.repository.AuthRepository
@@ -12,9 +13,8 @@ import com.tt.muzien.ui.base.BaseFragment
 
 
 class FragmentWelcome : BaseFragment<AuthViewModel, FragmentTutorialBinding, AuthRepository>() {
-    @Deprecated("Deprecated in Java")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.imgNext.setOnClickListener {
             (activity as AuthActivity?)?.loadFragment(FragmentOnBoarding())
         }

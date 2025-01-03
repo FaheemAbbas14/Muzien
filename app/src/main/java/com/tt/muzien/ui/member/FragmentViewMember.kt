@@ -3,6 +3,7 @@ package com.tt.muzien.ui.member
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import com.tt.muzien.data.dto.MemberDto
@@ -19,9 +20,8 @@ class FragmentViewMember :
     BaseFragment<HomeViewModel, FragmentViewMemberBinding, HomeRepository>() {
     var member: MemberDto? = null
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
     }
 
     override fun getViewModel(): Class<HomeViewModel> {

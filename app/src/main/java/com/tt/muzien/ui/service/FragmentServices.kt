@@ -2,6 +2,7 @@ package com.tt.muzien.ui.service
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import com.tt.muzien.data.dto.ServiceInfo
 import com.tt.muzien.data.network.AuthApi
@@ -21,9 +22,8 @@ class FragmentServices : BaseFragment<AuthViewModel, FragmentServicesBinding, Au
     private var toDate: String = ""
     private var bookingDuration: String = ""
 
-    @Deprecated("Deprecated in Java")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setServicesAdopter()
         binding.imgFilter.setOnClickListener {
             var nextFragment = FragmentFilter()
@@ -64,8 +64,10 @@ class FragmentServices : BaseFragment<AuthViewModel, FragmentServicesBinding, Au
         binding.rcyServices.setOnChildClickListener { _, _, groupPosition, childPosition, _ ->
             val group = groupTitles[groupPosition]
             val child = servicesMap[group]?.get(childPosition)
-//            Toast.makeText(requireContext(), "Selected: $child in $group", Toast.LENGTH_SHORT)
-//                .show()
+            var nextFragment = FragmentUpdateService()
+            nextFragment.service=child
+            nextFragment.category=group
+            (activity as HomeActivity?)?.loadFragment(nextFragment)
             true
         }
 

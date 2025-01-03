@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="15dp"
+    android:paddingBottom="15dp"
+    android:background="@android:color/white">
+
+    <!-- Salon Name -->
+    <TextView
+        android:id="@+id/salon_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Salon Name"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/salon_toggle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <!-- Toggle -->
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/salon_toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/salon_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/salon_name"
+        app:switchMinWidth="56dp"
+        app:switchPadding="12dp"
+        app:thumbTextPadding="12dp"
+        android:thumb="@drawable/custom_switch_thumb"
+        app:track="@drawable/custom_switch_track" />
+
+    <!-- Address -->
+    <LinearLayout
+        android:id="@+id/address_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/salon_name">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/location"/>
+
+        <TextView
+            android:id="@+id/saloon_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Rd. 2121 Alemal Dist. 12643 Riyadh SA"
+            android:textColor="@color/black_shade2"
+            android:textSize="12sp"
+            android:textFontWeight="400"
+            android:fontFamily="@font/manrope_regular"/>
+    </LinearLayout>
+
+    <!-- Duration Layout -->
+
+    <LinearLayout
+        android:id="@+id/duration_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/rounded_white_grey"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        app:layout_constraintEnd_toStartOf="@+id/price_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/address_layout"
+        app:layout_constraintWidth_percent="0.45">
+
+
+        <TextView
+            android:id="@+id/edtDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center|left"
+            android:hint="45 mins"
+            android:inputType="text"
+            android:paddingRight="10dp"
+            android:textColor="@color/colorTextDefault"
+            android:textFontWeight="400"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="8dp"
+            app:srcCompat="@drawable/ddl_icon" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtDurationLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="-10dp"
+        android:background="@color/white"
+        android:fontFamily="@font/manrope_regular"
+        android:inputType="textEmailAddress"
+        android:text="Duration"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textFontWeight="500"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toTopOf="@+id/duration_layout"
+        app:layout_constraintStart_toStartOf="@+id/duration_layout" />
+
+    <!-- Price Layout -->
+    <LinearLayout
+        android:id="@+id/price_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/rounded_white_grey"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/duration_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/duration_layout"
+        app:layout_constraintTop_toTopOf="@id/duration_layout">
+
+        <TextView
+            android:id="@+id/txtCurrency"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:background="@color/white"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center"
+            android:inputType="textEmailAddress"
+            android:text="SAR"
+            android:textColor="@color/black_shade3"
+            android:textFontWeight="400"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@+id/llPrice"
+            app:layout_constraintStart_toStartOf="@+id/llPrice" />
+
+        <EditText
+            android:id="@+id/edtPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center|left"
+            android:hint="20"
+            android:inputType="text"
+            android:paddingLeft="5dp"
+            android:textColor="@color/colorTextDefault"
+            android:textFontWeight="400"
+            android:textSize="14sp" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtPriceLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="-10dp"
+        android:background="@color/white"
+        android:fontFamily="@font/manrope_regular"
+        android:inputType="textEmailAddress"
+        android:text="Price"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textFontWeight="500"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toTopOf="@+id/price_layout"
+        app:layout_constraintStart_toStartOf="@+id/price_layout" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
