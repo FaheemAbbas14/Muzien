@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.core.content.res.ResourcesCompat
@@ -21,6 +22,8 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.MemberDto
+import com.tt.muzien.ui.home.HomeActivity
+import com.tt.muzien.ui.member.FragmentInvite
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 
 
@@ -74,6 +77,9 @@ class MembersListAdapter(
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         var item: MemberDto = itemList[position]
+        holder.imgMenu.setOnClickListener{
+            showCustomMenu(holder.imgMenu)
+        }
         if (fromSaloon) {
             holder.llStyle.visibility = View.GONE
         }
@@ -146,6 +152,46 @@ class MembersListAdapter(
             .into(holder.imgProfilePic)
     }
 
+    private fun showCustomMenu(anchor: View) {
+        // Inflate the custom menu layout
+        val inflater = LayoutInflater.from(context)
+        val menuView = inflater.inflate(R.layout.invite_layout, null)
+
+        // Initialize the PopupWindow
+        val popupWindow = PopupWindow(
+            menuView,
+            ViewGroup.LayoutParams.WRAP_CONTENT, // Width matches the anchor view width
+            ViewGroup.LayoutParams.WRAP_CONTENT, // Height wraps the content
+            true // Focusable to handle clicks outside the menu
+        )
+
+        // Set click listeners for menu options
+        val option1: TextView = menuView.findViewById(R.id.invite_salon)
+        val option2: TextView = menuView.findViewById(R.id.invite_user)
+        val option3: TextView = menuView.findViewById(R.id.delete_user)
+        option1.text="Mark as Manager"
+        option2.text="Inactivate User"
+        option3.text="Delete User"
+        option1.setOnClickListener {
+
+            // Handle Option 1 click
+            popupWindow.dismiss()
+        }
+
+        option2.setOnClickListener {
+
+            // Handle Option 2 click
+            popupWindow.dismiss()
+        }
+
+        option3.setOnClickListener {
+            // Handle Option 3 click
+            popupWindow.dismiss()
+        }
+
+        // Show the PopupWindow below the anchor view
+        popupWindow.showAsDropDown(anchor, 0, 10) // Adjust offset as needed
+    }
 
     override fun getItemCount() = itemList.size
 }

@@ -65,12 +65,14 @@ class HomeActivity : AppCompatActivity() {
             when (selectedTab) {
 
                 R.id.rdoSaloons -> {
-                    var nextFragment = FragmentAddSaloonMember()
-                    loadFragment(nextFragment)
+//                    var nextFragment = FragmentAddSaloonMember()
+//                    nextFragment.fromMain=true
+//                    loadFragment(nextFragment)
                 }
 
                 R.id.rdoMembers -> {
                     var nextFragment = FragmentAddSaloonMember()
+                    nextFragment.fromMain=true
                     loadFragment(nextFragment)
                 }
 

@@ -63,9 +63,9 @@ class FragmentMembers : BaseFragment<AuthViewModel, FragmentMembersBinding, Auth
         binding.txtHeading.text = "Members(${membersList.size})"
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(position: Int) {
-//                var nextFragment = FragmentViewMember()
-//                nextFragment.member = membersList[position]
-//                (activity as HomeActivity?)?.loadFragment(nextFragment)
+                var nextFragment = FragmentViewMember()
+                nextFragment.member = membersList[position]
+                (activity as HomeActivity?)?.loadFragment(nextFragment)
 
             }
         }

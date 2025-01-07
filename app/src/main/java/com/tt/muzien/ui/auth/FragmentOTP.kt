@@ -311,4 +311,15 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
             e.printStackTrace()
         }
     }
+    @RequiresApi(Build.VERSION_CODES.M)
+    override fun onPause() {
+        super.onPause()
+        (activity as AuthActivity?)?.changeStatusBarColor(R.color.colorPrimary)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    override fun onResume() {
+        super.onResume()
+        (activity as AuthActivity?)?.changeStatusBarColor(R.color.white)
+    }
 }

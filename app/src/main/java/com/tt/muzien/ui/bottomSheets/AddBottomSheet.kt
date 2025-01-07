@@ -46,6 +46,7 @@ class AddBottomSheet(activity1: HomeActivity) : BottomSheetDialogFragment()  {
         }
         txtMember.setOnClickListener {
             var nextFragment = FragmentAddSaloonMember()
+            nextFragment.fromMain=true
             (activity as HomeActivity?)?.loadFragment(nextFragment)
             // Dismiss the bottom sheet
             dismiss()

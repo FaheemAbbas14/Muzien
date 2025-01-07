@@ -53,8 +53,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/llBack"
-        app:srcCompat="@drawable/add_member_icon" />
-
+        app:srcCompat="@drawable/edit_saloon_icon" />
 
 
     <TextView
@@ -64,35 +63,20 @@
         android:layout_marginTop="10dp"
         android:background="@android:color/transparent"
         android:fontFamily="@font/manrope_bold"
-        android:text="Add Member"
+        android:text="Edit Contact"
         android:textColor="@color/colorTextLabelDefault"
-        android:textSize="22sp"
         android:textFontWeight="700"
+        android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
-    <TextView
-        android:id="@+id/txtText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="30dp"
-        android:fontFamily="@font/manrope_regular"
-        android:gravity="center"
-        android:text="Enter email ID to invite a member"
-        android:textColor="@color/colorTextLabelDefault"
-        android:textSize="14sp"
-        android:textFontWeight="400"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtLabel" />
     <LinearLayout
-        android:id="@+id/llEmail"
+        android:id="@+id/llPhone"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="15dp"
         android:background="@drawable/rounded_white_grey"
         android:clickable="true"
         android:focusable="true"
@@ -101,13 +85,37 @@
         android:paddingHorizontal="10dp"
         android:paddingVertical="10dp"
         android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="@+id/txtText"
-        app:layout_constraintStart_toStartOf="@+id/txtText"
-        app:layout_constraintTop_toBottomOf="@+id/txtText">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/llBack"
+        app:layout_constraintTop_toBottomOf="@+id/txtLabel">
 
+
+        <com.hbb20.CountryCodePicker
+            android:id="@+id/country_spinner"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            app:ccp_showFlag="true"
+            app:ccp_showFullName="false"
+            app:ccp_showNameCode="false"
+            app:ccp_showPhoneCode="false" />
+
+        <TextView
+            android:id="@+id/txtCountryCode"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center"
+            android:hint="+966"
+            android:inputType="phone"
+            android:textColor="@color/colorTextDefault"
+            android:textFontWeight="600"
+            android:textSize="16sp" />
 
         <EditText
-            android:id="@+id/edtEmail"
+            android:id="@+id/edtPhoneNumber"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
@@ -115,12 +123,12 @@
             android:background="@android:color/transparent"
             android:fontFamily="@font/manrope_regular"
             android:gravity="center|left"
-            android:hint="Smith@gmail.com"
-            android:inputType="text"
+            android:hint=""
+            android:inputType="phone"
             android:paddingRight="10dp"
             android:textColor="@color/colorTextDefault"
-            android:textFontWeight="400"
-            android:textSize="14sp" />
+            android:textFontWeight="600"
+            android:textSize="16sp" />
     </LinearLayout>
 
     <TextView
@@ -130,86 +138,27 @@
         android:layout_marginBottom="-10dp"
         android:background="@color/white"
         android:fontFamily="@font/manrope_regular"
-        android:inputType="textEmailAddress"
-        android:text="Enter Email ID"
+        android:text="Contact Number"
         android:textColor="@color/colorTextLabelDefault"
-        android:textSize="11sp"
         android:textFontWeight="500"
-        app:layout_constraintBottom_toTopOf="@+id/llEmail"
-        app:layout_constraintStart_toStartOf="@+id/llEmail" />
+        android:textSize="11sp"
+        app:layout_constraintBottom_toTopOf="@+id/llPhone"
+        app:layout_constraintStart_toStartOf="@+id/llPhone" />
 
     <TextView
-        android:id="@+id/txtEmailError"
+        android:id="@+id/txtPhoneError"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:background="@color/white"
         android:fontFamily="@font/manrope_regular"
-        android:text="Enter valid email"
+        android:text="Enter valid Phone number"
         android:textColor="@color/red_text"
         android:textSize="13sp"
         android:visibility="gone"
-        app:layout_constraintStart_toStartOf="@+id/llEmail"
-        app:layout_constraintTop_toBottomOf="@+id/llEmail" />
+        app:layout_constraintStart_toStartOf="@+id/llPhone"
+        app:layout_constraintTop_toBottomOf="@+id/llPhone" />
 
-
-    <LinearLayout
-        android:id="@+id/llSaloon"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/rounded_white_grey"
-        android:clickable="true"
-        android:focusable="true"
-        android:minHeight="60dp"
-        android:orientation="horizontal"
-        android:paddingHorizontal="10dp"
-        android:paddingVertical="10dp"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="@+id/llEmail"
-        app:layout_constraintStart_toStartOf="@+id/llEmail"
-        app:layout_constraintTop_toBottomOf="@+id/llEmail">
-
-
-        <EditText
-            android:id="@+id/edtSaloon"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:fontFamily="@font/manrope_regular"
-            android:gravity="center|left"
-            android:hint="Saloon name"
-            android:inputType="text"
-            android:paddingRight="10dp"
-            android:textColor="@color/colorTextDefault"
-            android:textFontWeight="400"
-            android:textSize="14sp" />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="8dp"
-            app:srcCompat="@drawable/ddl_icon" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/txtSaloonLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="-10dp"
-        android:background="@color/white"
-        android:fontFamily="@font/manrope_regular"
-        android:inputType="textEmailAddress"
-        android:text="Select a Salon (optional)"
-        android:textColor="@color/colorTextLabelDefault"
-        android:textSize="11sp"
-        android:textFontWeight="500"
-        app:layout_constraintBottom_toTopOf="@+id/llSaloon"
-        app:layout_constraintStart_toStartOf="@+id/llSaloon" />
 
     <LinearLayout
         android:id="@+id/llSave"
@@ -225,8 +174,8 @@
         android:paddingVertical="10dp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/llEmail"
-        app:layout_constraintStart_toStartOf="@+id/llEmail">
+        app:layout_constraintEnd_toEndOf="@+id/llPhone"
+        app:layout_constraintStart_toStartOf="@+id/llPhone">
 
         <TextView
             android:layout_width="match_parent"

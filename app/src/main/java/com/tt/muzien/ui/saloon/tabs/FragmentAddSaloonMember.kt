@@ -4,26 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.tt.muzien.constants.Keys
-import com.tt.muzien.data.network.AuthApi
 import com.tt.muzien.data.network.HomeApi
-import com.tt.muzien.data.repository.AuthRepository
 import com.tt.muzien.data.repository.HomeRepository
 import com.tt.muzien.databinding.FragmentAddSaloonMemberBinding
-import com.tt.muzien.ui.auth.AuthActivity
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.home.HomeViewModel
-import com.tt.muzien.ui.onboarding.FragmentOnBoarding
-import com.tt.muzien.ui.startNewActivity
 import com.tt.muzien.utilities.InputValidator
-import com.tt.muzien.utilities.PreferenceManager
 
 
 class FragmentAddSaloonMember :
     BaseFragment<HomeViewModel, FragmentAddSaloonMemberBinding, HomeRepository>() {
+    var fromMain: Boolean = false
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (!fromMain){
+            binding.llSaloon.visibility=View.GONE
+            binding.txtSaloonLabel.visibility=View.GONE
+
+        }
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
         }
@@ -40,6 +39,7 @@ class FragmentAddSaloonMember :
         // checkValidation()
 
     }
+
     private fun checkValidation(): Boolean {
         var isValid = true
         if (binding.edtEmail.text.toString() == "") {
@@ -59,6 +59,7 @@ class FragmentAddSaloonMember :
         }
         return isValid
     }
+
     override fun getViewModel(): Class<HomeViewModel> {
         return HomeViewModel::class.java
     }

@@ -53,8 +53,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/llBack"
-        app:srcCompat="@drawable/add_member_icon" />
-
+        app:srcCompat="@drawable/invite_icon" />
 
 
     <TextView
@@ -64,10 +63,10 @@
         android:layout_marginTop="10dp"
         android:background="@android:color/transparent"
         android:fontFamily="@font/manrope_bold"
-        android:text="Add Member"
+        android:text="Invite to a Salon"
         android:textColor="@color/colorTextLabelDefault"
-        android:textSize="22sp"
         android:textFontWeight="700"
+        android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView3" />
@@ -81,18 +80,19 @@
         android:layout_marginEnd="30dp"
         android:fontFamily="@font/manrope_regular"
         android:gravity="center"
-        android:text="Enter email ID to invite a member"
+        android:text="Select a salon to invite user"
         android:textColor="@color/colorTextLabelDefault"
-        android:textSize="14sp"
         android:textFontWeight="400"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtLabel" />
+
     <LinearLayout
-        android:id="@+id/llEmail"
+        android:id="@+id/llOpening"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="15dp"
         android:background="@drawable/rounded_white_grey"
         android:clickable="true"
         android:focusable="true"
@@ -101,78 +101,13 @@
         android:paddingHorizontal="10dp"
         android:paddingVertical="10dp"
         android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="@+id/txtText"
-        app:layout_constraintStart_toStartOf="@+id/txtText"
+        app:layout_constraintEnd_toEndOf="@+id/llInvite"
+        app:layout_constraintStart_toStartOf="@+id/llInvite"
         app:layout_constraintTop_toBottomOf="@+id/txtText">
 
 
         <EditText
-            android:id="@+id/edtEmail"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
-            android:background="@android:color/transparent"
-            android:fontFamily="@font/manrope_regular"
-            android:gravity="center|left"
-            android:hint="Smith@gmail.com"
-            android:inputType="text"
-            android:paddingRight="10dp"
-            android:textColor="@color/colorTextDefault"
-            android:textFontWeight="400"
-            android:textSize="14sp" />
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="-10dp"
-        android:background="@color/white"
-        android:fontFamily="@font/manrope_regular"
-        android:inputType="textEmailAddress"
-        android:text="Enter Email ID"
-        android:textColor="@color/colorTextLabelDefault"
-        android:textSize="11sp"
-        android:textFontWeight="500"
-        app:layout_constraintBottom_toTopOf="@+id/llEmail"
-        app:layout_constraintStart_toStartOf="@+id/llEmail" />
-
-    <TextView
-        android:id="@+id/txtEmailError"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:background="@color/white"
-        android:fontFamily="@font/manrope_regular"
-        android:text="Enter valid email"
-        android:textColor="@color/red_text"
-        android:textSize="13sp"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="@+id/llEmail"
-        app:layout_constraintTop_toBottomOf="@+id/llEmail" />
-
-
-    <LinearLayout
-        android:id="@+id/llSaloon"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/rounded_white_grey"
-        android:clickable="true"
-        android:focusable="true"
-        android:minHeight="60dp"
-        android:orientation="horizontal"
-        android:paddingHorizontal="10dp"
-        android:paddingVertical="10dp"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="@+id/llEmail"
-        app:layout_constraintStart_toStartOf="@+id/llEmail"
-        app:layout_constraintTop_toBottomOf="@+id/llEmail">
-
-
-        <EditText
-            android:id="@+id/edtSaloon"
+            android:id="@+id/edtInput"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
@@ -187,16 +122,19 @@
             android:textColor="@color/colorTextDefault"
             android:textFontWeight="400"
             android:textSize="14sp" />
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:padding="8dp"
             app:srcCompat="@drawable/ddl_icon" />
+
+
     </LinearLayout>
 
     <TextView
-        android:id="@+id/txtSaloonLabel"
+        android:id="@+id/txtInputLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -204,17 +142,21 @@
         android:background="@color/white"
         android:fontFamily="@font/manrope_regular"
         android:inputType="textEmailAddress"
-        android:text="Select a Salon (optional)"
+        android:text="Select a Salon"
         android:textColor="@color/colorTextLabelDefault"
-        android:textSize="11sp"
         android:textFontWeight="500"
-        app:layout_constraintBottom_toTopOf="@+id/llSaloon"
-        app:layout_constraintStart_toStartOf="@+id/llSaloon" />
+        android:textSize="11sp"
+        app:layout_constraintBottom_toTopOf="@+id/llOpening"
+        app:layout_constraintStart_toStartOf="@+id/llOpening" />
+
+
 
     <LinearLayout
-        android:id="@+id/llSave"
+        android:id="@+id/llInvite"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
         android:layout_marginBottom="28dp"
         android:background="@drawable/rounded_blue_100"
         android:clickable="true"
@@ -225,15 +167,15 @@
         android:paddingVertical="10dp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/llEmail"
-        app:layout_constraintStart_toStartOf="@+id/llEmail">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fontFamily="@font/manrope_bold"
             android:gravity="center"
-            android:text="Save"
+            android:text="Invite"
             android:textColor="@color/white"
             android:textSize="14sp" />
     </LinearLayout>

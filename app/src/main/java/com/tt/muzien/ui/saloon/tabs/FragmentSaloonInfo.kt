@@ -44,6 +44,14 @@ class FragmentSaloonInfo : BaseFragment<HomeViewModel, FragmentSaloonInfoBinding
             var nextFragment = FragmentAddWorkingDay()
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
+        binding.imgEditAbout.setOnClickListener {
+            var nextFragment = EditSaloonAbout()
+            (activity as HomeActivity?)?.loadFragment(nextFragment)
+        }
+        binding.imgEditContact.setOnClickListener {
+            var nextFragment = EditSaloonContact()
+            (activity as HomeActivity?)?.loadFragment(nextFragment)
+        }
         // Initialize the SupportMapFragment and request the map.
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
