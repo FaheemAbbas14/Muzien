@@ -39,7 +39,7 @@ class FragmentAddSaloonServices :
             (activity as HomeActivity?)?.popFragment()
         }
         binding.imgPhoto.setOnClickListener {
-            openGallery()
+            uploadImage()
         }
         binding.llSave.setOnClickListener {
 

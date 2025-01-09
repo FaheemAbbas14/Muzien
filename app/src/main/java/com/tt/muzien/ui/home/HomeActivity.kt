@@ -16,6 +16,7 @@ import com.tt.muzien.ui.bookings.FragmentBookings
 import com.tt.muzien.ui.bottomSheets.AddBottomSheet
 import com.tt.muzien.ui.notifications.FragmentNotifications
 import com.tt.muzien.ui.profile.FragmentProfile
+import com.tt.muzien.ui.saloon.FragmentAddSaloon
 import com.tt.muzien.ui.saloon.tabs.FragmentAddSaloonMember
 import com.tt.muzien.ui.saloon.tabs.FragmentAddSaloonServices
 import com.tt.muzien.ui.views.CustomLoadingIndicator
@@ -65,9 +66,8 @@ class HomeActivity : AppCompatActivity() {
             when (selectedTab) {
 
                 R.id.rdoSaloons -> {
-//                    var nextFragment = FragmentAddSaloonMember()
-//                    nextFragment.fromMain=true
-//                    loadFragment(nextFragment)
+                    var nextFragment = FragmentAddSaloon()
+                    loadFragment(nextFragment)
                 }
 
                 R.id.rdoMembers -> {
