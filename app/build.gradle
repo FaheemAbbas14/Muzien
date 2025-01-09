@@ -16,7 +16,7 @@ android {
   namespace 'com.tt.muzien'
   defaultConfig {
     applicationId "com.tt.muzien"
-    minSdk 22
+    minSdk 23
     targetSdk 35
     versionCode 1
     versionName "1.0"
@@ -116,7 +116,10 @@ dependencies {
   implementation("com.google.firebase:firebase-crashlytics")
   implementation("com.google.firebase:firebase-analytics")
 
+//for google places api to autocomplete address
+  implementation 'com.google.android.libraries.places:places:4.1.0'
 
+  implementation 'com.caverock:androidsvg:1.4'
   // Add the dependencies for any other desired Firebase products
   // https://firebase.google.com/docs/android/setup#available-libraries
 }

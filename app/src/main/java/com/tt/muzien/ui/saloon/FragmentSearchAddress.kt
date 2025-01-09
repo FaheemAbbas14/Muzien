@@ -1,0 +1,199 @@
+package com.tt.muzien.ui.saloon
+
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.Drawable
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.setFragmentResult
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.net.PlacesClient
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.AutocompleteActivity
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
+import com.tt.muzien.R
+import com.tt.muzien.data.network.HomeApi
+import com.tt.muzien.data.repository.HomeRepository
+import com.tt.muzien.databinding.FragmentSearchAddressBinding
+import com.tt.muzien.ui.base.BaseFragment
+import com.tt.muzien.ui.home.HomeActivity
+import com.tt.muzien.ui.home.HomeViewModel
+
+
+class FragmentSearchAddress :
+    BaseFragment<HomeViewModel, FragmentSearchAddressBinding, HomeRepository>(),
+    OnMapReadyCallback {
+    private lateinit var placesClient: PlacesClient
+    private lateinit var mMap: GoogleMap
+    private var selectedAddress: String = ""
+
+    companion object {
+        private const val AUTOCOMPLETE_REQUEST_CODE = 1
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val apiKey = getApiKey()
+        // Initialize the Places SDK
+        Places.initialize(requireContext(), apiKey)
+        placesClient = Places.createClient(requireContext())
+        //setup google maps
+        initGoogleMaps()
+        binding.llBack.setOnClickListener {
+            (activity as HomeActivity?)?.popFragment()
+        }
+        binding.txtSearch.setOnClickListener {
+            startAutocompleteActivity()
+        }
+        binding.cnstSave.setOnClickListener {
+            // Inside your current fragment before popping
+            val resultBundle = Bundle().apply {
+                putString("address", selectedAddress) // Replace with your data
+            }
+
+            setFragmentResult("requestKey", resultBundle)
+            (activity as HomeActivity?)?.popFragment()
+        }
+    }
+
+    private fun initGoogleMaps() {
+        // Initialize the SupportMapFragment and request the map.
+        val mapFragment = childFragmentManager
+            .findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        mMap = googleMap
+        // Set the map type
+        mMap.mapType = GoogleMap.MAP_TYPE_TERRAIN  // Change to desired map type
+
+    }
+
+    private fun getApiKey(): String {
+        val appInfo = requireActivity().packageManager.getApplicationInfo(
+            requireActivity().packageName,
+            PackageManager.GET_META_DATA
+        )
+        return appInfo.metaData.getString("com.google.android.geo.API_KEY")
+            ?: throw IllegalStateException("API_KEY not found in manifest")
+    }
+
+    // Add function to update marker location
+    private fun updateMarkerLocation(latitude: Double, longitude: Double) {
+        moveMarker(LatLng(latitude, longitude)!!)
+        setAddressData()
+    }
+
+    private fun setAddressData() {
+        binding.txtAddress.text = selectedAddress
+        binding.txtSearch.text = selectedAddress
+    }
+
+    private fun moveMarker(latLng: LatLng) {
+        val bitmapDescriptor = vectorToBitmapDescriptor(requireContext(), R.drawable.location_icon)
+
+        // Move the marker to the new location
+
+        mMap.addMarker(
+            MarkerOptions().position(latLng).title(selectedAddress)
+                .icon(bitmapDescriptor)
+        )
+
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+    }
+
+    fun vectorToBitmapDescriptor(context: Context, vectorResId: Int): BitmapDescriptor? {
+        val vectorDrawable: Drawable? = ContextCompat.getDrawable(context, vectorResId)
+        if (vectorDrawable == null) {
+            return null
+        }
+
+        val width = vectorDrawable.intrinsicWidth
+        val height = vectorDrawable.intrinsicHeight
+        vectorDrawable.setBounds(0, 0, width, height)
+
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        vectorDrawable.draw(canvas)
+
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
+    }
+
+    private fun startAutocompleteActivity() {
+        // Set the fields to specify which types of place data to return.
+        val fields =
+            listOf(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.LAT_LNG)
+
+        // Start the autocomplete intent.
+        val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+            .build(requireContext())
+        startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+            when (resultCode) {
+                Activity.RESULT_OK -> {
+                    data?.let {
+                        val place = Autocomplete.getPlaceFromIntent(data)
+                        if (place.latLng != null) {
+                            selectedAddress = place.address
+                            updateMarkerLocation(place.latLng.latitude, place.latLng.longitude)
+                        }
+                    }
+                }
+
+                AutocompleteActivity.RESULT_ERROR -> {
+                    data?.let {
+                        val status = Autocomplete.getStatusFromIntent(data)
+                        // Handle the error
+                        println(status.statusMessage)
+                    }
+                }
+
+                Activity.RESULT_CANCELED -> {
+                    // The user canceled the operation
+                }
+            }
+        }
+    }
+
+    override fun getViewModel(): Class<HomeViewModel> {
+        return HomeViewModel::class.java
+    }
+
+    override fun getFragmentBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ) = FragmentSearchAddressBinding.inflate(inflater, container, false)
+
+    override fun getFragmentRepository() =
+        HomeRepository(remoteDataSource.buildApi(HomeApi::class.java), userPreferences)
+
+    override fun onResume() {
+        super.onResume()
+        (activity as HomeActivity?)?.hideTabs()
+    }
+
+
+}

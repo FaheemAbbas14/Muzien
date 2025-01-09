@@ -21,6 +21,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.WorkingHourData
@@ -44,6 +45,7 @@ class FragmentAddSaloon : BaseFragment<HomeViewModel, FragmentAddSaloonBinding, 
     private val REQUEST_PERMISSIONS = 3
     private var image_uri: Uri? = null
     private var isCertificate: Boolean = false
+    private var selectedAddress: String? = ""
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,6 +61,14 @@ class FragmentAddSaloon : BaseFragment<HomeViewModel, FragmentAddSaloonBinding, 
             isCertificate = true
             uploadImage()
         }
+        binding.llSelectLocation.setOnClickListener {
+            var nextFragment = FragmentSearchAddress()
+            (activity as HomeActivity?)?.loadFragment(nextFragment)
+        }
+        binding.imgEditLocation.setOnClickListener {
+            var nextFragment = FragmentSearchAddress()
+            (activity as HomeActivity?)?.loadFragment(nextFragment)
+        }
         binding.imgAddHoliday.setOnClickListener {
             var nextFragment = FragmentAddHoliday()
             (activity as HomeActivity?)?.loadFragment(nextFragment)
@@ -70,6 +80,16 @@ class FragmentAddSaloon : BaseFragment<HomeViewModel, FragmentAddSaloonBinding, 
         binding.imgMinus.setOnClickListener {
             binding.cnstCertificateData.visibility = View.GONE
             binding.imgCertificate.visibility = View.VISIBLE
+        }
+        setFragmentResultListener("requestKey") { key, bundle ->
+            selectedAddress = bundle.getString("address")
+            if (selectedAddress != null && selectedAddress != "") {
+                binding.llSelectLocation.visibility = View.GONE
+                binding.txtAddress.visibility = View.VISIBLE
+                binding.imgEditLocation.visibility = View.VISIBLE
+                binding.txtAddress.text = selectedAddress
+            }
+
         }
         setData()
         setPrivacyText()
