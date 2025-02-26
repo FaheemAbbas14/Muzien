@@ -4,6 +4,8 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.Window
+import android.view.WindowInsetsController
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +13,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.tt.muzien.R
+import com.tt.muzien.data.dto.SaloonDto
+import com.tt.muzien.data.dto.UserInfo
 import com.tt.muzien.databinding.ActivityHomeBinding
 import com.tt.muzien.ui.bookings.FragmentBookings
 import com.tt.muzien.ui.bottomSheets.AddBottomSheet
@@ -38,9 +42,27 @@ class HomeActivity : AppCompatActivity() {
         setContentView(binding.root)
         changeStatusBarColor(Color.TRANSPARENT)
         setSystemWindow(true)
+        setStatusBarIconColor(window, true)
         customLoadingIndicator = CustomLoadingIndicator(this, Color.WHITE)
         // Default fragment
-        loadFragment(HomeFragment())
+        if (UserInfo.userRole == "Saloon Manager") {
+            binding.txtRole.text="Saloon Manager"
+            var nextFragment = SaloonManagerDashboard()
+            nextFragment.selectedSaloon = SaloonDto(
+                "",
+                "The Style Zone",
+                true,
+                "Rd. 2121 Alamal Dist. 12643 Riyadh SA",
+                "4.5 (2398 reviews)",
+                "10:00 AM - 11:00 PM"
+            )
+            loadFragment(nextFragment)
+            binding.constraintLayout2.visibility = View.GONE
+            binding.imgadd.visibility = View.GONE
+
+        } else {
+            loadFragment(HomeFragment())
+        }
         binding.llHome.setOnClickListener {
             binding.homeBg.visibility = View.VISIBLE
             binding.bookingBg.visibility = View.INVISIBLE
@@ -72,7 +94,7 @@ class HomeActivity : AppCompatActivity() {
 
                 R.id.rdoMembers -> {
                     var nextFragment = FragmentAddSaloonMember()
-                    nextFragment.fromMain=true
+                    nextFragment.fromMain = true
                     loadFragment(nextFragment)
                 }
 
@@ -85,7 +107,7 @@ class HomeActivity : AppCompatActivity() {
                     val bottomSheet = AddBottomSheet(this)
                     bottomSheet.show(supportFragmentManager, bottomSheet.tag)
                 }
-             }
+            }
 
         }
         binding.imgNotifications.setOnClickListener {
@@ -131,15 +153,18 @@ class HomeActivity : AppCompatActivity() {
     }
 
     fun showTabs() {
-        binding.constraintLayout2.visibility = View.VISIBLE
         binding.constraintLayout.visibility = View.VISIBLE
-        binding.imgadd.visibility = View.VISIBLE
+        if (UserInfo.userRole != "Saloon Manager") {
+            binding.constraintLayout2.visibility = View.VISIBLE
+            binding.imgadd.visibility = View.VISIBLE
+        }
     }
 
     fun hideTabs() {
         binding.constraintLayout2.visibility = View.GONE
         binding.constraintLayout.visibility = View.GONE
         binding.imgadd.visibility = View.GONE
+
     }
 
     fun popFragment() {
@@ -153,13 +178,35 @@ class HomeActivity : AppCompatActivity() {
             binding.statusBar.visibility = View.GONE
         }
     }
-
+    fun setStatusBarIconColor(window: Window, isLightBackground: Boolean) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // For Android 11 and above
+            window.insetsController?.setSystemBarsAppearance(
+                if (isLightBackground) WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS else 0,
+                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+            )
+        } else {
+            // For Android 6.0 to 10
+            @Suppress("DEPRECATION")
+            window.decorView.systemUiVisibility = if (isLightBackground) {
+                View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            } else {
+                0
+            }
+        }
+    }
     @RequiresApi(Build.VERSION_CODES.M)
     fun changeStatusBarColor(colorResId: Int) {
         window.statusBarColor = colorResId
         if (colorResId == Color.WHITE) {
+            binding.statusBar.setBackgroundColor(Color.WHITE)
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         } else {
+            if (colorResId == resources.getColor(R.color.colorPrimary)) {
+                binding.statusBar.setBackgroundColor(colorResId)
+            } else {
+                binding.statusBar.setBackgroundColor(Color.WHITE)
+            }
             window.decorView.systemUiVisibility = 0
 
         }

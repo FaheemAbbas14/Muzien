@@ -50,7 +50,7 @@
             android:button="@android:color/transparent"
             android:checked="true"
             android:gravity="center"
-            android:text="Analytics"
+            android:text="@string/analytics"
             android:textSize="12sp"
             android:textFontWeight="500"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -72,7 +72,7 @@
             android:background="@drawable/rounded_grey"
             android:button="@android:color/transparent"
             android:gravity="center"
-            android:text="Saloon(4)"
+            android:text="@string/saloon_4"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/colorTextLabelDefault" />
 
@@ -92,7 +92,7 @@
             android:background="@drawable/rounded_grey"
             android:button="@android:color/transparent"
             android:gravity="center"
-            android:text="Members(4)"
+            android:text="@string/members_4"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/colorTextLabelDefault" />
 
@@ -110,7 +110,7 @@
             android:background="@drawable/rounded_grey"
             android:button="@android:color/transparent"
             android:gravity="center"
-            android:text="Services"
+            android:text="@string/services"
             android:textSize="12sp"
             android:textFontWeight="500"
             android:textAppearance="?android:attr/textAppearanceMedium"

@@ -26,7 +26,7 @@
         android:layout_weight="700"
         android:fontFamily="@font/manrope_bold"
         android:gravity="center"
-        android:text="Service Added\n Successfully"
+        android:text="@string/service_added_n_successfully"
         android:textColor="@color/green_text"
         android:textSize="22sp" />
 
@@ -38,7 +38,7 @@
         android:layout_weight="400"
         android:fontFamily="@font/manrope_regular"
         android:gravity="center"
-        android:text="Would you like to enable the\n service for salons?"
+        android:text="@string/would_you_like_to_enable_the_n_service_for_salons"
         android:textColor="@color/black_shade1"
         android:textSize="14sp" />
 
@@ -61,7 +61,7 @@
             android:paddingBottom="14dp"
             android:layout_weight="1"
             android:background="@drawable/rounded_white_blue"
-            android:text="Not Now"
+            android:text="@string/not_now"
             android:textAllCaps="false"
             android:textColor="@color/colorPrimary" />
 
@@ -78,7 +78,7 @@
             android:paddingBottom="14dp"
             android:layout_weight="1"
             android:background="@drawable/rounded_green_100"
-            android:text="Yes, Proceed"
+            android:text="@string/yes_proceed"
             android:textAllCaps="false"
             android:textColor="@color/white" />
     </LinearLayout>

@@ -11,7 +11,7 @@
         android:layout_weight="1"
         android:fontFamily="@font/manrope_regular"
         android:gravity="center|left"
-        android:text="Faheem Abbas"
+        android:text="@string/faheem_abbas"
         android:textColor="@color/colorTextLabelDefault"
         android:textFontWeight="700"
         android:textSize="14sp" />

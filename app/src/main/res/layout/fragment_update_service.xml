@@ -113,7 +113,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/manrope_regular"
-                    android:text="Select the salons where you would like to activate the service."
+                    android:text="@string/select_the_salons_where_you_would_like_to_activate_the_service"
                     android:textColor="@color/black_shade1"
                     android:textFontWeight="700"
                     android:textSize="14sp" />
@@ -150,7 +150,7 @@
                     android:layout_height="match_parent"
                     android:fontFamily="@font/manrope_bold"
                     android:gravity="center"
-                    android:text="Update"
+                    android:text="@string/update"
                     android:textColor="@color/white"
                     android:textSize="14sp" />
             </LinearLayout>

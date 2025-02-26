@@ -57,14 +57,14 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/txtUserName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:fontFamily="@font/manrope_regular"
             android:gravity="center"
-            android:text="Welcome Idrees"
+            android:text="@string/welcome_idrees"
             android:textColor="@color/textBlack"
             android:textFontWeight="700"
             android:textSize="22sp"
@@ -72,17 +72,17 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/txtRole"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:fontFamily="@font/manrope_regular"
-            android:text="Owner"
+            android:text="@string/owner"
             android:textColor="@color/textBlack"
             android:textFontWeight="500"
             android:textSize="11sp"
             app:layout_constraintStart_toEndOf="@+id/imgProfilePic"
-            app:layout_constraintTop_toBottomOf="@+id/textView3" />
+            app:layout_constraintTop_toBottomOf="@+id/txtUserName" />
 
         <ImageView
             android:id="@+id/imgNotifications"
@@ -167,7 +167,7 @@
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/manrope_regular"
                 android:gravity="center"
-                android:text="Home"
+                android:text="@string/home"
                 android:textColor="@color/colorPrimary"
                 android:textFontWeight="800"
                 android:textSize="12sp"
@@ -215,7 +215,7 @@
                 android:layout_marginTop="5dp"
                 android:fontFamily="@font/manrope_regular"
                 android:gravity="center"
-                android:text="Bookings"
+                android:text="@string/bookings"
                 android:textColor="@color/colorTextLabelDefault"
                 android:textFontWeight="800"
                 android:textSize="12sp"

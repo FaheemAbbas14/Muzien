@@ -2,6 +2,7 @@ package com.tt.muzien.ui.saloon
 
 import android.Manifest
 import android.app.Activity
+import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.content.ContentValues
 import android.content.Intent
@@ -10,6 +11,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.provider.OpenableColumns
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ClickableSpan
@@ -32,8 +34,11 @@ import com.tt.muzien.ui.adapters.WorkingHoursAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.home.HomeViewModel
+import com.tt.muzien.ui.payment.FragmentAddPayment
+import com.tt.muzien.ui.payment.FragmentPayNow
 import com.tt.muzien.ui.saloon.tabs.FragmentAddHoliday
 import com.tt.muzien.ui.saloon.tabs.FragmentAddWorkingDay
+import com.tt.muzien.utilities.TimeHelper
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 
 
@@ -46,6 +51,8 @@ class FragmentAddSaloon : BaseFragment<HomeViewModel, FragmentAddSaloonBinding, 
     private var image_uri: Uri? = null
     private var isCertificate: Boolean = false
     private var selectedAddress: String? = ""
+    private val DOCUMENT_PICKER_REQUEST_CODE = 1001
+    var fileName: String = ""
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,7 +66,7 @@ class FragmentAddSaloon : BaseFragment<HomeViewModel, FragmentAddSaloonBinding, 
         }
         binding.imgCertificate.setOnClickListener {
             isCertificate = true
-            uploadImage()
+           selectDocument()
         }
         binding.llSelectLocation.setOnClickListener {
             var nextFragment = FragmentSearchAddress()
@@ -80,6 +87,10 @@ class FragmentAddSaloon : BaseFragment<HomeViewModel, FragmentAddSaloonBinding, 
         binding.imgMinus.setOnClickListener {
             binding.cnstCertificateData.visibility = View.GONE
             binding.imgCertificate.visibility = View.VISIBLE
+        }
+        binding.txtContinue.setOnClickListener {
+            var nextFragment = FragmentPayNow()
+            (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
         setFragmentResultListener("requestKey") { key, bundle ->
             selectedAddress = bundle.getString("address")
@@ -114,6 +125,15 @@ class FragmentAddSaloon : BaseFragment<HomeViewModel, FragmentAddSaloonBinding, 
             }
         }
         builder.show()
+    }
+
+    fun selectDocument() {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            type =
+                "*/*" // Allows all document types. You can specify MIME types like "application/pdf" for PDFs.
+            addCategory(Intent.CATEGORY_OPENABLE)
+        }
+        startActivityForResult(intent, DOCUMENT_PICKER_REQUEST_CODE)
     }
 
     private fun checkPermissions(): Boolean {
@@ -163,8 +183,40 @@ class FragmentAddSaloon : BaseFragment<HomeViewModel, FragmentAddSaloonBinding, 
         startActivityForResult(galleryIntent, REQUEST_GALLERY)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun handleDocument(uri: Uri) {
+        // Example: Reading file name
+        val cursor = requireActivity().contentResolver.query(uri, null, null, null, null)
+        cursor?.use {
+            val nameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            it.moveToFirst()
+            fileName = it.getString(nameIndex)
+            binding.txtDocName.text = fileName
+            println("Selected document name: $fileName")
+            val currentTime = TimeHelper.getCurrentTime("HH:mm:ss")
+            binding.txtDocTiming.text="Uploaded on $currentTime"
+            binding.imgCertificate.setImageURI(image_uri)
+            binding.cnstCertificateData.visibility = View.VISIBLE
+            binding.imgCertificate.visibility = View.GONE
+        }
+
+        // Example: Open InputStream
+        val inputStream = requireActivity().contentResolver.openInputStream(uri)
+        inputStream?.use {
+            // Read the content of the document
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == DOCUMENT_PICKER_REQUEST_CODE && resultCode == RESULT_OK) {
+            val documentUri = data?.data
+            documentUri?.let {
+                // Perform operations with the document Uri
+                handleDocument(it)
+            }
+        }
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 REQUEST_CAMERA -> {

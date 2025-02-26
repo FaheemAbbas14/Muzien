@@ -14,6 +14,7 @@ plugins {
 android {
   compileSdk 35
   namespace 'com.tt.muzien'
+  flavorDimensions += "version"
   defaultConfig {
     applicationId "com.tt.muzien"
     minSdk 23
@@ -23,7 +24,18 @@ android {
 
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
-
+  productFlavors {
+    create("admin") {
+      dimension = "version"
+      applicationId = "com.tt.muzien"
+      versionNameSuffix = "-admin"
+    }
+    create("client") {
+      dimension = "version"
+      applicationId = "com.tt.muzienclient"
+      versionNameSuffix = "-client"
+    }
+  }
   buildTypes {
     release {
       minifyEnabled false
@@ -122,6 +134,8 @@ dependencies {
   implementation 'com.caverock:androidsvg:1.4'
   // Add the dependencies for any other desired Firebase products
   // https://firebase.google.com/docs/android/setup#available-libraries
+  implementation 'com.google.android.flexbox:flexbox:3.0.0'
+
 }
 kapt {
   correctErrorTypes true

@@ -8,6 +8,7 @@ import android.widget.TextView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.tt.muzien.R
 import com.tt.muzien.ui.home.HomeActivity
+import com.tt.muzien.ui.saloon.FragmentAddSaloon
 import com.tt.muzien.ui.saloon.tabs.FragmentAddSaloonMember
 import com.tt.muzien.ui.saloon.tabs.FragmentAddSaloonServices
 
@@ -39,7 +40,7 @@ class AddBottomSheet(activity1: HomeActivity) : BottomSheetDialogFragment()  {
         val txtService: TextView = view.findViewById(R.id.txtService)
         // Set up button actions
         txtSaloon.setOnClickListener {
-            var nextFragment = FragmentAddSaloonServices()
+            var nextFragment = FragmentAddSaloon()
             (activity as HomeActivity?)?.loadFragment(nextFragment)
             // Dismiss the bottom sheet
             dismiss()

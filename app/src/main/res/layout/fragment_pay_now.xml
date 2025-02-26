@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ui.saloon.FragmentSaloon">
+
+    <LinearLayout
+        android:id="@+id/llBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/manrope_bold"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:src="@drawable/back_button"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/manrope_regular"
+            android:text="@string/back"
+            android:textColor="@color/black"
+            android:textFontWeight="700"
+            android:textSize="16sp"
+            tools:layout_editor_absoluteX="38dp"
+            tools:layout_editor_absoluteY="21dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center"
+            android:paddingEnd="50dp"
+            android:text="@string/pay_now"
+            android:textColor="@color/black"
+            android:textFontWeight="700"
+            android:textSize="16sp"
+            tools:layout_editor_absoluteX="38dp"
+            tools:layout_editor_absoluteY="21dp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@android:color/transparent"
+        android:fontFamily="@font/manrope_bold"
+        android:text="@string/salon_subscription_fee"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textFontWeight="700"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llBack" />
+
+    <TextView
+        android:id="@+id/txtText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="30dp"
+        android:fontFamily="@font/manrope_regular"
+        android:gravity="center"
+        android:text="@string/_1_year_subscription"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textFontWeight="400"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtLabel" />
+
+    <TextView
+        android:id="@+id/txtTotalFee"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/manrope_regular"
+        android:gravity="center"
+        android:text="@string/total_fee_1_000_sar"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textFontWeight="700"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/txtText"
+        app:layout_constraintTop_toBottomOf="@+id/txtText" />
+
+    <RadioGroup
+        android:id="@+id/rdoPayment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="@+id/txtText"
+        app:layout_constraintStart_toStartOf="@+id/txtText"
+        app:layout_constraintTop_toBottomOf="@+id/txtTotalFee">
+
+        <com.tt.muzien.ui.views.CustomRadioButton
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/rounded_white_grey_4"
+            app:image="@drawable/apple_pay"
+            app:text="Apple Pay" />
+
+        <com.tt.muzien.ui.views.CustomRadioButton
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/rounded_white_grey_4"
+            android:button="@null"
+            app:image="@drawable/apple_pay"
+            app:text="Apple Pay" />
+
+    </RadioGroup>
+
+    <LinearLayout
+        android:id="@+id/llOtherPayment"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:paddingTop="14sp"
+        android:paddingBottom="14sp"
+        android:paddingStart="20dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:background="@drawable/rounded_white_grey_4"
+        app:layout_constraintEnd_toEndOf="@+id/txtText"
+        app:layout_constraintStart_toStartOf="@+id/txtText"
+        app:layout_constraintTop_toBottomOf="@+id/rdoPayment">
+
+        <ImageView
+            android:id="@+id/radioImage"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/other_card" />
+
+        <TextView
+            android:id="@+id/radioText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/other_method"
+            android:fontFamily="@font/manrope_regular"
+            android:textColor="@color/black_shade1"
+            android:textFontWeight="400"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/checkIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/grey_right" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/lock_icon"
+        app:layout_constraintStart_toStartOf="@+id/llOtherPayment"
+        app:layout_constraintTop_toBottomOf="@+id/llOtherPayment" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:fontFamily="@font/manrope_regular"
+        android:text="@string/security_is_important_to_us_your_information_is_private_and_protected"
+        android:textColor="@color/black_shade2"
+        android:textFontWeight="500"
+        android:textSize="11sp"
+        app:layout_constraintEnd_toEndOf="@+id/llOtherPayment"
+        app:layout_constraintStart_toEndOf="@+id/imageView13"
+        app:layout_constraintTop_toTopOf="@+id/imageView13" />
+    <LinearLayout
+        android:id="@+id/llPayNow"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="28dp"
+        android:background="@drawable/rounded_blue_100"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="50dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/manrope_bold"
+            android:gravity="center"
+            android:text="@string/pay_now"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

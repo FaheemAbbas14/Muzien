@@ -8,4 +8,4 @@ package com.tt.muzien.data.dto
  * faheem.abbas@bajcotechnologies.com
  * +923115284424
  */
-data class FilterData(val selection: String,val from: String,val to: String,val fromRevenue: Boolean=false,val bookingStatus: String="",val serviceProvider: String="")
+data class FilterData(val selection: String,val from: String,val to: String,val fromRevenue: Boolean=false,val bookingStatus: String="",val serviceProvider: String="",val saloon: String="")

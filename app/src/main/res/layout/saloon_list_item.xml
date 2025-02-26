@@ -33,7 +33,7 @@
             android:layout_marginTop="10dp"
             android:fontFamily="@font/manrope_bold"
             android:maxLines="1"
-            android:text="The Style Zone"
+            android:text="@string/the_style_zone"
             android:textColor="@color/colorTextDefault"
             android:textSize="14sp"
             android:textFontWeight="700"
@@ -57,9 +57,9 @@
                 android:id="@+id/txtStatusTexts"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:text="open today"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:text="@string/open_today"
                 android:gravity="center"
                 android:textSize="11sp"
                 android:textFontWeight="500"
@@ -108,9 +108,9 @@
                         android:layout_gravity="center|left"
                         android:layout_marginStart="10dp"
                         android:fontFamily="@font/manrope_regular"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textFontWeight="400"
-                        android:text="Rd. 2121 Alamal Dist. 12643 Riyadh SA"
+                        android:text="@string/rd_2121_alamal_dist_12643_riyadh_sa"
                         android:textColor="@color/colorTextLabelDefault"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -138,9 +138,9 @@
                         android:layout_gravity="center|left"
                         android:layout_marginStart="10dp"
                         android:fontFamily="@font/manrope_regular"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textFontWeight="400"
-                        android:text="4.5(10 reviews)"
+                        android:text="@string/_4_5_10_reviews"
                         android:textColor="@color/colorTextLabelDefault"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -168,9 +168,9 @@
                         android:layout_gravity="center|left"
                         android:layout_marginStart="10dp"
                         android:fontFamily="@font/manrope_regular"
-                        android:paddingLeft="5dp"
+                        android:paddingStart="5dp"
                         android:textFontWeight="400"
-                        android:text="10:00 AM - 11:00 PM"
+                        android:text="@string/_10_00_am_11_00_pm"
                         android:textColor="@color/colorTextLabelDefault"
                         android:textSize="12sp" />
                 </LinearLayout>

@@ -21,7 +21,8 @@
         android:allowBackup="false"
         android:splashScreenTheme="@null"
         android:enableOnBackInvokedCallback="true"
-        tools:targetApi="m">
+        tools:targetApi="m"
+        android:localeConfig="@xml/locales_config">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDAighSARnemopvNYobuS4kftykr3RdREU"/>

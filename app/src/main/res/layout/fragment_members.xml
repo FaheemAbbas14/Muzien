@@ -14,7 +14,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:fontFamily="@font/manrope_regular"
-        android:text="Members(4)"
+        android:text="@string/members_4"
         android:textColor="@color/colorTextLabelDefault"
         android:textFontWeight="700"
         android:textSize="16sp"

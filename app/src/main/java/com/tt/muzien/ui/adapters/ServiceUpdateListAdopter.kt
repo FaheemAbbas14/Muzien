@@ -70,6 +70,17 @@ class ServiceUpdateListAdopter(
             price.text = salon.price
             toggle.isChecked = salon.isEnabled
             durationSpinner.text = "${salon.duration}"
+            if (salon.isEnabled) {
+                duration_layout.visibility = View.VISIBLE
+                txtDurationLabel.visibility = View.VISIBLE
+                price_layout.visibility = View.VISIBLE
+               txtPriceLabel.visibility = View.VISIBLE
+            } else {
+                duration_layout.visibility = View.GONE
+                txtDurationLabel.visibility = View.GONE
+                price_layout.visibility = View.GONE
+                txtPriceLabel.visibility = View.GONE
+            }
         }
     }
 }

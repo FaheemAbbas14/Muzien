@@ -108,6 +108,7 @@ class FragmentViewMember :
     }
 
     private fun setWorkingHourAdopter() {
+        workingHourrList.clear()
         workingHourrList.add(WorkingHourData("1", "Saturday - Thursday", "10:00 AM - 11:00 PM"))
         workingHourrList.add(WorkingHourData("2", "Friday", "02:00 AM - 11:00 PM"))
         val clickListener = object : OnItemClickListner {

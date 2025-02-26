@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="@font/manrope_regular"
-            android:text="Back"
+            android:text="@string/back"
             android:textColor="@color/black"
             android:textFontWeight="700"
             android:textSize="16sp"
@@ -45,367 +45,401 @@
 
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="5dp"
+        android:background="@color/light_grey"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/llBack"
-        app:srcCompat="@drawable/add_member_icon" />
+        app:layout_constraintStart_toStartOf="@+id/llBack"
+        app:layout_constraintTop_toBottomOf="@+id/llBack">
 
-
-    <TextView
-        android:id="@+id/txtLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:background="@android:color/transparent"
-        android:fontFamily="@font/manrope_bold"
-        android:text="Add Service"
-        android:textColor="@color/colorTextLabelDefault"
-        android:textFontWeight="700"
-        android:textSize="22sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
-
-    <TextView
-        android:id="@+id/txtText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="30dp"
-        android:fontFamily="@font/manrope_regular"
-        android:gravity="center"
-        android:text="Provide the information to add\n a service"
-        android:textColor="@color/colorTextLabelDefault"
-        android:textFontWeight="400"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtLabel" />
-
-    <LinearLayout
-        android:id="@+id/llCategory"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/rounded_white_grey"
-        android:clickable="true"
-        android:focusable="true"
-        android:minHeight="60dp"
-        android:orientation="horizontal"
-        android:paddingHorizontal="10dp"
-        android:paddingVertical="10dp"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="@+id/txtText"
-        app:layout_constraintStart_toStartOf="@+id/txtText"
-        app:layout_constraintTop_toBottomOf="@+id/txtText">
-
-
-        <EditText
-            android:id="@+id/edtCategory"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:fontFamily="@font/manrope_regular"
-            android:gravity="center|left"
-            android:hint="Hair Service"
-            android:inputType="text"
-            android:paddingRight="10dp"
-            android:textColor="@color/colorTextDefault"
-            android:textFontWeight="400"
-            android:textSize="14sp" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="8dp"
-            app:srcCompat="@drawable/ddl_icon" />
-
-
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="-10dp"
-        android:background="@color/white"
-        android:fontFamily="@font/manrope_regular"
-        android:inputType="textEmailAddress"
-        android:text="Select Category"
-        android:textColor="@color/colorTextLabelDefault"
-        android:textFontWeight="500"
-        android:textSize="11sp"
-        app:layout_constraintBottom_toTopOf="@+id/llCategory"
-        app:layout_constraintStart_toStartOf="@+id/llCategory" />
-
-    <LinearLayout
-        android:id="@+id/llServiceName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/rounded_white_grey"
-        android:clickable="true"
-        android:focusable="true"
-        android:minHeight="60dp"
-        android:orientation="horizontal"
-        android:paddingHorizontal="10dp"
-        android:paddingVertical="10dp"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="@+id/llCategory"
-        app:layout_constraintStart_toStartOf="@+id/llCategory"
-        app:layout_constraintTop_toBottomOf="@+id/llCategory">
-
-
-        <EditText
-            android:id="@+id/edtServiceName"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:fontFamily="@font/manrope_regular"
-            android:gravity="center|left"
-            android:hint="Fauxhawk"
-            android:inputType="text"
-            android:paddingRight="10dp"
-            android:textColor="@color/colorTextDefault"
-            android:textFontWeight="400"
-            android:textSize="14sp" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="8dp"
-            app:srcCompat="@drawable/search_icon" />
-
-
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="-10dp"
-        android:background="@color/white"
-        android:fontFamily="@font/manrope_regular"
-        android:inputType="text"
-        android:text="Service Name"
-        android:textColor="@color/colorTextLabelDefault"
-        android:textFontWeight="500"
-        android:textSize="11sp"
-        app:layout_constraintBottom_toTopOf="@+id/llServiceName"
-        app:layout_constraintStart_toStartOf="@+id/llServiceName" />
-
-    <LinearLayout
-        android:id="@+id/llDuration"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/rounded_white_grey"
-        android:clickable="true"
-        android:focusable="true"
-        android:minHeight="60dp"
-        android:orientation="horizontal"
-        android:paddingHorizontal="10dp"
-        android:paddingVertical="10dp"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="@+id/llServiceName"
-        app:layout_constraintStart_toStartOf="@+id/llServiceName"
-        app:layout_constraintTop_toBottomOf="@+id/llServiceName">
-
-
-        <EditText
-            android:id="@+id/edtDuration"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:fontFamily="@font/manrope_regular"
-            android:gravity="center|left"
-            android:hint="45 mins"
-            android:inputType="text"
-            android:paddingRight="10dp"
-            android:textColor="@color/colorTextDefault"
-            android:textFontWeight="400"
-            android:textSize="14sp" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="8dp"
-            app:srcCompat="@drawable/ddl_icon" />
-
-
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="-10dp"
-        android:background="@color/white"
-        android:fontFamily="@font/manrope_regular"
-        android:inputType="textEmailAddress"
-        android:text="Duration"
-        android:textColor="@color/colorTextLabelDefault"
-        android:textFontWeight="500"
-        android:textSize="11sp"
-        app:layout_constraintBottom_toTopOf="@+id/llDuration"
-        app:layout_constraintStart_toStartOf="@+id/llDuration" />
-
-    <LinearLayout
-        android:id="@+id/llPrice"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/rounded_white_grey"
-        android:clickable="true"
-        android:focusable="true"
-        android:minHeight="60dp"
-        android:orientation="horizontal"
-        android:paddingHorizontal="10dp"
-        android:paddingVertical="10dp"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="@+id/llDuration"
-        app:layout_constraintStart_toStartOf="@+id/llDuration"
-        app:layout_constraintTop_toBottomOf="@+id/llDuration">
-
-        <TextView
-            android:id="@+id/txtCurrency"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="5dp"
-            android:background="@color/white"
-            android:fontFamily="@font/manrope_regular"
-            android:gravity="center"
-            android:inputType="textEmailAddress"
-            android:text="SAR"
-            android:textColor="@color/black_shade3"
-            android:textFontWeight="400"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toTopOf="@+id/llPrice"
-            app:layout_constraintStart_toStartOf="@+id/llPrice" />
-
-        <EditText
-            android:id="@+id/edtPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:fontFamily="@font/manrope_regular"
-            android:gravity="center|left"
-            android:hint="20"
-            android:inputType="text"
-            android:paddingLeft="5dp"
-            android:textColor="@color/colorTextDefault"
-            android:textFontWeight="400"
-            android:textSize="14sp" />
-
-
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="-10dp"
-        android:background="@color/white"
-        android:fontFamily="@font/manrope_regular"
-        android:inputType="textEmailAddress"
-        android:text="Price"
-        android:textColor="@color/colorTextLabelDefault"
-        android:textFontWeight="500"
-        android:textSize="11sp"
-        app:layout_constraintBottom_toTopOf="@+id/llPrice"
-        app:layout_constraintStart_toStartOf="@+id/llPrice" />
-
-    <LinearLayout
-        android:id="@+id/llSaveAdd"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/rounded_blue_100"
-        android:clickable="true"
-        android:focusable="true"
-        android:minHeight="50dp"
-        android:orientation="horizontal"
-        android:paddingHorizontal="10dp"
-        android:paddingVertical="10dp"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="@+id/llCategory"
-        app:layout_constraintStart_toStartOf="@+id/llCategory"
-        app:layout_constraintTop_toBottomOf="@+id/imgPhoto">
-
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/manrope_bold"
-            android:gravity="center"
-            android:text="Save &amp; Add New"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            tools:layout_editor_absoluteX="14dp"
-            tools:layout_editor_absoluteY="530dp" />
-    </LinearLayout>
+            android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:id="@+id/llSave"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:clickable="true"
-        android:focusable="true"
-        android:minHeight="50dp"
-        android:orientation="horizontal"
-        android:paddingHorizontal="10dp"
-        android:paddingVertical="10dp"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="@+id/llCategory"
-        app:layout_constraintStart_toStartOf="@+id/llCategory"
-        app:layout_constraintTop_toBottomOf="@+id/llSaveAdd">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/manrope_bold"
-            android:gravity="center"
-            android:text="Save"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="14sp"
-            tools:layout_editor_absoluteX="14dp"
-            tools:layout_editor_absoluteY="530dp" />
-    </LinearLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/imgPhoto"
-        android:layout_width="0dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/doted_blue_border"
-        android:paddingStart="30dp"
-        android:paddingTop="15dp"
-        android:paddingEnd="30dp"
-        android:paddingBottom="15dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintEnd_toEndOf="@+id/llPrice"
-        app:layout_constraintStart_toStartOf="@+id/llPrice"
-        app:layout_constraintTop_toBottomOf="@+id/llPrice"
-        app:srcCompat="@drawable/add_image_placeholder" />
+                <ImageView
+                    android:id="@+id/imageView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/add_member_icon" />
 
 
+                <TextView
+                    android:id="@+id/txtLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@android:color/transparent"
+                    android:fontFamily="@font/manrope_bold"
+                    android:text="@string/add_service"
+                    android:textColor="@color/colorTextLabelDefault"
+                    android:textFontWeight="700"
+                    android:textSize="22sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+
+                <TextView
+                    android:id="@+id/txtText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="30dp"
+                    android:fontFamily="@font/manrope_regular"
+                    android:gravity="center"
+                    android:text="@string/provide_the_information_to_add_n_a_service"
+                    android:textColor="@color/colorTextLabelDefault"
+                    android:textFontWeight="400"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtLabel" />
+
+                <TextView
+                    android:id="@+id/divider"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginEnd="30dp"
+                    android:background="@color/light_grey_border"
+                    android:text=""
+                    app:layout_constraintEnd_toEndOf="@+id/txtText"
+                    app:layout_constraintStart_toStartOf="@+id/txtText"
+                    app:layout_constraintTop_toBottomOf="@+id/txtText" />
+
+                <LinearLayout
+                    android:id="@+id/llCategory"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/rounded_white_grey"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:minHeight="60dp"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="10dp"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="@+id/txtText"
+                    app:layout_constraintStart_toStartOf="@+id/txtText"
+                    app:layout_constraintTop_toBottomOf="@+id/divider">
+
+
+                    <EditText
+                        android:id="@+id/edtCategory"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:fontFamily="@font/manrope_regular"
+                        android:gravity="center|left"
+                        android:hint="@string/hair_service"
+                        android:inputType="text"
+                        android:paddingEnd="10dp"
+                        android:textColor="@color/colorTextDefault"
+                        android:textFontWeight="400"
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:padding="8dp"
+                        app:srcCompat="@drawable/ddl_icon" />
+
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginBottom="-10dp"
+                    android:background="@color/white"
+                    android:fontFamily="@font/manrope_regular"
+                    android:inputType="textEmailAddress"
+                    android:text="@string/select_category"
+                    android:textColor="@color/colorTextLabelDefault"
+                    android:textFontWeight="500"
+                    android:textSize="11sp"
+                    app:layout_constraintBottom_toTopOf="@+id/llCategory"
+                    app:layout_constraintStart_toStartOf="@+id/llCategory" />
+
+                <LinearLayout
+                    android:id="@+id/llServiceName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/rounded_white_grey"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:minHeight="60dp"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="10dp"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="@+id/llCategory"
+                    app:layout_constraintStart_toStartOf="@+id/llCategory"
+                    app:layout_constraintTop_toBottomOf="@+id/llCategory">
+
+
+                    <EditText
+                        android:id="@+id/edtServiceName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:fontFamily="@font/manrope_regular"
+                        android:gravity="center|left"
+                        android:hint="@string/fauxhawk"
+                        android:inputType="text"
+                        android:paddingEnd="10dp"
+                        android:textColor="@color/colorTextDefault"
+                        android:textFontWeight="400"
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:padding="8dp"
+                        app:srcCompat="@drawable/search_icon" />
+
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginBottom="-10dp"
+                    android:background="@color/white"
+                    android:fontFamily="@font/manrope_regular"
+                    android:inputType="text"
+                    android:text="@string/service_name"
+                    android:textColor="@color/colorTextLabelDefault"
+                    android:textFontWeight="500"
+                    android:textSize="11sp"
+                    app:layout_constraintBottom_toTopOf="@+id/llServiceName"
+                    app:layout_constraintStart_toStartOf="@+id/llServiceName" />
+
+                <LinearLayout
+                    android:id="@+id/llDuration"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/rounded_white_grey"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:minHeight="60dp"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="10dp"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="@+id/llServiceName"
+                    app:layout_constraintStart_toStartOf="@+id/llServiceName"
+                    app:layout_constraintTop_toBottomOf="@+id/llServiceName">
+
+
+                    <EditText
+                        android:id="@+id/edtDuration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:fontFamily="@font/manrope_regular"
+                        android:gravity="center|left"
+                        android:hint="@string/_45_mins"
+                        android:inputType="text"
+                        android:paddingEnd="10dp"
+                        android:textColor="@color/colorTextDefault"
+                        android:textFontWeight="400"
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:padding="8dp"
+                        app:srcCompat="@drawable/ddl_icon" />
+
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginBottom="-10dp"
+                    android:background="@color/white"
+                    android:fontFamily="@font/manrope_regular"
+                    android:inputType="textEmailAddress"
+                    android:text="@string/duration"
+                    android:textColor="@color/colorTextLabelDefault"
+                    android:textFontWeight="500"
+                    android:textSize="11sp"
+                    app:layout_constraintBottom_toTopOf="@+id/llDuration"
+                    app:layout_constraintStart_toStartOf="@+id/llDuration" />
+
+                <LinearLayout
+                    android:id="@+id/llPrice"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/rounded_white_grey"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:minHeight="60dp"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="10dp"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="@+id/llDuration"
+                    app:layout_constraintStart_toStartOf="@+id/llDuration"
+                    app:layout_constraintTop_toBottomOf="@+id/llDuration">
+
+                    <TextView
+                        android:id="@+id/txtCurrency"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="5dp"
+                        android:background="@color/white"
+                        android:fontFamily="@font/manrope_regular"
+                        android:gravity="center"
+                        android:inputType="textEmailAddress"
+                        android:text="@string/sar"
+                        android:textColor="@color/black_shade3"
+                        android:textFontWeight="400"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toTopOf="@+id/llPrice"
+                        app:layout_constraintStart_toStartOf="@+id/llPrice" />
+
+                    <EditText
+                        android:id="@+id/edtPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:fontFamily="@font/manrope_regular"
+                        android:gravity="center|left"
+                        android:hint="@string/_20"
+                        android:inputType="text"
+                        android:paddingStart="5dp"
+                        android:textColor="@color/colorTextDefault"
+                        android:textFontWeight="400"
+                        android:textSize="14sp" />
+
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginBottom="-10dp"
+                    android:background="@color/white"
+                    android:fontFamily="@font/manrope_regular"
+                    android:inputType="textEmailAddress"
+                    android:text="@string/price"
+                    android:textColor="@color/colorTextLabelDefault"
+                    android:textFontWeight="500"
+                    android:textSize="11sp"
+                    app:layout_constraintBottom_toTopOf="@+id/llPrice"
+                    app:layout_constraintStart_toStartOf="@+id/llPrice" />
+
+                <LinearLayout
+                    android:id="@+id/llSaveAdd"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/rounded_blue_100"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:minHeight="50dp"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="10dp"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="@+id/llCategory"
+                    app:layout_constraintStart_toStartOf="@+id/llCategory"
+                    app:layout_constraintTop_toBottomOf="@+id/imgPhoto">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/manrope_bold"
+                        android:gravity="center"
+                        android:text="@string/save_amp_add_new"
+                        android:textColor="@color/white"
+                        android:textSize="14sp"
+                        tools:layout_editor_absoluteX="14dp"
+                        tools:layout_editor_absoluteY="530dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llSave"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:minHeight="50dp"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="10dp"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="@+id/llCategory"
+                    app:layout_constraintStart_toStartOf="@+id/llCategory"
+                    app:layout_constraintTop_toBottomOf="@+id/llSaveAdd">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:fontFamily="@font/manrope_bold"
+                        android:gravity="center"
+                        android:text="@string/save"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="14sp"
+                        tools:layout_editor_absoluteX="14dp"
+                        tools:layout_editor_absoluteY="530dp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/imgPhoto"
+                    android:layout_width="0dp"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@drawable/doted_blue_border"
+                    android:paddingStart="30dp"
+                    android:paddingTop="15dp"
+                    android:paddingEnd="30dp"
+                    android:paddingBottom="15dp"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintEnd_toEndOf="@+id/llPrice"
+                    app:layout_constraintStart_toStartOf="@+id/llPrice"
+                    app:layout_constraintTop_toBottomOf="@+id/llPrice"
+                    app:srcCompat="@drawable/add_image_placeholder" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

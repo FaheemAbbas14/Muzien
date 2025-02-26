@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:paddingRight="20dp"
+    android:paddingEnd="20dp"
     android:layout_height="wrap_content">
     <ImageView
         android:id="@+id/imgSeen"
@@ -44,7 +44,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
         android:fontFamily="@font/manrope_regular"
-        android:text="Faheem Abbas"
+        android:text="@string/faheem_abbas"
         android:textColor="@color/colorTextLabelDefault"
         android:textSize="14sp"
         android:textFontWeight="400"
@@ -58,7 +58,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="2dp"
         android:fontFamily="@font/manrope_regular"
-        android:text="Owner"
+        android:text="@string/owner"
         android:textColor="@color/lightblack"
         android:textSize="11sp"
         android:textFontWeight="500"

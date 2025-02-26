@@ -14,6 +14,7 @@ import com.tt.muzien.data.dto.CalendarDay
 import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.data.repository.HomeRepository
 import com.tt.muzien.databinding.FragmentAnalyticsBinding
+import com.tt.muzien.databinding.FragmentBookingFilterBinding
 import com.tt.muzien.databinding.FragmentBookingsBinding
 import com.tt.muzien.databinding.FragmentSaloonBookingsBinding
 import com.tt.muzien.ui.adapters.SaloonBookingAdapter
@@ -46,7 +47,7 @@ class FragmentBookings : BaseFragment<HomeViewModel, FragmentBookingsBinding, Ho
         }
         binding.customCalendarView.setDays(generateDaysWithEvents())
         binding.imgBookingFilter.setOnClickListener {
-            var nextFragment = FragmentSaloonFilter()
+            var nextFragment = FragmentBookingFilter()
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
         if (FilterSelection.filterData != null) {

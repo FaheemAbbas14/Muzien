@@ -48,7 +48,7 @@
             android:layout_weight="700"
             android:fontFamily="@font/manrope_bold"
             android:gravity="center"
-            android:text="Add New Service"
+            android:text="@string/add_new_service"
             android:textColor="@color/white"
             android:textSize="14sp" />
     </LinearLayout>

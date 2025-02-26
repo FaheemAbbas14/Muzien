@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="@font/manrope_regular"
-            android:text="Back"
+            android:text="@string/back"
             android:textColor="@color/black"
             android:textFontWeight="700"
             android:textSize="16sp"
@@ -64,7 +64,7 @@
         android:layout_marginTop="10dp"
         android:background="@android:color/transparent"
         android:fontFamily="@font/manrope_bold"
-        android:text="Add Member"
+        android:text="@string/add_member"
         android:textColor="@color/colorTextLabelDefault"
         android:textSize="22sp"
         android:textFontWeight="700"
@@ -81,13 +81,25 @@
         android:layout_marginEnd="30dp"
         android:fontFamily="@font/manrope_regular"
         android:gravity="center"
-        android:text="Enter email ID to invite a member"
+        android:text="@string/enter_email_id_to_invite_a_member"
         android:textColor="@color/colorTextLabelDefault"
         android:textSize="14sp"
         android:textFontWeight="400"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtLabel" />
+    <TextView
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp"
+        android:background="@color/light_grey_border"
+        android:text=""
+        app:layout_constraintEnd_toEndOf="@+id/txtText"
+        app:layout_constraintStart_toStartOf="@+id/txtText"
+        app:layout_constraintTop_toBottomOf="@+id/txtText" />
     <LinearLayout
         android:id="@+id/llEmail"
         android:layout_width="0dp"
@@ -103,7 +115,7 @@
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="@+id/txtText"
         app:layout_constraintStart_toStartOf="@+id/txtText"
-        app:layout_constraintTop_toBottomOf="@+id/txtText">
+        app:layout_constraintTop_toBottomOf="@+id/divider">
 
 
         <EditText
@@ -115,9 +127,9 @@
             android:background="@android:color/transparent"
             android:fontFamily="@font/manrope_regular"
             android:gravity="center|left"
-            android:hint="Smith@gmail.com"
+            android:hint="@string/smith_gmail_com"
             android:inputType="text"
-            android:paddingRight="10dp"
+            android:paddingEnd="10dp"
             android:textColor="@color/colorTextDefault"
             android:textFontWeight="400"
             android:textSize="14sp" />
@@ -131,7 +143,7 @@
         android:background="@color/white"
         android:fontFamily="@font/manrope_regular"
         android:inputType="textEmailAddress"
-        android:text="Enter Email ID"
+        android:text="@string/enter_email_id"
         android:textColor="@color/colorTextLabelDefault"
         android:textSize="11sp"
         android:textFontWeight="500"
@@ -145,7 +157,7 @@
         android:layout_marginStart="20dp"
         android:background="@color/white"
         android:fontFamily="@font/manrope_regular"
-        android:text="Enter valid email"
+        android:text="@string/enter_valid_email"
         android:textColor="@color/red_text"
         android:textSize="13sp"
         android:visibility="gone"
@@ -181,9 +193,9 @@
             android:background="@android:color/transparent"
             android:fontFamily="@font/manrope_regular"
             android:gravity="center|left"
-            android:hint="Saloon name"
+            android:hint="@string/saloon_name"
             android:inputType="text"
-            android:paddingRight="10dp"
+            android:paddingEnd="10dp"
             android:textColor="@color/colorTextDefault"
             android:textFontWeight="400"
             android:textSize="14sp" />
@@ -204,7 +216,7 @@
         android:background="@color/white"
         android:fontFamily="@font/manrope_regular"
         android:inputType="textEmailAddress"
-        android:text="Select a Salon (optional)"
+        android:text="@string/select_a_salon_optional"
         android:textColor="@color/colorTextLabelDefault"
         android:textSize="11sp"
         android:textFontWeight="500"
@@ -233,7 +245,7 @@
             android:layout_height="match_parent"
             android:fontFamily="@font/manrope_bold"
             android:gravity="center"
-            android:text="Save"
+            android:text="@string/save"
             android:textColor="@color/white"
             android:textSize="14sp" />
     </LinearLayout>

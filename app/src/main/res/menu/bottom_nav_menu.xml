@@ -2,10 +2,10 @@
     <item
         android:id="@+id/homeFragment"
         android:icon="@drawable/home_selected"
-        android:title="Home" />
+        android:title="@string/home" />
     <item
         android:id="@+id/bookingsFragment"
         android:icon="@drawable/booking_icon"
-        android:title="Bookings" />
+        android:title="@string/bookings" />
 
 </menu>

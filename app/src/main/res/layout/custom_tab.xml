@@ -7,7 +7,7 @@
     android:gravity="center"
     android:layout_marginTop="5dp"
     android:layout_marginBottom="5dp"
-    android:text="Saloon"
+    android:text="@string/saloon"
     android:textSize="16sp"
     android:textColor="@color/colorTextDefault"
     android:background="@drawable/rounded_grey" />

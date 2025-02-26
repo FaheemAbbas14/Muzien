@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="@font/manrope_regular"
-            android:text="Back"
+            android:text="@string/back"
             android:textColor="@color/black"
             android:textFontWeight="700"
             android:textSize="16sp"
@@ -64,7 +64,7 @@
         android:layout_marginTop="10dp"
         android:background="@android:color/transparent"
         android:fontFamily="@font/manrope_bold"
-        android:text="Holidays"
+        android:text="@string/holidays"
         android:textColor="@color/colorTextLabelDefault"
         android:textSize="22sp"
         android:textFontWeight="700"
@@ -81,14 +81,25 @@
         android:layout_marginEnd="30dp"
         android:fontFamily="@font/manrope_regular"
         android:gravity="center"
-        android:text="Add salon holidays"
+        android:text="@string/add_salon_holidays"
         android:textColor="@color/colorTextLabelDefault"
         android:textSize="14sp"
         android:textFontWeight="400"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtLabel" />
-
+    <TextView
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp"
+        android:background="@color/light_grey_border"
+        android:text=""
+        app:layout_constraintEnd_toEndOf="@+id/txtText"
+        app:layout_constraintStart_toStartOf="@+id/txtText"
+        app:layout_constraintTop_toBottomOf="@+id/txtText" />
     <com.tt.muzien.ui.views.CustomCalendar
         android:id="@+id/customCalendar"
         android:layout_width="match_parent"
@@ -99,7 +110,7 @@
         android:layout_marginEnd="41dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtText" />
+        app:layout_constraintTop_toBottomOf="@+id/divider" />
 
 
     <LinearLayout
@@ -126,7 +137,7 @@
             android:layout_height="match_parent"
             android:fontFamily="@font/manrope_bold"
             android:gravity="center"
-            android:text="Save"
+            android:text="@string/save"
             android:textColor="@color/white"
             android:textSize="14sp" />
     </LinearLayout>

@@ -16,6 +16,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.tt.muzien.R
 import com.tt.muzien.constants.Keys
+import com.tt.muzien.data.dto.UserInfo
 import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.data.repository.HomeRepository
 import com.tt.muzien.databinding.FragmentProfileBinding
@@ -34,6 +35,12 @@ class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, Home
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (UserInfo.userRole == "Admin") {
+            binding.llSubscribtion.visibility = View.GONE
+        } else {
+            binding.llServices.visibility = View.GONE
+            binding.llHolidays.visibility = View.GONE
+        }
         binding.imgCamera.setOnClickListener {
 
             uploadImage()
@@ -42,11 +49,40 @@ class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, Home
 
             uploadImage()
         }
+        binding.llMyAccount.setOnClickListener {
+
+            var nextFragment = FragmentMyAccount()
+            (activity as HomeActivity?)?.loadFragment(nextFragment)
+        }
+        binding.llNotification.setOnClickListener {
+
+            var nextFragment = FragmentNotificationSettings()
+            (activity as HomeActivity?)?.loadFragment(nextFragment)
+        }
+        binding.llSubscribtion.setOnClickListener {
+
+            var nextFragment = FragmentManageSubscription()
+            (activity as HomeActivity?)?.loadFragment(nextFragment)
+        }
+        binding.llServices.setOnClickListener {
+
+            var nextFragment = FragmentAddAdminServices()
+            (activity as HomeActivity?)?.loadFragment(nextFragment)
+        }
+        binding.llHolidays.setOnClickListener {
+
+            var nextFragment = FragmentAddAdminHolidays()
+            (activity as HomeActivity?)?.loadFragment(nextFragment)
+        }
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
         }
         binding.llLogout.setOnClickListener {
             logout()
+        }
+        binding.llChangeLanguage.setOnClickListener {
+            val bottomSheet = FragmentChangeLanguage()
+            bottomSheet.show(requireActivity().supportFragmentManager, bottomSheet.tag)
         }
     }
 

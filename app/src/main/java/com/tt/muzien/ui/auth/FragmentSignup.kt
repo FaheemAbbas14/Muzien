@@ -42,6 +42,7 @@ class FragmentSignup : BaseFragment<AuthViewModel, FragmentSignupBinding, AuthRe
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as AuthActivity?)?.changeBackground(Color.WHITE)
+        binding.countrySpinner.setCountryForNameCode("SA")
         binding.rdoRole.setOnCheckedChangeListener { group, checkedId ->
             if (checkedId == R.id.RdoOwner) {
                 role = "Owner"
