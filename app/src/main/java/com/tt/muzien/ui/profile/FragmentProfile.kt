@@ -25,6 +25,7 @@ import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.home.HomeViewModel
 import com.tt.muzien.ui.startNewActivity
+import java.util.Locale
 
 
 class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, HomeRepository>() {
@@ -35,6 +36,7 @@ class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, Home
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         if (UserInfo.userRole == "Admin") {
             binding.llSubscribtion.visibility = View.GONE
         } else {

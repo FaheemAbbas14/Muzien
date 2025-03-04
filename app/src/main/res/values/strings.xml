@@ -108,7 +108,7 @@
     <string name="pending_approval">Pending Approval</string>
     <string name="overdue_incomplete">Overdue/Incomplete</string>
     <string name="select_a_option">Select a option</string>
-    <string name="time_period">Time Period</string>
+    <string name="timeperiod">Time Period</string>
     <string name="all">All</string>
     <string name="custome_time_period">Custome Time Period</string>
     <string name="select_date">Select Date</string>

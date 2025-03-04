@@ -1,5 +1,6 @@
 package com.tt.muzien.ui.home
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -25,6 +26,7 @@ import com.tt.muzien.ui.saloon.tabs.FragmentAddSaloonMember
 import com.tt.muzien.ui.saloon.tabs.FragmentAddSaloonServices
 import com.tt.muzien.ui.views.CustomLoadingIndicator
 import com.tt.muzien.utilities.FragmentManager
+import com.tt.muzien.utilities.LocaleHelper
 
 /**
  * Holds logged-in user experience.
@@ -123,7 +125,9 @@ class HomeActivity : AppCompatActivity() {
             insets
         }
     }
-
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.setLocale(newBase, "ar"))
+    }
     fun setSelectedTab(selected: Int?) {
         if (selected != null) {
             selectedTab = selected
