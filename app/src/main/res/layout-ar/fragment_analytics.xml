@@ -1,0 +1,385 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:scrollbars="none"
+    android:layout_height="match_parent"
+    android:background="@color/light_grey">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".ui.analytics.FragmentAnalytics">
+
+
+            <TextView
+                android:id="@+id/txtDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/manrope_regular"
+                android:text="@string/this_week"
+                android:textColor="@color/colorTextLabelDefault"
+                android:textFontWeight="700"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/imgBookingFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/filter_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cnstBookings"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/white_rounded10"
+                android:minHeight="50dp"
+                app:layout_constraintEnd_toEndOf="@+id/imgBookingFilter"
+                app:layout_constraintStart_toStartOf="@+id/txtDuration"
+                app:layout_constraintTop_toBottomOf="@+id/txtDuration">
+
+                <TextView
+                    android:id="@+id/textView8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/manrope_regular"
+                    android:text="@string/bookings"
+                    android:textColor="@color/colorTextLabelDefault"
+                    android:textFontWeight="700"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:src="@drawable/booking_icon"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:minHeight="40dp"
+                    android:orientation="horizontal"
+                    android:weightSum="9"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView8">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="2.5"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/manrope_regular"
+                            android:gravity="center|right"
+                            android:text="@string/scheduled"
+                            android:textColor="@color/blue_text"
+                            android:textFontWeight="500"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:id="@+id/txtScheduled"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/manrope_regular"
+                            android:gravity="center|right"
+                            android:text="@string/_30"
+                            android:textColor="@color/blue_text"
+                            android:textFontWeight="700"
+                            android:textSize="22sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="2.5"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/manrope_regular"
+                            android:gravity="center|right"
+                            android:text="@string/overdue"
+                            android:textColor="@color/red_text"
+                            android:textFontWeight="500"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:id="@+id/txtOverdue"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/manrope_regular"
+                            android:gravity="center|right"
+                            android:text="@string/_30"
+                            android:textColor="@color/red_text"
+                            android:textFontWeight="700"
+                            android:textSize="22sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="2.5"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/manrope_regular"
+                            android:gravity="center|right"
+                            android:text="@string/completed"
+                            android:textColor="@color/green_text"
+                            android:textFontWeight="500"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:id="@+id/txtCompleted"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/manrope_regular"
+                            android:gravity="center|right"
+                            android:text="@string/_30"
+                            android:textColor="@color/green_text"
+                            android:textFontWeight="700"
+                            android:textSize="22sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="2.5"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/manrope_regular"
+                            android:gravity="center|right"
+                            android:text="@string/cancelled"
+                            android:textColor="@color/black_shade2"
+                            android:textFontWeight="500"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:id="@+id/txtCancelled"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/manrope_regular"
+                            android:gravity="center|right"
+                            android:text="@string/_30"
+                            android:textColor="@color/black_shade2"
+                            android:textFontWeight="700"
+                            android:textSize="22sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cnstPerformer"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/white_rounded10"
+                android:minHeight="50dp"
+                app:layout_constraintEnd_toEndOf="@+id/cnstBookings"
+                app:layout_constraintStart_toStartOf="@+id/cnstBookings"
+                app:layout_constraintTop_toBottomOf="@+id/cnstBookings">
+
+                <TextView
+                    android:id="@+id/txtPerformerLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/manrope_regular"
+                    android:text="@string/top_5_performers"
+                    android:textColor="@color/colorTextLabelDefault"
+                    android:textFontWeight="700"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:src="@drawable/person_icon"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcyTopPerformer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtPerformerLabel" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cnstEarnings"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/white_rounded10"
+                android:minHeight="50dp"
+                app:layout_constraintEnd_toEndOf="@+id/cnstPerformer"
+                app:layout_constraintStart_toStartOf="@+id/cnstPerformer"
+                app:layout_constraintTop_toBottomOf="@+id/cnstPerformer">
+
+                <TextView
+                    android:id="@+id/txtEarningLable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/manrope_regular"
+                    android:text="@string/earnings"
+                    android:textColor="@color/colorTextLabelDefault"
+                    android:textFontWeight="700"
+                    android:textSize="14sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:src="@drawable/earnings"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/txtEarningLable">
+
+                    <TextView
+                        android:id="@+id/txtEarningUnit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/manrope_regular"
+                        android:gravity="center|right"
+                        android:text="@string/sar"
+                        android:textColor="@color/black_text"
+                        android:textFontWeight="400"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/txtEarningAmount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/manrope_regular"
+                        android:gravity="center|right"
+                        android:text="@string/_1340"
+                        android:textColor="@color/black_text"
+                        android:textFontWeight="700"
+                        android:textSize="22sp" />
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <TextView
+                android:id="@+id/txtRevenue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/manrope_regular"
+                android:text="@string/revenue"
+                android:textColor="@color/colorTextLabelDefault"
+                android:textFontWeight="700"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@+id/cnstEarnings"
+                app:layout_constraintTop_toBottomOf="@+id/cnstEarnings" />
+
+            <ImageView
+                android:id="@+id/imgRevenueFilter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/filter_icon"
+                app:layout_constraintEnd_toEndOf="@+id/cnstEarnings"
+                app:layout_constraintTop_toBottomOf="@+id/cnstEarnings" />
+
+            <TextView
+                android:id="@+id/txtRevenueType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:fontFamily="@font/manrope_regular"
+                android:text="@string/monthly"
+                android:textColor="@color/lightblack"
+                android:textFontWeight="400"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="@+id/txtRevenue"
+                app:layout_constraintTop_toBottomOf="@+id/txtRevenue" />
+
+            <LinearLayout
+
+                android:layout_width="0dp"
+                android:layout_height="250dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/white_rounded10"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/imgRevenueFilter"
+                app:layout_constraintStart_toStartOf="@+id/txtRevenueType"
+                app:layout_constraintTop_toBottomOf="@+id/txtRevenueType">
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/lineChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="7dp" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+</ScrollView>

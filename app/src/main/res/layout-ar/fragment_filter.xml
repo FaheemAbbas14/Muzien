@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".ui.home.FragmentFilter">
+
+    <LinearLayout
+        android:id="@+id/llBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/manrope_bold"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:src="@drawable/arabic_back"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/manrope_regular"
+            android:text="@string/back"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textFontWeight="700"
+            tools:layout_editor_absoluteX="38dp"
+            tools:layout_editor_absoluteY="21dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center"
+            android:paddingEnd="50dp"
+            android:text="@string/filter"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textFontWeight="700"
+            tools:layout_editor_absoluteX="38dp"
+            tools:layout_editor_absoluteY="21dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llTimePeriod"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:orientation="vertical"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/llBack"
+        app:layout_constraintTop_toBottomOf="@+id/llBack">
+
+        <TextView
+            android:id="@+id/selectedOptionText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/manrope_regular"
+            android:paddingBottom="8dp"
+            android:textFontWeight="700"
+            android:text="@string/timeperiod"
+            android:textColor="@color/colorTextLabelDefault"
+            android:textSize="16sp" />
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:orientation="vertical">
+
+
+            <!-- Custom RadioButton for Week -->
+            <RadioButton
+                android:id="@+id/rbWeek"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:drawableRight="@drawable/custom_tick_button"
+                android:fontFamily="@font/manrope_regular"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:text="@string/this_week"
+                android:textColor="@color/colorTextLabelDefault"
+                android:textSize="14sp"
+                android:textFontWeight="500"/>
+
+            <!-- Custom RadioButton for Month -->
+            <RadioButton
+                android:id="@+id/rbMonth"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:drawableRight="@drawable/custom_tick_button"
+                android:fontFamily="@font/manrope_regular"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:textFontWeight="500"
+                android:text="@string/this_month"
+                android:textColor="@color/colorTextLabelDefault"
+                android:textSize="14sp" />
+
+            <!-- Custom RadioButton for Custom -->
+            <RadioButton
+                android:id="@+id/rbCustom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:drawableRight="@drawable/custom_tick_button"
+                android:fontFamily="@font/manrope_regular"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:textFontWeight="500"
+                android:text="@string/custome_time_period"
+                android:textColor="@color/colorTextLabelDefault"
+                android:textSize="14sp" />
+
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/txtSelectionError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:background="@color/white"
+            android:fontFamily="@font/manrope_regular"
+            android:text="@string/select_a_option"
+            android:textColor="@color/red_text"
+            android:textSize="11sp"
+            android:textFontWeight="500"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/llFrom"
+            app:layout_constraintTop_toBottomOf="@+id/llFrom" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llFrom"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/rounded_white_grey"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="60dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/llTimePeriod"
+        app:layout_constraintStart_toStartOf="@+id/llTimePeriod"
+        app:layout_constraintTop_toBottomOf="@+id/llTimePeriod">
+
+
+        <TextView
+            android:id="@+id/txtFrom"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center|left"
+            android:hint="@string/select_date"
+            android:inputType="text"
+            android:paddingEnd="10dp"
+            android:textColor="@color/colorTextDefault"
+            android:textFontWeight="400"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtFromLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="-10dp"
+        android:background="@color/white"
+        android:fontFamily="@font/manrope_regular"
+        android:text="@string/from"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textSize="11sp"
+        android:textFontWeight="500"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/llFrom"
+        app:layout_constraintStart_toStartOf="@+id/llFrom" />
+
+    <TextView
+        android:id="@+id/txtFromError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:background="@color/white"
+        android:fontFamily="@font/manrope_regular"
+        android:text="@string/select_date"
+        android:textColor="@color/red_text"
+        android:textSize="13sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/llFrom"
+        app:layout_constraintTop_toBottomOf="@+id/llFrom" />
+
+    <LinearLayout
+        android:id="@+id/llTo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/rounded_white_grey"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="60dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/llTimePeriod"
+        app:layout_constraintStart_toStartOf="@+id/llTimePeriod"
+        app:layout_constraintTop_toBottomOf="@+id/llFrom">
+
+
+        <TextView
+            android:id="@+id/txtTo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center|left"
+            android:hint="@string/select_date"
+            android:inputType="text"
+            android:paddingEnd="10dp"
+            android:textColor="@color/colorTextDefault"
+            android:textFontWeight="400"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtToLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="-10dp"
+        android:background="@color/white"
+        android:fontFamily="@font/manrope_regular"
+        android:text="@string/to"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textSize="11sp"
+        android:textFontWeight="500"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/llTo"
+        app:layout_constraintStart_toStartOf="@+id/llTo" />
+
+    <TextView
+        android:id="@+id/txtToError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:background="@color/white"
+        android:fontFamily="@font/manrope_regular"
+        android:text="@string/select_date"
+        android:textColor="@color/red_text"
+        android:textSize="13sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="@+id/llTo"
+        app:layout_constraintTop_toBottomOf="@+id/llTo" />
+
+    <com.tt.muzien.ui.views.CustomCalendar
+        android:id="@+id/customCalendar"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:calendarViewShown="true"
+        android:spinnersShown="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/llApply"
+        app:layout_constraintEnd_toEndOf="@+id/llFrom"
+        app:layout_constraintStart_toStartOf="@+id/llFrom"
+        app:layout_constraintTop_toBottomOf="@+id/llTo" />
+
+
+    <LinearLayout
+        android:id="@+id/llApply"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/rounded_blue_100"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="50dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/manrope_bold"
+            android:gravity="center"
+            android:text="@string/apply_filter"
+            android:textColor="@color/white"
+            android:textFontWeight="700"
+            android:textSize="14sp" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

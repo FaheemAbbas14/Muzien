@@ -1,0 +1,52 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:background="@drawable/rounded_grey"
+    android:orientation="vertical"
+    android:paddingHorizontal="9dp"
+    android:paddingVertical="10dp">
+
+    <!-- Month Navigation -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+
+        <!-- Month and Year Text -->
+        <TextView
+            android:id="@+id/monthYearText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/manrope_medium"
+            android:paddingStart="8dp"
+            android:text="@string/april_2023"
+            android:textColor="@color/textBlack"
+            android:textFontWeight="700"
+            android:textSize="14sp" />
+        <!-- Previous Arrow -->
+        <TextView
+            android:id="@+id/prevMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/blue_right_arrow" />
+        <!-- Next Arrow -->
+        <TextView
+            android:id="@+id/nextMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/blue_left_arrow" />
+    </LinearLayout>
+
+    <!-- RecyclerView for Calendar Days -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/calendarRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>

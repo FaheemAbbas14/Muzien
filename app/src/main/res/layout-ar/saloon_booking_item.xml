@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mainCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:background="@color/white"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="4dp"
+    app:layout_goneMarginTop="10dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/llDateTime"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="12dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/clock_icon" />
+
+            <TextView
+                android:id="@+id/txtDateTime"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center|left"
+                android:layout_marginStart="10dp"
+                android:fontFamily="@font/manrope_regular"
+                android:paddingStart="5dp"
+                android:text="@string/_12_04_2024_10_00_am_1_5_hr"
+                android:textColor="@color/colorTextLabelDefault"
+                android:textFontWeight="400"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imgProfilePic"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/topperformer"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="3dp"
+            app:layout_constraintStart_toStartOf="@+id/llDateTime"
+            app:layout_constraintTop_toBottomOf="@+id/llDateTime" />
+
+        <TextView
+            android:id="@+id/txtName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/manrope_regular"
+            android:text=""
+            android:textColor="@color/colorTextLabelDefault"
+            android:textFontWeight="700"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/imgProfilePic"
+            app:layout_constraintStart_toEndOf="@+id/imgProfilePic"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="15dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/imgProfilePic"
+            app:layout_constraintTop_toBottomOf="@+id/imgProfilePic">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/style_icon" />
+
+                <TextView
+                    android:id="@+id/txtStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center|left"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/manrope_regular"
+                    android:paddingStart="5dp"
+                    android:text=""
+                    android:textColor="@color/colorTextLabelDefault"
+                    android:textFontWeight="400"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/person_icon" />
+
+                <TextView
+                    android:id="@+id/txtUserName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center|left"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/manrope_regular"
+                    android:paddingStart="5dp"
+                    android:text=""
+                    android:textColor="@color/colorTextLabelDefault"
+                    android:textFontWeight="400"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/scissors" />
+
+                <TextView
+                    android:id="@+id/txtService"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center|left"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/manrope_regular"
+                    android:paddingStart="5dp"
+                    android:text=""
+                    android:textColor="@color/colorTextLabelDefault"
+                    android:textFontWeight="400"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llCancel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/rounded_grey"
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+
+                <TextView
+                    android:id="@+id/txtCancelBy"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center|left"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/manrope_regular"
+                    android:paddingStart="5dp"
+                    android:text="@string/cancelled_by_customer"
+                    android:textColor="@color/red"
+                    android:textFontWeight="700"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center|left"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="@font/manrope_regular"
+                    android:paddingStart="5dp"
+                    android:text="@string/reason"
+                    android:textColor="@color/black_text"
+                    android:textFontWeight="400"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/txtReason"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center|left"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="@font/manrope_regular"
+                    android:paddingStart="5dp"
+                    android:text="@string/lorem_ipsum_is_simply_dummy_text_of_the_printing_and_typesetting_industry_lorem_ipsum_has_been_the_industry_s_standard_dummy_text_n_n12_12_2023"
+                    android:textColor="@color/black_shade2"
+                    android:textFontWeight="400"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/llPending"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="10"
+                android:visibility="gone"
+                android:layout_marginTop="30dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txtReject"
+                    android:layout_width="0dp"
+                    android:layout_weight="4.9"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:background="@drawable/rounded_white_blue"
+                    android:fontFamily="@font/manrope_regular"
+                    android:paddingStart="5dp"
+                    android:text="@string/reject"
+                    android:textColor="@color/colorPrimary"
+                    android:textFontWeight="700"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/txtApprove"
+                    android:layout_width="0dp"
+                    android:layout_weight="4.9"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:background="@drawable/rounded_blue_100"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/manrope_regular"
+                    android:paddingStart="5dp"
+                    android:text="@string/approve"
+                    android:textColor="@color/white"
+                    android:textFontWeight="700"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/llReview"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:visibility="gone"
+                    android:background="@drawable/rounded_grey"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <ImageView
+                        android:id="@+id/imgItemIcon"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:src="@drawable/topperformer"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/txtItemName"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:fontFamily="@font/manrope_regular"
+                        android:text="@string/jennifer_austin"
+                        android:textColor="@color/textBlack"
+                        android:textFontWeight="700"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toTopOf="@+id/txtAddedOn"
+                        app:layout_constraintEnd_toStartOf="@+id/imageView2"
+                        app:layout_constraintStart_toEndOf="@+id/imgItemIcon"
+                        app:layout_constraintTop_toTopOf="@+id/imgItemIcon" />
+
+                    <TextView
+                        android:id="@+id/txtAddedOn"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/manrope_regular"
+                        android:text="@string/added_on_12_12_2023"
+                        android:textColor="@color/black_shade2"
+                        android:textFontWeight="400"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="@+id/txtRatings"
+                        app:layout_constraintStart_toStartOf="@+id/imgItemIcon"
+                        app:layout_constraintTop_toBottomOf="@+id/imgItemIcon" />
+
+
+                    <TextView
+                        android:id="@+id/txtReview"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/manrope_regular"
+                        android:text="@string/dummy_text"
+                        android:textColor="@color/black_shade2"
+                        android:textFontWeight="400"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="@+id/txtAddedOn"
+                        app:layout_constraintStart_toStartOf="@+id/txtAddedOn"
+                        app:layout_constraintTop_toBottomOf="@+id/txtAddedOn" />
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcyPhotos"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="15dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/txtRatings"
+                        app:layout_constraintStart_toStartOf="@+id/imgItemIcon"
+                        app:layout_constraintTop_toBottomOf="@+id/txtReview" />
+
+                    <TextView
+                        android:id="@+id/txtRatings"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:fontFamily="@font/manrope_regular"
+                        android:text="@string/_4_5"
+                        android:textColor="@color/textBlack"
+                        android:textFontWeight="700"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/txtItemName"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/txtItemName" />
+
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:layout_marginEnd="5dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/txtRatings"
+                        app:layout_constraintEnd_toStartOf="@+id/txtRatings"
+                        app:layout_constraintTop_toTopOf="@+id/txtRatings"
+                        app:srcCompat="@drawable/yellow_star" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/llMainView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="1"
+                android:visibility="gone"
+                android:layout_marginTop="30dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txtCancel"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_white_blue"
+                    android:fontFamily="@font/manrope_regular"
+                    android:gravity="center"
+                    android:paddingEnd="18dp"
+                    android:paddingStart="20dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:text="@string/cancel_booking"
+                    android:textColor="@color/colorPrimary"
+                    android:textFontWeight="700"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/imgBarCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="10dp"
+                    android:src="@drawable/barcode"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

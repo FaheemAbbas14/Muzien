@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="9dp"
+    android:background="@color/white"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="4dp">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <ImageView
+            android:id="@+id/imgItemIcon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:src="@drawable/topperformer"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/txtItemName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/manrope_regular"
+            android:text="@string/falansai"
+            android:textColor="@color/textBlack"
+            android:textFontWeight="700"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@+id/txtAddedOn"
+            app:layout_constraintEnd_toStartOf="@+id/imageView2"
+            app:layout_constraintStart_toEndOf="@+id/imgItemIcon"
+            app:layout_constraintTop_toTopOf="@+id/imgItemIcon" />
+
+        <TextView
+            android:id="@+id/txtAddedOn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/manrope_regular"
+            android:text="@string/vietnamese"
+            android:textColor="@color/black_shade2"
+            android:textFontWeight="400"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/txtRatings"
+            app:layout_constraintStart_toStartOf="@+id/imgItemIcon"
+            app:layout_constraintTop_toBottomOf="@+id/imgItemIcon" />
+
+        <TextView
+            android:id="@+id/txtProvidedBy"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/manrope_regular"
+            android:text="@string/vietnamese"
+            android:textColor="@color/black_shade2"
+            android:textFontWeight="400"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/txtAddedOn"
+            app:layout_constraintStart_toStartOf="@+id/imgItemIcon"
+            app:layout_constraintTop_toBottomOf="@+id/txtAddedOn" />
+
+        <TextView
+            android:id="@+id/txtReview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/manrope_regular"
+            android:text="@string/vietnamese"
+            android:textColor="@color/black_shade2"
+            android:textFontWeight="400"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/txtAddedOn"
+            app:layout_constraintStart_toStartOf="@+id/txtAddedOn"
+            app:layout_constraintTop_toBottomOf="@+id/txtProvidedBy" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcyPhotos"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/txtRatings"
+            app:layout_constraintStart_toStartOf="@+id/imgItemIcon"
+            app:layout_constraintTop_toBottomOf="@+id/txtReview" />
+
+        <TextView
+            android:id="@+id/txtRatings"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:fontFamily="@font/manrope_regular"
+            android:text="4.5"
+            android:textColor="@color/textBlack"
+            android:textFontWeight="700"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/txtItemName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/txtItemName" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="5dp"
+            app:layout_constraintBottom_toBottomOf="@+id/txtRatings"
+            app:layout_constraintEnd_toStartOf="@+id/txtRatings"
+            app:layout_constraintTop_toTopOf="@+id/txtRatings"
+            app:srcCompat="@drawable/yellow_star" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

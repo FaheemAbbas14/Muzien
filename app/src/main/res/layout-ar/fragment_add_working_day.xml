@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/llBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/manrope_bold"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:src="@drawable/arabic_back"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/manrope_regular"
+            android:text="@string/back"
+            android:textColor="@color/black"
+            android:textFontWeight="700"
+            android:textSize="16sp"
+            tools:layout_editor_absoluteX="38dp"
+            tools:layout_editor_absoluteY="21dp" />
+
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llBack"
+        app:srcCompat="@drawable/work_hours" />
+
+
+    <TextView
+        android:id="@+id/txtLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/transparent"
+        android:fontFamily="@font/manrope_bold"
+        android:text="@string/work_hours"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textFontWeight="700"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+
+    <TextView
+        android:id="@+id/txtText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="30dp"
+        android:fontFamily="@font/manrope_regular"
+        android:gravity="center"
+        android:text="@string/add_salon_work_hours"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textFontWeight="400"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtLabel" />
+
+    <TextView
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp"
+        android:background="@color/light_grey_border"
+        android:text=""
+        app:layout_constraintEnd_toEndOf="@+id/txtText"
+        app:layout_constraintStart_toStartOf="@+id/txtText"
+        app:layout_constraintTop_toBottomOf="@+id/txtText" />
+    <LinearLayout
+        android:id="@+id/llDays1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="@+id/txtText"
+        app:layout_constraintStart_toStartOf="@+id/txtText"
+        app:layout_constraintTop_toBottomOf="@+id/divider">
+
+        <TextView
+            android:id="@+id/txtSat"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/circular_white_blue"
+            android:text="@string/sat"
+            android:fontFamily="@font/manrope_medium"
+            android:textFontWeight="500"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:textColor="@color/colorPrimary"
+            />
+        <TextView
+            android:id="@+id/txtSun"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/circular_white_blue"
+            android:text="@string/sun"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/manrope_medium"
+            android:textFontWeight="500"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:textColor="@color/colorPrimary"
+            />
+        <TextView
+            android:id="@+id/txtMon"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/circular_white_blue"
+            android:text="@string/mon"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/manrope_medium"
+            android:textFontWeight="500"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:textColor="@color/colorPrimary"
+            />
+        <TextView
+            android:id="@+id/txtTue"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/circular_white_blue"
+            android:text="@string/tue"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/manrope_medium"
+            android:textFontWeight="500"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:textColor="@color/colorPrimary"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llDays2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="@+id/llDays1"
+        app:layout_constraintStart_toStartOf="@+id/llDays1"
+        app:layout_constraintTop_toBottomOf="@+id/llDays1">
+
+        <TextView
+            android:id="@+id/txtWed"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/circular_white_blue"
+            android:text="@string/wed"
+            android:fontFamily="@font/manrope_medium"
+            android:textFontWeight="500"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:textColor="@color/colorPrimary"
+            />
+        <TextView
+            android:id="@+id/txtThu"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/circular_white_blue"
+            android:text="@string/thu"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/manrope_medium"
+            android:textFontWeight="500"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:textColor="@color/colorPrimary"
+            />
+        <TextView
+            android:id="@+id/txtFri"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/circular_white_blue"
+            android:text="@string/fri"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/manrope_medium"
+            android:textFontWeight="500"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:textColor="@color/colorPrimary"
+            />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llOpening"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/rounded_white_grey"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="60dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="@+id/llSave"
+        app:layout_constraintStart_toStartOf="@+id/llSave"
+        app:layout_constraintTop_toBottomOf="@+id/llDays2">
+
+
+        <EditText
+            android:id="@+id/edtOpening"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center|right"
+            android:hint="@string/_00_00_am"
+            android:inputType="text"
+            android:paddingEnd="10dp"
+            android:textColor="@color/colorTextDefault"
+            android:textFontWeight="400"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="8dp"
+            app:srcCompat="@drawable/ddl_icon" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="-10dp"
+        android:background="@color/white"
+        android:fontFamily="@font/manrope_regular"
+        android:inputType="textEmailAddress"
+        android:text="@string/opening_time"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textFontWeight="500"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toTopOf="@+id/llOpening"
+        app:layout_constraintStart_toStartOf="@+id/llOpening" />
+    <LinearLayout
+        android:id="@+id/llClose"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/rounded_white_grey"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="60dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="@+id/llSave"
+        app:layout_constraintStart_toStartOf="@+id/llSave"
+        app:layout_constraintTop_toBottomOf="@+id/llOpening">
+
+
+        <EditText
+            android:id="@+id/edtClose"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center|right"
+            android:hint="@string/_00_00_pm"
+            android:inputType="text"
+            android:paddingEnd="10dp"
+            android:textColor="@color/colorTextDefault"
+            android:textFontWeight="400"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="8dp"
+            app:srcCompat="@drawable/ddl_icon" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="-10dp"
+        android:background="@color/white"
+        android:fontFamily="@font/manrope_regular"
+        android:inputType="textEmailAddress"
+        android:text="@string/closing_time"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textFontWeight="500"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toTopOf="@+id/llClose"
+        app:layout_constraintStart_toStartOf="@+id/llClose" />
+    <LinearLayout
+        android:id="@+id/llSave"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="28dp"
+        android:background="@drawable/rounded_blue_100"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="50dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/manrope_bold"
+            android:gravity="center"
+            android:text="@string/save"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

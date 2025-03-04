@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "247296179808",
+    "project_id": "muzain-2c694",
+    "storage_bucket": "muzain-2c694.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:247296179808:android:c99d2690f3933789da8d05",
+        "android_client_info": {
+          "package_name": "com.tt.muzien"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxgDSM48-R3PUZ2JpX4N_7GYg2DBTaRjA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

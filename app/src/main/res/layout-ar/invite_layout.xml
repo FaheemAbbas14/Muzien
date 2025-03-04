@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/white_rounded10"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/invite_salon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/invite_to_a_salon"
+        android:textSize="14sp"
+        android:textFontWeight="500"
+        android:fontFamily="@font/manrope_regular"
+        android:textColor="@color/otpblack"
+        android:background="?attr/selectableItemBackground" />
+
+    <TextView
+        android:id="@+id/invite_user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/inactivate_user"
+        android:textSize="14sp"
+        android:textFontWeight="500"
+        android:fontFamily="@font/manrope_regular"
+        android:textColor="@color/otpblack"
+        android:background="?attr/selectableItemBackground" />
+
+    <TextView
+        android:id="@+id/delete_user"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/delete_user"
+        android:textSize="14sp"
+        android:textFontWeight="500"
+        android:fontFamily="@font/manrope_regular"
+        android:textColor="@color/otpblack"
+        android:background="?attr/selectableItemBackground" />
+</LinearLayout>
