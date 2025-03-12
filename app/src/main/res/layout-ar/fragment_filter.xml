@@ -130,7 +130,7 @@
                 android:gravity="center_vertical"
                 android:padding="16dp"
                 android:textFontWeight="500"
-                android:text="@string/custome_time_period"
+                android:text="@string/custome_timeperiod"
                 android:textColor="@color/colorTextLabelDefault"
                 android:textSize="14sp" />
 

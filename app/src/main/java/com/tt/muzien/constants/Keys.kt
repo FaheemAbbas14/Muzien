@@ -9,6 +9,7 @@ package com.tt.muzien.constants
  * +923115284424
  */
 object Keys {
-    public const val Access_Token:String="Access_Token"
-    public val Tutorial_Shown:String="Tutorial_Shown"
+    const val Access_Token: String = "Access_Token"
+    val Tutorial_Shown: String = "Tutorial_Shown"
+    const val LANGUAGE_KEY = "language"
 }

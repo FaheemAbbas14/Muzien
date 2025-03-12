@@ -2,6 +2,7 @@ package com.tt.muzien.utilities
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.tt.muzien.constants.Keys
 
 
 /**
@@ -18,7 +19,7 @@ class PreferenceManager private constructor(context: Context) {
         @Synchronized
         fun getInstance(context: Context): PreferenceManager {
             if (instance == null) {
-                instance = PreferenceManager(context.applicationContext)
+                instance = PreferenceManager(context)
             }
             return instance!!
         }
@@ -51,7 +52,13 @@ class PreferenceManager private constructor(context: Context) {
         return preferences.getBoolean(key, defaultValue)
     }
 
+    fun saveLanguage(languageCode: String) {
+        preferences.edit().putString(Keys.LANGUAGE_KEY, languageCode).apply()
+    }
 
+    fun getLanguage(): String {
+        return preferences.getString(Keys.LANGUAGE_KEY, "en") ?: "en"
+    }
 
 
 }

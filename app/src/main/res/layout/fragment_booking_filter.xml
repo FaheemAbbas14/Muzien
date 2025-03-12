@@ -234,7 +234,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/manrope_regular"
                         android:paddingBottom="8dp"
-                        android:text="@string/time_period"
+                        android:text="@string/timeperiod"
                         android:textColor="@color/colorTextLabelDefault"
                         android:textFontWeight="700"
                         android:textSize="16sp" />
@@ -297,7 +297,7 @@
                             android:fontFamily="@font/manrope_regular"
                             android:gravity="center_vertical"
                             android:padding="16dp"
-                            android:text="@string/custome_time_period"
+                            android:text="@string/custome_timeperiod"
                             android:textColor="@color/colorTextLabelDefault"
                             android:textFontWeight="500"
                             android:textSize="14sp" />

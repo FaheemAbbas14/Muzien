@@ -118,7 +118,7 @@
     <string name="select_a_option">اختر خيارًا</string>
     <string name="timeperiod">الفترة الزمنية</string>
     <string name="all">الكل</string>
-    <string name="custome_time_period">فترة زمنية مخصصة</string>
+    <string name="custome_timeperiod">فترة زمنية مخصصة</string>
     <string name="select_date">اختر التاريخ</string>
     <string name="select_specific">اختر محددًا</string>
     <string name="select_saloon">اختر الصالون</string>

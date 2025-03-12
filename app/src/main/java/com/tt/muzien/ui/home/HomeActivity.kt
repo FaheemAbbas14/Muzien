@@ -27,6 +27,7 @@ import com.tt.muzien.ui.saloon.tabs.FragmentAddSaloonServices
 import com.tt.muzien.ui.views.CustomLoadingIndicator
 import com.tt.muzien.utilities.FragmentManager
 import com.tt.muzien.utilities.LocaleHelper
+import com.tt.muzien.utilities.PreferenceManager
 
 /**
  * Holds logged-in user experience.
@@ -125,8 +126,8 @@ class HomeActivity : AppCompatActivity() {
             insets
         }
     }
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(LocaleHelper.setLocale(newBase, "ar"))
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(LocaleHelper.setLocale(base, PreferenceManager.getInstance(base).getLanguage()))
     }
     fun setSelectedTab(selected: Int?) {
         if (selected != null) {
