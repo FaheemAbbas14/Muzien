@@ -155,7 +155,7 @@ class FragmentSaloonInfo : BaseFragment<HomeViewModel, FragmentSaloonInfoBinding
     ) = FragmentSaloonInfoBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        HomeRepository(remoteDataSource.buildApi(HomeApi::class.java), userPreferences)
+        HomeRepository(remoteDataSource.buildApi(HomeApi::class.java,requireContext()), userPreferences)
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap

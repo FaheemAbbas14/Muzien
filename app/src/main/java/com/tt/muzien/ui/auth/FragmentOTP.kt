@@ -10,6 +10,7 @@ import android.text.Spanned
 import android.text.TextWatcher
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,10 +19,14 @@ import androidx.annotation.RequiresApi
 import com.tt.muzien.R
 import com.tt.muzien.constants.Keys
 import com.tt.muzien.data.network.AuthApi
+import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.AuthRepository
+import com.tt.muzien.data.requests.VerifyOTPRequest
 import com.tt.muzien.databinding.FragmentOTPBinding
 import com.tt.muzien.ui.base.BaseFragment
+import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
+import com.tt.muzien.ui.snackbar
 import com.tt.muzien.ui.startNewActivity
 import com.tt.muzien.utilities.PreferenceManager
 
@@ -32,6 +37,7 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
     private var timeInMillis: Long = 30000
     private var timeLeftInMillis: Long = 30000
     var phone: String = ""
+    var otp: String = ""
     var isFromSignup: Boolean = false
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -45,17 +51,10 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
         binding.edtInput1.requestFocus()
         binding.llNext.setOnClickListener {
             if (checkValidation()) {
-                if (isFromSignup) {
-                    var nextFragment = FragmentSignup()
-                    (activity as AuthActivity?)?.loadFragment(nextFragment)
-                } else {
-                    val userPreferences = PreferenceManager.getInstance(requireActivity())
-                    userPreferences.putString(Keys.Access_Token, "Faheem")
-                    val activity = HomeActivity::class.java
-                    requireActivity().startNewActivity(activity)
-                    requireActivity().finish()
-                    Toast.makeText(requireContext(), "Login success", Toast.LENGTH_SHORT).show()
-                }
+                var enteredOTP =
+                    binding.edtInput1.text.toString() + binding.edtInput2.text.toString() + binding.edtInput3.text.toString() + binding.edtInput4.text.toString()
+                loginVerify(enteredOTP)
+
             }
         }
         binding.edtInput1.addTextChangedListener(object : TextWatcher {
@@ -69,8 +68,7 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
                 if (s.isNotEmpty()) {
                     binding.edtInput1.setBackgroundDrawable(resources.getDrawable(R.drawable.rounded_white_primary))
                     binding.edtInput2.requestFocus()
-                }
-                else{
+                } else {
                     binding.edtInput1.setBackgroundDrawable(resources.getDrawable(R.drawable.rounded_white_grey))
                 }
 
@@ -231,7 +229,7 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
     ) = FragmentOTPBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        AuthRepository(remoteDataSource.buildApi(AuthApi::class.java), userPreferences)
+        AuthRepository(remoteDataSource.buildApi(AuthApi::class.java,requireContext()), userPreferences)
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun setdata() {
@@ -311,6 +309,7 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
             e.printStackTrace()
         }
     }
+
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onPause() {
         super.onPause()
@@ -321,5 +320,50 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
     override fun onResume() {
         super.onResume()
         (activity as AuthActivity?)?.changeStatusBarColor(R.color.white)
+    }
+
+    private fun loginVerify(data: String) {
+        viewModel.verifyLogin.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as AuthActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        if (isFromSignup) {
+                            var nextFragment = FragmentSignup()
+                            (activity as AuthActivity?)?.loadFragment(nextFragment)
+
+                        } else {
+                            val userPreferences = PreferenceManager.getInstance(requireActivity())
+                            userPreferences.putString(Keys.Access_Token, it.value.data.token)
+                            userPreferences.putString(
+                                Keys.Refresh_Token,
+                                it.value.data.refreshToken
+                            )
+                            val activity = HomeActivity::class.java
+                            requireActivity().startNewActivity(activity)
+                            requireActivity().finish()
+                            Toast.makeText(requireContext(), "Login success", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as AuthActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        var request = VerifyOTPRequest(phone, data)
+        viewModel.verifyLogin(request)
+        (activity as AuthActivity?)?.showLoadingIndicator()
     }
 }

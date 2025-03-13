@@ -2,14 +2,12 @@ package com.tt.muzien.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.tt.muzien.data.dto.FilterData
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.HomeRepository
 import com.tt.muzien.data.repository.UserRepository
 import com.tt.muzien.data.responses.LoginResponse
 import com.tt.muzien.ui.base.BaseViewModel
-import kotlinx.coroutines.launch
 
 /**
  * ViewModel controlling Logged-in user experience between [HomeFragment] and [UserRepository]

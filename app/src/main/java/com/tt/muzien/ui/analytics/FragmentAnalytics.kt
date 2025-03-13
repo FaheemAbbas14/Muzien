@@ -252,7 +252,7 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
     ) = FragmentAnalyticsBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        HomeRepository(remoteDataSource.buildApi(HomeApi::class.java), userPreferences)
+        HomeRepository(remoteDataSource.buildApi(HomeApi::class.java,requireContext()), userPreferences)
 
 
 }

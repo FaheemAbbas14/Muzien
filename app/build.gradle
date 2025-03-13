@@ -36,11 +36,26 @@ android {
       versionNameSuffix = "-client"
     }
   }
+  signingConfigs {
+    config {
+      keyAlias 'key0z'
+      keyPassword 'jsaASD213#kp'
+      storeFile file('/Users/faheemabbas/Downloads/Documents/zabihah.keystore')
+      storePassword 'jsaASD213#kw'
+    }
+  }
   buildTypes {
     release {
       minifyEnabled false
+      shrinkResources false
+      debuggable false
+      signingConfig signingConfigs.config
       proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-    }
+      buildConfigField "String", "baseUrl", '"http://dev.api.muzien.com/"'
+        }
+    debug {
+      buildConfigField "String", "baseUrl", '"http://dev.api.muzien.com/"'
+      }
   }
 
   buildFeatures {

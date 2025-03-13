@@ -132,7 +132,7 @@ class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRe
     ) = FragmentFilterBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        AuthRepository(remoteDataSource.buildApi(AuthApi::class.java), userPreferences)
+        AuthRepository(remoteDataSource.buildApi(AuthApi::class.java,requireContext()), userPreferences)
 
     override fun onResume() {
         super.onResume()

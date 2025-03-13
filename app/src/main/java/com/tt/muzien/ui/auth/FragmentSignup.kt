@@ -169,7 +169,7 @@ class FragmentSignup : BaseFragment<AuthViewModel, FragmentSignupBinding, AuthRe
     ) = FragmentSignupBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        AuthRepository(remoteDataSource.buildApi(AuthApi::class.java), userPreferences)
+        AuthRepository(remoteDataSource.buildApi(AuthApi::class.java,requireContext()), userPreferences)
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onPause() {

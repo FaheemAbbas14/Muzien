@@ -30,7 +30,7 @@ class FragmentWelcome : BaseFragment<AuthViewModel, FragmentTutorialBinding, Aut
     ) = FragmentTutorialBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        AuthRepository(remoteDataSource.buildApi(AuthApi::class.java), userPreferences)
+        AuthRepository(remoteDataSource.buildApi(AuthApi::class.java,requireContext()), userPreferences)
 
 
 }

@@ -1,5 +1,7 @@
 package com.tt.muzien.data.responses
 
 data class LoginResponse(
-  val user: User
+  val code: Long,
+  val status: Int,
+  val message: String,
 )

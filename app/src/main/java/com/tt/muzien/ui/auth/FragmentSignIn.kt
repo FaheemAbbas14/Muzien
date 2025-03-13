@@ -9,6 +9,7 @@ import android.text.Spanned
 import android.text.TextWatcher
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,9 +18,14 @@ import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import com.tt.muzien.R
 import com.tt.muzien.data.network.AuthApi
+import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.AuthRepository
+import com.tt.muzien.data.requests.LoginRequest
+import com.tt.muzien.data.requests.RegisterRequest
 import com.tt.muzien.databinding.FragmentSignInBinding
 import com.tt.muzien.ui.base.BaseFragment
+import com.tt.muzien.ui.handleApiError
+import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.InputValidator
 
 
@@ -36,10 +42,11 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
             if (checkValidation()) {
                 var phone =
                     binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString()
-                var nextFragment = FragmentOTP()
-                nextFragment.isFromSignup = isFromSignup
-                nextFragment.phone = phone
-                (activity as AuthActivity?)?.loadFragment(nextFragment)
+                if (isFromSignup) {
+                    register(phone)
+                } else {
+                    sendOtpNormal(phone)
+                }
             }
         }
         binding.countrySpinner.setCountryForNameCode("SA")
@@ -183,7 +190,7 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
     ) = FragmentSignInBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        AuthRepository(remoteDataSource.buildApi(AuthApi::class.java), userPreferences)
+        AuthRepository(remoteDataSource.buildApi(AuthApi::class.java,requireContext()), userPreferences)
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onPause() {
@@ -195,5 +202,69 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
     override fun onResume() {
         super.onResume()
         (activity as AuthActivity?)?.changeStatusBarColor(R.color.white)
+    }
+
+    private fun sendOtpNormal(data: String) {
+        viewModel.login.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as AuthActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        var nextFragment = FragmentOTP()
+                        nextFragment.isFromSignup = isFromSignup
+                        nextFragment.phone = data
+                        (activity as AuthActivity?)?.loadFragment(nextFragment)
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as AuthActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        var request = LoginRequest(data)
+        viewModel.sendOTP(request)
+        (activity as AuthActivity?)?.showLoadingIndicator()
+    }
+
+    private fun register(data: String) {
+        viewModel.register.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as AuthActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        var nextFragment = FragmentOTP()
+                        nextFragment.isFromSignup = isFromSignup
+                        nextFragment.phone = data
+                        (activity as AuthActivity?)?.loadFragment(nextFragment)
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as AuthActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        var request = RegisterRequest(data, "service-provider")
+        viewModel.register(request)
+        (activity as AuthActivity?)?.showLoadingIndicator()
     }
 }

@@ -136,7 +136,7 @@ class FragmentSaloonBookings :
     ) = FragmentSaloonBookingsBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        HomeRepository(remoteDataSource.buildApi(HomeApi::class.java), userPreferences)
+        HomeRepository(remoteDataSource.buildApi(HomeApi::class.java,requireContext()), userPreferences)
 
     override fun onResume() {
         super.onResume()
