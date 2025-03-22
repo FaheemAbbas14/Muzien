@@ -1,6 +1,11 @@
 package com.tt.muzien.utilities
 
+import android.content.ContentResolver
 import android.content.Context
+import android.net.Uri
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 
 /**
@@ -13,5 +18,22 @@ import android.content.Context
 object Helper {
     fun dpToPx(context: Context,dpValue: Int): Int {
         return (dpValue * context.resources.displayMetrics.density).toInt()
+    }
+    fun getFileFromUri(context: Context, uri: Uri): File? {
+        val contentResolver: ContentResolver = context.contentResolver
+        val fileName = "temp_image_${System.currentTimeMillis()}.jpg" // Change extension as needed
+        val tempFile = File(context.cacheDir, fileName)
+
+        return try {
+            val inputStream = contentResolver.openInputStream(uri)
+            val outputStream = FileOutputStream(tempFile)
+            inputStream?.copyTo(outputStream)
+            inputStream?.close()
+            outputStream.close()
+            tempFile
+        } catch (e: IOException) {
+            e.printStackTrace()
+            null
+        }
     }
 }

@@ -19,11 +19,11 @@
             android:layout_width="match_parent"
             android:layout_height="130dp"
             android:background="@color/light_grey"
-            android:scaleType="centerInside"
+            android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/user_placeholder" />
+            app:srcCompat="@drawable/salonplaceholder" />
 
         <TextView
             android:id="@+id/txtItemName"
@@ -33,7 +33,7 @@
             android:layout_marginTop="10dp"
             android:fontFamily="@font/manrope_bold"
             android:maxLines="1"
-            android:text="@string/the_style_zone"
+            android:text=""
             android:textColor="@color/colorTextDefault"
             android:textSize="14sp"
             android:textFontWeight="700"
@@ -110,7 +110,7 @@
                         android:fontFamily="@font/manrope_regular"
                         android:paddingStart="5dp"
                         android:textFontWeight="400"
-                        android:text="@string/rd_2121_alamal_dist_12643_riyadh_sa"
+                        android:text=""
                         android:textColor="@color/colorTextLabelDefault"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -140,7 +140,7 @@
                         android:fontFamily="@font/manrope_regular"
                         android:paddingStart="5dp"
                         android:textFontWeight="400"
-                        android:text="@string/_4_5_10_reviews"
+                        android:text=""
                         android:textColor="@color/colorTextLabelDefault"
                         android:textSize="12sp" />
                 </LinearLayout>
@@ -170,7 +170,7 @@
                         android:fontFamily="@font/manrope_regular"
                         android:paddingStart="5dp"
                         android:textFontWeight="400"
-                        android:text="@string/_10_00_am_11_00_pm"
+                        android:text=""
                         android:textColor="@color/colorTextLabelDefault"
                         android:textSize="12sp" />
                 </LinearLayout>

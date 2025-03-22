@@ -5,6 +5,7 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,57 +17,133 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.tt.muzien.R
+import com.tt.muzien.data.dto.SaloonDto
 import com.tt.muzien.data.dto.WorkingHourData
-import com.tt.muzien.data.network.HomeApi
-import com.tt.muzien.data.repository.HomeRepository
+import com.tt.muzien.data.network.Resource
+import com.tt.muzien.data.network.SaloonApi
+import com.tt.muzien.data.repository.SaloonRepository
+import com.tt.muzien.data.responses.SaloonDetailsInfo
 import com.tt.muzien.databinding.FragmentSaloonInfoBinding
+import com.tt.muzien.ui.adapters.HolidayListAdapter
 import com.tt.muzien.ui.adapters.WorkingHoursAdapter
 import com.tt.muzien.ui.base.BaseFragment
+import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
-import com.tt.muzien.ui.home.HomeViewModel
+import com.tt.muzien.ui.saloon.FragmentSearchAddress
+import com.tt.muzien.ui.saloon.SaloonViewModel
+import com.tt.muzien.ui.snackbar
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 
 
-class FragmentSaloonInfo : BaseFragment<HomeViewModel, FragmentSaloonInfoBinding, HomeRepository>(),
+class FragmentSaloonInfo :
+    BaseFragment<SaloonViewModel, FragmentSaloonInfoBinding, SaloonRepository>(),
     OnMapReadyCallback {
     private lateinit var map: GoogleMap
     private val workingHourrList = arrayListOf<WorkingHourData>()
     private var workingHoursAdopter: WorkingHoursAdapter? = null
+    private val holidaysList = arrayListOf<String>()
+    private var holidayListAdapter: HolidayListAdapter? = null
     private var isExpanded = false
+    var selectedSaloon: SaloonDto? = null
+    var selectedSaloonDetails: SaloonDetailsInfo? = null
+    var position: Int = 0
+    private val holidaysMap = HashMap<String, Long>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setAboutData()
+        getSaloons()
         binding.imgAddHoliday.setOnClickListener {
             var nextFragment = FragmentAddHoliday()
+            nextFragment.isEdit = true
+            nextFragment.saloonId = selectedSaloonDetails?.id?.toInt()!!
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
         binding.imgAddWorkingHour.setOnClickListener {
             var nextFragment = FragmentAddWorkingDay()
+            nextFragment.isEdit = true
+            nextFragment.saloonId = selectedSaloonDetails?.id?.toInt()!!
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
         binding.imgEditAbout.setOnClickListener {
             var nextFragment = EditSaloonAbout()
+            nextFragment.about = selectedSaloonDetails?.description ?: ""
+            nextFragment.saloonId = selectedSaloonDetails?.id?.toInt()!!
+            nextFragment.phone = selectedSaloonDetails!!.phoneNumber
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
         binding.imgEditContact.setOnClickListener {
             var nextFragment = EditSaloonContact()
+            nextFragment.phone = selectedSaloonDetails?.phoneNumber ?: ""
+            nextFragment.saloonId = selectedSaloonDetails?.id?.toInt()!!
+            (activity as HomeActivity?)?.loadFragment(nextFragment)
+        }
+        binding.imgEditAddress.setOnClickListener {
+            var nextFragment = FragmentSearchAddress()
+            nextFragment.isEdit = true
+            nextFragment.saloonId = selectedSaloonDetails?.id?.toInt()!!
+            nextFragment.selectedAddress = selectedSaloonDetails?.address ?: ""
+            nextFragment.latitude = selectedSaloonDetails?.locationLat?.toDouble()!!
+            nextFragment.longitude = selectedSaloonDetails?.locationLong?.toDouble()!!
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
         // Initialize the SupportMapFragment and request the map.
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
-        setData()
+
     }
 
     private fun setAboutData() {
-        val fullText =
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type"
 
-        // Truncated text preview (show first 100 chars)
-        val previewText = fullText.substring(0, 100) + "..." // Truncated preview text
+        if (selectedSaloonDetails?.description != null) {
+            // Truncated text preview (show first 100 chars)
+            selectedSaloonDetails?.description?.length?.let {
+                if (it > 100) {
+                    val previewText = selectedSaloonDetails?.description?.substring(
+                        0,
+                        100
+                    ) + "..." // Truncated preview text
 
-        // Set initial text with "Read More" link
-        setTextWithToggle(previewText, fullText)
+                    // Set initial text with "Read More" link
+                    setTextWithToggle(previewText, selectedSaloonDetails?.description ?: "")
+                } else {
+                    binding.txtAbout.text = selectedSaloonDetails?.description
+                }
+
+            }
+        }
+    }
+
+    private fun setHolidaysAdopter() {
+        selectedSaloonDetails?.SaloonHolidays?.size?.let {
+            if (it > 0) {
+                binding.txtHolidaysData.visibility = View.GONE
+                binding.rcyHolidays?.visibility = View.VISIBLE
+            } else {
+                binding.txtHolidaysData.visibility = View.VISIBLE
+                binding.rcyHolidays?.visibility = View.GONE
+            }
+        }
+        holidaysList.clear()
+        holidaysMap.clear()
+        for (holiday in selectedSaloonDetails?.SaloonHolidays!!) {
+            holidaysMap.put(holiday.startDate, holiday.id)
+            holidaysList.add(holiday.startDate)
+        }
+        val clickListener = object : OnItemClickListner {
+            override fun onItemClick(pos: Int) {
+                position = pos
+                deleteHoliday(holidaysMap[holidaysList[pos]]?.toInt() ?: 0)
+            }
+        }
+        binding.rcyHolidays?.layoutManager =
+            LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
+        holidayListAdapter = HolidayListAdapter(
+            holidaysList,
+            false,
+            clickListener
+        )
+        binding.rcyHolidays?.adapter = holidayListAdapter
+
+
     }
 
     private fun setTextWithToggle(previewText: String, fullText: String) {
@@ -121,16 +198,59 @@ class FragmentSaloonInfo : BaseFragment<HomeViewModel, FragmentSaloonInfoBinding
 
 
     private fun setData() {
+        binding.txtContactNo.text = selectedSaloonDetails?.phoneNumber
+        binding.txtAddressData.text = selectedSaloonDetails?.address
+        setCertificateData()
+        setAddressData()
+        setAboutData()
         setWorkingHourAdopter()
+        setHolidaysAdopter()
+    }
+
+    private fun setCertificateData() {
+        if (selectedSaloonDetails?.certificate != null && selectedSaloonDetails?.certificate != "") {
+            binding.imgCertificateIcon.visibility = View.VISIBLE
+            binding.txtCertificateName.visibility = View.VISIBLE
+            binding.txtCertificateExpiry.visibility = View.VISIBLE
+            binding.txtUploadedAt.visibility = View.VISIBLE
+            binding.txtRenew.visibility = View.VISIBLE
+            binding.txtRenew.text = requireContext().resources.getString(R.string.renew)
+        } else {
+            binding.imgCertificateIcon.visibility = View.GONE
+            binding.txtCertificateName.visibility = View.GONE
+            binding.txtCertificateExpiry.visibility = View.GONE
+            binding.txtUploadedAt.visibility = View.GONE
+            binding.txtRenew.visibility = View.VISIBLE
+            binding.txtRenew.text = requireContext().resources.getString(R.string.add)
+        }
+    }
+
+    private fun setAddressData() {
+        // Add a marker at a specific location and move the camera
+        val location = LatLng(
+            selectedSaloonDetails?.locationLat?.toDouble() ?: 0.0,
+            selectedSaloonDetails?.locationLong?.toDouble() ?: 0.0
+        ) // Example coordinates (Sydney, Australia)
+        map.addMarker(MarkerOptions().position(location).title(selectedSaloonDetails?.address))
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
     }
 
     private fun setWorkingHourAdopter() {
-        workingHourrList.add(WorkingHourData("1", "Saturday - Thursday", "10:00 AM - 11:00 PM"))
-        workingHourrList.add(WorkingHourData("2", "Friday", "02:00 AM - 11:00 PM"))
+        workingHourrList.clear()
+        for (hour in selectedSaloonDetails?.SaloonWorkHours!!) {
+            workingHourrList.add(
+                WorkingHourData(
+                    1,
+                    "${hour.day}",
+                    "${hour.openingTime} - ${hour.closingTime}"
+                )
+            )
+
+        }
         val clickListener = object : OnItemClickListner {
-            override fun onItemClick(position: Int) {
-                workingHourrList.removeAt(position)
-                workingHoursAdopter?.notifyDataSetChanged()
+            override fun onItemClick(pos: Int) {
+                position = pos
+                deleteWorkingHour(workingHourrList[pos].title)
             }
         }
         binding.rcyWorkingHours.layoutManager =
@@ -145,8 +265,8 @@ class FragmentSaloonInfo : BaseFragment<HomeViewModel, FragmentSaloonInfoBinding
 
     }
 
-    override fun getViewModel(): Class<HomeViewModel> {
-        return HomeViewModel::class.java
+    override fun getViewModel(): Class<SaloonViewModel> {
+        return SaloonViewModel::class.java
     }
 
     override fun getFragmentBinding(
@@ -155,15 +275,99 @@ class FragmentSaloonInfo : BaseFragment<HomeViewModel, FragmentSaloonInfoBinding
     ) = FragmentSaloonInfoBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        HomeRepository(remoteDataSource.buildApi(HomeApi::class.java,requireContext()), userPreferences)
+        SaloonRepository(remoteDataSource.buildApi(SaloonApi::class.java, requireContext()))
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
 
-        // Add a marker at a specific location and move the camera
-        val location = LatLng(-34.0, 151.0) // Example coordinates (Sydney, Australia)
-        map.addMarker(MarkerOptions().position(location).title("Marker in Sydney"))
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
+
+    }
+
+    private fun getSaloons() {
+        viewModel.getSaloonDetails.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        selectedSaloonDetails = it.value.data.saloon
+                        setData()
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.getSaloons(selectedSaloon?.id ?: 0)
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
+    private fun deleteHoliday(holidayId: Int) {
+        viewModel.deleteHoliday.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        holidaysList.removeAt(position)
+                        holidayListAdapter?.notifyDataSetChanged()
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.deleteHoliday(selectedSaloon?.id ?: 0, holidayId)
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
+    private fun deleteWorkingHour(day: String) {
+        viewModel.deleteHoliday.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        workingHourrList.removeAt(position)
+                        workingHoursAdopter?.notifyDataSetChanged()
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.deleteWorkingHour(selectedSaloon?.id ?: 0, day)
+        (activity as HomeActivity?)?.showLoadingIndicator()
     }
 
 }

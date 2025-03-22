@@ -8,5 +8,11 @@ package com.tt.muzien.data.responses
  * faheem.abbas@bajcotechnologies.com
  * +923115284424
  */
-data class RefreshTokenResponse( val token: String,
-                                 val refreshToken: String,)
+data class RefreshTokenResponse(
+    val status: Int,
+    val data: NewTokenData,
+)
+
+data class NewTokenData(
+    val token: String,
+)

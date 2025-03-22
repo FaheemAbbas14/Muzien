@@ -16,6 +16,7 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,36 +24,53 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tt.muzien.R
+import com.tt.muzien.data.dto.AddSaloonData
 import com.tt.muzien.data.dto.WorkingHourData
-import com.tt.muzien.data.network.HomeApi
-import com.tt.muzien.data.repository.HomeRepository
+import com.tt.muzien.data.network.Resource
+import com.tt.muzien.data.network.SaloonApi
+import com.tt.muzien.data.repository.SaloonRepository
+import com.tt.muzien.data.requests.AddHolidayRequest
+import com.tt.muzien.data.requests.AddWorkingHourRequest
+import com.tt.muzien.data.requests.HolidayData
+import com.tt.muzien.data.requests.WorkHourData
 import com.tt.muzien.databinding.FragmentAddSaloonBinding
+import com.tt.muzien.ui.adapters.HolidayListAdapter
 import com.tt.muzien.ui.adapters.WorkingHoursAdapter
 import com.tt.muzien.ui.base.BaseFragment
+import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
-import com.tt.muzien.ui.home.HomeViewModel
-import com.tt.muzien.ui.payment.FragmentAddPayment
-import com.tt.muzien.ui.payment.FragmentPayNow
 import com.tt.muzien.ui.saloon.tabs.FragmentAddHoliday
 import com.tt.muzien.ui.saloon.tabs.FragmentAddWorkingDay
+import com.tt.muzien.ui.snackbar
+import com.tt.muzien.utilities.Helper
+import com.tt.muzien.utilities.InputValidator
 import com.tt.muzien.utilities.TimeHelper
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 
-class FragmentAddSaloon : BaseFragment<HomeViewModel, FragmentAddSaloonBinding, HomeRepository>() {
-    private val workingHourrList = arrayListOf<WorkingHourData>()
+class FragmentAddSaloon :
+    BaseFragment<SaloonViewModel, FragmentAddSaloonBinding, SaloonRepository>() {
+    private val workingHourList = arrayListOf<WorkingHourData>()
+    private val holidaysList = arrayListOf<String>()
     private var workingHoursAdopter: WorkingHoursAdapter? = null
+    private var holidayListAdapter: HolidayListAdapter? = null
     private val REQUEST_CAMERA = 1
     private val REQUEST_GALLERY = 2
     private val REQUEST_PERMISSIONS = 3
     private var image_uri: Uri? = null
+    private var certificate_uri: Uri? = null
     private var isCertificate: Boolean = false
-    private var selectedAddress: String? = ""
     private val DOCUMENT_PICKER_REQUEST_CODE = 1001
     var fileName: String = ""
+    var country: String = ""
+    var saloonId: Int = 0
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -60,13 +78,28 @@ class FragmentAddSaloon : BaseFragment<HomeViewModel, FragmentAddSaloonBinding, 
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
         }
+        setFragmentResultListener("requestKey") { key, bundle ->
+            var reload = bundle.getBoolean("reload")
+            if (reload) {
+                setData()
+            }
+
+        }
+        binding.countrySpinner.setCountryForNameCode("SA")
+        binding.countrySpinner.setOnCountryChangeListener {
+            country = binding.countrySpinner.selectedCountryName
+            binding.txtCountryCode.text = binding.countrySpinner.selectedCountryCode
+            AddSaloonData.country = binding.countrySpinner.selectedCountryCode
+            checkValidation()
+        }
+
         binding.imgPhoto.setOnClickListener {
             isCertificate = false
             uploadImage()
         }
         binding.imgCertificate.setOnClickListener {
             isCertificate = true
-           selectDocument()
+            selectDocument()
         }
         binding.llSelectLocation.setOnClickListener {
             var nextFragment = FragmentSearchAddress()
@@ -89,21 +122,41 @@ class FragmentAddSaloon : BaseFragment<HomeViewModel, FragmentAddSaloonBinding, 
             binding.imgCertificate.visibility = View.VISIBLE
         }
         binding.txtContinue.setOnClickListener {
-            var nextFragment = FragmentPayNow()
-            (activity as HomeActivity?)?.loadFragment(nextFragment)
+            if (checkValidation()) {
+                addSaloon()
+            }
+//            var nextFragment = FragmentPayNow()
+//            (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
         setFragmentResultListener("requestKey") { key, bundle ->
-            selectedAddress = bundle.getString("address")
-            if (selectedAddress != null && selectedAddress != "") {
-                binding.llSelectLocation.visibility = View.GONE
-                binding.txtAddress.visibility = View.VISIBLE
-                binding.imgEditLocation.visibility = View.VISIBLE
-                binding.txtAddress.text = selectedAddress
-            }
+            setData()
 
         }
-        setData()
+        checkValidation()
         setPrivacyText()
+    }
+
+    private fun setAddress() {
+        if (AddSaloonData.address != null && AddSaloonData.address != "") {
+            binding.llSelectLocation.visibility = View.GONE
+            binding.txtAddress.visibility = View.VISIBLE
+            binding.imgEditLocation.visibility = View.VISIBLE
+            binding.txtAddress.text = AddSaloonData.address
+        }
+    }
+
+    private fun checkValidation(): Boolean {
+        var isValid = false
+        var phone =
+            binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString()
+        if (AddSaloonData.addressLng != 0.0 && AddSaloonData.addressLat != 0.0 && binding.edtName.text.toString() != "" && binding.edtDescription.text.toString() != "" && phone != "" && InputValidator.isValidPhoneNumber(
+                country,
+                binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString()
+            )
+        ) {
+            isValid = true
+        }
+        return isValid
     }
 
     private fun uploadImage() {
@@ -155,9 +208,7 @@ class FragmentAddSaloon : BaseFragment<HomeViewModel, FragmentAddSaloonBinding, 
 
         if (listPermissionsNeeded.isNotEmpty()) {
             ActivityCompat.requestPermissions(
-                requireActivity(),
-                listPermissionsNeeded.toTypedArray(),
-                REQUEST_PERMISSIONS
+                requireActivity(), listPermissionsNeeded.toTypedArray(), REQUEST_PERMISSIONS
             )
             return false
         }
@@ -169,8 +220,7 @@ class FragmentAddSaloon : BaseFragment<HomeViewModel, FragmentAddSaloonBinding, 
         values.put(MediaStore.Images.Media.TITLE, "New Picture")
         values.put(MediaStore.Images.Media.DESCRIPTION, "From the Camera")
         image_uri = requireActivity().contentResolver.insert(
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-            values
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values
         )
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri)
@@ -194,7 +244,7 @@ class FragmentAddSaloon : BaseFragment<HomeViewModel, FragmentAddSaloonBinding, 
             binding.txtDocName.text = fileName
             println("Selected document name: $fileName")
             val currentTime = TimeHelper.getCurrentTime("HH:mm:ss")
-            binding.txtDocTiming.text="Uploaded on $currentTime"
+            binding.txtDocTiming.text = "Uploaded on $currentTime"
             binding.imgCertificate.setImageURI(image_uri)
             binding.cnstCertificateData.visibility = View.VISIBLE
             binding.imgCertificate.visibility = View.GONE
@@ -212,7 +262,9 @@ class FragmentAddSaloon : BaseFragment<HomeViewModel, FragmentAddSaloonBinding, 
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == DOCUMENT_PICKER_REQUEST_CODE && resultCode == RESULT_OK) {
             val documentUri = data?.data
+
             documentUri?.let {
+                certificate_uri = documentUri
                 // Perform operations with the document Uri
                 handleDocument(it)
             }
@@ -237,7 +289,7 @@ class FragmentAddSaloon : BaseFragment<HomeViewModel, FragmentAddSaloonBinding, 
                 REQUEST_GALLERY -> {
                     val selectedImageUri: Uri? = data?.data
                     if (selectedImageUri != null) {
-                        //UserInfo.profilePic = selectedImageUri
+                        image_uri = selectedImageUri
                     }
                     if (isCertificate) {
                         binding.imgCertificate.setImageURI(selectedImageUri)
@@ -254,8 +306,7 @@ class FragmentAddSaloon : BaseFragment<HomeViewModel, FragmentAddSaloonBinding, 
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun setPrivacyText() {
-        var privacyText = "By continuing you agree to our\n" +
-                "T&C and Privacy Policy"
+        var privacyText = "By continuing you agree to our\n" + "T&C and Privacy Policy"
         var spannableString = SpannableString(privacyText)
 
         // Make "here" clickable and change its color
@@ -274,13 +325,15 @@ class FragmentAddSaloon : BaseFragment<HomeViewModel, FragmentAddSaloonBinding, 
         spannableString.setSpan(tcSpan, 31, 34, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         spannableString.setSpan(
             ForegroundColorSpan(requireActivity().getColor(R.color.colorPrimary)),
-            31, 34,
+            31,
+            34,
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
         )
         spannableString.setSpan(privacySpan, 39, 52, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         spannableString.setSpan(
             ForegroundColorSpan(requireActivity().getColor(R.color.colorPrimary)),
-            39, 53,
+            39,
+            53,
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
         )
 
@@ -289,44 +342,89 @@ class FragmentAddSaloon : BaseFragment<HomeViewModel, FragmentAddSaloonBinding, 
 
     private fun setData() {
         setWorkingHourAdopter()
+        setHolidaysAdopter()
+        setAddress()
+        setCountryCode()
+    }
+
+    private fun setCountryCode() {
+        if (AddSaloonData.country != null) {
+            binding.countrySpinner.setCountryForPhoneCode(Integer.parseInt(AddSaloonData.country))
+        }
     }
 
     private fun setWorkingHourAdopter() {
-        workingHourrList.clear()
-        workingHourrList.add(WorkingHourData("1", "Saturday - Thursday", "10:00 AM - 11:00 PM"))
-        workingHourrList.add(WorkingHourData("2", "Friday", "02:00 AM - 11:00 PM"))
+        workingHourList.clear()
+        for (day in AddSaloonData.days) {
+            workingHourList.add(
+                WorkingHourData(1,
+                    day,
+                    "${AddSaloonData.startTime} - ${AddSaloonData.endTime}"
+                )
+            )
+        }
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(position: Int) {
-                workingHourrList.removeAt(position)
+                AddSaloonData.days.removeAt(position)
+                workingHourList.removeAt(position)
                 workingHoursAdopter?.notifyDataSetChanged()
             }
         }
         binding.rcyWorkingHours.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
         workingHoursAdopter = WorkingHoursAdapter(
-            workingHourrList,
-            requireContext(),
-            clickListener
+            workingHourList, requireContext(), clickListener
         )
         binding.rcyWorkingHours.adapter = workingHoursAdopter
 
 
     }
 
-    override fun getViewModel(): Class<HomeViewModel> {
-        return HomeViewModel::class.java
+    private fun setHolidaysAdopter() {
+        if (AddSaloonData.holidays.size > 0) {
+            binding.txtHolidaysData.visibility = View.GONE
+            binding.rcyHolidays?.visibility = View.VISIBLE
+        } else {
+            binding.txtHolidaysData.visibility = View.VISIBLE
+            binding.rcyHolidays?.visibility = View.GONE
+        }
+        holidaysList.clear()
+        for (holiday in AddSaloonData.holidays) {
+            holidaysList.add(holiday)
+        }
+        val clickListener = object : OnItemClickListner {
+            override fun onItemClick(position: Int) {
+                AddSaloonData.holidays.removeAt(position)
+                holidaysList.removeAt(position)
+                holidayListAdapter?.notifyDataSetChanged()
+            }
+        }
+        binding.rcyHolidays?.layoutManager =
+            LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
+        holidayListAdapter = HolidayListAdapter(
+            holidaysList,
+            false,
+            clickListener
+        )
+        binding.rcyHolidays?.adapter = holidayListAdapter
+
+
+    }
+
+    override fun getViewModel(): Class<SaloonViewModel> {
+        return SaloonViewModel::class.java
     }
 
     override fun getFragmentBinding(
-        inflater: LayoutInflater,
-        container: ViewGroup?
+        inflater: LayoutInflater, container: ViewGroup?
     ) = FragmentAddSaloonBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        HomeRepository(remoteDataSource.buildApi(HomeApi::class.java,requireContext()), userPreferences)
+        SaloonRepository(remoteDataSource.buildApi(SaloonApi::class.java, requireContext()))
 
     override fun onResume() {
         super.onResume()
+        setData()
         (activity as HomeActivity?)?.hideTabs()
     }
 
@@ -334,4 +432,124 @@ class FragmentAddSaloon : BaseFragment<HomeViewModel, FragmentAddSaloonBinding, 
         super.onPause()
         (activity as HomeActivity?)?.showTabs()
     }
+
+    private fun addSaloon() {
+        viewModel.addSaloon.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    if (it.value.status != 0) {
+                        id
+//                        if (AddSaloonData.days.size > 0) {
+//                            addWorkHour()
+//                        } else {
+                        requireView().snackbar("Saloon added successfully")
+                        (activity as HomeActivity?)?.hideLoadingIndicator()
+                        val resultBundle = Bundle().apply {
+                            putBoolean("reload", true) // Replace with your data
+                        }
+                        setFragmentResult("requestKey", resultBundle)
+                        (activity as HomeActivity?)?.popFragment()
+                        //  }
+                    } else {
+                        requireView().snackbar(it.value.message)
+                        (activity as HomeActivity?)?.hideLoadingIndicator()
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        var images = ArrayList<MultipartBody.Part>()
+        if (image_uri != null) {
+            val imageFile =
+                Helper.getFileFromUri(requireContext(), image_uri!!) ?: return // Get file from URI
+            val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), imageFile)
+            val imagePart = MultipartBody.Part.createFormData("images", imageFile.name, requestFile)
+            images.add(imagePart)
+        }
+        var certificatePart: MultipartBody.Part? = null
+        if (certificate_uri != null) {
+            val certificateFile =
+                Helper.getFileFromUri(requireContext(), certificate_uri!!)
+                    ?: return // Get file from URI
+            val certificateRequestFile =
+                RequestBody.create("application/octet-stream".toMediaTypeOrNull(), certificateFile)
+            certificatePart =
+                MultipartBody.Part.createFormData(
+                    "certificate",
+                    certificateFile.name,
+                    certificateRequestFile
+                )
+        }
+        var phone =
+            binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString()
+
+        // Create text-based request bodies
+        val name =
+            RequestBody.create("text/plain".toMediaTypeOrNull(), binding.edtName.text.toString())
+        val description = RequestBody.create(
+            "text/plain".toMediaTypeOrNull(), binding.edtDescription.text.toString()
+        )
+        val phoneNumber = RequestBody.create(
+            "text/plain".toMediaTypeOrNull(), phone
+        )
+        val address = RequestBody.create(
+            "text/plain".toMediaTypeOrNull(), "${AddSaloonData.address}"
+        )
+
+        val locationLat =
+            RequestBody.create("text/plain".toMediaTypeOrNull(), "${AddSaloonData.addressLat}")
+        val locationLong =
+            RequestBody.create("text/plain".toMediaTypeOrNull(), "${AddSaloonData.addressLng}")
+        var holidays = ArrayList<HolidayData>()
+        for (holiday in AddSaloonData.holidays) {
+            holidays.add(HolidayData(holiday, holiday))
+        }
+        var workHours = ArrayList<WorkHourData>()
+        for (day in AddSaloonData.days) {
+            workHours.add(WorkHourData(day, AddSaloonData.startTime, AddSaloonData.endTime))
+        }
+        val holidaysParts = mutableMapOf<String, RequestBody>()
+        // Convert each user object into separate form-data fields
+        holidays.forEachIndexed { index, holiday ->
+            holidaysParts["SaloonHolidays[$index][startDate]"] =
+                RequestBody.create("text/plain".toMediaTypeOrNull(), holiday.startTime)
+            holidaysParts["SaloonHolidays[$index][endDate]"] =
+                RequestBody.create("text/plain".toMediaTypeOrNull(), holiday.endTime)
+        }
+        val hoursParts = mutableMapOf<String, RequestBody>()
+        // Convert each user object into separate form-data fields
+        workHours.forEachIndexed { index, workHour ->
+            hoursParts["SaloonWorkHours[$index][day]"] = RequestBody.create("text/plain".toMediaTypeOrNull(),
+                workHour.day
+            )
+            hoursParts["SaloonWorkHours[$index][openingTime]"] = RequestBody.create("text/plain".toMediaTypeOrNull(), workHour.startTime?:"")
+            hoursParts["SaloonWorkHours[$index][closingTime]"] = RequestBody.create("text/plain".toMediaTypeOrNull(), workHour.endTime?:"")
+        }
+
+        viewModel.addSaloon(
+            certificatePart,
+            images,
+            name,
+            description,
+            locationLat,
+            locationLong,
+            phoneNumber,
+            address,
+            hoursParts,
+            holidaysParts
+        )
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
+
 }

@@ -67,7 +67,7 @@
     <string name="smith_gmail_com">Smith@gmail.com</string>
     <string name="enter_email_id">Enter Email ID</string>
     <string name="enter_valid_email">Enter valid email</string>
-    <string name="select_a_salon_optional">Select a Salon (optional)</string>
+    <string name="select_a_salon_optional">Select a Saloon</string>
     <string name="add_service">Add Service</string>
     <string name="provide_the_information_to_add_n_a_service">Provide the information to add\n a service</string>
     <string name="hair_service">Hair Service</string>
@@ -127,8 +127,8 @@
     <string name="from">From</string>
     <string name="to">To</string>
     <string name="analytics">Analytics</string>
-    <string name="saloon_4">Saloon(4)</string>
-    <string name="members_4">Members(4)</string>
+    <string name="saloon_4">Saloons</string>
+    <string name="members_4">Members</string>
     <string name="services">Services</string>
     <string name="invite_to_a_salon">Invite to a Salon</string>
     <string name="select_a_salon_to_invite_user">Select a salon to invite user</string>

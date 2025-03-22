@@ -39,7 +39,7 @@ class SaloonBookingAdapter(
     private val itemList: List<SaloonBookingData>,
     private val context: Context,
     private val listener: OnItemClickListner,
-    private var bookingStatus: String,
+    private var bookingStatus: String?=null,
     private var isFromMain: Boolean = false
 ) :
     RecyclerView.Adapter<SaloonBookingAdapter.MyViewHolder>() {
@@ -94,13 +94,13 @@ class SaloonBookingAdapter(
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         try {
             var item: SaloonBookingData = itemList[position]
-            if (bookingStatus == "Completed") {
+            if (bookingStatus == "completed") {
                 holder.llReview.visibility = View.VISIBLE
-            } else if (bookingStatus == "Cancelled") {
+            } else if (bookingStatus == "cancelled") {
                 holder.llCancel.visibility = View.VISIBLE
-            } else if (bookingStatus == "Pending Approval") {
+            } else if (bookingStatus == "pending-approval") {
                 holder.llPending.visibility = View.VISIBLE
-            } else if (bookingStatus == "Overdue/Incomplete") {
+            } else if (bookingStatus == "overdue") {
                 holder.mainCard.setBackgroundDrawable(context.resources.getDrawable(R.drawable.rounded_overdue))
             }
             if (isFromMain) {
@@ -157,7 +157,7 @@ class SaloonBookingAdapter(
         }
     }
 
-    fun setBookingStatus(status: String) {
+    fun setBookingStatus(status: String?) {
         bookingStatus = status
     }
 

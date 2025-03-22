@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.annotation.RequiresApi
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -29,6 +30,7 @@ import com.tt.muzien.ui.saloon.tabs.FragmentSaloonMembers
 import com.tt.muzien.ui.saloon.tabs.FragmentSaloonReviews
 import com.tt.muzien.ui.saloon.tabs.FragmentSaloonServices
 import com.tt.muzien.utilities.FilterSelection
+import com.tt.muzien.utilities.TimeHelper
 
 
 class FragmentSaloonDetails :
@@ -56,18 +58,51 @@ class FragmentSaloonDetails :
             (activity as HomeActivity?)?.popFragment()
         }
         //  (activity as HomeActivity?)?.loadFragment(FragmentSaloonAnalytics(), R.id.tab_container)
-        fragmentManager.beginTransaction().replace(R.id.tab_container, FragmentAnalytics())
+        var nextFragment = FragmentSaloonAnalytics()
+        nextFragment.selectedSaloon=selectedSaloon
+        fragmentManager.beginTransaction().replace(R.id.tab_container, nextFragment)
             .commit()
         binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
             val selectedRadioButton = group.findViewById<RadioButton>(checkedId)
             val fragment: Fragment = when (selectedRadioButton?.id) {
-                R.id.rdoAnalytics -> FragmentAnalytics()
-                R.id.rdoBookings -> FragmentSaloonBookings()
-                R.id.rdoStoreInfo -> FragmentSaloonInfo()
-                R.id.rdoReviews -> FragmentSaloonReviews()
-                R.id.rdoServices -> FragmentSaloonServices()
-                R.id.rdoMembers -> FragmentSaloonMembers()
-                else -> FragmentSaloonAnalytics()
+                R.id.rdoAnalytics -> {
+                    var nextFragment = FragmentSaloonAnalytics()
+                    nextFragment.selectedSaloon=selectedSaloon
+                    nextFragment
+                }
+
+                R.id.rdoBookings -> {
+                    var nextFragment = FragmentSaloonBookings()
+                    nextFragment.selectedSaloon=selectedSaloon
+                    nextFragment
+                }
+                R.id.rdoStoreInfo ->{
+                    var nextFragment = FragmentSaloonInfo()
+                    nextFragment.selectedSaloon=selectedSaloon
+                    nextFragment
+                }
+                R.id.rdoReviews -> {
+                    var nextFragment = FragmentSaloonReviews()
+                    nextFragment.selectedSaloon=selectedSaloon
+                    nextFragment
+                }
+                R.id.rdoServices -> {
+                    val nextFragment = FragmentSaloonServices()
+                    nextFragment.saloonId = selectedSaloon?.id
+                    nextFragment.selectedSaloon=selectedSaloon
+                    nextFragment
+                }
+
+                R.id.rdoMembers -> {
+                    var nextFragment = FragmentSaloonMembers()
+                    nextFragment.selectedSaloon=selectedSaloon
+                    nextFragment
+                }
+                else -> {
+                    var nextFragment = FragmentSaloonAnalytics()
+                    nextFragment.selectedSaloon=selectedSaloon
+                    nextFragment
+                }
             }
             resetTabs()
             when (selectedRadioButton?.id) {
@@ -105,14 +140,48 @@ class FragmentSaloonDetails :
             // (activity as HomeActivity?)?.loadFragment(fragment, R.id.tab_container)
             fragmentManager.beginTransaction().replace(R.id.tab_container, fragment).commit()
         }
+        setData()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setData() {
+        binding.txtItemName.text = selectedSaloon?.name
+        binding.txtLocation.text = selectedSaloon?.location
+        binding.txtRating.text = selectedSaloon?.ratings
+        var timing = TimeHelper.getCurrentDayTiming(selectedSaloon?.timing)
+        binding.txtTiming.text = timing
+        if (selectedSaloon?.isOpened == true) {
+            binding.llStatus.setBackgroundDrawable(
+                ResourcesCompat.getDrawable(
+                    requireContext().resources,
+                    R.drawable.rounded_green,
+                    requireContext().theme
+                )
+            )
+            binding.txtStatusTexts.text = "open today"
+        } else {
+            binding.llStatus.setBackgroundDrawable(
+                ResourcesCompat.getDrawable(
+                    requireContext().resources,
+                    R.drawable.rounded_red,
+                    requireContext().theme
+                )
+            )
+            binding.txtStatusTexts.text = "close today"
+        }
         setViewPager()
     }
 
     private fun setViewPager() {
-
+        var images = ArrayList<String>()
+        for (image in selectedSaloon?.icon!!) {
+            images.add(image?.image ?: "")
+        }
+        if (images.isEmpty()) {
+            images.add("")
+        }
         // Sample data for ViewPager
-        val items = listOf("", "", "", "")
-        val adapter = ViewPagerAdapter(items)
+        val adapter = ViewPagerAdapter(images)
         binding.viewPager.adapter = adapter
 
         // Attach the DotsIndicator to the ViewPager
@@ -166,7 +235,10 @@ class FragmentSaloonDetails :
     ) = FragmentSaloonDetailsBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        HomeRepository(remoteDataSource.buildApi(HomeApi::class.java,requireContext()), userPreferences)
+        HomeRepository(
+            remoteDataSource.buildApi(HomeApi::class.java, requireContext()),
+            userPreferences
+        )
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onResume() {
@@ -179,7 +251,7 @@ class FragmentSaloonDetails :
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onPause() {
         super.onPause()
-       (activity as HomeActivity?)?.setSystemWindow(true)
+        (activity as HomeActivity?)?.setSystemWindow(true)
         (activity as HomeActivity?)?.changeStatusBarColor(Color.WHITE)
         (activity as HomeActivity?)?.showTabs()
     }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.WindowInsetsController
@@ -13,10 +14,25 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.google.gson.Gson
 import com.tt.muzien.R
+import com.tt.muzien.constants.Keys
+import com.tt.muzien.data.dto.LoggedInInfo
 import com.tt.muzien.data.dto.SaloonDto
-import com.tt.muzien.data.dto.UserInfo
+import com.tt.muzien.data.network.AuthApi
+import com.tt.muzien.data.network.RemoteDataSource
+import com.tt.muzien.data.network.Resource
+import com.tt.muzien.data.network.SaloonApi
+import com.tt.muzien.data.network.UserApi
+import com.tt.muzien.data.repository.AuthRepository
+import com.tt.muzien.data.repository.SaloonRepository
+import com.tt.muzien.data.repository.UserRepository
 import com.tt.muzien.databinding.ActivityHomeBinding
+import com.tt.muzien.ui.auth.AuthActivity
+import com.tt.muzien.ui.auth.AuthViewModel
 import com.tt.muzien.ui.bookings.FragmentBookings
 import com.tt.muzien.ui.bottomSheets.AddBottomSheet
 import com.tt.muzien.ui.notifications.FragmentNotifications
@@ -24,6 +40,7 @@ import com.tt.muzien.ui.profile.FragmentProfile
 import com.tt.muzien.ui.saloon.FragmentAddSaloon
 import com.tt.muzien.ui.saloon.tabs.FragmentAddSaloonMember
 import com.tt.muzien.ui.saloon.tabs.FragmentAddSaloonServices
+import com.tt.muzien.ui.startNewActivity
 import com.tt.muzien.ui.views.CustomLoadingIndicator
 import com.tt.muzien.utilities.FragmentManager
 import com.tt.muzien.utilities.LocaleHelper
@@ -47,17 +64,18 @@ class HomeActivity : AppCompatActivity() {
         setSystemWindow(true)
         setStatusBarIconColor(window, true)
         customLoadingIndicator = CustomLoadingIndicator(this, Color.WHITE)
+        setUserData()
         // Default fragment
-        if (UserInfo.userRole == "Saloon Manager") {
-            binding.txtRole.text="Saloon Manager"
+        if (LoggedInInfo.user?.role == "salon-manager") {
             var nextFragment = SaloonManagerDashboard()
             nextFragment.selectedSaloon = SaloonDto(
-                "",
+                0,
+                listOf(),
                 "The Style Zone",
                 true,
                 "Rd. 2121 Alamal Dist. 12643 Riyadh SA",
                 "4.5 (2398 reviews)",
-                "10:00 AM - 11:00 PM"
+                listOf()
             )
             loadFragment(nextFragment)
             binding.constraintLayout2.visibility = View.GONE
@@ -126,9 +144,28 @@ class HomeActivity : AppCompatActivity() {
             insets
         }
     }
-    override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(LocaleHelper.setLocale(base, PreferenceManager.getInstance(base).getLanguage()))
+
+    fun setUserData() {
+        binding.txtUserName.text = "Welcome ${LoggedInInfo.user?.fullName}"
+        binding.txtRole.text = "${LoggedInInfo.user?.role}"
+        Glide.with(binding.imgProfilePic)
+            .load(LoggedInInfo.user?.picture)
+            .circleCrop()
+            .placeholder(R.drawable.user_placeholder)
+            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)  // Cache both original & transformed image
+            .skipMemoryCache(false)  // Cache in memory
+            .into(binding.imgProfilePic)
     }
+
+    override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(
+            LocaleHelper.setLocale(
+                base,
+                PreferenceManager.getInstance(base).getLanguage()
+            )
+        )
+    }
+
     fun setSelectedTab(selected: Int?) {
         if (selected != null) {
             selectedTab = selected
@@ -159,7 +196,7 @@ class HomeActivity : AppCompatActivity() {
 
     fun showTabs() {
         binding.constraintLayout.visibility = View.VISIBLE
-        if (UserInfo.userRole != "Saloon Manager") {
+        if (LoggedInInfo.user?.role != "salon-manager") {
             binding.constraintLayout2.visibility = View.VISIBLE
             binding.imgadd.visibility = View.VISIBLE
         }
@@ -183,6 +220,7 @@ class HomeActivity : AppCompatActivity() {
             binding.statusBar.visibility = View.GONE
         }
     }
+
     fun setStatusBarIconColor(window: Window, isLightBackground: Boolean) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             // For Android 11 and above
@@ -200,6 +238,7 @@ class HomeActivity : AppCompatActivity() {
             }
         }
     }
+
     @RequiresApi(Build.VERSION_CODES.M)
     fun changeStatusBarColor(colorResId: Int) {
         window.statusBarColor = colorResId
@@ -217,4 +256,71 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
+    fun getUserRepo(): UserRepository {
+        var remoteDataSource = RemoteDataSource()
+        return UserRepository(
+            remoteDataSource.buildApi(UserApi::class.java, this)
+        )
+    }
+
+    fun getSaloonRepo(): SaloonRepository {
+        var remoteDataSource = RemoteDataSource()
+        return SaloonRepository(
+            remoteDataSource.buildApi(SaloonApi::class.java, this)
+        )
+    }
+
+
+
+    fun getUserData() {
+        var accessToken = PreferenceManager.getInstance(this).getString(Keys.Access_Token)
+        var user = PreferenceManager.getInstance(this).getString(Keys.User, defaultValue = "")
+        if (accessToken != null && accessToken != "" && user != ""
+        ) {
+            LoggedInInfo.user = Gson().fromJson(
+                user,
+                com.tt.muzien.data.responses.UserInfo::class.java
+            )
+            LoggedInInfo.userId = LoggedInInfo.user?.id!!
+            var remoteDataSource = RemoteDataSource()
+            var authRepository = AuthRepository(
+                remoteDataSource.buildApi(AuthApi::class.java, this),
+                PreferenceManager.getInstance(this)
+            )
+            var authViewModel = AuthViewModel(authRepository)
+            authViewModel.my.observe(this, Observer {
+                when (it) {
+
+                    is Resource.Success -> {
+                        hideLoadingIndicator()
+                        LoggedInInfo.user = it.value.data?.user
+                        val gson = Gson()
+                        val userInfo = gson.toJson(it.value.data?.user)
+                        PreferenceManager.getInstance(this)
+                            .putString(Keys.User, userInfo)
+                        setUserData()
+
+                    }
+
+                    is Resource.Failure -> {
+                        hideLoadingIndicator()
+                        Log.d("failed", it.errorBody.toString())
+                        loginActivity()
+                    }
+
+                    else -> {}
+                }
+            })
+
+            authViewModel!!.my(LoggedInInfo.userId)
+        } else {
+            loginActivity()
+        }
+    }
+
+    fun loginActivity() {
+        val activity = AuthActivity::class.java
+        startNewActivity(activity)
+        finish()
+    }
 }

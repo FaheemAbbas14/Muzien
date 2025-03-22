@@ -1,38 +1,42 @@
 package com.tt.muzien.ui.service
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.tt.muzien.data.dto.ServiceInfo
-import com.tt.muzien.data.network.AuthApi
-import com.tt.muzien.data.repository.AuthRepository
+import com.tt.muzien.data.network.Resource
+import com.tt.muzien.data.network.ServiceApi
+import com.tt.muzien.data.repository.ServiceRepository
 import com.tt.muzien.databinding.FragmentServicesBinding
 import com.tt.muzien.ui.adapters.ExpandServiceListAdapter
-import com.tt.muzien.ui.auth.AuthViewModel
 import com.tt.muzien.ui.base.BaseFragment
+import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.FragmentFilter
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.utilities.FilterSelection
 
 
-class FragmentServices : BaseFragment<AuthViewModel, FragmentServicesBinding, AuthRepository>() {
+class FragmentServices :
+    BaseFragment<ServiceViewModel, FragmentServicesBinding, ServiceRepository>() {
     private val servicesMap = HashMap<String, List<ServiceInfo>>()
     private var fromDate: String = ""
     private var toDate: String = ""
     private var bookingDuration: String = ""
-
+    private val groupTitles = arrayListOf<String>()
+    private val groupServices = arrayListOf<String>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setServicesAdopter()
+        // setServicesAdopter()
         binding.imgFilter.setOnClickListener {
             var nextFragment = FragmentFilter()
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
-        if (FilterSelection.filterData!=null){
+        if (FilterSelection.filterData != null) {
             val selection = FilterSelection.filterData!!.selection
             val fromDateFilter = FilterSelection.filterData!!.from
-            val toDateFilter =FilterSelection.filterData!!.to
+            val toDateFilter = FilterSelection.filterData!!.to
             if (selection != "") {
                 bookingDuration = selection.toString()
                 fromDate = fromDateFilter.toString()
@@ -41,23 +45,18 @@ class FragmentServices : BaseFragment<AuthViewModel, FragmentServicesBinding, Au
             }
 
         }
+        getCategories()
     }
 
     private fun setServicesAdopter() {
-        servicesMap.clear()
-        val groupTitles = listOf("Hair Service", "Facial", "Nails", "Manicure", "Massage")
-        val groupServices = listOf("30", "10", "5", "8", "100")
-        for (type in groupTitles) {
-            val servicesList = arrayListOf<ServiceInfo>()
-            for (i in 1..4) {
-                println("Index: $i")
-                servicesList.add(
-                    ServiceInfo("", "Buzz cut", "Duration: 45mins", "SAR 10")
-                )
-            }
-            servicesMap.put(type, servicesList)
-        }
-        val adapter = ExpandServiceListAdapter(requireContext(), groupTitles, servicesMap,true,groupServices )
+
+        val adapter = ExpandServiceListAdapter(
+            requireContext(),
+            groupTitles,
+            servicesMap,
+            true,
+            groupServices
+        )
         binding.rcyServices.setAdapter(adapter)
 
         // Handle child clicks
@@ -65,8 +64,8 @@ class FragmentServices : BaseFragment<AuthViewModel, FragmentServicesBinding, Au
             val group = groupTitles[groupPosition]
             val child = servicesMap[group]?.get(childPosition)
             var nextFragment = FragmentUpdateService()
-            nextFragment.service=child
-            nextFragment.category=group
+            nextFragment.service = child
+            nextFragment.category = group
             (activity as HomeActivity?)?.loadFragment(nextFragment)
             true
         }
@@ -82,8 +81,8 @@ class FragmentServices : BaseFragment<AuthViewModel, FragmentServicesBinding, Au
 
     }
 
-    override fun getViewModel(): Class<AuthViewModel> {
-        return AuthViewModel::class.java
+    override fun getViewModel(): Class<ServiceViewModel> {
+        return ServiceViewModel::class.java
     }
 
     override fun getFragmentBinding(
@@ -92,7 +91,53 @@ class FragmentServices : BaseFragment<AuthViewModel, FragmentServicesBinding, Au
     ) = FragmentServicesBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        AuthRepository(remoteDataSource.buildApi(AuthApi::class.java,requireContext()), userPreferences)
+        ServiceRepository(remoteDataSource.buildApi(ServiceApi::class.java, requireContext()))
 
+    private fun getCategories() {
+        viewModel.getCategories.observe(viewLifecycleOwner) {
 
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        servicesMap.clear()
+                        groupServices.clear()
+                        groupTitles.clear()
+                        for (category in it.value.data.categories) {
+                            groupTitles.add(category?.name ?: "")
+                            groupServices.add("${category?.services?.size}")
+                            val servicesList = arrayListOf<ServiceInfo>()
+                            for (service in category!!.services) {
+                                servicesList.add(
+                                    ServiceInfo(
+                                        service?.image!!,
+                                        service?.name!!,
+                                        "Duration: ${service.duration} ${
+                                            if (service.duration.toInt() == 1) "min" else "mins"
+                                        }",
+                                        "SAR ${service.price / 100}"
+                                    )
+                                )
+                            }
+                            servicesMap.put(category.name, servicesList)
+
+                        }
+                    }
+                    setServicesAdopter()
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.getCategories()
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
 }

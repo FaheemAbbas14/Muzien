@@ -2,24 +2,24 @@ package com.tt.muzien.utilities
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.location.Geocoder
-import android.location.Location
-import android.location.LocationManager
 import android.os.Build
 import android.telephony.TelephonyManager
 import android.text.format.DateFormat
 import androidx.annotation.RequiresApi
+import com.tt.muzien.data.responses.SaloonWorkHour
 import java.text.SimpleDateFormat
+import java.time.DayOfWeek
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.time.temporal.ChronoUnit
+import java.time.temporal.TemporalAdjusters
 import java.util.Locale
 import java.util.TimeZone
-import kotlin.collections.isNotEmpty
-import kotlin.let
 import kotlin.takeIf
 import kotlin.text.isNotEmpty
 
@@ -42,6 +42,18 @@ object TimeHelper {
             "hh:mm a" // 12-hour format with AM/PM
         }
         return pattern
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun convertISOToDate(
+        isoString: String,
+        outputPattern: String
+    ): String {
+        val instant = Instant.parse(isoString) // Parse ISO date
+        val date = instant.atOffset(ZoneOffset.UTC).toLocalDate() // Convert to LocalDate in UTC
+        val formatter = DateTimeFormatter.ofPattern(outputPattern) // Define output format
+
+        return date.format(formatter)
     }
 
     fun convertTimeFormat(
@@ -122,11 +134,6 @@ object TimeHelper {
     }
 
 
-
-
-
-
-
     fun getTimeZoneName(): String {
         val timeZone: TimeZone = TimeZone.getDefault()
         return timeZone.id
@@ -140,5 +147,44 @@ object TimeHelper {
             ?: telephonyManager.networkCountryIso.takeIf { it.isNotEmpty() }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getCurrentDay(): String {
+        return LocalDate.now().dayOfWeek.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
+    }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getCurrentDayTiming(timings: List<SaloonWorkHour?>?): String {
+        var timing = ""
+        var day = getCurrentDay()
+        if (timings != null) {
+            for (hour in timings) {
+                if (hour?.day == day) {
+                    timing = "${hour.openingTime}-${hour.closingTime}"
+                }
+            }
+        }
+        return timing
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getWeekAndMonthDates(): Map<String, String> {
+        val today = LocalDate.now()
+
+        // Get start and end of the week (Assuming week starts on Monday)
+        val startOfWeek = today.with(DayOfWeek.MONDAY)
+        val endOfWeek = today.with(DayOfWeek.SUNDAY)
+
+        // Get start and end of the month
+        val startOfMonth = today.with(TemporalAdjusters.firstDayOfMonth())
+        val endOfMonth = today.with(TemporalAdjusters.lastDayOfMonth())
+
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd") // Change format if needed
+
+        return mapOf(
+            "startOfWeek" to startOfWeek.format(formatter),
+            "endOfWeek" to endOfWeek.format(formatter),
+            "startOfMonth" to startOfMonth.format(formatter),
+            "endOfMonth" to endOfMonth.format(formatter)
+        )
+    }
 }

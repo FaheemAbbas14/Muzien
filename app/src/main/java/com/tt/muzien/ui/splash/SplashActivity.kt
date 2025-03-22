@@ -7,10 +7,18 @@ import android.os.Looper
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import com.google.gson.Gson
 import com.tt.muzien.constants.Keys
+import com.tt.muzien.data.dto.LoggedInInfo
+import com.tt.muzien.data.network.AuthApi
+import com.tt.muzien.data.network.RemoteDataSource
+import com.tt.muzien.data.network.Resource
+import com.tt.muzien.data.repository.AuthRepository
 import com.tt.muzien.databinding.ActivitySplashBinding
 import com.tt.muzien.ui.auth.AuthActivity
+import com.tt.muzien.ui.auth.AuthViewModel
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.startNewActivity
 import com.tt.muzien.utilities.PreferenceManager
@@ -20,6 +28,7 @@ import kotlinx.coroutines.launch
 class SplashActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySplashBinding
+    private var authViewModel: AuthViewModel? = null
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,17 +43,66 @@ class SplashActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
 
             lifecycleScope.launch {
-                Log.d("Sample", "Loading Auth Token")
-                val authToken = userPreferences.getString(Keys.Access_Token)
-                val activity =
-                    if (authToken == null || authToken =="") AuthActivity::class.java else HomeActivity::class.java
-                startNewActivity(activity)
-                finish()
+                getUserData()
             }
 
 
         }, 5000)
     }
 
+    fun getUserData() {
+        var accessToken = PreferenceManager.getInstance(this).getString(Keys.Access_Token)
+        var user = PreferenceManager.getInstance(this).getString(Keys.User, defaultValue = "")
+        if (accessToken != null && accessToken != "" && user != ""
+        ) {
+            LoggedInInfo.user = Gson().fromJson(
+                user,
+                com.tt.muzien.data.responses.UserInfo::class.java
+            )
+            LoggedInInfo.userId= LoggedInInfo.user?.id!!
+            var remoteDataSource = RemoteDataSource()
+            var authRepository = AuthRepository(
+                remoteDataSource.buildApi(AuthApi::class.java, this),
+                PreferenceManager.getInstance(this)
+            )
+            authViewModel = AuthViewModel(authRepository)
+            authViewModel!!.my.observe(this, Observer {
+                when (it) {
+                    is Resource.Success -> {
+                        LoggedInInfo.user = it.value.data?.user
+                        val gson = Gson()
+                        val userInfo = gson.toJson(it.value.data?.user)
+                        PreferenceManager.getInstance(this)
+                            .putString(Keys.User, userInfo)
+                        if (it.value.data?.user?.fullName == null) {
+                            loginActivity()
 
+                        } else {
+                            val activity = HomeActivity::class.java
+                            startNewActivity(activity)
+                            finish()
+                        }
+
+                    }
+
+                    is Resource.Failure -> {
+                        Log.d("failed", it.errorBody.toString())
+                        loginActivity()
+                    }
+
+                    else -> {}
+                }
+            })
+
+            authViewModel!!.my(LoggedInInfo.userId)
+        } else {
+            loginActivity()
+        }
+    }
+
+    fun loginActivity() {
+        val activity = AuthActivity::class.java
+        startNewActivity(activity)
+        finish()
+    }
 }

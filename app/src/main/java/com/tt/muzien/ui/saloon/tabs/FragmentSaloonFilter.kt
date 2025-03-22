@@ -1,9 +1,11 @@
 package com.tt.muzien.ui.saloon.tabs
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.FilterData
 import com.tt.muzien.data.network.HomeApi
@@ -14,44 +16,46 @@ import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.home.HomeViewModel
 import com.tt.muzien.ui.views.CustomCalendar
 import com.tt.muzien.utilities.FilterSelection
+import com.tt.muzien.utilities.TimeHelper
 
 
 class FragmentSaloonFilter :
     BaseFragment<HomeViewModel, FragmentSaloonFilterBinding, HomeRepository>() {
     var selection: String = ""
-    var bookingStatus: String = ""
-    var serviceProvider: String = ""
-    var fromDate: String = ""
-    var toDate: String = ""
+    var bookingStatus: String? = null
+    var serviceProvider: String? = null
+    var fromDate: String? = null
+    var toDate: String? = null
     var isFrom: Boolean = true
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.radioBookingStatus.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.rbPending -> {
-                    bookingStatus = "Pending Approval"
+                    bookingStatus = "pending-approval"
                     // checkValidation()
                 }
 
                 R.id.rbScheduled -> {
-                    bookingStatus = "Scheduled"
+                    bookingStatus = "scheduled"
                     // checkValidation()
                 }
 
                 R.id.rbOverdue -> {
-                    bookingStatus = "Overdue/Incomplete"
+                    bookingStatus = "overdue"
                     // checkValidation()
 
                 }
 
                 R.id.rbCompleted -> {
-                    bookingStatus = "Completed"
+                    bookingStatus = "completed"
                     //checkValidation()
                 }
 
                 R.id.rbCancelled -> {
-                    bookingStatus = "Cancelled"
+                    bookingStatus = "cancelled"
                     //checkValidation()
                 }
             }
@@ -60,13 +64,13 @@ class FragmentSaloonFilter :
             when (checkedId) {
                 R.id.rbAllProvider -> {
                     serviceProvider = "AllProvider"
-                    binding.llProvider.visibility=View.GONE
+                    binding.llProvider.visibility = View.GONE
                     // checkValidation()
                 }
 
                 R.id.rbSpecific -> {
                     serviceProvider = "Specific"
-                    binding.llProvider.visibility=View.VISIBLE
+                    binding.llProvider.visibility = View.VISIBLE
                     // checkValidation()
                 }
 
@@ -75,6 +79,9 @@ class FragmentSaloonFilter :
         binding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.rbWeek -> {
+                    val dates = TimeHelper.getWeekAndMonthDates()
+                    fromDate = dates["startOfWeek"]
+                    toDate = dates["endOfWeek"]
                     selection = "Week"
                     checkValidation()
                     binding.llFrom.visibility = View.GONE
@@ -83,6 +90,9 @@ class FragmentSaloonFilter :
 
                 R.id.rbMonth -> {
                     selection = "Month"
+                    val dates = TimeHelper.getWeekAndMonthDates()
+                    fromDate = dates["startOfMonth"]
+                    toDate = dates["endOfMonth"]
                     checkValidation()
                     binding.llFrom.visibility = View.GONE
                     binding.llTo.visibility = View.GONE
@@ -119,18 +129,19 @@ class FragmentSaloonFilter :
 //// Set the result before popping the current fragment
 //                parentFragmentManager.setFragmentResult("requestKey", result)
                 FilterSelection.filterData =
-                    FilterData(selection, fromDate, toDate, false,bookingStatus, serviceProvider)
+                    FilterData(selection, fromDate, toDate, false, bookingStatus, serviceProvider)
                 (activity as HomeActivity?)?.popFragment()
             }
         }
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
         }
-        binding.customCalendar.setOnDateSelectedListener(object : CustomCalendar.OnDateSelectedListener {
+        binding.customCalendar.setOnDateSelectedListener(object :
+            CustomCalendar.OnDateSelectedListener {
             override fun onDateSelected(date: String) {
                 // Handle the selected date
                 if (isFrom) {
-                   // binding.txtFromError.visibility = View.VISIBLE
+                    // binding.txtFromError.visibility = View.VISIBLE
                     binding.llTo.visibility = View.VISIBLE
                     fromDate = date
                     binding.txtFrom.text = fromDate
@@ -180,7 +191,10 @@ class FragmentSaloonFilter :
     ) = FragmentSaloonFilterBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        HomeRepository(remoteDataSource.buildApi(HomeApi::class.java,requireContext()), userPreferences)
+        HomeRepository(
+            remoteDataSource.buildApi(HomeApi::class.java, requireContext()),
+            userPreferences
+        )
 
     override fun onResume() {
         super.onResume()

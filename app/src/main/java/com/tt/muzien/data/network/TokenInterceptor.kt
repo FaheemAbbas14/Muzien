@@ -1,6 +1,7 @@
 package com.zabihah.ui.data.network
 
 import android.util.Log
+import com.tt.muzien.data.requests.RefreshTokenRequest
 import com.tt.muzien.data.responses.RefreshTokenResponse
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -39,13 +40,13 @@ class TokenInterceptor(private val tokenManager: TokenManager) : Interceptor {
                 if (tokenManager.getRefreshToken() != "") {
                     // Make sure the token is still expired
                     val refreshTokenResponse = refreshToken(tokenManager.getRefreshToken())
-                    if (refreshTokenResponse != null) {
-                        tokenManager.saveAccessToken(refreshTokenResponse.token)
-                        tokenManager.saveRefreshToken(refreshTokenResponse.refreshToken)
-                        Log.d("refreshToken", "new  ${refreshTokenResponse.refreshToken}")
+                    if (refreshTokenResponse != null && refreshTokenResponse.data!=null) {
+                        tokenManager.saveAccessToken(refreshTokenResponse.data.token)
+//                        tokenManager.saveRefreshToken(refreshTokenResponse.refreshToken)
+//                        Log.d("refreshToken", "new  ${refreshTokenResponse.refreshToken}")
                         // Retry the request with the new token
                         request = request.newBuilder()
-                            .header("Authorization", "Bearer ${refreshTokenResponse.token}")
+                            .header("Authorization", "Bearer ${refreshTokenResponse.data.token}")
                             .build()
                         return chain.proceed(request)
                     }
@@ -58,8 +59,10 @@ class TokenInterceptor(private val tokenManager: TokenManager) : Interceptor {
 
     private fun refreshToken(refreshToken: String?): RefreshTokenResponse? {
         return try {
-            val response = tokenManager.getApiService().getRefreshToken(refreshToken!!).execute()
-            if (response.code() == 200) {
+            val response = tokenManager.getApiService().getRefreshToken(RefreshTokenRequest(
+                refreshToken!!
+            )).execute()
+            if (response.body()?.status == 1) {
                 response.body()
             } else {
                 tokenManager.logout()

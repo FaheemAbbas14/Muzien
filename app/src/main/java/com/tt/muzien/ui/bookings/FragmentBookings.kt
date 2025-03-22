@@ -2,7 +2,7 @@ package com.tt.muzien.ui.bookings
 
 import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,17 +11,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.tt.muzien.R
 import com.tt.muzien.data.SaloonBookingData
 import com.tt.muzien.data.dto.CalendarDay
-import com.tt.muzien.data.network.HomeApi
-import com.tt.muzien.data.repository.HomeRepository
-import com.tt.muzien.databinding.FragmentAnalyticsBinding
-import com.tt.muzien.databinding.FragmentBookingFilterBinding
+import com.tt.muzien.data.network.BookingApi
+import com.tt.muzien.data.network.Resource
+import com.tt.muzien.data.repository.BookingRepository
 import com.tt.muzien.databinding.FragmentBookingsBinding
-import com.tt.muzien.databinding.FragmentSaloonBookingsBinding
 import com.tt.muzien.ui.adapters.SaloonBookingAdapter
 import com.tt.muzien.ui.base.BaseFragment
+import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
-import com.tt.muzien.ui.home.HomeViewModel
-import com.tt.muzien.ui.saloon.tabs.FragmentSaloonFilter
+import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.FilterSelection
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 import java.text.SimpleDateFormat
@@ -29,19 +27,20 @@ import java.util.Calendar
 import java.util.Locale
 
 
-class FragmentBookings : BaseFragment<HomeViewModel, FragmentBookingsBinding, HomeRepository>() {
+class FragmentBookings :
+    BaseFragment<BookingViewModel, FragmentBookingsBinding, BookingRepository>() {
     private val saloonsBookingList = arrayListOf<SaloonBookingData>()
-    private var fromDate: String = ""
-    private var toDate: String = ""
-    private var bookingDuration: String = ""
-    private var bookingStatus: String = ""
-    private var bookingServiceProvider: String = ""
+    private var fromDate: String?=null
+    private var toDate: String?=null
+    private var bookingDuration: String?=null
+    private var bookingStatus: String?=null
+    private var bookingServiceProvider: String?=null
     private var adopter: SaloonBookingAdapter? = null
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setSaloonAdopter()
+        getBooking()
         binding.customCalendarView.setOnDaySelectedListener { selectedDay ->
             // Toast.makeText(requireContext(), "Selected: ${selectedDay}", Toast.LENGTH_SHORT).show()
         }
@@ -94,20 +93,7 @@ class FragmentBookings : BaseFragment<HomeViewModel, FragmentBookingsBinding, Ho
         binding.rcyBookings.layoutParams = layoutParams
     }
 
-    private fun setSaloonAdopter() {
-        saloonsBookingList.clear()
-        for (i in 0..10) {
-            println("Index: $i")
-            saloonsBookingList.add(
-                SaloonBookingData(
-                    "",
-                    "Jennifer Austin",
-                    "Tye Style Zone",
-                    "Dibra Morgan",
-                    "Undercut Haircut, Thin Shaving, Shampoo Hair wash"
-                )
-            )
-        }
+    private fun setBookingsAdopter() {
 
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(position: Int) {
@@ -130,8 +116,8 @@ class FragmentBookings : BaseFragment<HomeViewModel, FragmentBookingsBinding, Ho
 
     }
 
-    override fun getViewModel(): Class<HomeViewModel> {
-        return HomeViewModel::class.java
+    override fun getViewModel(): Class<BookingViewModel> {
+        return BookingViewModel::class.java
     }
 
     override fun getFragmentBinding(
@@ -140,7 +126,7 @@ class FragmentBookings : BaseFragment<HomeViewModel, FragmentBookingsBinding, Ho
     ) = FragmentBookingsBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        HomeRepository(remoteDataSource.buildApi(HomeApi::class.java,requireContext()), userPreferences)
+        BookingRepository(remoteDataSource.buildApi(BookingApi::class.java, requireContext()))
 
     override fun onResume() {
         super.onResume()
@@ -148,6 +134,7 @@ class FragmentBookings : BaseFragment<HomeViewModel, FragmentBookingsBinding, Ho
             // Use the data
         }
     }
+
     private fun generateDaysWithEvents(): List<CalendarDay> {
         val days = mutableListOf<CalendarDay>()
         val calendar = Calendar.getInstance()
@@ -172,4 +159,43 @@ class FragmentBookings : BaseFragment<HomeViewModel, FragmentBookingsBinding, Ho
         return days
     }
 
+    private fun getBooking() {
+        viewModel.getBooking.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        saloonsBookingList.clear()
+//                        for (saloon in it.value.data) {
+//                            saloonsBookingList.add(
+//                                SaloonBookingData(
+//                                    "",
+//                                    "Jennifer Austin",
+//                                    "Tye Style Zone",
+//                                    "Dibra Morgan",
+//                                    "Undercut Haircut, Thin Shaving, Shampoo Hair wash"
+//                                )
+//                            )
+//                        }
+                        setBookingsAdopter()
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.getBookings()
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
 }

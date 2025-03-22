@@ -1,22 +1,249 @@
 package com.tt.muzien.ui.saloon.tabs
 
+import android.annotation.SuppressLint
+import android.graphics.Color
+import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.ValueFormatter
 import com.tt.muzien.R
+import com.tt.muzien.data.dto.PersonDto
+import com.tt.muzien.data.dto.SaloonDto
 import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.data.repository.HomeRepository
+import com.tt.muzien.databinding.FragmentAnalyticsBinding
 import com.tt.muzien.databinding.FragmentSaloonAnalyticsBinding
 import com.tt.muzien.databinding.FragmentSaloonBookingsBinding
+import com.tt.muzien.ui.adapters.PerformerListAdapter
 import com.tt.muzien.ui.base.BaseFragment
+import com.tt.muzien.ui.home.FragmentFilter
+import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.home.HomeViewModel
+import com.tt.muzien.utilities.FilterSelection
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
+import kotlin.random.Random
+import kotlin.toString
 
-class FragmentSaloonAnalytics  : BaseFragment<HomeViewModel, FragmentSaloonAnalyticsBinding, HomeRepository>() {
-
+class FragmentSaloonAnalytics  : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, HomeRepository>() {
+    private var lineChart: LineChart? = null
+    private val topPerformerList = arrayListOf<PersonDto>()
+    private var isRevenueFilter = false
+    private var revenueDuration: String = ""
+    private var revenueFromDate: String = ""
+    private var revenueToDate: String = ""
+    private var bookingDuration: String = ""
+    private var bookingFromDate: String = ""
+    private var bookingToDate: String = ""
+    var selectedSaloon: SaloonDto? = null
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // binding.homeLayout.setBackgroundColor(Color.argb(10, 30, 69, 148))
+        lineChart = binding.lineChart
+        setdata()
+
+        binding.imgBookingFilter.setOnClickListener {
+            isRevenueFilter = false
+            var nextFragment = FragmentFilter()
+            (activity as HomeActivity?)?.loadFragment(nextFragment)
+        }
+        binding.imgRevenueFilter.setOnClickListener {
+            isRevenueFilter = true
+            var nextFragment = FragmentFilter()
+            nextFragment.isFromRevenue = true
+            (activity as HomeActivity?)?.loadFragment(nextFragment)
+        }
+        if (FilterSelection.filterData != null) {
+            val selection = FilterSelection.filterData!!.selection
+            val fromDate = FilterSelection.filterData!!.from
+            val toDate = FilterSelection.filterData!!.to
+            if (selection != "") {
+                if (!FilterSelection.filterData!!.fromRevenue) {
+                    bookingDuration = selection.toString()
+                    bookingFromDate = fromDate.toString()
+                    bookingToDate = toDate.toString()
+                    if (selection == "Custom") {
+                        binding.txtDuration.text = "$fromDate To ${toDate}"
+                    } else {
+                        binding.txtDuration.text = selection
+                    }
+                } else {
+                    revenueDuration = selection.toString()
+                    revenueFromDate = fromDate.toString()
+                    revenueToDate = toDate.toString()
+                    if (selection == "Custom") {
+                        binding.txtRevenueType.text = "$fromDate To ${toDate}"
+                    } else {
+                        binding.txtRevenueType.text = selection
+                    }
+                }
+                setdata()
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setdata() {
+        setPerformerAdopter()
+        setGraph()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getDatesInRange(
+        startDate: String,
+        endDate: String,
+        dateFormat: String = "d/M/yyyy"
+    ): ArrayList<String> {
+        try {
+            val formatter = DateTimeFormatter.ofPattern(dateFormat, Locale.getDefault())
+            val start = LocalDate.parse(startDate, formatter)
+            val end = LocalDate.parse(endDate, formatter)
+            val desiredFormatter = DateTimeFormatter.ofPattern("d/M", Locale.getDefault())
+            val dates = arrayListOf<String>()
+            var currentDate = start
+            while (!currentDate.isAfter(end)) {
+                dates.add(currentDate.format(desiredFormatter))
+                currentDate = currentDate.plusDays(1)
+            }
+
+            return dates
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return listOf<String>() as ArrayList<String>
+    }
+
+    fun generateRandomFloatList(min: Float, max: Float, count: Int): List<Float> {
+        return List(count) { Random.nextFloat() * (max - min) + min }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private fun setGraph() {
+        var labels = arrayListOf<String>(
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        )
+
+        if (revenueDuration == "Week") {
+            labels.clear()
+            labels.addAll(
+                listOf(
+                    "Mon", "Tue", "Wed", "Thr", "Fri", "Sat", "Sun"
+                )
+            )
+        } else if (revenueDuration == "Custom") {
+            labels.clear()
+            labels = getDatesInRange(revenueFromDate, revenueToDate)
+        }
+
+        val customValues = generateRandomFloatList(10f, 55f, labels.size)
+
+        // Generate entries with custom values and sine wave
+        val entries = mutableListOf<Entry>()
+        for (i in labels.indices) {
+            val x = i.toFloat()
+            val sineWaveValue =
+                kotlin.math.sin(i * Math.PI / 6) * 5f // Modify the amplitude as needed
+            val y = customValues[i] + sineWaveValue // Add sine wave value to the custom value
+            entries.add(Entry(x, y.toFloat()))
+        }
+
+        // Create dataset
+        val dataSet = LineDataSet(entries, "").apply {
+            color = Color.parseColor("#001DFF")
+            valueTextColor = Color.BLACK
+            lineWidth = 1f
+            setDrawCircles(false)
+            setDrawFilled(true)
+            setDrawValues(false)
+            mode = LineDataSet.Mode.CUBIC_BEZIER
+            // Apply gradient drawable as fill
+            val gradientDrawable: Drawable? =
+                ContextCompat.getDrawable(requireContext(), R.drawable.gradient_fill)
+            fillDrawable = gradientDrawable
+        }
+
+        // Set the data to the chart
+        lineChart?.data = LineData(dataSet)
+        // Hide the legend (color indicator)
+        lineChart?.legend?.isEnabled = false
+        // Customize X-Axis to show month names
+        lineChart?.xAxis?.apply {
+            granularity = 1f
+            valueFormatter = object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String {
+                    return labels.getOrNull(value.toInt()) ?: ""
+                }
+            }
+            position = com.github.mikephil.charting.components.XAxis.XAxisPosition.BOTTOM
+        }
+        // Customize Y-axis to show labels, set range and formatting
+        lineChart?.axisLeft?.apply {
+            axisMinimum = 1f
+            axisMaximum = 60f // Adjust depending on your data range
+            valueFormatter = object : ValueFormatter() {
+                override fun getFormattedValue(value: Float): String {
+                    return "${value.toInt()}k" // Add currency or units
+                }
+            }
+        }
+
+        // Remove horizontal grid lines
+        lineChart?.axisLeft?.setDrawGridLines(false)
+        lineChart?.axisRight?.setDrawGridLines(false)
+        // Customize Y-axis to be positive only
+        lineChart?.axisLeft?.axisMinimum = 1f
+        lineChart?.axisRight?.isEnabled = false
+
+        // Chart appearance
+        lineChart?.description?.isEnabled = false
+        // lineChart?.animateX(1500)
+        // Disable pinch zoom (zooming with two fingers)
+        lineChart?.setPinchZoom(false)
+
+// Disable scaling on X and Y axes
+        lineChart?.isScaleXEnabled = false
+        lineChart?.isScaleYEnabled = false
+
+// Optional: Disable double-tap zoom
+        lineChart?.isDoubleTapToZoomEnabled = false
+    }
+
+    private fun setPerformerAdopter() {
+        for (i in 0..10) {
+            println("Index: $i")
+            topPerformerList.add(
+                PersonDto(
+                    "",
+                    "Jennifer Austin",
+                    "Hair Stylist",
+                    "${10 * i} Bookings",
+                    "SAR ${5 * i}"
+                )
+            )
+        }
+        binding.rcyTopPerformer.layoutManager =
+            LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
+        binding.rcyTopPerformer.adapter =
+            PerformerListAdapter(
+                topPerformerList,
+                requireContext(),
+            )
     }
 
     override fun getViewModel(): Class<HomeViewModel> {
@@ -26,9 +253,10 @@ class FragmentSaloonAnalytics  : BaseFragment<HomeViewModel, FragmentSaloonAnaly
     override fun getFragmentBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ) = FragmentSaloonAnalyticsBinding.inflate(inflater, container, false)
+    ) = FragmentAnalyticsBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
         HomeRepository(remoteDataSource.buildApi(HomeApi::class.java,requireContext()), userPreferences)
+
 
 }

@@ -9,23 +9,32 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.tt.muzien.R
 import com.tt.muzien.constants.Keys
-import com.tt.muzien.data.dto.UserInfo
+import com.tt.muzien.data.dto.LoggedInInfo
 import com.tt.muzien.data.network.HomeApi
+import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.HomeRepository
 import com.tt.muzien.databinding.FragmentProfileBinding
 import com.tt.muzien.ui.auth.AuthActivity
 import com.tt.muzien.ui.base.BaseFragment
+import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.home.HomeViewModel
+import com.tt.muzien.ui.snackbar
 import com.tt.muzien.ui.startNewActivity
-import java.util.Locale
+import com.tt.muzien.utilities.Helper
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 
 class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, HomeRepository>() {
@@ -36,8 +45,9 @@ class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, Home
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        if (UserInfo.userRole == "Admin") {
+        viewModel.setUserRepo((activity as HomeActivity?)?.getUserRepo()!!)
+        setUserData()
+        if (LoggedInInfo.user?.role == "super-admin") {
             binding.llSubscribtion.visibility = View.GONE
         } else {
             binding.llServices.visibility = View.GONE
@@ -88,12 +98,18 @@ class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, Home
         }
     }
 
-    private fun logout() {
-        userPreferences.putString(Keys.Access_Token, "")
-        requireActivity().startNewActivity(AuthActivity::class.java)
-        requireActivity().finish()
-
+    fun setUserData() {
+        binding.txtName.text = "${LoggedInInfo.user?.fullName}"
+        binding.txtProfession.text = "${LoggedInInfo.user?.role}"
+        Glide.with(binding.imgProfilePic)
+            .load(LoggedInInfo.user?.picture)
+            .circleCrop()
+            .placeholder(R.drawable.user_placeholder)
+            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)  // Cache both original & transformed image
+            .skipMemoryCache(false)  // Cache in memory
+            .into(binding.imgProfilePic)
     }
+
 
     override fun getViewModel(): Class<HomeViewModel> {
         return HomeViewModel::class.java
@@ -105,7 +121,10 @@ class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, Home
     ) = FragmentProfileBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        HomeRepository(remoteDataSource.buildApi(HomeApi::class.java,requireContext()), userPreferences)
+        HomeRepository(
+            remoteDataSource.buildApi(HomeApi::class.java, requireContext()),
+            userPreferences
+        )
 
     override fun onResume() {
         super.onResume()
@@ -194,18 +213,83 @@ class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, Home
 
 
                     }
-
+                    uploadPhoto()
                 }
 
                 REQUEST_GALLERY -> {
                     val selectedImageUri: Uri? = data?.data
                     if (selectedImageUri != null) {
-                        //UserInfo.profilePic = selectedImageUri
+                        image_uri = selectedImageUri
                     }
                     binding.imgProfilePic.setImageURI(selectedImageUri)
-
+                    uploadPhoto()
                 }
             }
         }
+    }
+
+    private fun uploadPhoto() {
+        viewModel.uploadPhoto.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    // (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        // LoggedInInfo.user?.picture= it.value.data?.user?.picture!!
+                        (activity as HomeActivity?)?.getUserData()
+                        requireView().snackbar("Profile photo updated")
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        val imageFile =
+            Helper.getFileFromUri(requireContext(), image_uri!!) ?: return // Get file from URI
+        val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), imageFile)
+        val imagePart = MultipartBody.Part.createFormData("image", imageFile.name, requestFile)
+
+        viewModel.uploadImage(imagePart)
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
+    private fun logout() {
+        viewModel.logout.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        userPreferences.putString(Keys.Access_Token, "")
+                        requireActivity().startNewActivity(AuthActivity::class.java)
+                        requireActivity().finish()
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.logout()
+        // (activity as HomeActivity?)?.showLoadingIndicator()
     }
 }

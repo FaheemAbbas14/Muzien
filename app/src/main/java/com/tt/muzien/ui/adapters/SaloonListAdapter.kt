@@ -21,6 +21,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.SaloonDto
+import com.tt.muzien.utilities.TimeHelper
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 
 
@@ -38,7 +39,7 @@ class SaloonListAdapter(
 ) :
     RecyclerView.Adapter<SaloonListAdapter.MyViewHolder>() {
 
-    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) ,
+    inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
         val imgIcon: ImageView = itemView.findViewById(R.id.imgIcon)
         val txtItemName: TextView = itemView.findViewById(R.id.txtItemName)
@@ -67,13 +68,15 @@ class SaloonListAdapter(
         return MyViewHolder(itemView)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         var item: SaloonDto = itemList[position]
 
         holder.txtItemName.text = item.name
         holder.txtLocation.text = item.location
         holder.txtRating.text = item.ratings
-        holder.txtTiming.text = item.timing
+        var timing = TimeHelper.getCurrentDayTiming(item.timing)
+        holder.txtTiming.text = timing
         if (item.isOpened) {
             holder.llStatus.setBackgroundDrawable(
                 ResourcesCompat.getDrawable(
@@ -93,43 +96,47 @@ class SaloonListAdapter(
             )
             holder.txtStatusTexts.text = "close today"
         }
-        // Implement the RequestListener here
-        val iconRequestListener = object : RequestListener<Drawable> {
+        item.icon?.size?.let {
+            if (it > 0) {
+                // Implement the RequestListener here
+                val iconRequestListener = object : RequestListener<Drawable> {
 
-            override fun onResourceReady(
-                resource: Drawable,
-                model: Any,
-                target: com.bumptech.glide.request.target.Target<Drawable>?,
-                dataSource: DataSource,
-                isFirstResource: Boolean
-            ): Boolean {
-                Log.d("imageLoaded", "success ${item.name}")
+                    override fun onResourceReady(
+                        resource: Drawable,
+                        model: Any,
+                        target: com.bumptech.glide.request.target.Target<Drawable>?,
+                        dataSource: DataSource,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        Log.d("imageLoaded", "success ${item.name}")
 
-                holder.imgIcon.scaleType = ImageView.ScaleType.CENTER_CROP
-                return false
+                        holder.imgIcon.scaleType = ImageView.ScaleType.CENTER_CROP
+                        return false
+                    }
+
+                    @RequiresApi(Build.VERSION_CODES.M)
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        holder.imgIcon.scaleType = ImageView.ScaleType.CENTER_CROP
+                        Log.d("imageLoaded", "failed ${item.name}")
+                        return false
+                    }
+
+
+                }
+                Glide.with(holder.imgIcon)
+                    .load(item.icon[0]?.image)
+                    .placeholder(R.drawable.salonplaceholder)
+                    .listener(iconRequestListener)
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)  // Cache both original & transformed image
+                    .skipMemoryCache(false)  // Cache in memory
+                    .into(holder.imgIcon)
             }
-
-            @RequiresApi(Build.VERSION_CODES.M)
-            override fun onLoadFailed(
-                e: GlideException?,
-                model: Any?,
-                target: Target<Drawable>,
-                isFirstResource: Boolean
-            ): Boolean {
-                holder.imgIcon.scaleType = ImageView.ScaleType.CENTER_CROP
-                Log.d("imageLoaded", "failed ${item.name}")
-                return false
-            }
-
-
         }
-        Glide.with(holder.imgIcon)
-            .load(item.icon)
-            .placeholder(R.drawable.salonplaceholder)
-            .listener(iconRequestListener)
-            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)  // Cache both original & transformed image
-            .skipMemoryCache(false)  // Cache in memory
-            .into(holder.imgIcon)
     }
 
 

@@ -8,4 +8,4 @@ package com.tt.muzien.data.dto
  * faheem.abbas@bajcotechnologies.com
  * +923115284424
  */
-data class WorkingHourData(val id: String,val title: String,val hours: String)
+data class WorkingHourData(val id: Int,val title: String,val hours: String)

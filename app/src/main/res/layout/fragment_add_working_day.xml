@@ -236,7 +236,7 @@
         app:layout_constraintTop_toBottomOf="@+id/llDays2">
 
 
-        <EditText
+        <TextView
             android:id="@+id/edtOpening"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -295,7 +295,7 @@
         app:layout_constraintTop_toBottomOf="@+id/llOpening">
 
 
-        <EditText
+        <TextView
             android:id="@+id/edtClose"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

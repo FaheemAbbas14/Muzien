@@ -1,9 +1,11 @@
 package com.tt.muzien.ui.home
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.setFragmentResult
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.FilterData
@@ -14,20 +16,25 @@ import com.tt.muzien.ui.auth.AuthViewModel
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.views.CustomCalendar
 import com.tt.muzien.utilities.FilterSelection
+import com.tt.muzien.utilities.TimeHelper
 
 
 class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRepository>() {
     var selection: String = ""
-    var fromDate: String = ""
-    var toDate: String = ""
+    var fromDate: String?=null
+    var toDate: String?=null
     var isFrom: Boolean = true
     var isFromRevenue: Boolean = false
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.rbWeek -> {
                     selection = "Week"
+                    val dates = TimeHelper.getWeekAndMonthDates()
+                    fromDate = dates["startOfWeek"]
+                    toDate = dates["endOfWeek"]
                     checkValidation()
                     binding.llFrom.visibility = View.GONE
                     binding.llTo.visibility = View.GONE
@@ -37,6 +44,9 @@ class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRe
 
                 R.id.rbMonth -> {
                     selection = "Month"
+                    val dates = TimeHelper.getWeekAndMonthDates()
+                    fromDate = dates["startOfMonth"]
+                    toDate = dates["endOfMonth"]
                     checkValidation()
                     binding.llFrom.visibility = View.GONE
                     binding.llTo.visibility = View.GONE

@@ -1,9 +1,11 @@
 package com.tt.muzien.ui.bookings
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.FilterData
 import com.tt.muzien.data.network.HomeApi
@@ -14,17 +16,19 @@ import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.home.HomeViewModel
 import com.tt.muzien.ui.views.CustomCalendar
 import com.tt.muzien.utilities.FilterSelection
+import com.tt.muzien.utilities.TimeHelper
 
 
 class FragmentBookingFilter :
     BaseFragment<HomeViewModel, FragmentBookingFilterBinding, HomeRepository>() {
     var selection: String = ""
-    var bookingStatus: String = ""
-    var serviceProvider: String = ""
-    var fromDate: String = ""
-    var toDate: String = ""
+    var bookingStatus: String?=null
+    var serviceProvider: String?=null
+    var fromDate: String?=null
+    var toDate: String?=null
     var isFrom: Boolean = true
     var saloon: String = ""
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.radioBookingStatus.setOnCheckedChangeListener { _, checkedId ->
@@ -92,6 +96,9 @@ class FragmentBookingFilter :
             when (checkedId) {
                 R.id.rbWeek -> {
                     selection = "Week"
+                    val dates = TimeHelper.getWeekAndMonthDates()
+                    fromDate = dates["startOfWeek"]
+                    toDate = dates["endOfWeek"]
                     checkValidation()
                     binding.llFrom.visibility = View.GONE
                     binding.llTo.visibility = View.GONE
@@ -99,6 +106,9 @@ class FragmentBookingFilter :
 
                 R.id.rbMonth -> {
                     selection = "Month"
+                    val dates = TimeHelper.getWeekAndMonthDates()
+                    fromDate = dates["startOfMonth"]
+                    toDate = dates["endOfMonth"]
                     checkValidation()
                     binding.llFrom.visibility = View.GONE
                     binding.llTo.visibility = View.GONE

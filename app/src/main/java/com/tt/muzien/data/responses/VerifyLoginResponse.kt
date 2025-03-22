@@ -10,11 +10,11 @@ package com.tt.muzien.data.responses
  */
 data class VerifyLoginResponse(
     val status: Int,
-    val data: Data,
+    val data: TokenData,
     val message: String,
 )
 
-data class Data(
+data class TokenData(
     val token: String,
     val refreshToken: String,
 )

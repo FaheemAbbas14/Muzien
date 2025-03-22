@@ -3,7 +3,9 @@ package com.tt.muzien.ui.auth
 import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.ContentResolver
 import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -13,39 +15,60 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.gson.Gson
 import com.tt.muzien.R
 import com.tt.muzien.constants.Keys
+import com.tt.muzien.data.dto.LoggedInInfo
 import com.tt.muzien.data.network.AuthApi
+import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.AuthRepository
+import com.tt.muzien.data.requests.UpdateUser
 import com.tt.muzien.databinding.FragmentSignupBinding
 import com.tt.muzien.ui.base.BaseFragment
+import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
+import com.tt.muzien.ui.snackbar
 import com.tt.muzien.ui.startNewActivity
 import com.tt.muzien.utilities.InputValidator
 import com.tt.muzien.utilities.PreferenceManager
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 
 class FragmentSignup : BaseFragment<AuthViewModel, FragmentSignupBinding, AuthRepository>() {
-    var role: String = ""
-    var country: String = ""
+    var role: String? = null
+    var country: String? = null
     private val REQUEST_CAMERA = 1
     private val REQUEST_GALLERY = 2
     private val REQUEST_PERMISSIONS = 3
     private var image_uri: Uri? = null
-
+    var closeApp: Boolean = false
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as AuthActivity?)?.changeBackground(Color.WHITE)
         binding.countrySpinner.setCountryForNameCode("SA")
+        binding.llBack?.setOnClickListener {
+            (activity as AuthActivity?)?.popFragment()
+            if (closeApp) {
+                (activity as AuthActivity?)?.popFragment()
+                (activity as AuthActivity?)?.popFragment()
+            }
+        }
         binding.rdoRole.setOnCheckedChangeListener { group, checkedId ->
             if (checkedId == R.id.RdoOwner) {
-                role = "Owner"
+                role = "business-owner"
                 binding.llCountry.visibility = View.GONE
                 binding.txtCountryLabel.visibility = View.GONE
                 binding.RdoOwner.background = resources.getDrawable(R.drawable.blue_rounded)
@@ -54,7 +77,7 @@ class FragmentSignup : BaseFragment<AuthViewModel, FragmentSignupBinding, AuthRe
                     resources.getDrawable(R.drawable.rounded_white_grey)
                 binding.rdoProvider.setTextColor(resources.getColor(R.color.colorTextDefault))
             } else {
-                role = "Service Provider"
+                role = "service-provider"
                 binding.llCountry.visibility = View.VISIBLE
                 binding.txtCountryLabel.visibility = View.VISIBLE
                 binding.rdoProvider.background = resources.getDrawable(R.drawable.blue_rounded)
@@ -109,11 +132,20 @@ class FragmentSignup : BaseFragment<AuthViewModel, FragmentSignupBinding, AuthRe
         binding.llSave.setOnClickListener {
 
             if (checkValidation()) {
-                val userPreferences = PreferenceManager.getInstance(requireActivity())
-                userPreferences.putString(Keys.Access_Token, "Faheem")
-                val activity = HomeActivity::class.java
-                requireActivity().startNewActivity(activity)
-                requireActivity().finish()
+                LoggedInInfo.fullName = binding.edtName.text.toString()
+                LoggedInInfo.email = binding.edtEmail.text.toString()
+                LoggedInInfo.role = role
+                LoggedInInfo.nationality = country
+                if (image_uri != null) {
+                    uploadPhoto()
+                } else {
+                    updateUser()
+                }
+//                val userPreferences = PreferenceManager.getInstance(requireActivity())
+//                userPreferences.putString(Keys.Access_Token, "Faheem")
+//                val activity = HomeActivity::class.java
+//                requireActivity().startNewActivity(activity)
+//                requireActivity().finish()
             }
         }
         // checkValidation()
@@ -169,7 +201,10 @@ class FragmentSignup : BaseFragment<AuthViewModel, FragmentSignupBinding, AuthRe
     ) = FragmentSignupBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        AuthRepository(remoteDataSource.buildApi(AuthApi::class.java,requireContext()), userPreferences)
+        AuthRepository(
+            remoteDataSource.buildApi(AuthApi::class.java, requireContext()),
+            userPreferences
+        )
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onPause() {
@@ -185,7 +220,7 @@ class FragmentSignup : BaseFragment<AuthViewModel, FragmentSignupBinding, AuthRe
 
     private fun uploadImage() {
         if (checkPermissions()) {
-           // showImagePickerDialog()
+            // showImagePickerDialog()
             openGallery()
         }
     }
@@ -267,7 +302,7 @@ class FragmentSignup : BaseFragment<AuthViewModel, FragmentSignupBinding, AuthRe
                 REQUEST_GALLERY -> {
                     val selectedImageUri: Uri? = data?.data
                     if (selectedImageUri != null) {
-                        //UserInfo.profilePic = selectedImageUri
+                        image_uri = selectedImageUri
                     }
                     binding.imgProfilePic.setImageURI(selectedImageUri)
 
@@ -276,4 +311,100 @@ class FragmentSignup : BaseFragment<AuthViewModel, FragmentSignupBinding, AuthRe
         }
     }
 
+    private fun updateUser() {
+        viewModel.updateUser.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as AuthActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        LoggedInInfo.user = it.value.data.user
+                        val gson = Gson()
+                        val userInfo = gson.toJson(it.value.data.user)
+                        PreferenceManager.getInstance(requireActivity())
+                            .putString(Keys.User, userInfo)
+                        if (it.value.data.user.fullName == null) {
+                            var nextFragment = FragmentSignup()
+                            (activity as AuthActivity?)?.loadFragment(nextFragment)
+
+                        } else {
+                            val activity = HomeActivity::class.java
+                            requireActivity().startNewActivity(activity)
+                            requireActivity().finish()
+//                            Toast.makeText(requireContext(), "Login success", Toast.LENGTH_SHORT)
+//                                .show()
+                        }
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as AuthActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        var request = UpdateUser(
+            LoggedInInfo.fullName,
+            LoggedInInfo.email, LoggedInInfo.nationality, LoggedInInfo.role
+        )
+        viewModel.updateUser(request)
+        (activity as AuthActivity?)?.showLoadingIndicator()
+    }
+
+    private fun uploadPhoto() {
+        viewModel.uploadPhoto.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as AuthActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        updateUser()
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as AuthActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        val imageFile = getFileFromUri(requireContext(), image_uri!!) ?: return // Get file from URI
+        val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), imageFile)
+        val imagePart = MultipartBody.Part.createFormData("image", imageFile.name, requestFile)
+
+        viewModel.uploadImage(imagePart)
+        (activity as AuthActivity?)?.showLoadingIndicator()
+    }
+
+    fun getFileFromUri(context: Context, uri: Uri): File? {
+        val contentResolver: ContentResolver = context.contentResolver
+        val fileName = "temp_image_${System.currentTimeMillis()}.jpg" // Change extension as needed
+        val tempFile = File(context.cacheDir, fileName)
+
+        return try {
+            val inputStream = contentResolver.openInputStream(uri)
+            val outputStream = FileOutputStream(tempFile)
+            inputStream?.copyTo(outputStream)
+            inputStream?.close()
+            outputStream.close()
+            tempFile
+        } catch (e: IOException) {
+            e.printStackTrace()
+            null
+        }
+    }
 }

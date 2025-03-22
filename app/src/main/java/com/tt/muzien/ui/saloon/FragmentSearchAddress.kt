@@ -8,6 +8,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,20 +29,28 @@ import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.tt.muzien.R
-import com.tt.muzien.data.network.HomeApi
-import com.tt.muzien.data.repository.HomeRepository
+import com.tt.muzien.data.dto.AddSaloonData
+import com.tt.muzien.data.network.Resource
+import com.tt.muzien.data.network.SaloonApi
+import com.tt.muzien.data.repository.SaloonRepository
+import com.tt.muzien.data.requests.UpdateSaloonRequest
 import com.tt.muzien.databinding.FragmentSearchAddressBinding
 import com.tt.muzien.ui.base.BaseFragment
+import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
-import com.tt.muzien.ui.home.HomeViewModel
+import com.tt.muzien.ui.snackbar
 
 
 class FragmentSearchAddress :
-    BaseFragment<HomeViewModel, FragmentSearchAddressBinding, HomeRepository>(),
+    BaseFragment<SaloonViewModel, FragmentSearchAddressBinding, SaloonRepository>(),
     OnMapReadyCallback {
     private lateinit var placesClient: PlacesClient
     private lateinit var mMap: GoogleMap
-    private var selectedAddress: String = ""
+    var selectedAddress: String = ""
+    var latitude: Double = 0.0
+    var longitude: Double = 0.0
+    var isEdit = false
+    var saloonId: Int = 0
 
     companion object {
         private const val AUTOCOMPLETE_REQUEST_CODE = 1
@@ -62,13 +71,22 @@ class FragmentSearchAddress :
             startAutocompleteActivity()
         }
         binding.cnstSave.setOnClickListener {
-            // Inside your current fragment before popping
-            val resultBundle = Bundle().apply {
-                putString("address", selectedAddress) // Replace with your data
-            }
+            if (selectedAddress != "") {
+                if (isEdit) {
+                    updateSaloon()
+                } else {
+                    AddSaloonData.address = selectedAddress
+                    AddSaloonData.addressLat = latitude
+                    AddSaloonData.addressLng = longitude
+                    // Inside your current fragment before popping
+                    val resultBundle = Bundle().apply {
+                        putString("address", selectedAddress) // Replace with your data
+                    }
 
-            setFragmentResult("requestKey", resultBundle)
-            (activity as HomeActivity?)?.popFragment()
+                    setFragmentResult("requestKey", resultBundle)
+                    (activity as HomeActivity?)?.popFragment()
+                }
+            }
         }
     }
 
@@ -84,7 +102,10 @@ class FragmentSearchAddress :
         mMap = googleMap
         // Set the map type
         mMap.mapType = GoogleMap.MAP_TYPE_TERRAIN  // Change to desired map type
-
+        if (latitude != 0.0 && longitude != 0.0) {
+            updateMarkerLocation(latitude, longitude)
+            setAddressData()
+        }
     }
 
     private fun getApiKey(): String {
@@ -158,6 +179,8 @@ class FragmentSearchAddress :
                         val place = Autocomplete.getPlaceFromIntent(data)
                         if (place.latLng != null) {
                             selectedAddress = place.address
+                            latitude = place.latLng.latitude
+                            longitude = place.latLng.longitude
                             updateMarkerLocation(place.latLng.latitude, place.latLng.longitude)
                         }
                     }
@@ -178,8 +201,8 @@ class FragmentSearchAddress :
         }
     }
 
-    override fun getViewModel(): Class<HomeViewModel> {
-        return HomeViewModel::class.java
+    override fun getViewModel(): Class<SaloonViewModel> {
+        return SaloonViewModel::class.java
     }
 
     override fun getFragmentBinding(
@@ -188,11 +211,60 @@ class FragmentSearchAddress :
     ) = FragmentSearchAddressBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        HomeRepository(remoteDataSource.buildApi(HomeApi::class.java,requireContext()), userPreferences)
+        SaloonRepository(
+            remoteDataSource.buildApi(SaloonApi::class.java, requireContext())
+        )
 
     override fun onResume() {
         super.onResume()
         (activity as HomeActivity?)?.hideTabs()
+    }
+
+    private fun updateSaloon() {
+        viewModel.addSaloon.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    if (it.value.status != 0) {
+                        id
+//                        if (AddSaloonData.days.size > 0) {
+//                            addWorkHour()
+//                        } else {
+                        requireView().snackbar("Saloon updated successfully")
+                        (activity as HomeActivity?)?.hideLoadingIndicator()
+                        val resultBundle = Bundle().apply {
+                            putBoolean("reload", true) // Replace with your data
+                        }
+                        setFragmentResult("requestKey", resultBundle)
+                        (activity as HomeActivity?)?.popFragment()
+                        //  }
+                    } else {
+                        requireView().snackbar(it.value.message)
+                        (activity as HomeActivity?)?.hideLoadingIndicator()
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+
+        viewModel.updateSaloon(
+            saloonId,
+            UpdateSaloonRequest(
+                address = selectedAddress,
+                locationLat = latitude.toString(),
+                locationLong = longitude.toString()
+            )
+        )
+        (activity as HomeActivity?)?.showLoadingIndicator()
     }
 
 

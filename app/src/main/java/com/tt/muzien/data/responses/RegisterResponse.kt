@@ -11,13 +11,6 @@ package com.tt.muzien.data.responses
 data class RegisterResponse(
     val status: Int,
     val message: String,
-    val otp: Otp,
+    val data: Data,
 )
 
-data class Otp(
-    val userId: Long,
-    val phoneNumber: String,
-    val otp: String,
-    val expiryDate: String,
-    val sent: Boolean,
-)

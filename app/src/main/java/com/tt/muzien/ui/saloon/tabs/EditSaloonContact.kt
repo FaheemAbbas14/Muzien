@@ -3,25 +3,30 @@ package com.tt.muzien.ui.saloon.tabs
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.tt.muzien.R
-import com.tt.muzien.data.network.HomeApi
-import com.tt.muzien.data.repository.HomeRepository
-import com.tt.muzien.databinding.FragmentBookingsBinding
+import androidx.fragment.app.setFragmentResult
+import com.tt.muzien.data.dto.LoggedInInfo
+import com.tt.muzien.data.network.Resource
+import com.tt.muzien.data.network.SaloonApi
+import com.tt.muzien.data.repository.SaloonRepository
+import com.tt.muzien.data.requests.UpdateSaloonRequest
 import com.tt.muzien.databinding.FragmentEditSaloonContactBinding
-import com.tt.muzien.ui.auth.AuthActivity
-import com.tt.muzien.ui.auth.FragmentOTP
 import com.tt.muzien.ui.base.BaseFragment
+import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
-import com.tt.muzien.ui.home.HomeViewModel
+import com.tt.muzien.ui.saloon.SaloonViewModel
+import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.InputValidator
 
 
-class EditSaloonContact  : BaseFragment<HomeViewModel, FragmentEditSaloonContactBinding, HomeRepository>() {
+class EditSaloonContact :
+    BaseFragment<SaloonViewModel, FragmentEditSaloonContactBinding, SaloonRepository>() {
     private lateinit var selectedCountry: String
+    var phone: String = ""
+    var saloonId: Int = 0
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.llBack.setOnClickListener {
@@ -32,10 +37,15 @@ class EditSaloonContact  : BaseFragment<HomeViewModel, FragmentEditSaloonContact
             if (checkValidation()) {
                 var phone =
                     binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString()
-
+                updateSaloon(phone)
             }
         }
-        binding.countrySpinner.setCountryForNameCode("SA")
+        var (countryCode, phoneNumber) = splitString(LoggedInInfo.user?.phoneNumber!!)
+        binding.txtCountryCode.text = countryCode
+        countryCode = countryCode.replace("+", "")
+        binding.edtPhoneNumber.text =
+            Editable.Factory.getInstance().newEditable(phoneNumber)
+        binding.countrySpinner.setCountryForPhoneCode(Integer.parseInt(countryCode))
         selectedCountry = binding.countrySpinner.selectedCountryName
         binding.countrySpinner.setOnCountryChangeListener {
             selectedCountry = binding.countrySpinner.selectedCountryName
@@ -62,6 +72,50 @@ class EditSaloonContact  : BaseFragment<HomeViewModel, FragmentEditSaloonContact
             }
         })
     }
+
+    private fun updateSaloon(phone: String) {
+        viewModel.addSaloon.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    if (it.value.status != 0) {
+                        id
+//                        if (AddSaloonData.days.size > 0) {
+//                            addWorkHour()
+//                        } else {
+                        requireView().snackbar("Saloon updated successfully")
+                        (activity as HomeActivity?)?.hideLoadingIndicator()
+                        val resultBundle = Bundle().apply {
+                            putBoolean("reload", true) // Replace with your data
+                        }
+                        setFragmentResult("requestKey", resultBundle)
+                        (activity as HomeActivity?)?.popFragment()
+                        //  }
+                    } else {
+                        requireView().snackbar(it.value.message)
+                        (activity as HomeActivity?)?.hideLoadingIndicator()
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+
+        viewModel.updateSaloon(
+            saloonId,
+            UpdateSaloonRequest(phoneNumber = phone)
+        )
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
     private fun checkValidation(): Boolean {
         var isValid = false
 
@@ -81,8 +135,9 @@ class EditSaloonContact  : BaseFragment<HomeViewModel, FragmentEditSaloonContact
         return isValid
 
     }
-    override fun getViewModel(): Class<HomeViewModel> {
-        return HomeViewModel::class.java
+
+    override fun getViewModel(): Class<SaloonViewModel> {
+        return SaloonViewModel::class.java
     }
 
     override fun getFragmentBinding(
@@ -91,7 +146,8 @@ class EditSaloonContact  : BaseFragment<HomeViewModel, FragmentEditSaloonContact
     ) = FragmentEditSaloonContactBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        HomeRepository(remoteDataSource.buildApi(HomeApi::class.java,requireContext()), userPreferences)
+        SaloonRepository(remoteDataSource.buildApi(SaloonApi::class.java, requireContext()))
+
     override fun onResume() {
         super.onResume()
         (activity as HomeActivity?)?.hideTabs()
@@ -100,5 +156,18 @@ class EditSaloonContact  : BaseFragment<HomeViewModel, FragmentEditSaloonContact
     override fun onPause() {
         super.onPause()
         (activity as HomeActivity?)?.showTabs()
+    }
+
+    fun splitString(input: String): Pair<String, String> {
+        return if (input.length >= 3) {
+            val firstPart = input.substring(0, 3)  // Get first 3 characters
+            val remainingPart = input.drop(3)      // Get the rest of the string
+            Pair(firstPart, remainingPart)
+        } else {
+            Pair(
+                input,
+                ""
+            )  // If input has less than 3 characters, return the full string and empty
+        }
     }
 }

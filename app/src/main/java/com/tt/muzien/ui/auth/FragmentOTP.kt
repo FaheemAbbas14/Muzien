@@ -16,8 +16,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import com.google.gson.Gson
 import com.tt.muzien.R
 import com.tt.muzien.constants.Keys
+import com.tt.muzien.data.dto.LoggedInInfo
 import com.tt.muzien.data.network.AuthApi
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.AuthRepository
@@ -39,7 +41,7 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
     var phone: String = ""
     var otp: String = ""
     var isFromSignup: Boolean = false
-
+    var isFromEdit: Boolean = false
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -229,7 +231,10 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
     ) = FragmentOTPBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        AuthRepository(remoteDataSource.buildApi(AuthApi::class.java,requireContext()), userPreferences)
+        AuthRepository(
+            remoteDataSource.buildApi(AuthApi::class.java, requireContext()),
+            userPreferences
+        )
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun setdata() {
@@ -328,26 +333,17 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
             when (it) {
                 is Resource.Success -> {
                     Log.d("response", "success " + it.toString())
-                    (activity as AuthActivity?)?.hideLoadingIndicator()
+                    //  (activity as AuthActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
-                        if (isFromSignup) {
-                            var nextFragment = FragmentSignup()
-                            (activity as AuthActivity?)?.loadFragment(nextFragment)
-
-                        } else {
-                            val userPreferences = PreferenceManager.getInstance(requireActivity())
-                            userPreferences.putString(Keys.Access_Token, it.value.data.token)
-                            userPreferences.putString(
-                                Keys.Refresh_Token,
-                                it.value.data.refreshToken
-                            )
-                            val activity = HomeActivity::class.java
-                            requireActivity().startNewActivity(activity)
-                            requireActivity().finish()
-                            Toast.makeText(requireContext(), "Login success", Toast.LENGTH_SHORT)
-                                .show()
-                        }
+                        val userPreferences = PreferenceManager.getInstance(requireActivity())
+                        userPreferences.putString(Keys.Access_Token, it.value.data.token)
+                        userPreferences.putString(
+                            Keys.Refresh_Token,
+                            it.value.data.refreshToken
+                        )
+                        getUserData()
                     } else {
+                        (activity as AuthActivity?)?.hideLoadingIndicator()
                         requireView().snackbar(it.value.message)
                     }
                 }
@@ -365,5 +361,48 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
         var request = VerifyOTPRequest(phone, data)
         viewModel.verifyLogin(request)
         (activity as AuthActivity?)?.showLoadingIndicator()
+    }
+
+    private fun getUserData() {
+        viewModel.my.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as AuthActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        LoggedInInfo.user = it.value.data?.user
+                        val gson = Gson()
+                        val userInfo = gson.toJson(it.value.data?.user)
+                        PreferenceManager.getInstance(requireActivity())
+                            .putString(Keys.User, userInfo)
+                        if (it.value.data?.user?.fullName == null) {
+                            var nextFragment = FragmentSignup()
+                            (activity as AuthActivity?)?.loadFragment(nextFragment)
+
+                        } else {
+                            val activity = HomeActivity::class.java
+                            requireActivity().startNewActivity(activity)
+                            requireActivity().finish()
+//                            Toast.makeText(requireContext(), "Login success", Toast.LENGTH_SHORT)
+//                                .show()
+                        }
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as AuthActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.my(LoggedInInfo.userId)
+        // (activity as AuthActivity?)?.showLoadingIndicator()
     }
 }

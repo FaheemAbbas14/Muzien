@@ -137,8 +137,8 @@
     <string name="this_month">هذا الشهر</string>
     <string name="from">من</string>
     <string name="to">إلى</string>
-    <string name="saloon_4">صالون (4)</string>
-    <string name="members_4">أعضاء (4)</string>
+    <string name="saloon_4">صالون</string>
+    <string name="members_4">أعضاء</string>
     <string name="services">الخدمات</string>
     <string name="invite_to_a_salon">دعوة إلى صالون</string>
     <string name="select_a_salon_to_invite_user">اختر صالونًا لدعوة المستخدم</string>

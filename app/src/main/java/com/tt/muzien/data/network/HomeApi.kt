@@ -14,10 +14,5 @@ import retrofit2.http.POST
  * +923115284424
  */
 interface HomeApi {
-    @FormUrlEncoded
-    @POST("login")
-    suspend fun login(
-        @Field("email") email: String,
-        @Field("password") password: String
-    ) : LoginResponse
+
 }

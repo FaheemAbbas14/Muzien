@@ -2,45 +2,49 @@ package com.tt.muzien.ui.saloon.tabs
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
-
+import com.tt.muzien.R
 import com.tt.muzien.data.SaloonBookingData
-import com.tt.muzien.data.network.HomeApi
-import com.tt.muzien.data.repository.HomeRepository
+import com.tt.muzien.data.dto.CalendarDay
+import com.tt.muzien.data.dto.SaloonDto
+import com.tt.muzien.data.network.BookingApi
+import com.tt.muzien.data.network.Resource
+import com.tt.muzien.data.repository.BookingRepository
 import com.tt.muzien.databinding.FragmentSaloonBookingsBinding
 import com.tt.muzien.ui.adapters.SaloonBookingAdapter
 import com.tt.muzien.ui.base.BaseFragment
+import com.tt.muzien.ui.bookings.BookingViewModel
+import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
-import com.tt.muzien.ui.home.HomeViewModel
+import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.FilterSelection
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
-import com.tt.muzien.R
-import com.tt.muzien.data.dto.CalendarDay
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
 
 class FragmentSaloonBookings :
-    BaseFragment<HomeViewModel, FragmentSaloonBookingsBinding, HomeRepository>() {
+    BaseFragment<BookingViewModel, FragmentSaloonBookingsBinding, BookingRepository>() {
     private val saloonsBookingList = arrayListOf<SaloonBookingData>()
-    private var fromDate: String = ""
-    private var toDate: String = ""
-    private var bookingDuration: String = ""
-    private var bookingStatus: String = ""
-    private var bookingServiceProvider: String = ""
+    private var fromDate: String?=null
+    private var toDate: String?=null
+    private var bookingDuration: String?=null
+    private var bookingStatus: String?=null
+    private var bookingServiceProvider: String?=null
     private var adopter: SaloonBookingAdapter? = null
-
+    var selectedSaloon: SaloonDto? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setSaloonAdopter()
+        getBooking(saloonIds = selectedSaloon?.id.toString())
         binding.customCalendarView.setOnDaySelectedListener { selectedDay ->
-           // Toast.makeText(requireContext(), "Selected: ${selectedDay}", Toast.LENGTH_SHORT).show()
+            // Toast.makeText(requireContext(), "Selected: ${selectedDay}", Toast.LENGTH_SHORT).show()
         }
         binding.customCalendarView.setDays(generateDaysWithEvents())
         binding.imgBookingFilter.setOnClickListener {
@@ -57,9 +61,9 @@ class FragmentSaloonBookings :
 
                 bookingDuration = FilterSelection.filterData!!.selection.toString()
                 if (bookingDuration == "Custom") {
-                  //  binding.txtMonth.text = "$fromDate To ${toDate}"
+                    //  binding.txtMonth.text = "$fromDate To ${toDate}"
                 } else {
-                   // binding.txtMonth.text = bookingDuration
+                    // binding.txtMonth.text = bookingDuration
                 }
 
             }
@@ -74,7 +78,8 @@ class FragmentSaloonBookings :
             }
             adopter?.setBookingStatus(bookingStatus)
             adopter?.notifyDataSetChanged()
-           // Toast.makeText(requireContext(), "data received", Toast.LENGTH_SHORT).show()
+            getBooking(selectedSaloon?.id.toString(),fromDate,toDate,bookingStatus)
+            // Toast.makeText(requireContext(), "data received", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -91,21 +96,7 @@ class FragmentSaloonBookings :
         binding.rcyBookings.layoutParams = layoutParams
     }
 
-    private fun setSaloonAdopter() {
-        saloonsBookingList.clear()
-        for (i in 0..10) {
-            println("Index: $i")
-            saloonsBookingList.add(
-                SaloonBookingData(
-                    "",
-                    "Jennifer Austin",
-                    "Tye Style Zone",
-                    "Dibra Morgan",
-                    "Undercut Haircut, Thin Shaving, Shampoo Hair wash"
-                )
-            )
-        }
-
+    private fun setBookingsAdopter() {
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(position: Int) {
 //                var nextFragment = FragmentSaloonDetails()
@@ -126,8 +117,8 @@ class FragmentSaloonBookings :
 
     }
 
-    override fun getViewModel(): Class<HomeViewModel> {
-        return HomeViewModel::class.java
+    override fun getViewModel(): Class<BookingViewModel> {
+        return BookingViewModel::class.java
     }
 
     override fun getFragmentBinding(
@@ -136,7 +127,7 @@ class FragmentSaloonBookings :
     ) = FragmentSaloonBookingsBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        HomeRepository(remoteDataSource.buildApi(HomeApi::class.java,requireContext()), userPreferences)
+        BookingRepository(remoteDataSource.buildApi(BookingApi::class.java, requireContext()))
 
     override fun onResume() {
         super.onResume()
@@ -144,6 +135,7 @@ class FragmentSaloonBookings :
             // Use the data
         }
     }
+
     private fun generateDaysWithEvents(): List<CalendarDay> {
         val days = mutableListOf<CalendarDay>()
         val calendar = Calendar.getInstance()
@@ -168,4 +160,48 @@ class FragmentSaloonBookings :
         return days
     }
 
+    private fun getBooking(
+        saloonIds: String? = null,
+        startDate: String? = null,
+        endDate: String? = null,
+        status: String? = null
+    ) {
+        viewModel.getBooking.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        saloonsBookingList.clear()
+//                        for (saloon in it.value.data) {
+//                            saloonsBookingList.add(
+//                                SaloonBookingData(
+//                                    "",
+//                                    "Jennifer Austin",
+//                                    "Tye Style Zone",
+//                                    "Dibra Morgan",
+//                                    "Undercut Haircut, Thin Shaving, Shampoo Hair wash"
+//                                )
+//                            )
+//                        }
+                        setBookingsAdopter()
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.getBookings(saloonIds, startDate, endDate, status)
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
 }

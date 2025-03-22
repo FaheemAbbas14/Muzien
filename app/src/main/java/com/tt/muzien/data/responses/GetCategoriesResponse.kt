@@ -1,0 +1,33 @@
+package com.tt.muzien.data.responses
+
+
+/**
+ * Created by Faheem Abbas on 15/03/2025.
+ * Technical Lead
+ * Bajco Technologies
+ * faheem.abbas@bajcotechnologies.com
+ * +923115284424
+ */
+data class GetCategoriesResponse(
+    val status: Int,
+    val data: CategoryData,
+)
+
+data class CategoryData(
+    val categories: List<Category?>,
+)
+data class Category(
+    val id: Int,
+    val name: String,
+    val image: String,
+    val services: List<Service?>,
+)
+data class Service(
+    val id: Long,
+    val addedBy: Long,
+    val saloonId: Long,
+    val name: String,
+    val duration: Long,
+    val price: Long,
+    val image: String,
+)

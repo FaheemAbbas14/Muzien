@@ -17,11 +17,13 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import com.tt.muzien.R
+import com.tt.muzien.data.dto.LoggedInInfo
 import com.tt.muzien.data.network.AuthApi
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.AuthRepository
 import com.tt.muzien.data.requests.LoginRequest
 import com.tt.muzien.data.requests.RegisterRequest
+import com.tt.muzien.data.responses.UserInfo
 import com.tt.muzien.databinding.FragmentSignInBinding
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
@@ -212,6 +214,8 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
                     Log.d("response", "success " + it.toString())
                     (activity as AuthActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
+
+                        LoggedInInfo.userId= it.value.data?.otp?.userId!!
                         var nextFragment = FragmentOTP()
                         nextFragment.isFromSignup = isFromSignup
                         nextFragment.phone = data
@@ -244,6 +248,7 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
                     Log.d("response", "success " + it.toString())
                     (activity as AuthActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
+                        LoggedInInfo.userId=it.value.data.otp.userId
                         var nextFragment = FragmentOTP()
                         nextFragment.isFromSignup = isFromSignup
                         nextFragment.phone = data

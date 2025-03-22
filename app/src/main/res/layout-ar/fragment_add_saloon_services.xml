@@ -137,16 +137,17 @@
                     app:layout_constraintTop_toBottomOf="@+id/divider">
 
 
-                    <EditText
-                        android:id="@+id/edtCategory"
+
+                    <Spinner
+                        android:id="@+id/spnCategory"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_gravity="center"
+                        android:layout_gravity="center|right"
                         android:layout_marginLeft="5dp"
                         android:layout_weight="1"
                         android:background="@android:color/transparent"
                         android:fontFamily="@font/manrope_regular"
-                        android:gravity="center|right"
+                        android:gravity="center|left"
                         android:hint="@string/hair_service"
                         android:inputType="text"
                         android:paddingEnd="10dp"
@@ -159,8 +160,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:padding="8dp"
+                        android:visibility="gone"
                         app:srcCompat="@drawable/ddl_icon" />
-
 
                 </LinearLayout>
 
@@ -219,6 +220,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:padding="8dp"
+                        android:visibility="gone"
                         app:srcCompat="@drawable/search_icon" />
 
 
@@ -422,6 +424,64 @@
                         tools:layout_editor_absoluteX="14dp"
                         tools:layout_editor_absoluteY="530dp" />
                 </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/llSaloon"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/rounded_white_grey"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:minHeight="60dp"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="10dp"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="@+id/llPrice"
+                    app:layout_constraintStart_toStartOf="@+id/llPrice"
+                    app:layout_constraintTop_toBottomOf="@+id/llPrice">
+
+
+                    <AutoCompleteTextView
+                        android:id="@+id/edtSaloon"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center|right"
+                        android:layout_marginLeft="5dp"
+                        android:gravity="center|right"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:fontFamily="@font/manrope_regular"
+                        android:hint="@string/saloon_name"
+                        android:inputType="text"
+                        android:paddingEnd="10dp"
+                        android:textColor="@color/colorTextDefault"
+                        android:textFontWeight="400"
+                        android:textSize="14sp" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:padding="8dp"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/ddl_icon" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txtSaloonLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginBottom="-10dp"
+                    android:background="@color/white"
+                    android:fontFamily="@font/manrope_regular"
+                    android:inputType="textEmailAddress"
+                    android:text="@string/select_a_salon_optional"
+                    android:textColor="@color/colorTextLabelDefault"
+                    android:textSize="11sp"
+                    android:textFontWeight="500"
+                    app:layout_constraintBottom_toTopOf="@+id/llSaloon"
+                    app:layout_constraintStart_toStartOf="@+id/llSaloon" />
 
                 <ImageView
                     android:id="@+id/imgPhoto"
@@ -434,9 +494,9 @@
                     android:paddingEnd="30dp"
                     android:paddingBottom="15dp"
                     android:scaleType="centerCrop"
-                    app:layout_constraintEnd_toEndOf="@+id/llPrice"
-                    app:layout_constraintStart_toStartOf="@+id/llPrice"
-                    app:layout_constraintTop_toBottomOf="@+id/llPrice"
+                    app:layout_constraintEnd_toEndOf="@+id/llSaloon"
+                    app:layout_constraintStart_toStartOf="@+id/llSaloon"
+                    app:layout_constraintTop_toBottomOf="@+id/llSaloon"
                     app:srcCompat="@drawable/add_image_placeholder" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

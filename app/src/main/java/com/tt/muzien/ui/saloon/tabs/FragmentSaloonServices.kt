@@ -6,44 +6,44 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ExpandableListView
+import com.tt.muzien.data.dto.SaloonDto
 import com.tt.muzien.data.dto.ServiceInfo
 import com.tt.muzien.data.network.HomeApi
+import com.tt.muzien.data.network.Resource
+import com.tt.muzien.data.network.ServiceApi
 import com.tt.muzien.data.repository.HomeRepository
+import com.tt.muzien.data.repository.ServiceRepository
 import com.tt.muzien.databinding.FragmentSaloonServicesBinding
 import com.tt.muzien.ui.adapters.ExpandServiceListAdapter
 import com.tt.muzien.ui.base.BaseFragment
+import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.home.HomeViewModel
+import com.tt.muzien.ui.saloon.SaloonViewModel
 import com.tt.muzien.ui.service.FragmentUpdateService
+import com.tt.muzien.ui.service.ServiceViewModel
 import com.tt.muzien.utilities.Helper
 
 
 class FragmentSaloonServices :
-    BaseFragment<HomeViewModel, FragmentSaloonServicesBinding, HomeRepository>() {
+    BaseFragment<ServiceViewModel, FragmentSaloonServicesBinding, ServiceRepository>() {
     private val servicesMap = HashMap<String, List<ServiceInfo>>()
-
+    var saloonId: Int? = 1
+    var selectedSaloon: SaloonDto? = null
+    private val groupTitles = arrayListOf<String>()
+    private val groupServices = arrayListOf<String>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setServicesAdopter()
+        getCategories()
         binding.llAdd.setOnClickListener {
             var nextFragment = FragmentAddSaloonServices()
+            nextFragment.saloonId=saloonId
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
     }
 
     private fun setServicesAdopter() {
-        servicesMap.clear()
-        val groupTitles = listOf("Hair Service", "Facial", "Nails", "Manicure", "Massage",)
-        for (type in groupTitles) {
-            val servicesList = arrayListOf<ServiceInfo>()
-            for (i in 1..4) {
-                println("Index: $i")
-                servicesList.add(
-                    ServiceInfo("", "Buzz cut", "Duration: 45mins", "SAR 10")
-                )
-            }
-            servicesMap.put(type, servicesList)
-        }
+
         val adapter = ExpandServiceListAdapter(requireContext(), groupTitles, servicesMap)
         binding.rcyServices.setAdapter(adapter)
         // Adjust height dynamically
@@ -103,8 +103,8 @@ class FragmentSaloonServices :
         params.height = totalHeight + (listView.dividerHeight * (adapter.groupCount - 1))
         listView.layoutParams = params
     }
-    override fun getViewModel(): Class<HomeViewModel> {
-        return HomeViewModel::class.java
+    override fun getViewModel(): Class<ServiceViewModel> {
+        return ServiceViewModel::class.java
     }
 
     override fun getFragmentBinding(
@@ -113,6 +113,52 @@ class FragmentSaloonServices :
     ) = FragmentSaloonServicesBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        HomeRepository(remoteDataSource.buildApi(HomeApi::class.java,requireContext()), userPreferences)
+        ServiceRepository(remoteDataSource.buildApi(ServiceApi::class.java,requireContext()))
+    private fun getCategories() {
+        viewModel.getCategories.observe(viewLifecycleOwner) {
 
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        servicesMap.clear()
+                        groupServices.clear()
+                        groupTitles.clear()
+                        for (category in it.value.data.categories) {
+                            groupTitles.add(category?.name ?: "")
+                            groupServices.add("${category?.services?.size}")
+                            val servicesList = arrayListOf<ServiceInfo>()
+                            for (service in category!!.services) {
+                                servicesList.add(
+                                    ServiceInfo(
+                                        service?.image!!,
+                                        service?.name!!,
+                                        "Duration: ${service.duration} ${
+                                            if (service.duration.toInt() == 1) "min" else "mins"
+                                        }",
+                                        "SAR ${service.price / 100}"
+                                    )
+                                )
+                            }
+                            servicesMap.put(category.name, servicesList)
+
+                        }
+                    }
+                    setServicesAdopter()
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.getCategories()
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
 }

@@ -91,10 +91,11 @@
 
 
         <EditText
-            android:id="@+id/edtEmail"
+            android:id="@+id/edtAbout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
+            android:gravity="left|top"
             android:background="@android:color/transparent"
             android:fontFamily="@font/manrope_regular"
             android:hint="@string/dummy_text"

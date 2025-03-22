@@ -51,7 +51,7 @@
 
                 <TextView
                     android:id="@+id/txtAbout"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:fontFamily="@font/manrope_regular"
@@ -89,7 +89,7 @@
 
 
                 <ImageView
-                    android:id="@+id/imageView14"
+                    android:id="@+id/imgCertificateIcon"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:layout_marginTop="10dp"
@@ -108,11 +108,11 @@
                     android:textColor="@color/black_text"
                     android:textFontWeight="400"
                     android:textSize="12sp"
-                    app:layout_constraintStart_toEndOf="@+id/imageView14"
-                    app:layout_constraintTop_toTopOf="@+id/imageView14" />
+                    app:layout_constraintStart_toEndOf="@+id/imgCertificateIcon"
+                    app:layout_constraintTop_toTopOf="@+id/imgCertificateIcon" />
 
                 <TextView
-                    android:id="@+id/textView11"
+                    android:id="@+id/txtUploadedAt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -136,7 +136,7 @@
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imageView14" />
+                    app:layout_constraintTop_toBottomOf="@+id/imgCertificateIcon" />
 
                 <TextView
                     android:id="@+id/txtRenew"
@@ -232,6 +232,14 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/txtHoliday"
                     app:layout_constraintTop_toBottomOf="@+id/txtHoliday" />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcyHolidays"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/txtHoliday"
+                    app:layout_constraintTop_toBottomOf="@+id/txtHolidaysData" />
 
                 <ImageView
                     android:id="@+id/imgAddHoliday"
@@ -239,8 +247,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:src="@drawable/blue_add"
-                    app:layout_constraintStart_toStartOf="@+id/txtHolidaysData"
-                    app:layout_constraintTop_toBottomOf="@+id/txtHolidaysData" />
+                    app:layout_constraintStart_toStartOf="@+id/txtHoliday"
+                    app:layout_constraintTop_toBottomOf="@+id/rcyHolidays" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout

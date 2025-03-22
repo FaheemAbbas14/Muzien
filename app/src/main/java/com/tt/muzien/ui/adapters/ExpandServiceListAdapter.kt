@@ -15,10 +15,14 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.ServiceInfo
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation
 
 /**
  * Created by Faheem Abbas on 19/12/2024.
@@ -139,6 +143,7 @@ class ExpandServiceListAdapter(
         }
         Glide.with(imgProfilePic)
             .load(childInfo?.icon)
+            .transform(CenterCrop(), RoundedCornersTransformation(20, 0))
             .placeholder(R.drawable.service_placeholder)
             .listener(iconRequestListener)
             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)  // Cache both original & transformed image

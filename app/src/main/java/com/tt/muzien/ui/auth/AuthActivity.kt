@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.tt.muzien.R
 import com.tt.muzien.constants.Keys
+import com.tt.muzien.data.dto.LoggedInInfo
 import com.tt.muzien.databinding.ActivityAuthBinding
 import com.tt.muzien.ui.onboarding.FragmentWelcome
 import com.tt.muzien.ui.views.CustomLoadingIndicator
@@ -34,9 +35,17 @@ class AuthActivity : AppCompatActivity() {
         var tutorialShown =
             PreferenceManager.getInstance(this).getBoolean(Keys.Tutorial_Shown, false)
         if (tutorialShown) {
-            loadFragment(FragmentSignIn())
+            if (LoggedInInfo.userId > 0 && LoggedInInfo.user != null && LoggedInInfo.user!!.fullName == null) {
+                var nextFragment=FragmentSignup()
+                nextFragment.closeApp=true
+                loadFragment(nextFragment)
+            } else {
+                loadFragment(FragmentSignIn())
+            }
         } else {
+
             loadFragment(FragmentWelcome())
+
         }
 
     }

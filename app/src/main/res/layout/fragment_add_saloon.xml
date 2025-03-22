@@ -598,6 +598,14 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/txtHoliday"
                         app:layout_constraintTop_toBottomOf="@+id/txtHoliday" />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcyHolidays"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/txtHoliday"
+                        app:layout_constraintTop_toBottomOf="@+id/txtHolidaysData" />
 
                     <ImageView
                         android:id="@+id/imgAddHoliday"
@@ -605,8 +613,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:src="@drawable/blue_add"
-                        app:layout_constraintStart_toStartOf="@+id/txtHolidaysData"
-                        app:layout_constraintTop_toBottomOf="@+id/txtHolidaysData" />
+                        app:layout_constraintStart_toStartOf="@+id/txtHoliday"
+                        app:layout_constraintTop_toBottomOf="@+id/rcyHolidays" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView

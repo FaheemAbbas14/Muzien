@@ -2,7 +2,6 @@ package com.tt.muzien.ui.saloon.tabs
 
 import android.Manifest
 import android.app.Activity
-import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.ContentValues
@@ -11,32 +10,49 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.provider.OpenableColumns
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.tt.muzien.R
-import com.tt.muzien.data.network.HomeApi
-import com.tt.muzien.data.repository.HomeRepository
+import com.tt.muzien.data.dto.SaloonDto
+import com.tt.muzien.data.network.Resource
+import com.tt.muzien.data.network.ServiceApi
+import com.tt.muzien.data.repository.ServiceRepository
 import com.tt.muzien.databinding.FragmentAddSaloonServicesBinding
 import com.tt.muzien.ui.base.BaseFragment
+import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
-import com.tt.muzien.ui.home.HomeViewModel
+import com.tt.muzien.ui.service.ServiceViewModel
+import com.tt.muzien.ui.snackbar
+import com.tt.muzien.utilities.Helper
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 
 class FragmentAddSaloonServices :
-    BaseFragment<HomeViewModel, FragmentAddSaloonServicesBinding, HomeRepository>() {
+    BaseFragment<ServiceViewModel, FragmentAddSaloonServicesBinding, ServiceRepository>() {
     private val REQUEST_CAMERA = 1
     private val REQUEST_GALLERY = 2
     private val REQUEST_PERMISSIONS = 3
     private var image_uri: Uri? = null
-
+    private var categoryId: Int? = null
+    var saloonId: Int? = 0
+    private val servicesMap = HashMap<String, Int>()
+    private val services = arrayListOf<String>()
+    private val saloonsList = arrayListOf<String>()
+    private val saloonMap = HashMap<String, SaloonDto>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.setSaloonRepo((activity as HomeActivity?)?.getSaloonRepo()!!)
+        getSaloons()
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
         }
@@ -46,11 +62,14 @@ class FragmentAddSaloonServices :
         binding.llSave.setOnClickListener {
 
             if (checkValidation()) {
-                showPopupDialog()
+                if (saloonId == 0) {
+                    saloonId = saloonMap[binding.edtSaloon.text.toString()]?.id ?: 0
+                }
+                addService()
             }
         }
         // checkValidation()
-
+        getCategories()
     }
 
     private fun showPopupDialog() {
@@ -100,8 +119,8 @@ class FragmentAddSaloonServices :
         return isValid
     }
 
-    override fun getViewModel(): Class<HomeViewModel> {
-        return HomeViewModel::class.java
+    override fun getViewModel(): Class<ServiceViewModel> {
+        return ServiceViewModel::class.java
     }
 
     override fun getFragmentBinding(
@@ -110,7 +129,7 @@ class FragmentAddSaloonServices :
     ) = FragmentAddSaloonServicesBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        HomeRepository(remoteDataSource.buildApi(HomeApi::class.java,requireContext()), userPreferences)
+        ServiceRepository(remoteDataSource.buildApi(ServiceApi::class.java, requireContext()))
 
     override fun onResume() {
         super.onResume()
@@ -208,13 +227,178 @@ class FragmentAddSaloonServices :
                 REQUEST_GALLERY -> {
                     val selectedImageUri: Uri? = data?.data
                     if (selectedImageUri != null) {
-                        //UserInfo.profilePic = selectedImageUri
+                        image_uri = selectedImageUri
                     }
                     binding.imgPhoto.setImageURI(selectedImageUri)
 
                 }
             }
         }
+    }
+
+    private fun getCategories() {
+        viewModel.getCategories.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        servicesMap.clear()
+                        services.clear()
+                        for (category in it.value.data.categories) {
+                            servicesMap.put(category!!.name, category.id)
+                            services.add(category.name)
+                        }
+                    }
+                    setData()
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.getCategories()
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
+    private fun setData() {
+        setCategoryAdopter()
+    }
+
+    private fun setCategoryAdopter() {
+        val adapter = ArrayAdapter(requireContext(), R.layout.custom_spinner_item, services)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spnCategory?.adapter = adapter
+        binding.spnCategory?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                val selectedItem = services[position]
+                categoryId = servicesMap.get(selectedItem)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // Handle when no item is selected (optional)
+            }
+        }
+    }
+
+    private fun addService() {
+        viewModel.addService.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        showPopupDialog()
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        var adjustedPrice = Integer.parseInt(binding.edtPrice.text.toString()) * 100
+        val imageFile =
+            Helper.getFileFromUri(requireContext(), image_uri!!) ?: return // Get file from URI
+        val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), imageFile)
+        val imagePart = MultipartBody.Part.createFormData("image", imageFile.name, requestFile)
+
+        // Create text-based request bodies
+        val categoryId = RequestBody.create("text/plain".toMediaTypeOrNull(), "$categoryId")
+        val saloonId = RequestBody.create("text/plain".toMediaTypeOrNull(), "$saloonId")
+        val name = RequestBody.create(
+            "text/plain".toMediaTypeOrNull(),
+            binding.edtServiceName.text.toString()
+        )
+        val duration = RequestBody.create(
+            "text/plain".toMediaTypeOrNull(),
+            binding.edtDuration.text.toString()
+        )
+        val price =
+            RequestBody.create("text/plain".toMediaTypeOrNull(), "$adjustedPrice")
+        viewModel.addService(
+            imagePart, categoryId, saloonId, name, duration, price
+        )
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+    private fun setSaloonAdopter() {
+        // Adapter to link the list with AutoCompleteTextView
+        val adapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, saloonsList)
+
+        // Set adapter to AutoCompleteTextView
+        binding.edtSaloon.setAdapter(adapter)
+
+        // Optional: Set the threshold (number of characters before suggestions appear)
+        binding.edtSaloon.threshold = 1
+    }
+    private fun getSaloons() {
+        viewModel.getSaloon.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        saloonsList.clear()
+                        for (saloon in it.value.data.saloons) {
+                            if (!saloonsList.contains(saloon.name)) {
+                                saloonsList.add(saloon.name)
+                                var saloonData = SaloonDto(
+                                    saloon.id.toInt(),
+                                    saloon.SaloonImages,
+                                    saloon.name,
+                                    saloon.isActive,
+                                    saloon.address ?: "",
+                                    "${saloon.tRating} (${saloon.numReviews} ${
+                                        if (saloon.numReviews.toInt() == 1) "review" else "reviews"
+                                    })",
+                                    saloon.SaloonWorkHours,
+                                    saloon.locationLat.toDouble(), saloon.locationLong.toDouble()
+                                )
+                                saloonMap.put(saloon.name, saloonData)
+                            }
+
+
+                        }
+                        setSaloonAdopter()
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.getSaloons()
+        // (activity as HomeActivity?)?.showLoadingIndicator()
     }
 
 }
