@@ -13,9 +13,8 @@ import retrofit2.http.Part
 
 /**
  * Created by Faheem Abbas on 15/03/2025.
- * Technical Lead
- * Bajco Technologies
- * faheem.abbas@bajcotechnologies.com
+ * Technical Lead(Mobile Apps)
+ * faheemabbas60@yahoo.com
  * +923115284424
  */
 interface ServiceApi {

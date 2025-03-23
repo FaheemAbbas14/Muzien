@@ -21,9 +21,8 @@ import com.tt.muzien.R
 
 /**
  * Created by Faheem Abbas on 31/12/2024.
- * Technical Lead
- * Bajco Technologies
- * faheem.abbas@bajcotechnologies.com
+ * Technical Lead(Mobile Apps)
+ * faheemabbas60@yahoo.com
  * +923115284424
  */
 class ViewPagerAdapter (private val items: List<String>) :

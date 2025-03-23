@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -19,11 +18,11 @@
             android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/manrope_bold"
-            android:gravity="center"
-
             android:layout_marginStart="15dp"
             android:layout_marginTop="10dp"
+
+            android:fontFamily="@font/manrope_bold"
+            android:gravity="center"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:src="@drawable/back_button"
@@ -35,11 +34,11 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:fontFamily="@font/manrope_regular"
-            android:text="@string/back"
-            android:gravity="center"
             android:layout_marginTop="10dp"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center"
             android:paddingBottom="10dp"
+            android:text="@string/back"
             android:textColor="@color/black"
             android:textFontWeight="700"
             android:textSize="16sp" />
@@ -84,6 +83,15 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/add_image_placeholder" />
 
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rcyPhotos"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/imgPhoto"
+                    app:layout_constraintTop_toBottomOf="@+id/imgPhoto" />
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cnstInformation"
                     android:layout_width="0dp"
@@ -96,7 +104,7 @@
                     android:paddingBottom="20dp"
                     app:layout_constraintEnd_toEndOf="@id/imgPhoto"
                     app:layout_constraintStart_toStartOf="@id/imgPhoto"
-                    app:layout_constraintTop_toBottomOf="@+id/imgPhoto">
+                    app:layout_constraintTop_toBottomOf="@+id/rcyPhotos">
 
                     <TextView
                         android:id="@+id/txtInformation"
@@ -488,15 +496,16 @@
                             android:layout_width="60dp"
                             android:layout_height="60dp"
                             android:background="@drawable/rounded_blue_10"
+                            android:padding="7dp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:srcCompat="@drawable/pdf_placeholder" />
+                            app:srcCompat="@drawable/doc_icon" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
+
                     <ImageView
                         android:id="@+id/imgCertificate"
                         android:layout_width="0dp"
                         android:layout_height="150dp"
-                        android:visibility="visible"
                         android:layout_marginTop="15dp"
                         android:background="@drawable/doted_blue_border"
                         android:paddingStart="30dp"
@@ -505,6 +514,7 @@
                         android:paddingBottom="15dp"
                         android:scaleType="centerCrop"
                         android:src="@drawable/upload_certificate_placeholder"
+                        android:visibility="visible"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/txtCertificate" />
@@ -598,6 +608,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/txtHoliday"
                         app:layout_constraintTop_toBottomOf="@+id/txtHoliday" />
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rcyHolidays"
                         android:layout_width="0dp"
@@ -622,9 +633,9 @@
                     android:layout_width="336dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:paddingBottom="20dp"
                     android:fontFamily="@font/manrope_regular"
                     android:gravity="center"
+                    android:paddingBottom="20dp"
                     android:text="@string/by_continuing_you_agree_to_our_tc_and_privacy_policy"
                     android:textColor="@color/colorTextLabelDefault"
                     android:textSize="14sp"

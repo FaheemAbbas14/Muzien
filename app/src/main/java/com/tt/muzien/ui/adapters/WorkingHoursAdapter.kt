@@ -14,9 +14,8 @@ import com.zabihah.ui.ui.interfaces.OnItemClickListner
 
 /**
  * Created by Faheem Abbas on 26/12/2024.
- * Technical Lead
- * Bajco Technologies
- * faheem.abbas@bajcotechnologies.com
+ * Technical Lead(Mobile Apps)
+ * faheemabbas60@yahoo.com
  * +923115284424
  */
 class WorkingHoursAdapter(

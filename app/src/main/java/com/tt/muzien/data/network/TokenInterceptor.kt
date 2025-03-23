@@ -10,9 +10,8 @@ import java.io.IOException
 
 /**
  * Created by Faheem Abbas on 08/08/2024.
- * Technical Lead
- * Bajco Technologies
- * faheem.abbas@bajcotechnologies.com
+ * Technical Lead(Mobile Apps)
+ * faheemabbas60@yahoo.com
  * +923115284424
  */
 class TokenInterceptor(private val tokenManager: TokenManager) : Interceptor {

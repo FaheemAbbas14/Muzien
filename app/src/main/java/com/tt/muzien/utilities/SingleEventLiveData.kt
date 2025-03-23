@@ -7,9 +7,8 @@ import androidx.lifecycle.Observer
 
 /**
  * Created by Faheem Abbas on 10/07/2024.
- * Technical Lead
- * Bajco Technologies
- * faheem.abbas@bajcotechnologies.com
+ * Technical Lead(Mobile Apps)
+ * faheemabbas60@yahoo.com
  * +923115284424
  */
 class SingleEventLiveData<T> : MutableLiveData<T>() {

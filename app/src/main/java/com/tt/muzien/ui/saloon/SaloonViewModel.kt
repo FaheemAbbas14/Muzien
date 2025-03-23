@@ -25,9 +25,8 @@ import okhttp3.RequestBody
 
 /**
  * Created by Faheem Abbas on 16/03/2025.
- * Technical Lead
- * Bajco Technologies
- * faheem.abbas@bajcotechnologies.com
+ * Technical Lead(Mobile Apps)
+ * faheemabbas60@yahoo.com
  * +923115284424
  */
 class SaloonViewModel(
@@ -36,6 +35,7 @@ class SaloonViewModel(
 
     private val _getSaloon: MutableLiveData<Resource<GetSaloonResponse>> = SingleEventLiveData()
     val getSaloon: LiveData<Resource<GetSaloonResponse>> get() = _getSaloon
+
     private val _getSaloonDetails: MutableLiveData<Resource<GetSaloonDetailResponse>> =
         SingleEventLiveData()
     val getSaloonDetails: LiveData<Resource<GetSaloonDetailResponse>> get() = _getSaloonDetails
@@ -58,8 +58,12 @@ class SaloonViewModel(
         SingleEventLiveData()
     val getSaloonsSubscriptions: LiveData<Resource<GetSubscriptionsResponse>> get() = _getSaloonsSubscriptions
 
-    fun getSaloons() = viewModelScope.launch {
-        _getSaloon.value = repository.getSaloons()
+    fun getSaloons(saloonId: Int? = null, page: Int? = null) = viewModelScope.launch {
+        _getSaloon.value = repository.getSaloons(saloonId, page)
+    }
+
+    fun getSaloonsDetails(saloonId: Int? = null) = viewModelScope.launch {
+        _getSaloonDetails.value = repository.getSaloonsDetail(saloonId)
     }
 
     fun getServiceProviders() = viewModelScope.launch {
@@ -68,10 +72,6 @@ class SaloonViewModel(
 
     fun getSaloonsSubscriptions(saloonId: Int) = viewModelScope.launch {
         _getSaloonsSubscriptions.value = repository.getSaloonsSubscriptions(saloonId)
-    }
-
-    fun getSaloons(saloonId: Int) = viewModelScope.launch {
-        _getSaloonDetails.value = repository.getSaloons(saloonId)
     }
 
     fun addSaloon(

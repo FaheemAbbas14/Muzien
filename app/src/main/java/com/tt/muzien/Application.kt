@@ -3,9 +3,8 @@ package com.tt.muzien
 
 /**
  * Created by Faheem Abbas on 12/03/2025.
- * Technical Lead
- * Bajco Technologies
- * faheem.abbas@bajcotechnologies.com
+ * Technical Lead(Mobile Apps)
+ * faheemabbas60@yahoo.com
  * +923115284424
  */
 import android.app.Application

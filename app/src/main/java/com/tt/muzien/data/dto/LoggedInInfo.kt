@@ -5,9 +5,8 @@ import com.tt.muzien.data.responses.UserInfo
 
 /**
  * Created by Faheem Abbas on 24/01/2025.
- * Technical Lead
- * Bajco Technologies
- * faheem.abbas@bajcotechnologies.com
+ * Technical Lead(Mobile Apps)
+ * faheemabbas60@yahoo.com
  * +923115284424
  */
 object LoggedInInfo {

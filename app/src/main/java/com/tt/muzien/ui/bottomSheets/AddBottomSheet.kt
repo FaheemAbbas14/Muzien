@@ -14,9 +14,8 @@ import com.tt.muzien.ui.saloon.tabs.FragmentAddSaloonServices
 
 /**
  * Created by Faheem Abbas on 29/11/2024.
- * Technical Lead
- * Bajco Technologies
- * faheem.abbas@bajcotechnologies.com
+ * Technical Lead(Mobile Apps)
+ * faheemabbas60@yahoo.com
  * +923115284424
  */
 class AddBottomSheet(activity1: HomeActivity) : BottomSheetDialogFragment()  {

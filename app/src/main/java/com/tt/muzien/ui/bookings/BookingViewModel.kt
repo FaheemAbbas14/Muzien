@@ -13,9 +13,8 @@ import kotlinx.coroutines.launch
 
 /**
  * Created by Faheem Abbas on 15/03/2025.
- * Technical Lead
- * Bajco Technologies
- * faheem.abbas@bajcotechnologies.com
+ * Technical Lead(Mobile Apps)
+ * faheemabbas60@yahoo.com
  * +923115284424
  */
 class BookingViewModel(
@@ -27,8 +26,9 @@ class BookingViewModel(
         saloonIds: String? = null,
         startDate: String? = null,
         endDate: String? = null,
-        status: String? = null
+        status: String? = null,
+        page: String? = null
     ) = viewModelScope.launch {
-        _getBooking.value = repository.getBookings(saloonIds, startDate, endDate, status)
+        _getBooking.value = repository.getBookings(saloonIds, startDate, endDate, status,page)
     }
 }

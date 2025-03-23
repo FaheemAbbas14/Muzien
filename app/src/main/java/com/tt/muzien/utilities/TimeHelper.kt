@@ -26,9 +26,8 @@ import kotlin.text.isNotEmpty
 
 /**
  * Created by Faheem Abbas on 15/08/2024.
- * Technical Lead
- * Bajco Technologies
- * faheem.abbas@bajcotechnologies.com
+ * Technical Lead(Mobile Apps)
+ * faheemabbas60@yahoo.com
  * +923115284424
  */
 object TimeHelper {
@@ -50,7 +49,7 @@ object TimeHelper {
         outputPattern: String
     ): String {
         val instant = Instant.parse(isoString) // Parse ISO date
-        val date = instant.atOffset(ZoneOffset.UTC).toLocalDate() // Convert to LocalDate in UTC
+        val date = instant.atOffset(ZoneOffset.UTC).toLocalDateTime() // Convert to LocalDate in UTC
         val formatter = DateTimeFormatter.ofPattern(outputPattern) // Define output format
 
         return date.format(formatter)

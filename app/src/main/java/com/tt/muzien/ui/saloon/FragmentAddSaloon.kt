@@ -33,12 +33,11 @@ import com.tt.muzien.data.dto.WorkingHourData
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.network.SaloonApi
 import com.tt.muzien.data.repository.SaloonRepository
-import com.tt.muzien.data.requests.AddHolidayRequest
-import com.tt.muzien.data.requests.AddWorkingHourRequest
 import com.tt.muzien.data.requests.HolidayData
 import com.tt.muzien.data.requests.WorkHourData
 import com.tt.muzien.databinding.FragmentAddSaloonBinding
 import com.tt.muzien.ui.adapters.HolidayListAdapter
+import com.tt.muzien.ui.adapters.ImagesListAdopter
 import com.tt.muzien.ui.adapters.WorkingHoursAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
@@ -61,9 +60,11 @@ class FragmentAddSaloon :
     private val holidaysList = arrayListOf<String>()
     private var workingHoursAdopter: WorkingHoursAdapter? = null
     private var holidayListAdapter: HolidayListAdapter? = null
+    private var imagesListAdopter: ImagesListAdopter? = null
     private val REQUEST_CAMERA = 1
     private val REQUEST_GALLERY = 2
     private val REQUEST_PERMISSIONS = 3
+    private var image_uris = arrayListOf<Uri>()
     private var image_uri: Uri? = null
     private var certificate_uri: Uri? = null
     private var isCertificate: Boolean = false
@@ -76,6 +77,7 @@ class FragmentAddSaloon :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.llBack.setOnClickListener {
+            AddSaloonData.clear()
             (activity as HomeActivity?)?.popFragment()
         }
         setFragmentResultListener("requestKey") { key, bundle ->
@@ -229,7 +231,11 @@ class FragmentAddSaloon :
 
 
     private fun openGallery() {
-        val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        val galleryIntent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            type = "image/*"
+            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+            addCategory(Intent.CATEGORY_OPENABLE)
+        }
         startActivityForResult(galleryIntent, REQUEST_GALLERY)
     }
 
@@ -245,7 +251,7 @@ class FragmentAddSaloon :
             println("Selected document name: $fileName")
             val currentTime = TimeHelper.getCurrentTime("HH:mm:ss")
             binding.txtDocTiming.text = "Uploaded on $currentTime"
-            binding.imgCertificate.setImageURI(image_uri)
+            //  binding.imgCertificate.setImageURI(image_uri)
             binding.cnstCertificateData.visibility = View.VISIBLE
             binding.imgCertificate.visibility = View.GONE
         }
@@ -265,6 +271,7 @@ class FragmentAddSaloon :
 
             documentUri?.let {
                 certificate_uri = documentUri
+                AddSaloonData.certificate_uri = certificate_uri
                 // Perform operations with the document Uri
                 handleDocument(it)
             }
@@ -274,11 +281,14 @@ class FragmentAddSaloon :
                 REQUEST_CAMERA -> {
                     if (image_uri != null) {
                         if (isCertificate) {
+                            certificate_uri = image_uri
                             binding.imgCertificate.setImageURI(image_uri)
                             binding.cnstCertificateData.visibility = View.VISIBLE
                             binding.imgCertificate.visibility = View.GONE
                         } else {
-                            binding.imgPhoto.setImageURI(image_uri)
+                            image_uris.add(image_uri!!)
+                            AddSaloonData.image_uris = image_uris
+                            setImagesAdopter()
                         }
 
 
@@ -287,16 +297,29 @@ class FragmentAddSaloon :
                 }
 
                 REQUEST_GALLERY -> {
-                    val selectedImageUri: Uri? = data?.data
-                    if (selectedImageUri != null) {
-                        image_uri = selectedImageUri
-                    }
-                    if (isCertificate) {
-                        binding.imgCertificate.setImageURI(selectedImageUri)
-                        binding.cnstCertificateData.visibility = View.VISIBLE
-                        binding.imgCertificate.visibility = View.GONE
-                    } else {
-                        binding.imgPhoto.setImageURI(selectedImageUri)
+                    if (data?.clipData != null) {
+                        // Multiple images selected
+                        val count = data.clipData!!.itemCount
+                        for (i in 0 until count) {
+                            val imageUri = data.clipData!!.getItemAt(i).uri
+                            image_uris.add(imageUri)
+                        }
+                        // Handle multiple images (e.g., display or upload them)
+
+                        setImagesAdopter()
+                    } else if (data?.data != null) {
+                        // Single image selected
+                        val imageUri = data.data!!
+                        if (isCertificate) {
+                            certificate_uri = image_uri
+                            binding.imgCertificate.setImageURI(imageUri)
+                            binding.cnstCertificateData.visibility = View.VISIBLE
+                            binding.imgCertificate.visibility = View.GONE
+                        } else {
+                            // Handle single image
+                            image_uris.add(imageUri)
+                            setImagesAdopter()
+                        }
                     }
 
                 }
@@ -340,11 +363,36 @@ class FragmentAddSaloon :
         binding.txtPrivacy.text = spannableString
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setData() {
         setWorkingHourAdopter()
         setHolidaysAdopter()
         setAddress()
         setCountryCode()
+        if (AddSaloonData.image_uris != null) {
+            image_uris = AddSaloonData.image_uris
+            setImagesAdopter()
+        }
+        if (AddSaloonData.certificate_uri != null) {
+            certificate_uri = AddSaloonData.certificate_uri
+            handleDocument(certificate_uri!!)
+        }
+    }
+
+    private fun setImagesAdopter() {
+        val clickListener = object : OnItemClickListner {
+            override fun onItemClick(position: Int) {
+                image_uris.removeAt(position)
+                imagesListAdopter?.notifyDataSetChanged()
+            }
+        }
+        binding.rcyPhotos.layoutManager =
+            LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
+        imagesListAdopter = ImagesListAdopter(
+            image_uris,
+            clickListener
+        )
+        binding.rcyPhotos.adapter = imagesListAdopter
     }
 
     private fun setCountryCode() {
@@ -357,7 +405,8 @@ class FragmentAddSaloon :
         workingHourList.clear()
         for (day in AddSaloonData.days) {
             workingHourList.add(
-                WorkingHourData(1,
+                WorkingHourData(
+                    1,
                     day,
                     "${AddSaloonData.startTime} - ${AddSaloonData.endTime}"
                 )
@@ -440,10 +489,7 @@ class FragmentAddSaloon :
                 is Resource.Success -> {
                     Log.d("response", "success " + it.toString())
                     if (it.value.status != 0) {
-                        id
-//                        if (AddSaloonData.days.size > 0) {
-//                            addWorkHour()
-//                        } else {
+                        AddSaloonData.clear()
                         requireView().snackbar("Saloon added successfully")
                         (activity as HomeActivity?)?.hideLoadingIndicator()
                         val resultBundle = Bundle().apply {
@@ -469,24 +515,30 @@ class FragmentAddSaloon :
             }
         }
         var images = ArrayList<MultipartBody.Part>()
-        if (image_uri != null) {
-            val imageFile =
-                Helper.getFileFromUri(requireContext(), image_uri!!) ?: return // Get file from URI
-            val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), imageFile)
-            val imagePart = MultipartBody.Part.createFormData("images", imageFile.name, requestFile)
-            images.add(imagePart)
+        if (image_uris != null && image_uris.size > 0) {
+            for (uri in image_uris) {
+                val imageFile =
+                    Helper.getFileFromUri(requireContext(), uri!!) ?: return // Get file from URI
+                val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), imageFile)
+                val imagePart =
+                    MultipartBody.Part.createFormData("images", imageFile.name, requestFile)
+                images.add(imagePart)
+            }
+
         }
         var certificatePart: MultipartBody.Part? = null
         if (certificate_uri != null) {
+            var fileType = Helper.getFileExtension(requireContext(), certificate_uri!!)
+            Log.d("fileType", "$fileType")
             val certificateFile =
                 Helper.getFileFromUri(requireContext(), certificate_uri!!)
                     ?: return // Get file from URI
             val certificateRequestFile =
-                RequestBody.create("application/octet-stream".toMediaTypeOrNull(), certificateFile)
+                RequestBody.create("application/$fileType".toMediaTypeOrNull(), certificateFile)
             certificatePart =
                 MultipartBody.Part.createFormData(
                     "certificate",
-                    certificateFile.name,
+                    "${binding.edtName.text}_certificate.$fileType",
                     certificateRequestFile
                 )
         }
@@ -529,11 +581,14 @@ class FragmentAddSaloon :
         val hoursParts = mutableMapOf<String, RequestBody>()
         // Convert each user object into separate form-data fields
         workHours.forEachIndexed { index, workHour ->
-            hoursParts["SaloonWorkHours[$index][day]"] = RequestBody.create("text/plain".toMediaTypeOrNull(),
+            hoursParts["SaloonWorkHours[$index][day]"] = RequestBody.create(
+                "text/plain".toMediaTypeOrNull(),
                 workHour.day
             )
-            hoursParts["SaloonWorkHours[$index][openingTime]"] = RequestBody.create("text/plain".toMediaTypeOrNull(), workHour.startTime?:"")
-            hoursParts["SaloonWorkHours[$index][closingTime]"] = RequestBody.create("text/plain".toMediaTypeOrNull(), workHour.endTime?:"")
+            hoursParts["SaloonWorkHours[$index][openingTime]"] =
+                RequestBody.create("text/plain".toMediaTypeOrNull(), workHour.startTime ?: "")
+            hoursParts["SaloonWorkHours[$index][closingTime]"] =
+                RequestBody.create("text/plain".toMediaTypeOrNull(), workHour.endTime ?: "")
         }
 
         viewModel.addSaloon(

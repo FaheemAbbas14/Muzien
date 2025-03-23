@@ -3,9 +3,8 @@ package com.tt.muzien.constants
 
 /**
  * Created by Faheem Abbas on 20/11/2024.
- * Technical Lead
- * Bajco Technologies
- * faheem.abbas@bajcotechnologies.com
+ * Technical Lead(Mobile Apps)
+ * faheemabbas60@yahoo.com
  * +923115284424
  */
 object Keys {

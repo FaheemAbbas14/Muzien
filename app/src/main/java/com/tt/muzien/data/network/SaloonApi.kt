@@ -12,6 +12,7 @@ import com.tt.muzien.data.responses.GetSaloonDetailResponse
 import com.tt.muzien.data.responses.GetSaloonResponse
 import com.tt.muzien.data.responses.GetServiceProviderResponse
 import com.tt.muzien.data.responses.GetSubscriptionsResponse
+import com.tt.muzien.data.responses.SaloonDetailsData
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.Body
@@ -23,25 +24,22 @@ import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.PartMap
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 
 /**
  * Created by Faheem Abbas on 16/03/2025.
- * Technical Lead
- * Bajco Technologies
- * faheem.abbas@bajcotechnologies.com
+ * Technical Lead(Mobile Apps)
+ * faheemabbas60@yahoo.com
  * +923115284424
  */
 interface SaloonApi {
     @GET("v1/saloon")
-    suspend fun getSaloons(
+    suspend fun getSaloons(@Query("saloonId") saloonId: Int?, @Query("page") page	: Int?,
     ): GetSaloonResponse
-
     @GET("v1/saloon/{saloonId}")
-    suspend fun getSaloons(
-        @Path("saloonId") saloonId: Int,
+    suspend fun getSaloonsDetail(@Path("saloonId") saloonId: Int?
     ): GetSaloonDetailResponse
-
     @Multipart
     @POST("v1/saloon")
     suspend fun addSaloon(

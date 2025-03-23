@@ -23,7 +23,6 @@ import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.AuthRepository
 import com.tt.muzien.data.requests.LoginRequest
 import com.tt.muzien.data.requests.RegisterRequest
-import com.tt.muzien.data.responses.UserInfo
 import com.tt.muzien.databinding.FragmentSignInBinding
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
@@ -192,7 +191,10 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
     ) = FragmentSignInBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        AuthRepository(remoteDataSource.buildApi(AuthApi::class.java,requireContext()), userPreferences)
+        AuthRepository(
+            remoteDataSource.buildApi(AuthApi::class.java, requireContext()),
+            userPreferences
+        )
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onPause() {
@@ -215,10 +217,11 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
                     (activity as AuthActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
 
-                        LoggedInInfo.userId= it.value.data?.otp?.userId!!
+                        LoggedInInfo.userId = it.value.data?.otp?.userId!!
                         var nextFragment = FragmentOTP()
                         nextFragment.isFromSignup = isFromSignup
                         nextFragment.phone = data
+                        nextFragment.expiryTime = it.value.data.otp.expiryDate
                         (activity as AuthActivity?)?.loadFragment(nextFragment)
                     } else {
                         requireView().snackbar(it.value.message)
@@ -248,7 +251,7 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
                     Log.d("response", "success " + it.toString())
                     (activity as AuthActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
-                        LoggedInInfo.userId=it.value.data.otp.userId
+                        LoggedInInfo.userId = it.value.data.otp.userId
                         var nextFragment = FragmentOTP()
                         nextFragment.isFromSignup = isFromSignup
                         nextFragment.phone = data

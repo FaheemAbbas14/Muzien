@@ -3,9 +3,8 @@ package com.tt.muzien.data.dto
 
 /**
  * Created by Faheem Abbas on 03/01/2025.
- * Technical Lead
- * Bajco Technologies
- * faheem.abbas@bajcotechnologies.com
+ * Technical Lead(Mobile Apps)
+ * faheemabbas60@yahoo.com
  * +923115284424
  */
 data class ServiceSaloon(val name: String,

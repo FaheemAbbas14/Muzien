@@ -23,6 +23,7 @@ import com.tt.muzien.data.dto.LoggedInInfo
 import com.tt.muzien.data.network.AuthApi
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.AuthRepository
+import com.tt.muzien.data.requests.LoginRequest
 import com.tt.muzien.data.requests.VerifyOTPRequest
 import com.tt.muzien.databinding.FragmentOTPBinding
 import com.tt.muzien.ui.base.BaseFragment
@@ -31,6 +32,10 @@ import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.snackbar
 import com.tt.muzien.ui.startNewActivity
 import com.tt.muzien.utilities.PreferenceManager
+import java.time.Duration
+import java.time.Instant
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthRepository>() {
     private var countDownTimer: CountDownTimer? = null
@@ -38,10 +43,12 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
     private var resendEnabled: Boolean = false
     private var timeInMillis: Long = 30000
     private var timeLeftInMillis: Long = 30000
+    var expiryTime = ""
     var phone: String = ""
     var otp: String = ""
     var isFromSignup: Boolean = false
     var isFromEdit: Boolean = false
+
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -49,6 +56,8 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
         binding.llBack.setOnClickListener {
             (activity as AuthActivity?)?.popFragment()
         }
+        timeInMillis = (getTimeDifference(expiryTime).seconds) * 1000
+        timeLeftInMillis = timeInMillis
         setdata()
         binding.edtInput1.requestFocus()
         binding.llNext.setOnClickListener {
@@ -257,12 +266,14 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
             if (resendEnabled) {
                 // Make "here" clickable and change its color
                 val clickableSpan = object : ClickableSpan() {
+                    @RequiresApi(Build.VERSION_CODES.O)
                     override fun onClick(widget: View) {
                         binding.edtInput1.requestFocus()
                         resetTimer()
                         resetBoxes()
                         resendEnabled = false
                         setdata()
+                        sendOtpNormal(phone)
                     }
                 }
 
@@ -404,5 +415,45 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
         }
         viewModel.my(LoggedInInfo.userId)
         // (activity as AuthActivity?)?.showLoadingIndicator()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getTimeDifference(isoDateTime: String): Duration {
+        val formatter = DateTimeFormatter.ISO_DATE_TIME
+        val expireTime = ZonedDateTime.parse(isoDateTime, formatter).toInstant()
+        val currentTime = Instant.now()
+
+        return Duration.between(currentTime, expireTime)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun sendOtpNormal(data: String) {
+        viewModel.login.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as AuthActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        expiryTime = it.value.data?.otp?.expiryDate ?: ""
+                        getTimeDifference(expiryTime)
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as AuthActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        var request = LoginRequest(data)
+        viewModel.sendOTP(request)
+        (activity as AuthActivity?)?.showLoadingIndicator()
     }
 }

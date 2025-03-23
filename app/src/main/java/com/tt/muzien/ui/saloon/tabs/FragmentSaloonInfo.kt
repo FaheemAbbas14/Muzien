@@ -1,5 +1,7 @@
 package com.tt.muzien.ui.saloon.tabs
 
+import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
@@ -9,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -32,6 +35,7 @@ import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.saloon.FragmentSearchAddress
 import com.tt.muzien.ui.saloon.SaloonViewModel
 import com.tt.muzien.ui.snackbar
+import com.tt.muzien.utilities.TimeHelper
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 
 
@@ -113,36 +117,37 @@ class FragmentSaloonInfo :
     }
 
     private fun setHolidaysAdopter() {
-        selectedSaloonDetails?.SaloonHolidays?.size?.let {
-            if (it > 0) {
-                binding.txtHolidaysData.visibility = View.GONE
-                binding.rcyHolidays?.visibility = View.VISIBLE
-            } else {
-                binding.txtHolidaysData.visibility = View.VISIBLE
-                binding.rcyHolidays?.visibility = View.GONE
+        if (selectedSaloonDetails?.SaloonHolidays != null) {
+            selectedSaloonDetails?.SaloonHolidays?.size?.let {
+                if (it > 0) {
+                    binding.txtHolidaysData.visibility = View.GONE
+                    binding.rcyHolidays?.visibility = View.VISIBLE
+                } else {
+                    binding.txtHolidaysData.visibility = View.VISIBLE
+                    binding.rcyHolidays?.visibility = View.GONE
+                }
             }
-        }
-        holidaysList.clear()
-        holidaysMap.clear()
-        for (holiday in selectedSaloonDetails?.SaloonHolidays!!) {
-            holidaysMap.put(holiday.startDate, holiday.id)
-            holidaysList.add(holiday.startDate)
-        }
-        val clickListener = object : OnItemClickListner {
-            override fun onItemClick(pos: Int) {
-                position = pos
-                deleteHoliday(holidaysMap[holidaysList[pos]]?.toInt() ?: 0)
+            holidaysList.clear()
+            holidaysMap.clear()
+            for (holiday in selectedSaloonDetails?.SaloonHolidays!!) {
+                holidaysMap.put(holiday.startDate, holiday.id)
+                holidaysList.add(holiday.startDate)
             }
+            val clickListener = object : OnItemClickListner {
+                override fun onItemClick(pos: Int) {
+                    position = pos
+                    deleteHoliday(holidaysMap[holidaysList[pos]]?.toInt() ?: 0)
+                }
+            }
+            binding.rcyHolidays?.layoutManager =
+                LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
+            holidayListAdapter = HolidayListAdapter(
+                holidaysList,
+                false,
+                clickListener
+            )
+            binding.rcyHolidays?.adapter = holidayListAdapter
         }
-        binding.rcyHolidays?.layoutManager =
-            LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
-        holidayListAdapter = HolidayListAdapter(
-            holidaysList,
-            false,
-            clickListener
-        )
-        binding.rcyHolidays?.adapter = holidayListAdapter
-
 
     }
 
@@ -197,6 +202,7 @@ class FragmentSaloonInfo :
     }
 
 
+    @SuppressLint("NewApi")
     private fun setData() {
         binding.txtContactNo.text = selectedSaloonDetails?.phoneNumber
         binding.txtAddressData.text = selectedSaloonDetails?.address
@@ -207,6 +213,7 @@ class FragmentSaloonInfo :
         setHolidaysAdopter()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setCertificateData() {
         if (selectedSaloonDetails?.certificate != null && selectedSaloonDetails?.certificate != "") {
             binding.imgCertificateIcon.visibility = View.VISIBLE
@@ -215,6 +222,8 @@ class FragmentSaloonInfo :
             binding.txtUploadedAt.visibility = View.VISIBLE
             binding.txtRenew.visibility = View.VISIBLE
             binding.txtRenew.text = requireContext().resources.getString(R.string.renew)
+            binding.txtUploadedAt.text =
+                TimeHelper.convertISOToDate(selectedSaloonDetails!!.createdAt, "yyyy-MM-dd HH:mm")
         } else {
             binding.imgCertificateIcon.visibility = View.GONE
             binding.txtCertificateName.visibility = View.GONE
@@ -237,15 +246,17 @@ class FragmentSaloonInfo :
 
     private fun setWorkingHourAdopter() {
         workingHourrList.clear()
-        for (hour in selectedSaloonDetails?.SaloonWorkHours!!) {
-            workingHourrList.add(
-                WorkingHourData(
-                    1,
-                    "${hour.day}",
-                    "${hour.openingTime} - ${hour.closingTime}"
+        if (selectedSaloonDetails?.SaloonWorkHours != null) {
+            for (hour in selectedSaloonDetails?.SaloonWorkHours!!) {
+                workingHourrList.add(
+                    WorkingHourData(
+                        1,
+                        "${hour.day}",
+                        "${hour.openingTime} - ${hour.closingTime}"
+                    )
                 )
-            )
 
+            }
         }
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(pos: Int) {
@@ -308,7 +319,7 @@ class FragmentSaloonInfo :
                 else -> {}
             }
         }
-        viewModel.getSaloons(selectedSaloon?.id ?: 0)
+        viewModel.getSaloonsDetails(selectedSaloon?.id ?: 0)
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 

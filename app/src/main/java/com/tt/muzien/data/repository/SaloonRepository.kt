@@ -4,38 +4,40 @@ import com.tt.muzien.data.network.SaloonApi
 import com.tt.muzien.data.requests.AddHolidayRequest
 import com.tt.muzien.data.requests.AddWorkingHourRequest
 import com.tt.muzien.data.requests.UpdateSaloonRequest
-import com.tt.muzien.data.requests.WorkHour
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 
 
 /**
  * Created by Faheem Abbas on 16/03/2025.
- * Technical Lead
- * Bajco Technologies
- * faheem.abbas@bajcotechnologies.com
+ * Technical Lead(Mobile Apps)
+ * faheemabbas60@yahoo.com
  * +923115284424
  */
 class SaloonRepository(
     private val api: SaloonApi,
 ) : BaseRepository() {
     suspend fun getSaloons(
+        saloonId: Int? = null, page: Int? = null
     ) = safeApiCall {
-        api.getSaloons()
+        api.getSaloons(saloonId, page)
     }
+
+    suspend fun getSaloonsDetail(
+        saloonId: Int? = null
+    ) = safeApiCall {
+        api.getSaloonsDetail(saloonId)
+    }
+
     suspend fun getServiceProviders(
     ) = safeApiCall {
         api.getServiceProviders()
     }
-    suspend fun getSaloonsSubscriptions(saloonId: Int
-    ) = safeApiCall {
-        api.getSaloonsSubscriptions(saloonId)
-    }
 
-    suspend fun getSaloons(
+    suspend fun getSaloonsSubscriptions(
         saloonId: Int
     ) = safeApiCall {
-        api.getSaloons(saloonId)
+        api.getSaloonsSubscriptions(saloonId)
     }
 
     suspend fun addSaloon(
@@ -78,11 +80,13 @@ class SaloonRepository(
     ) = safeApiCall {
         api.addHour(saloonId, request)
     }
+
     suspend fun deleteHoliday(
         saloonId: Int, holidayId: Int
     ) = safeApiCall {
         api.deleteHoliday(saloonId, holidayId)
     }
+
     suspend fun deleteWorkingHour(
         saloonId: Int, day: String
     ) = safeApiCall {

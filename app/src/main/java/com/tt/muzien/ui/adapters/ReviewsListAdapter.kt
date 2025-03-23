@@ -17,9 +17,8 @@ import com.tt.muzien.data.dto.ReviewsInfo
 
 /**
  * Created by Faheem Abbas on 05/08/2024.
- * Technical Lead
- * Bajco Technologies
- * faheem.abbas@bajcotechnologies.com
+ * Technical Lead(Mobile Apps)
+ * faheemabbas60@yahoo.com
  * +923115284424
  */
 class ReviewsListAdapter(

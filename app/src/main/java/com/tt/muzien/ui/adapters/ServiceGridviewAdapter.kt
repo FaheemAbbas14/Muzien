@@ -10,9 +10,8 @@ import com.tt.muzien.R
 
 /**
  * Created by Faheem Abbas on 04/01/2025.
- * Technical Lead
- * Bajco Technologies
- * faheem.abbas@bajcotechnologies.com
+ * Technical Lead(Mobile Apps)
+ * faheemabbas60@yahoo.com
  * +923115284424
  */
 class ServiceGridviewAdapter(private val items: List<String>,val context: Context) : BaseAdapter() {
