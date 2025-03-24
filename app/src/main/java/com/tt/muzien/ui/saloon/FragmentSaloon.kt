@@ -116,6 +116,7 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
         SaloonRepository(remoteDataSource.buildApi(SaloonApi::class.java, requireContext()))
 
     private fun getSaloons() {
+        isLoading=true
         viewModel.getSaloon.observe(viewLifecycleOwner) {
 
             when (it) {
@@ -123,6 +124,7 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
                     Log.d("response", "success " + it.toString())
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
+                        isLoading = false
                         if (page == 1) {
                             saloonsList.clear()
                         }
@@ -152,7 +154,7 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
 
                 is Resource.Failure -> {
                     Log.d("response", "failure " + it.toString())
-
+                    isLoading = false
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     handleApiError(it)
                 }

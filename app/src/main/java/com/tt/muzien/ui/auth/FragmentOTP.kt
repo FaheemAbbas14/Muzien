@@ -382,6 +382,7 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
                     Log.d("response", "success " + it.toString())
                     (activity as AuthActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
+                        stopTimer()
                         LoggedInInfo.user = it.value.data?.user
                         val gson = Gson()
                         val userInfo = gson.toJson(it.value.data?.user)

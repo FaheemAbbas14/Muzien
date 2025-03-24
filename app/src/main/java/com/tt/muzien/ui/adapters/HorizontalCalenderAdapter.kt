@@ -31,16 +31,21 @@ class HorizontalCalenderAdapter(
         val dayBackground: View = itemView.findViewById(R.id.dayBackground)
         val dayOfWeek: TextView = itemView.findViewById(R.id.dayOfWeek)
         val dayOfMonth: TextView = itemView.findViewById(R.id.dayOfMonth)
-        val eventIndicatorContainer: LinearLayout = itemView.findViewById(R.id.eventIndicatorContainer)
+        val eventIndicatorContainer: LinearLayout =
+            itemView.findViewById(R.id.eventIndicatorContainer)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CalendarViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_calendar_day, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_calendar_day, parent, false)
         return CalendarViewHolder(view)
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
-    override fun onBindViewHolder(holder: CalendarViewHolder, @SuppressLint("RecyclerView") position: Int) {
+    override fun onBindViewHolder(
+        holder: CalendarViewHolder,
+        @SuppressLint("RecyclerView") position: Int
+    ) {
         val day = days[position]
         holder.dayOfWeek.text = day.dayOfWeek
         holder.dayOfMonth.text = day.dayOfMonth.toString()
@@ -62,8 +67,11 @@ class HorizontalCalenderAdapter(
 
             day.eventDotColors.forEach { color ->
                 val dot = View(holder.itemView.context).apply {
-                    layoutParams = LinearLayout.LayoutParams(Helper.dpToPx(holder.itemView.context,8), Helper.dpToPx(holder.itemView.context,8)).apply {
-                        marginEnd = Helper.dpToPx(holder.itemView.context,4)
+                    layoutParams = LinearLayout.LayoutParams(
+                        Helper.dpToPx(holder.itemView.context, 8),
+                        Helper.dpToPx(holder.itemView.context, 8)
+                    ).apply {
+                        marginEnd = Helper.dpToPx(holder.itemView.context, 4)
                     }
                     background = holder.itemView.context.getDrawable(R.drawable.event_dot_shape)
                     background?.setTint(color) // Set the dot color dynamically
@@ -81,10 +89,12 @@ class HorizontalCalenderAdapter(
             onClick(position)
         }
     }
+
     // Extension function for converting dp to px
     fun Int.dpToPx(context: Context): Int {
         return (this * context.resources.displayMetrics.density).toInt()
     }
+
     override fun getItemCount(): Int = days.size
 
     fun setDays(newDays: List<CalendarDay>) {
@@ -93,5 +103,9 @@ class HorizontalCalenderAdapter(
     }
 
     fun getDay(position: Int): CalendarDay = days[position]
+    fun setSelected(day: Int) {
+        selectedPosition = day
+        notifyDataSetChanged()
 
+    }
 }

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.tt.muzien.R
 import com.tt.muzien.data.SaloonBookingData
 import com.tt.muzien.data.dto.CalendarDay
@@ -30,24 +31,44 @@ import java.util.Locale
 class FragmentBookings :
     BaseFragment<BookingViewModel, FragmentBookingsBinding, BookingRepository>() {
     private val saloonsBookingList = arrayListOf<SaloonBookingData>()
-    private var fromDate: String?=null
-    private var toDate: String?=null
-    private var bookingDuration: String?=null
-    private var bookingStatus: String?=null
-    private var bookingServiceProvider: String?=null
+    private var fromDate: String? = null
+    private var toDate: String? = null
+    private var bookingDuration: String? = null
+    private var bookingStatus: String? = null
+    private var bookingServiceProvider: String? = null
     private var adopter: SaloonBookingAdapter? = null
-
+    private var page = 1
+    private var totalPage = 1
+    private var selection: Int = 0
+    private var isLoading: Boolean = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getBooking()
         binding.customCalendarView.setOnDaySelectedListener { selectedDay ->
             // Toast.makeText(requireContext(), "Selected: ${selectedDay}", Toast.LENGTH_SHORT).show()
+            fromDate = selectedDay
+            toDate = selectedDay
+            FilterSelection.filterData!!.from = fromDate
+            FilterSelection.filterData!!.to = toDate
+            getBooking()
         }
         binding.customCalendarView.setDays(generateDaysWithEvents())
         binding.imgBookingFilter.setOnClickListener {
-            var nextFragment = FragmentBookingFilter()
-            (activity as HomeActivity?)?.loadFragment(nextFragment)
+            if (bookingStatus != null) {
+                binding.imgBookingFilter.setImageResource(
+                    R.drawable.filter_icon
+                )
+                binding.customCalendarView.visibility = View.VISIBLE
+                binding.txtBookingStatus.visibility = View.GONE
+                bookingStatus = null
+                FilterSelection.filterData!!.bookingStatus = bookingStatus
+                setMargins(false)
+                getBooking()
+            } else {
+                var nextFragment = FragmentBookingFilter()
+                (activity as HomeActivity?)?.loadFragment(nextFragment)
+            }
         }
         if (FilterSelection.filterData != null) {
 
@@ -65,27 +86,34 @@ class FragmentBookings :
                 }
 
             }
-            if (bookingStatus != "") {
+            if (bookingStatus != null && bookingStatus != "") {
                 binding.imgBookingFilter.setImageResource(
                     R.drawable.blue_cancel
                 )
                 binding.txtBookingStatus.text = "$bookingStatus Bookings"
                 binding.customCalendarView.visibility = View.GONE
-                setMargins()
+                setMargins(true)
 
             }
             adopter?.setBookingStatus(bookingStatus)
             adopter?.notifyDataSetChanged()
             // Toast.makeText(requireContext(), "data received", Toast.LENGTH_SHORT).show()
         }
+//        val days = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+//        binding.customCalendarView.setCurrentDay(days.minus(1))
     }
 
-    private fun setMargins() {
+    private fun setMargins(show: Boolean) {
         val layoutParams = ConstraintLayout.LayoutParams(
             ConstraintLayout.LayoutParams.MATCH_PARENT,
             ConstraintLayout.LayoutParams.WRAP_CONTENT
         ).apply {
-            setMargins(40, 100, 40, 0) // Left, Top, Right, Bottom in pixels
+            if (show) {
+                setMargins(40, 100, 40, 0) // Left, Top, Right, Bottom in pixels
+            }
+            else{
+                setMargins(40, 300, 40, 0) // Left, Top, Right, Bottom in pixels
+            }
             startToStart = ConstraintLayout.LayoutParams.PARENT_ID
             topToTop = ConstraintLayout.LayoutParams.PARENT_ID
         }
@@ -113,6 +141,36 @@ class FragmentBookings :
         binding.rcyBookings.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
         binding.rcyBookings.adapter = adopter
+
+        binding.rcyBookings.scrollToPosition(selection)
+        binding.rcyBookings.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val visibleItemCount = layoutManager.childCount
+                val totalItemCount = layoutManager.itemCount
+                val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+
+                if (visibleItemCount + firstVisibleItemPosition >= totalItemCount && totalItemCount > 0) {
+                    // Reached the end of the list
+                    loadMoreData()
+                }
+            }
+        })
+
+    }
+
+    fun loadMoreData() {
+        if (!isLoading && saloonsBookingList.size > 0) {
+            if (page < totalPage) {
+                page = page + 1
+                selection = saloonsBookingList.size - 1
+                (activity as HomeActivity?)?.showLoadingIndicator()
+                getBooking()
+
+            }
+        }
 
     }
 
@@ -160,6 +218,7 @@ class FragmentBookings :
     }
 
     private fun getBooking() {
+        isLoading = true
         viewModel.getBooking.observe(viewLifecycleOwner) {
 
             when (it) {
@@ -167,18 +226,31 @@ class FragmentBookings :
                     Log.d("response", "success " + it.toString())
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
-                        saloonsBookingList.clear()
-//                        for (saloon in it.value.data) {
-//                            saloonsBookingList.add(
-//                                SaloonBookingData(
-//                                    "",
-//                                    "Jennifer Austin",
-//                                    "Tye Style Zone",
-//                                    "Dibra Morgan",
-//                                    "Undercut Haircut, Thin Shaving, Shampoo Hair wash"
-//                                )
-//                            )
-//                        }
+                        isLoading = false
+                        if (page == 1) {
+                            saloonsBookingList.clear()
+                        }
+                        totalPage = it.value.data.pagination.totalPages.toInt()
+                        for (booking in it.value.data.bookings) {
+                            var services = ""
+                            for (service in booking.bookingServices) {
+                                services += service.serviceDetails.name
+                            }
+                            saloonsBookingList.add(
+                                SaloonBookingData(
+                                    booking.customer.picture ?: "",
+                                    booking.customer.fullName ?: "",
+                                    booking.saloon.name,
+                                    booking.serviceProvider.fullName ?: "",
+                                    services,
+                                    booking.date,
+                                    booking.time,
+                                    booking.status,
+                                    booking.duration
+                                )
+                            )
+                        }
+
                         setBookingsAdopter()
                     } else {
                         requireView().snackbar(it.value.message)
@@ -187,7 +259,7 @@ class FragmentBookings :
 
                 is Resource.Failure -> {
                     Log.d("response", "failure " + it.toString())
-
+                    isLoading = false
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     handleApiError(it)
                 }
@@ -195,7 +267,12 @@ class FragmentBookings :
                 else -> {}
             }
         }
-        viewModel.getBookings()
+        viewModel.getBookings(
+            page = page.toString(),
+            status = bookingStatus,
+            startDate = fromDate,
+            endDate = toDate
+        )
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 }

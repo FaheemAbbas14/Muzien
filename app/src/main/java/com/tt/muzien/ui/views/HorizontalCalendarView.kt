@@ -14,11 +14,11 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.tt.muzien.R
+import com.tt.muzien.data.dto.CalendarDay
 import com.tt.muzien.ui.adapters.HorizontalCalenderAdapter
 import java.text.SimpleDateFormat
 import java.util.*
-import com.tt.muzien.R
-import com.tt.muzien.data.dto.CalendarDay
 
 class HorizontalCalendarView @JvmOverloads constructor(
     context: Context,
@@ -48,7 +48,8 @@ class HorizontalCalendarView @JvmOverloads constructor(
             onDaySelectedListener?.invoke(adapter.getDay(position))
         }
 
-        recyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        recyclerView.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         recyclerView.adapter = adapter
 
         btnPreviousMonth.setOnClickListener {
@@ -70,7 +71,7 @@ class HorizontalCalendarView @JvmOverloads constructor(
             val formattedDate = formatSelectedDate(
                 dayOfMonth = selectedDay.dayOfMonth,
                 calendar = calendar,
-                format = "dd-MM-yyyy" // Change this to your desired format
+                format = "yyyy-MM-dd" // Change this to your desired format
             )
             listener(formattedDate)
         }
@@ -103,13 +104,21 @@ class HorizontalCalendarView @JvmOverloads constructor(
 
         return days
     }
+
     fun formatSelectedDate(dayOfMonth: Int, calendar: Calendar, format: String): String {
         val selectedCalendar = calendar.clone() as Calendar
         selectedCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
         val dateFormatter = SimpleDateFormat(format, Locale.getDefault())
         return dateFormatter.format(selectedCalendar.time)
     }
+
     fun setDays(days: List<CalendarDay>) {
         adapter.setDays(days)
+    }
+
+    fun setCurrentDay(day: Int) {
+        adapter.setSelected(day)
+        onDaySelectedListener?.invoke(adapter.getDay(day))
+        recyclerView.scrollToPosition(day)
     }
 }

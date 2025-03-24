@@ -34,28 +34,28 @@ class FragmentBookingFilter :
         binding.radioBookingStatus.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.rbPending -> {
-                    bookingStatus = "Pending Approval"
+                    bookingStatus = "pending-approval"
                     // checkValidation()
                 }
 
                 R.id.rbScheduled -> {
-                    bookingStatus = "Scheduled"
+                    bookingStatus = "scheduled"
                     // checkValidation()
                 }
 
                 R.id.rbOverdue -> {
-                    bookingStatus = "Overdue/Incomplete"
+                    bookingStatus = "overdue"
                     // checkValidation()
 
                 }
 
                 R.id.rbCompleted -> {
-                    bookingStatus = "Completed"
+                    bookingStatus = "completed"
                     //checkValidation()
                 }
 
                 R.id.rbCancelled -> {
-                    bookingStatus = "Cancelled"
+                    bookingStatus = "cancelled"
                     //checkValidation()
                 }
             }

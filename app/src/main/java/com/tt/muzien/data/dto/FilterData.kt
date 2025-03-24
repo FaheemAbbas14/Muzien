@@ -7,4 +7,5 @@ package com.tt.muzien.data.dto
  * faheemabbas60@yahoo.com
  * +923115284424
  */
-data class FilterData(val selection: String,val from: String?,val to: String?,val fromRevenue: Boolean=false,val bookingStatus: String?=null,val serviceProvider: String?=null,val saloon: String="")
+data class FilterData(val selection: String, var from: String?, var to: String?, val fromRevenue: Boolean=false,
+                      var bookingStatus: String?=null, val serviceProvider: String?=null, val saloon: String="")

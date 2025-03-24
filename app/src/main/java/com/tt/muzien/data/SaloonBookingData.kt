@@ -7,4 +7,14 @@ package com.tt.muzien.data
  * faheemabbas60@yahoo.com
  * +923115284424
  */
-data class SaloonBookingData(var imageUrl: String,var name: String,var style: String,var personName: String,var service: String)
+data class SaloonBookingData(
+    var imageUrl: String,
+    var name: String,
+    var style: String,
+    var personName: String,
+    var service: String,
+    var date: String,
+    var time: String,
+    var status: String,
+    var duration: Long
+)

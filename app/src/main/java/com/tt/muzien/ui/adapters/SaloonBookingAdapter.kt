@@ -38,7 +38,7 @@ class SaloonBookingAdapter(
     private val itemList: List<SaloonBookingData>,
     private val context: Context,
     private val listener: OnItemClickListner,
-    private var bookingStatus: String?=null,
+    private var bookingStatus: String? = null,
     private var isFromMain: Boolean = false
 ) :
     RecyclerView.Adapter<SaloonBookingAdapter.MyViewHolder>() {
@@ -51,6 +51,7 @@ class SaloonBookingAdapter(
         val txtStyle: TextView = itemView.findViewById(R.id.txtStyle)
         val txtUserName: TextView = itemView.findViewById(R.id.txtUserName)
         val txtService: TextView = itemView.findViewById(R.id.txtService)
+        val txtDateTime: TextView = itemView.findViewById(R.id.txtDateTime)
 
         val llReview: ConstraintLayout = itemView.findViewById(R.id.llReview)
         val imgItemIcon: ImageView = itemView.findViewById(R.id.imgItemIcon)
@@ -105,6 +106,7 @@ class SaloonBookingAdapter(
             if (isFromMain) {
                 holder.llMainView.visibility = View.VISIBLE
             }
+            holder.txtDateTime.text = "${item.date} - ${item.time} - ${item.duration} mins"
             holder.txtName.text = item.name
             holder.txtStyle.text = item.style
             holder.txtUserName.text = item.personName
