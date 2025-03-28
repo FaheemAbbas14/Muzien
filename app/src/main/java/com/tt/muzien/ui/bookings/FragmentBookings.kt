@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.tt.muzien.R
 import com.tt.muzien.data.SaloonBookingData
 import com.tt.muzien.data.dto.CalendarDay
+import com.tt.muzien.data.dto.FilterData
 import com.tt.muzien.data.network.BookingApi
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.BookingRepository
@@ -49,8 +50,7 @@ class FragmentBookings :
             // Toast.makeText(requireContext(), "Selected: ${selectedDay}", Toast.LENGTH_SHORT).show()
             fromDate = selectedDay
             toDate = selectedDay
-            FilterSelection.filterData!!.from = fromDate
-            FilterSelection.filterData!!.to = toDate
+            FilterSelection.filterData=FilterData("", fromDate, toDate,false)
             getBooking()
         }
         binding.customCalendarView.setDays(generateDaysWithEvents())

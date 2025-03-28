@@ -6,10 +6,12 @@ import androidx.lifecycle.viewModelScope
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.SaloonRepository
 import com.tt.muzien.data.requests.AddHolidayRequest
+import com.tt.muzien.data.requests.AddSubscribtionRequest
 import com.tt.muzien.data.requests.AddWorkingHourRequest
 import com.tt.muzien.data.requests.UpdateSaloonRequest
 import com.tt.muzien.data.responses.AddHolidayResponse
 import com.tt.muzien.data.responses.AddSaloonResponse
+import com.tt.muzien.data.responses.AddSubscribtionResponse
 import com.tt.muzien.data.responses.AddWorkingHourResponse
 import com.tt.muzien.data.responses.DeleteHolidayResponse
 import com.tt.muzien.data.responses.GetSaloonDetailResponse
@@ -43,6 +45,9 @@ class SaloonViewModel(
     private val _addSaloon: MutableLiveData<Resource<AddSaloonResponse>> = SingleEventLiveData()
     val addSaloon: LiveData<Resource<AddSaloonResponse>> get() = _addSaloon
 
+    private val _uploadSaloonCertificate: MutableLiveData<Resource<AddSaloonResponse>> =
+        SingleEventLiveData()
+    val uploadSaloonCertificate: LiveData<Resource<AddSaloonResponse>> get() = _uploadSaloonCertificate
     private val _addHoliday: MutableLiveData<Resource<AddHolidayResponse>> = SingleEventLiveData()
     val addHoliday: LiveData<Resource<AddHolidayResponse>> get() = _addHoliday
 
@@ -58,6 +63,10 @@ class SaloonViewModel(
         SingleEventLiveData()
     val getSaloonsSubscriptions: LiveData<Resource<GetSubscriptionsResponse>> get() = _getSaloonsSubscriptions
 
+    private val _addSubscriptions: MutableLiveData<Resource<AddSubscribtionResponse>> =
+        SingleEventLiveData()
+    val addSubscriptions: LiveData<Resource<AddSubscribtionResponse>> get() = _addSubscriptions
+
     fun getSaloons(page: Int? = null) = viewModelScope.launch {
         _getSaloon.value = repository.getSaloons(page)
     }
@@ -70,7 +79,7 @@ class SaloonViewModel(
         _getServiceProviders.value = repository.getServiceProviders()
     }
 
-    fun getSaloonsSubscriptions(saloonId: Int) = viewModelScope.launch {
+    fun getSaloonsSubscriptions(saloonId: Int? = null) = viewModelScope.launch {
         _getSaloonsSubscriptions.value = repository.getSaloonsSubscriptions(saloonId)
     }
 
@@ -109,6 +118,15 @@ class SaloonViewModel(
         )
     }
 
+    fun uploadSaloonCertificate(
+        saloonId: Int, requestData: MultipartBody.Part?,
+    ) = viewModelScope.launch {
+        _uploadSaloonCertificate.value = repository.uploadSaloonCertificate(
+            saloonId,
+            requestData
+        )
+    }
+
     fun addHoliday(saloonId: Int, request: AddHolidayRequest) = viewModelScope.launch {
         _addHoliday.value = repository.addHoliday(saloonId, request)
     }
@@ -123,5 +141,9 @@ class SaloonViewModel(
 
     fun deleteWorkingHour(saloonId: Int, day: String) = viewModelScope.launch {
         _deleteHoliday.value = repository.deleteWorkingHour(saloonId, day)
+    }
+
+    fun addSubscriptions(saloonId: Int, request: AddSubscribtionRequest) = viewModelScope.launch {
+        _addSubscriptions.value = repository.addSubscriptions(saloonId, request)
     }
 }

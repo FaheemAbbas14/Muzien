@@ -29,6 +29,7 @@ data class SaloonDetailsInfo(
     val locationLat: String,
     val locationLong: String,
     val certificate: String,
+    val subscriptionExpiry: String,
     val isActive: Boolean,
     val numReviews: Long,
     val tRating: Long,

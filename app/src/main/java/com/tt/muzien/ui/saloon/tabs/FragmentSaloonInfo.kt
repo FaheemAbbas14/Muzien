@@ -1,6 +1,9 @@
 package com.tt.muzien.ui.saloon.tabs
 
 import android.annotation.SuppressLint
+import android.app.Activity.RESULT_OK
+import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.SpannableString
@@ -20,11 +23,13 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.tt.muzien.R
+import com.tt.muzien.data.dto.AddSaloonData
 import com.tt.muzien.data.dto.SaloonDto
 import com.tt.muzien.data.dto.WorkingHourData
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.network.SaloonApi
 import com.tt.muzien.data.repository.SaloonRepository
+import com.tt.muzien.data.requests.AddSubscribtionRequest
 import com.tt.muzien.data.responses.SaloonDetailsInfo
 import com.tt.muzien.databinding.FragmentSaloonInfoBinding
 import com.tt.muzien.ui.adapters.HolidayListAdapter
@@ -35,8 +40,12 @@ import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.saloon.FragmentSearchAddress
 import com.tt.muzien.ui.saloon.SaloonViewModel
 import com.tt.muzien.ui.snackbar
+import com.tt.muzien.utilities.Helper
 import com.tt.muzien.utilities.TimeHelper
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 
 
 class FragmentSaloonInfo :
@@ -51,10 +60,18 @@ class FragmentSaloonInfo :
     var selectedSaloon: SaloonDto? = null
     var selectedSaloonDetails: SaloonDetailsInfo? = null
     var position: Int = 0
+    private var certificate_uri: Uri? = null
+    private val DOCUMENT_PICKER_REQUEST_CODE = 1001
     private val holidaysMap = HashMap<String, Long>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getSaloons()
+        binding.txtRenew.setOnClickListener {
+            addSubscriptions()
+        }
+        binding.txtUploadCertificate.setOnClickListener {
+            selectDocument()
+        }
         binding.imgAddHoliday.setOnClickListener {
             var nextFragment = FragmentAddHoliday()
             nextFragment.isEdit = true
@@ -218,7 +235,7 @@ class FragmentSaloonInfo :
         if (selectedSaloonDetails?.certificate != null && selectedSaloonDetails?.certificate != "") {
             binding.imgCertificateIcon.visibility = View.VISIBLE
             binding.txtCertificateName.visibility = View.VISIBLE
-            binding.txtCertificateExpiry.visibility = View.VISIBLE
+            binding.txtUploadCertificate.visibility = View.GONE
             binding.txtUploadedAt.visibility = View.VISIBLE
             binding.txtRenew.visibility = View.VISIBLE
             binding.txtRenew.text = requireContext().resources.getString(R.string.renew)
@@ -227,10 +244,17 @@ class FragmentSaloonInfo :
         } else {
             binding.imgCertificateIcon.visibility = View.GONE
             binding.txtCertificateName.visibility = View.GONE
-            binding.txtCertificateExpiry.visibility = View.GONE
+            binding.txtUploadCertificate.visibility = View.VISIBLE
             binding.txtUploadedAt.visibility = View.GONE
             binding.txtRenew.visibility = View.VISIBLE
-            binding.txtRenew.text = requireContext().resources.getString(R.string.add)
+            //   binding.txtRenew.text = requireContext().resources.getString(R.string.add)
+        }
+        if (selectedSaloonDetails!!.subscriptionExpiry != null) {
+            binding.txtCertificateExpiry.visibility = View.VISIBLE
+            binding.txtCertificateExpiry.text =
+                "${resources.getString(R.string.subscription_expiry_date_12_12_25)} ${selectedSaloonDetails!!.subscriptionExpiry}"
+        } else {
+            binding.txtCertificateExpiry.visibility = View.GONE
         }
     }
 
@@ -381,4 +405,178 @@ class FragmentSaloonInfo :
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 
+    private fun addSubscriptions() {
+        viewModel.addSubscriptions.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        getSaloons()
+                        requireView().snackbar("Subscription added successfully")
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+
+
+        viewModel.addSubscriptions(
+            selectedSaloon?.id ?: 0,
+            AddSubscribtionRequest(
+                selectedSaloonDetails?.id.toString(),
+                100,
+                "2025-03-01",
+                "2026-02-28"
+            )
+        )
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
+    private fun uploadSaloonCertificate() {
+        viewModel.uploadSaloonCertificate.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    if (it.value.status != 0) {
+                        getSaloons()
+                    } else {
+                        requireView().snackbar(it.value.message)
+                        (activity as HomeActivity?)?.hideLoadingIndicator()
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        var certificatePart: MultipartBody.Part? = null
+        if (AddSaloonData.certificate_uri != null) {
+            var fileType =
+                Helper.getFileExtension(requireContext(), AddSaloonData.certificate_uri!!)
+            Log.d("fileType", "$fileType")
+            val certificateFile =
+                Helper.getFileFromUri(requireContext(), AddSaloonData.certificate_uri!!)
+                    ?: return // Get file from URI
+            val certificateRequestFile =
+                RequestBody.create("application/$fileType".toMediaTypeOrNull(), certificateFile)
+            certificatePart =
+                MultipartBody.Part.createFormData(
+                    "certificate",
+                    "${selectedSaloonDetails?.name}_certificate.$fileType",
+                    certificateRequestFile
+                )
+        }
+        viewModel.uploadSaloonCertificate(
+            selectedSaloonDetails?.id?.toInt() ?: 0,
+            certificatePart
+        )
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
+    //    @RequiresApi(Build.VERSION_CODES.O)
+//    private fun handleDocument(uri: Uri) {
+//        // Example: Reading file name
+//        val cursor = requireActivity().contentResolver.query(uri, null, null, null, null)
+//        cursor?.use {
+//            val nameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+//            it.moveToFirst()
+//            fileName = it.getString(nameIndex)
+//            binding.txtDocName.text = fileName
+//            println("Selected document name: $fileName")
+//            val currentTime = TimeHelper.getCurrentTime("HH:mm:ss")
+//            binding.txtDocTiming.text = "Uploaded on $currentTime"
+//            //  binding.imgCertificate.setImageURI(image_uri)
+//            binding.cnstCertificateData.visibility = View.VISIBLE
+//            binding.imgCertificate.visibility = View.GONE
+//        }
+    fun selectDocument() {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            type =
+                "*/*" // Allows all document types. You can specify MIME types like "application/pdf" for PDFs.
+            addCategory(Intent.CATEGORY_OPENABLE)
+        }
+        startActivityForResult(intent, DOCUMENT_PICKER_REQUEST_CODE)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == DOCUMENT_PICKER_REQUEST_CODE && resultCode == RESULT_OK) {
+            val documentUri = data?.data
+
+            documentUri?.let {
+                certificate_uri = documentUri
+                AddSaloonData.certificate_uri = certificate_uri
+                uploadSaloonCertificate()
+            }
+        }
+//        if (resultCode == Activity.RESULT_OK) {
+//            when (requestCode) {
+//                REQUEST_CAMERA -> {
+//                    if (image_uri != null) {
+//                        if (isCertificate) {
+//                            certificate_uri = image_uri
+//                            binding.imgCertificate.setImageURI(image_uri)
+//                            binding.cnstCertificateData.visibility = View.VISIBLE
+//                            binding.imgCertificate.visibility = View.GONE
+//                        } else {
+//                            image_uris.add(image_uri!!)
+//                            AddSaloonData.image_uris = image_uris
+//                            setImagesAdopter()
+//                        }
+//
+//
+//                    }
+//
+//                }
+//
+//                REQUEST_GALLERY -> {
+//                    if (data?.clipData != null) {
+//                        // Multiple images selected
+//                        val count = data.clipData!!.itemCount
+//                        for (i in 0 until count) {
+//                            val imageUri = data.clipData!!.getItemAt(i).uri
+//                            image_uris.add(imageUri)
+//                        }
+//                        // Handle multiple images (e.g., display or upload them)
+//
+//                        setImagesAdopter()
+//                    } else if (data?.data != null) {
+//                        // Single image selected
+//                        val imageUri = data.data!!
+//                        if (isCertificate) {
+//                            certificate_uri = image_uri
+//                            binding.imgCertificate.setImageURI(imageUri)
+//                            binding.cnstCertificateData.visibility = View.VISIBLE
+//                            binding.imgCertificate.visibility = View.GONE
+//                        } else {
+//                            // Handle single image
+//                            image_uris.add(imageUri)
+//                            setImagesAdopter()
+//                        }
+//                    }
+//
+//                }
+        //   }
+        //    }
+    }
 }

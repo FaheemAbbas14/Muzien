@@ -141,6 +141,18 @@
                     app:layout_constraintTop_toBottomOf="@+id/imgCertificateIcon" />
 
                 <TextView
+                    android:id="@+id/txtUploadCertificate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/manrope_regular"
+                    android:text="@string/upload"
+                    android:textColor="@color/colorPrimary"
+                    android:textFontWeight="500"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/txtCertificate"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/txtCertificate" />
+                <TextView
                     android:id="@+id/txtRenew"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

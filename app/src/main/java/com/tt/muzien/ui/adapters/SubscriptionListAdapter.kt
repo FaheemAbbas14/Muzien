@@ -66,7 +66,7 @@ class SubscriptionListAdapter(
         holder.txtName.text = item.name
         holder.txtStartDate.text = item.startDate
         holder.txtEndDate.text = item.endData
-        var days = getDaysBetweenDates(item.startDate, item.endData, "dd/MM/yyyy")
+        var days = getDaysBetweenDates(item.startDate, item.endData, "yyyy-MM-dd")
         if (days <= 10) {
             holder.txtDays.setTextColor(context.getColor(R.color.red_text))
             holder.txtOverdue.setTextColor(context.getColor(R.color.red_text))

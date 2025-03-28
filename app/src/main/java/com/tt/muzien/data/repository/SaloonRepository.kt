@@ -2,6 +2,7 @@ package com.tt.muzien.data.repository
 
 import com.tt.muzien.data.network.SaloonApi
 import com.tt.muzien.data.requests.AddHolidayRequest
+import com.tt.muzien.data.requests.AddSubscribtionRequest
 import com.tt.muzien.data.requests.AddWorkingHourRequest
 import com.tt.muzien.data.requests.UpdateSaloonRequest
 import okhttp3.MultipartBody
@@ -17,9 +18,10 @@ import okhttp3.RequestBody
 class SaloonRepository(
     private val api: SaloonApi,
 ) : BaseRepository() {
-    suspend fun getSaloons(page: Int? = null
+    suspend fun getSaloons(
+        page: Int? = null
     ) = safeApiCall {
-        api.getSaloons( page)
+        api.getSaloons(page)
     }
 
     suspend fun getSaloonsDetail(
@@ -33,10 +35,20 @@ class SaloonRepository(
         api.getServiceProviders()
     }
 
-    suspend fun getSaloonsSubscriptions(
-        saloonId: Int
+    suspend fun addSubscriptions(
+        saloonId: Int, requestData: AddSubscribtionRequest
     ) = safeApiCall {
-        api.getSaloonsSubscriptions(saloonId)
+        api.addSubscriptions(saloonId, requestData)
+    }
+
+    suspend fun getSaloonsSubscriptions(
+        saloonId: Int?
+    ) = safeApiCall {
+        if (saloonId != null) {
+            api.getSpecificSaloonsSubscriptions(saloonId)
+        } else {
+            api.getSaloonsSubscriptions()
+        }
     }
 
     suspend fun addSaloon(
@@ -69,6 +81,14 @@ class SaloonRepository(
         saloonId: Int, requestData: UpdateSaloonRequest
     ) = safeApiCall {
         api.updateSaloon(
+            saloonId,
+            requestData
+        )
+    }
+    suspend fun uploadSaloonCertificate(
+        saloonId: Int, requestData: MultipartBody.Part?,
+    ) = safeApiCall {
+        api.uploadSaloonCertificate(
             saloonId,
             requestData
         )

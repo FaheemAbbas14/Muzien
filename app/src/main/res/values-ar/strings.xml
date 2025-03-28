@@ -189,6 +189,7 @@
     <string name="saturday">السبت</string>
     <string name="highbrow_beauty_bar">صالون هاي برو للتجميل</string>
     <string name="renew">تجديد</string>
+    <string name="upload">Upload</string>
     <string name="subscribed_on">مشترك في</string>
     <string name="_12_12_2023">12/12/2023</string>
     <string name="expiring_on">ينتهي في</string>
@@ -233,7 +234,7 @@
     <string name="add_new_service">إضافة خدمة جديدة</string>
     <string name="add_new_member">إضافة عضو جديد</string>
     <string name="about">حول</string>
-    <string name="subscription_expiry_date_12_12_25">تاريخ انتهاء الاشتراك: 12/12/25</string>
+    <string name="subscription_expiry_date_12_12_25">تاريخ انتهاء الاشتراك:12/12/25</string>
     <string name="contact">اتصل بنا</string>
     <string name="_966_123_1234">+966 123 1234</string>
     <string name="address">العنوان</string>

@@ -1,18 +1,18 @@
 package com.tt.muzien.data.network
 
 import com.tt.muzien.data.requests.AddHolidayRequest
+import com.tt.muzien.data.requests.AddSubscribtionRequest
 import com.tt.muzien.data.requests.AddWorkingHourRequest
 import com.tt.muzien.data.requests.UpdateSaloonRequest
-import com.tt.muzien.data.requests.WorkHour
 import com.tt.muzien.data.responses.AddHolidayResponse
 import com.tt.muzien.data.responses.AddSaloonResponse
+import com.tt.muzien.data.responses.AddSubscribtionResponse
 import com.tt.muzien.data.responses.AddWorkingHourResponse
 import com.tt.muzien.data.responses.DeleteHolidayResponse
 import com.tt.muzien.data.responses.GetSaloonDetailResponse
 import com.tt.muzien.data.responses.GetSaloonResponse
 import com.tt.muzien.data.responses.GetServiceProviderResponse
 import com.tt.muzien.data.responses.GetSubscriptionsResponse
-import com.tt.muzien.data.responses.SaloonDetailsData
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.http.Body
@@ -35,11 +35,15 @@ import retrofit2.http.Query
  */
 interface SaloonApi {
     @GET("v1/saloon/my-saloons")
-    suspend fun getSaloons(@Query("page") page	: Int?,
+    suspend fun getSaloons(
+        @Query("page") page: Int?,
     ): GetSaloonResponse
+
     @GET("v1/saloon/{saloonId}")
-    suspend fun getSaloonsDetail(@Path("saloonId") saloonId: Int?
+    suspend fun getSaloonsDetail(
+        @Path("saloonId") saloonId: Int?
     ): GetSaloonDetailResponse
+
     @Multipart
     @POST("v1/saloon")
     suspend fun addSaloon(
@@ -60,6 +64,13 @@ interface SaloonApi {
         @Path("saloonId") saloonId: Int, @Body requestData: UpdateSaloonRequest
     ): AddSaloonResponse
 
+    @Multipart
+    @PUT("v1/saloon/{saloonId}")
+    suspend fun uploadSaloonCertificate(
+        @Path("saloonId") saloonId: Int,
+        @Part certificate: MultipartBody.Part?,
+    ): AddSaloonResponse
+
     @POST("v1/saloon/{saloonId}/holiday")
     suspend fun addHoliday(
         @Path("saloonId") saloonId: Int,
@@ -77,6 +88,7 @@ interface SaloonApi {
         @Path("saloonId") saloonId: Int,
         @Path("holidayId") holidayId: Int
     ): DeleteHolidayResponse
+
     @DELETE("v1/saloon/{saloonId}/hours/{day}")
     suspend fun deleteWorkingHour(
         @Path("saloonId") saloonId: Int,
@@ -87,8 +99,18 @@ interface SaloonApi {
     suspend fun getServiceProviders(
     ): GetServiceProviderResponse
 
-    @GET("v1/saloon/{saloonId}/subscription")
+    @GET("v1/saloon/my/subscriptions")
     suspend fun getSaloonsSubscriptions(
-        @Path("saloonId") saloonId: Int,
     ): GetSubscriptionsResponse
+
+    @GET("v1/saloon/{saloonId}/subscription")
+    suspend fun getSpecificSaloonsSubscriptions(
+        @Path("saloonId") saloonId: Int? = null,
+    ): GetSubscriptionsResponse
+
+    @POST("v1/saloon/{saloonId}/subscription")
+    suspend fun addSubscriptions(
+        @Path("saloonId") saloonId: Int,
+        @Body requestData: AddSubscribtionRequest
+    ): AddSubscribtionResponse
 }

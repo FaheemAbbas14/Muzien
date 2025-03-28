@@ -181,6 +181,7 @@
     <string name="saturday">Saturday</string>
     <string name="highbrow_beauty_bar">Highbrow Beauty Bar</string>
     <string name="renew">RENEW</string>
+    <string name="upload">Upload</string>
     <string name="subscribed_on">Subscribed On</string>
     <string name="_12_12_2023">12/12/2023</string>
     <string name="expiring_on">Expiring On</string>
@@ -225,7 +226,7 @@
     <string name="add_new_service">Add New Service</string>
     <string name="add_new_member">Add New Member</string>
     <string name="about">About</string>
-    <string name="subscription_expiry_date_12_12_25">Subscription Expiry Date: 12/12/25</string>
+    <string name="subscription_expiry_date_12_12_25">Subscription Expiry Date: </string>
     <string name="contact">Contact</string>
     <string name="_966_123_1234">+966 123 1234</string>
     <string name="address">Address</string>
