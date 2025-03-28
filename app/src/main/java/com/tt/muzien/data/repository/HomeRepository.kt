@@ -1,7 +1,5 @@
 package com.tt.muzien.data.repository
 
-import com.tt.muzien.constants.Keys
-import com.tt.muzien.data.network.AuthApi
 import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.utilities.PreferenceManager
 
@@ -17,5 +15,25 @@ class HomeRepository(
     private val preferences: PreferenceManager
 ) : BaseRepository() {
 
-
+    suspend fun getAnalytics(
+        saloonIds: String? = null,
+        startDate: String? = null,
+        endDate: String? = null
+    ) = safeApiCall {
+        api.getAnalytics(saloonIds, startDate, endDate)
+    }
+    suspend fun getWeeklyRevenue(
+        saloonIds: String? = null,
+        startDate: String? = null,
+        endDate: String? = null
+    ) = safeApiCall {
+        api.getWeeklyRevenue(saloonIds, startDate, endDate)
+    }
+    suspend fun getMonthlyRevenue(
+        saloonIds: String? = null,
+        startDate: String? = null,
+        endDate: String? = null
+    ) = safeApiCall {
+        api.getMonthlyRevenue(saloonIds, startDate, endDate)
+    }
 }

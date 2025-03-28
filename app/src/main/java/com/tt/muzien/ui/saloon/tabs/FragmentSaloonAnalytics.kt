@@ -5,7 +5,7 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,39 +21,56 @@ import com.tt.muzien.R
 import com.tt.muzien.data.dto.PersonDto
 import com.tt.muzien.data.dto.SaloonDto
 import com.tt.muzien.data.network.HomeApi
+import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.HomeRepository
 import com.tt.muzien.databinding.FragmentAnalyticsBinding
-import com.tt.muzien.databinding.FragmentSaloonAnalyticsBinding
-import com.tt.muzien.databinding.FragmentSaloonBookingsBinding
 import com.tt.muzien.ui.adapters.PerformerListAdapter
 import com.tt.muzien.ui.base.BaseFragment
+import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.FragmentFilter
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.home.HomeViewModel
+import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.FilterSelection
+import com.tt.muzien.utilities.TimeHelper
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.random.Random
 import kotlin.toString
 
-class FragmentSaloonAnalytics  : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, HomeRepository>() {
+class FragmentSaloonAnalytics :
+    BaseFragment<HomeViewModel, FragmentAnalyticsBinding, HomeRepository>() {
     private var lineChart: LineChart? = null
     private val topPerformerList = arrayListOf<PersonDto>()
     private var isRevenueFilter = false
-    private var revenueDuration: String = ""
-    private var revenueFromDate: String = ""
-    private var revenueToDate: String = ""
-    private var bookingDuration: String = ""
-    private var bookingFromDate: String = ""
-    private var bookingToDate: String = ""
+    private var revenueDuration: String? = null
+    private var revenueFromDate: String? = null
+    private var revenueToDate: String? = null
+    private var bookingDuration: String? = null
+    private var bookingFromDate: String? = null
+    private var bookingToDate: String? = null
     var selectedSaloon: SaloonDto? = null
+    var scheduleBookings = 0
+    var overdueBookings = 0
+    var cancledBookings = 0
+    var completedBookings = 0
+    var totalEarnings = 0
+    private val graphMap = HashMap<String, Int>()
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // binding.homeLayout.setBackgroundColor(Color.argb(10, 30, 69, 148))
         lineChart = binding.lineChart
-        setdata()
+        if (bookingFromDate == null) {
+            val dates = TimeHelper.getWeekAndMonthDates()
+            bookingFromDate = dates["startOfWeek"]
+            bookingToDate = dates["endOfWeek"]
+            revenueFromDate = dates["startOfMonth"]
+            revenueToDate = dates["endOfMonth"]
+            getAnalytics()
+        }
+
 
         binding.imgBookingFilter.setOnClickListener {
             isRevenueFilter = false
@@ -90,13 +107,18 @@ class FragmentSaloonAnalytics  : BaseFragment<HomeViewModel, FragmentAnalyticsBi
                         binding.txtRevenueType.text = selection
                     }
                 }
-                setdata()
+                getAnalytics()
             }
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setdata() {
+        binding.txtScheduled.text = "$scheduleBookings"
+        binding.txtOverdue.text = "$overdueBookings"
+        binding.txtCompleted.text = "$completedBookings"
+        binding.txtCancelled.text = "$cancledBookings"
+        binding.txtEarningAmount.text = "$totalEarnings"
         setPerformerAdopter()
         setGraph()
     }
@@ -105,14 +127,14 @@ class FragmentSaloonAnalytics  : BaseFragment<HomeViewModel, FragmentAnalyticsBi
     fun getDatesInRange(
         startDate: String,
         endDate: String,
-        dateFormat: String = "d/M/yyyy"
+        dateFormat: String = "yyyy-MM-dd"
     ): ArrayList<String> {
+        val dates = arrayListOf<String>()
         try {
             val formatter = DateTimeFormatter.ofPattern(dateFormat, Locale.getDefault())
             val start = LocalDate.parse(startDate, formatter)
             val end = LocalDate.parse(endDate, formatter)
             val desiredFormatter = DateTimeFormatter.ofPattern("d/M", Locale.getDefault())
-            val dates = arrayListOf<String>()
             var currentDate = start
             while (!currentDate.isAfter(end)) {
                 dates.add(currentDate.format(desiredFormatter))
@@ -124,7 +146,7 @@ class FragmentSaloonAnalytics  : BaseFragment<HomeViewModel, FragmentAnalyticsBi
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        return listOf<String>() as ArrayList<String>
+        return dates
     }
 
     fun generateRandomFloatList(min: Float, max: Float, count: Int): List<Float> {
@@ -148,18 +170,35 @@ class FragmentSaloonAnalytics  : BaseFragment<HomeViewModel, FragmentAnalyticsBi
             )
         } else if (revenueDuration == "Custom") {
             labels.clear()
-            labels = getDatesInRange(revenueFromDate, revenueToDate)
+            revenueFromDate?.let { labels = getDatesInRange(it, revenueToDate!!) }
         }
 
-        val customValues = generateRandomFloatList(10f, 55f, labels.size)
+        // val customValues = generateRandomFloatList(10f, 55f, labels.size)
 
         // Generate entries with custom values and sine wave
         val entries = mutableListOf<Entry>()
+        var maxValue = 0
         for (i in labels.indices) {
             val x = i.toFloat()
+            val value = x.toString()
+            var data = graphMap.get(value)
+            if (data != null) {
+                if (data > maxValue) {
+                    maxValue = data
+                }
+            }
+            if (data == null) {
+                data = 0
+            }
             val sineWaveValue =
                 kotlin.math.sin(i * Math.PI / 6) * 5f // Modify the amplitude as needed
-            val y = customValues[i] + sineWaveValue // Add sine wave value to the custom value
+            var y: Double = data.toDouble()
+
+            if (data > 0) {
+                y = data + sineWaveValue // Add sine wave value to the custom value
+
+            }
+            Log.d("GraphValues", "label $x value $y data $data value $value")
             entries.add(Entry(x, y.toFloat()))
         }
 
@@ -182,6 +221,7 @@ class FragmentSaloonAnalytics  : BaseFragment<HomeViewModel, FragmentAnalyticsBi
         lineChart?.data = LineData(dataSet)
         // Hide the legend (color indicator)
         lineChart?.legend?.isEnabled = false
+        Log.d("GraphData", "max value $maxValue")
         // Customize X-Axis to show month names
         lineChart?.xAxis?.apply {
             granularity = 1f
@@ -195,10 +235,10 @@ class FragmentSaloonAnalytics  : BaseFragment<HomeViewModel, FragmentAnalyticsBi
         // Customize Y-axis to show labels, set range and formatting
         lineChart?.axisLeft?.apply {
             axisMinimum = 1f
-            axisMaximum = 60f // Adjust depending on your data range
+            axisMaximum = (maxValue + 200).toFloat()// Adjust depending on your data range
             valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
-                    return "${value.toInt()}k" // Add currency or units
+                    return "${value.toInt()}" // Add currency or units
                 }
             }
         }
@@ -222,21 +262,11 @@ class FragmentSaloonAnalytics  : BaseFragment<HomeViewModel, FragmentAnalyticsBi
 
 // Optional: Disable double-tap zoom
         lineChart?.isDoubleTapToZoomEnabled = false
+        lineChart?.invalidate()
     }
 
+
     private fun setPerformerAdopter() {
-        for (i in 0..10) {
-            println("Index: $i")
-            topPerformerList.add(
-                PersonDto(
-                    "",
-                    "Jennifer Austin",
-                    "Hair Stylist",
-                    "${10 * i} Bookings",
-                    "SAR ${5 * i}"
-                )
-            )
-        }
         binding.rcyTopPerformer.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
         binding.rcyTopPerformer.adapter =
@@ -256,7 +286,143 @@ class FragmentSaloonAnalytics  : BaseFragment<HomeViewModel, FragmentAnalyticsBi
     ) = FragmentAnalyticsBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        HomeRepository(remoteDataSource.buildApi(HomeApi::class.java,requireContext()), userPreferences)
+        HomeRepository(
+            remoteDataSource.buildApi(HomeApi::class.java, requireContext()),
+            userPreferences
+        )
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getAnalytics() {
+        viewModel.getAnalytics.observe(viewLifecycleOwner) {
 
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        topPerformerList.clear()
+                        for (performer in it.value.data.topPerformers) {
+
+                            topPerformerList.add(
+                                PersonDto(
+                                    performer.picture,
+                                    performer.fullName ?: "",
+                                    "Hair Stylist",
+                                    "${performer.totalBookings} Bookings",
+                                    "SAR ${5 * 1}"
+                                )
+                            )
+
+                        }
+                        for (analytics in it.value.data.booking) {
+                            if (analytics.status == "completed") {
+                                completedBookings = analytics.total_count.toInt()
+                            } else if (analytics.status == "cancelled") {
+                                cancledBookings = analytics.total_count.toInt()
+                            } else if (analytics.status == "overdue") {
+                                overdueBookings = analytics.total_count.toInt()
+                            } else if (analytics.status == "scheduled") {
+                                scheduleBookings = analytics.total_count.toInt()
+                            }
+                        }
+                        totalEarnings = it.value.data.totalEarning.toInt()
+                        if (FilterSelection.filterData != null) {
+                            val selection = FilterSelection.filterData!!.selection
+                            if (selection == "Month") {
+                                getMonthlyRevenue()
+                            } else {
+                                getWeeklyRevenue()
+                            }
+                        } else {
+                            getMonthlyRevenue()
+                        }
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.getAnalytics(
+            saloonIds = selectedSaloon?.id.toString(),
+            startDate = bookingFromDate,
+            endDate = bookingToDate
+        )
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getWeeklyRevenue() {
+        viewModel.getWeeklyRevenue.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        graphMap.clear()
+                        for (revenue in it.value.data?.revenue!!) {
+                            var key=revenue.date?.split("-")[2]!!
+                            graphMap.put("${key.toFloat()}", revenue.count.toInt())
+                        }
+                        setdata()
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.getWeeklyRevenue(
+            startDate = revenueFromDate,
+            endDate = revenueToDate
+        )
+        // (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getMonthlyRevenue() {
+        viewModel.getMonthlyRevenue.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        graphMap.clear()
+                        for (revenue in it.value.data?.revenue!!) {
+                            graphMap.put("${revenue.month?.toFloat()}", revenue.count.toInt())
+                        }
+                        setdata()
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.getMonthlyRevenue(
+        )
+        // (activity as HomeActivity?)?.showLoadingIndicator()
+    }
 }

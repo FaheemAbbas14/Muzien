@@ -20,7 +20,7 @@ import retrofit2.http.Query
  * +923115284424
  */
 interface MemberApi {
-    @GET("v1/members/list")
+    @GET("v1/members/mySaloonsMembers")
     suspend fun getMembers(
     ): GetMembersResponse
     @GET("v1/members/list")

@@ -34,8 +34,8 @@ import retrofit2.http.Query
  * +923115284424
  */
 interface SaloonApi {
-    @GET("v1/saloon")
-    suspend fun getSaloons(@Query("saloonId") saloonId: Int?, @Query("page") page	: Int?,
+    @GET("v1/saloon/my-saloons")
+    suspend fun getSaloons(@Query("page") page	: Int?,
     ): GetSaloonResponse
     @GET("v1/saloon/{saloonId}")
     suspend fun getSaloonsDetail(@Path("saloonId") saloonId: Int?

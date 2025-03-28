@@ -105,10 +105,10 @@
     <string name="opening_time">وقت الفتح</string>
     <string name="_00_00_pm">00:00 م</string>
     <string name="closing_time">وقت الإغلاق</string>
-    <string name="_30">30</string>
+    <string name="_30">0</string>
     <string name="top_5_performers">أفضل 5 مؤدين</string>
     <string name="earnings">الأرباح</string>
-    <string name="_1340">1340</string>
+    <string name="_1340">0</string>
     <string name="revenue">الإيرادات</string>
     <string name="monthly">شهريًا</string>
     <string name="filter">تصفية</string>

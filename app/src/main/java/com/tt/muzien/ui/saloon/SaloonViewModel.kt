@@ -58,8 +58,8 @@ class SaloonViewModel(
         SingleEventLiveData()
     val getSaloonsSubscriptions: LiveData<Resource<GetSubscriptionsResponse>> get() = _getSaloonsSubscriptions
 
-    fun getSaloons(saloonId: Int? = null, page: Int? = null) = viewModelScope.launch {
-        _getSaloon.value = repository.getSaloons(saloonId, page)
+    fun getSaloons(page: Int? = null) = viewModelScope.launch {
+        _getSaloon.value = repository.getSaloons(page)
     }
 
     fun getSaloonsDetails(saloonId: Int? = null) = viewModelScope.launch {

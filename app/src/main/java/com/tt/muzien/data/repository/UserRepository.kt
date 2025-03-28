@@ -55,5 +55,9 @@ class UserRepository(
     ) = safeApiCall {
         api.logout()
     }
+    suspend fun deleteUser(
+    ) = safeApiCall {
+        api.deleteUser()
+    }
 
 }

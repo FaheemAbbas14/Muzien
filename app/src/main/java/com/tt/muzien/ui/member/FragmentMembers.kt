@@ -89,21 +89,19 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
                         membersList.clear()
-//                        for (saloon in it.value.data.saloons) {
-//                            println("Index: $i")
-//                            membersList.add(
-//                                MemberDto(
-//                                    "",
-//                                    if (i % 2 == 0) true else false,
-//                                    "Jennifer Austin",
-//                                    "Hair Stylist",
-//                                    "4.1 (50 reviews)",
-//                                    "Store  Tye Style Zone",
-//                                    4
-//                                )
-//                            )
-//
-//                        }
+                        for (member in it.value.data.members) {
+                            membersList.add(
+                                MemberDto(
+                                    member.User.picture?:"",
+                                    member.isActive,
+                                    member.User.fullName?:"",
+                                    "profession missing",
+                                    "rating missing",
+                                    member.Saloon.name,
+                                    4
+                                )
+                            )
+                        }
                         setMemberAdopter()
                     } else {
                         requireView().snackbar(it.value.message)

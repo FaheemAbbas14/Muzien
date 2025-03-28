@@ -94,13 +94,13 @@
     <string name="closing_time">Closing Time</string>
     <string name="this_week">This Week</string>
     <string name="scheduled">Scheduled</string>
-    <string name="_30">30</string>
+    <string name="_30">0</string>
     <string name="overdue">Overdue</string>
     <string name="completed">Completed</string>
     <string name="cancelled">Cancelled</string>
     <string name="top_5_performers">Top 5 Performers</string>
     <string name="earnings">Earnings</string>
-    <string name="_1340">1340</string>
+    <string name="_1340">0</string>
     <string name="revenue">Revenue</string>
     <string name="monthly">Monthly</string>
     <string name="filter">Filter</string>

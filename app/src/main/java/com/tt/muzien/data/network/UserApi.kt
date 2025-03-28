@@ -12,9 +12,9 @@ import com.tt.muzien.data.responses.RefreshTokenResponse
 import com.tt.muzien.data.responses.UpdateUserResponse
 import com.tt.muzien.data.responses.VerifyLoginResponse
 import okhttp3.MultipartBody
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -23,41 +23,46 @@ import retrofit2.http.Path
 
 interface UserApi {
 
-  @GET("user")
-  suspend fun getUser(): LoginResponse
+    @GET("user")
+    suspend fun getUser(): LoginResponse
 
-  @POST("v1/auth/logout")
-  suspend fun logout(): LoginResponse
+    @POST("v1/auth/logout")
+    suspend fun logout(): LoginResponse
 
-  @POST("v1/auth/refresh-token")
-  fun getRefreshToken(@Body requestData: RefreshTokenRequest): Call<RefreshTokenResponse>
+    @POST("v1/auth/refresh-token")
+    fun getRefreshToken(@Body requestData: RefreshTokenRequest): Call<RefreshTokenResponse>
 
-  @GET("v1/user")
-  suspend fun getUsers(
-  ): GetsUsersResponse
-  @GET("v1/user/{userId}")
-  suspend fun my(
-    @Path("userId") userId: Long
-  ): MyResponse
+    @GET("v1/user")
+    suspend fun getUsers(
+    ): GetsUsersResponse
 
-  @POST("v1/auth/profile")
-  suspend fun updateUser(
-    @Body requestData: UpdateUser
-  ): UpdateUserResponse
+    @GET("v1/user/{userId}")
+    suspend fun my(
+        @Path("userId") userId: Long
+    ): MyResponse
 
-  @Multipart
-  @POST("v1/auth/profile/image") // Change to your API endpoint
-  suspend fun uploadImage(
-    @Part image: MultipartBody.Part,
-  ):MyResponse
+    @POST("v1/auth/profile")
+    suspend fun updateUser(
+        @Body requestData: UpdateUser
+    ): UpdateUserResponse
 
-  @POST("v1/auth/update-verify")
-  suspend fun verifyLogin(
-    @Body requestData: VerifyOTPRequest
-  ): VerifyLoginResponse
+    @Multipart
+    @POST("v1/auth/profile/image") // Change to your API endpoint
+    suspend fun uploadImage(
+        @Part image: MultipartBody.Part,
+    ): MyResponse
 
-  @POST("v1/auth/update")
-  suspend fun sendOTP(
-    @Body requestData: LoginRequest
-  ): LoginResponse
+    @POST("v1/auth/update-verify")
+    suspend fun verifyLogin(
+        @Body requestData: VerifyOTPRequest
+    ): VerifyLoginResponse
+
+    @POST("v1/auth/update")
+    suspend fun sendOTP(
+        @Body requestData: LoginRequest
+    ): LoginResponse
+
+    @DELETE("v1/auth/profile")
+    suspend fun deleteUser(
+    )
 }

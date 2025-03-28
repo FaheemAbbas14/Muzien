@@ -17,10 +17,9 @@ import okhttp3.RequestBody
 class SaloonRepository(
     private val api: SaloonApi,
 ) : BaseRepository() {
-    suspend fun getSaloons(
-        saloonId: Int? = null, page: Int? = null
+    suspend fun getSaloons(page: Int? = null
     ) = safeApiCall {
-        api.getSaloons(saloonId, page)
+        api.getSaloons( page)
     }
 
     suspend fun getSaloonsDetail(

@@ -29,7 +29,7 @@ interface ServiceApi {
         @Part("price") price: RequestBody
     ): GenericResponse
 
-    @GET("v1/service/category")
+    @GET("v1/service/mySaloonsServices")
     suspend fun getCategories(
     ): GetCategoriesResponse
 
