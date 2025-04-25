@@ -1,11 +1,13 @@
 package com.tt.muzien.ui.saloon.tabs
 
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +28,7 @@ import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.FilterSelection
+import com.tt.muzien.utilities.TimeHelper
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -46,8 +49,19 @@ class FragmentSaloonBookings :
     private var selection: Int = 0
     private var isLoading: Boolean = false
     var selectedSaloon: SaloonDto? = null
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val dates = TimeHelper.getWeekAndMonthDates()
+        fromDate = dates["startOfMonth"]
+        toDate = dates["endOfMonth"]
+        binding.customCalendarView.setOnMonthChangedListener { startDate, endDate ->
+            Log.d("CalendarFragment", "Month range: $startDate to $endDate")
+            // Fetch data or update UI based on date range
+            fromDate = startDate
+            toDate = endDate
+            getBooking()
+        }
         getBooking()
         binding.customCalendarView.setOnDaySelectedListener { selectedDay ->
             // Toast.makeText(requireContext(), "Selected: ${selectedDay}", Toast.LENGTH_SHORT).show()
@@ -125,7 +139,13 @@ class FragmentSaloonBookings :
     }
 
     private fun setBookingsAdopter() {
-
+        if (saloonsBookingList.isNotEmpty()) {
+            binding.cnstData.visibility = View.VISIBLE
+            binding.llNoDta.visibility = View.GONE
+        } else {
+            binding.cnstData.visibility = View.GONE
+            binding.llNoDta.visibility = View.VISIBLE
+        }
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(position: Int) {
 //                var nextFragment = FragmentSaloonDetails()
@@ -233,8 +253,8 @@ class FragmentSaloonBookings :
                         if (page == 1) {
                             saloonsBookingList.clear()
                         }
-                        totalPage = it.value.data.pagination.totalPages.toInt()
-                        for (booking in it.value.data.bookings) {
+                        totalPage = it.value.data.totalPages.toInt()
+                        for (booking in it.value.data.items) {
                             var services = ""
                             for (service in booking.bookingServices) {
                                 services += service.serviceDetails.name

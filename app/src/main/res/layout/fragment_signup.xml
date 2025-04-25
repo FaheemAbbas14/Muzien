@@ -31,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
-                android:visibility="visible"
+                android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -66,8 +66,7 @@
                 android:textColor="@color/colorTextLabelDefault"
                 android:textSize="22sp"
                 app:layout_constraintBottom_toBottomOf="@+id/llBack"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/llBack"
+                app:layout_constraintStart_toStartOf="@+id/llBack"
                 app:layout_constraintTop_toTopOf="@+id/llBack" />
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -75,7 +74,7 @@
                 android:layout_width="160dp"
                 android:layout_height="160dp"
                 android:layout_centerInParent="true"
-                android:layout_marginTop="60dp"
+                android:layout_marginTop="40dp"
                 android:background="@drawable/circuler_grey"
                 android:src="@drawable/user_placeholder"
                 app:civ_border_color="@color/white"
@@ -100,9 +99,9 @@
                 android:id="@+id/llFullName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="15dp"
                 android:background="@drawable/rounded_white_grey"
                 android:clickable="true"
                 android:focusable="true"
@@ -119,7 +118,7 @@
                 <EditText
                     android:id="@+id/edtName"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="45dp"
                     android:layout_gravity="center"
                     android:layout_marginLeft="5dp"
                     android:background="@android:color/transparent"
@@ -165,7 +164,7 @@
                 android:id="@+id/llEmail"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/rounded_white_grey"
                 android:clickable="true"
                 android:focusable="true"
@@ -254,7 +253,7 @@
                 android:id="@+id/rdoRole"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:minHeight="60dp"
                 android:orientation="horizontal"
                 android:weightSum="2"
@@ -303,7 +302,7 @@
 
             <LinearLayout
                 android:id="@+id/llCountry"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:background="@drawable/rounded_white_grey"
@@ -314,8 +313,8 @@
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="10dp"
                 android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="@+id/rdoRole"
-                app:layout_constraintStart_toStartOf="@+id/rdoRole"
+                app:layout_constraintEnd_toEndOf="@+id/llFullName"
+                app:layout_constraintStart_toStartOf="@+id/llFullName"
                 app:layout_constraintTop_toBottomOf="@+id/rdoRole">
 
 
@@ -363,10 +362,9 @@
 
             <LinearLayout
                 android:id="@+id/llSave"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginTop="40dp"
                 android:background="@drawable/rounded_blue_100"
                 android:clickable="true"
                 android:focusable="true"
@@ -375,8 +373,8 @@
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="10dp"
                 android:visibility="visible"
-                app:layout_constraintEnd_toEndOf="@+id/rdoRole"
-                app:layout_constraintStart_toStartOf="@+id/rdoRole"
+                app:layout_constraintEnd_toEndOf="@+id/llFullName"
+                app:layout_constraintStart_toStartOf="@+id/llFullName"
                 app:layout_constraintTop_toBottomOf="@+id/llCountry">
 
                 <TextView

@@ -34,7 +34,7 @@ class HorizontalCalendarView @JvmOverloads constructor(
 
     private val calendar: Calendar = Calendar.getInstance()
     private var onDaySelectedListener: ((CalendarDay) -> Unit)? = null
-
+    private var onMonthChangedListener: ((startDate: String, endDate: String) -> Unit)? = null
     init {
         orientation = VERTICAL
         LayoutInflater.from(context).inflate(R.layout.custom_horizental_calender, this, true)
@@ -76,7 +76,16 @@ class HorizontalCalendarView @JvmOverloads constructor(
             listener(formattedDate)
         }
     }
+    fun setOnMonthChangedListener(listener: (startDate: String, endDate: String) -> Unit) {
+        this.onMonthChangedListener = listener
+    }
+    fun setMonthFromDate(dateString: String, format: String = "yyyy-MM-dd") {
+        val sdf = SimpleDateFormat(format, Locale.getDefault())
+        val date = sdf.parse(dateString) ?: return
 
+        calendar.time = date
+        updateCalendar()
+    }
     private fun updateCalendar() {
         // Update the month-year header
         val formatter = SimpleDateFormat("MMMM yyyy", Locale.getDefault())
@@ -85,6 +94,29 @@ class HorizontalCalendarView @JvmOverloads constructor(
         // Generate days for the current month
         val days = generateDaysForMonth(calendar)
         adapter.setDays(days)
+
+        // Disable next button if current month and year match today's month and year
+        val today = Calendar.getInstance()
+        val isCurrentMonth = calendar.get(Calendar.MONTH) == today.get(Calendar.MONTH)
+                && calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR)
+
+        btnNextMonth.isEnabled = !isCurrentMonth
+        btnNextMonth.alpha = if (btnNextMonth.isEnabled) 1.0f else 0.5f  // Optional: dim disabled button
+
+
+        // Notify start and end date to listener
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+        val startCalendar = calendar.clone() as Calendar
+        startCalendar.set(Calendar.DAY_OF_MONTH, 1)
+
+        val endCalendar = calendar.clone() as Calendar
+        endCalendar.set(Calendar.DAY_OF_MONTH, endCalendar.getActualMaximum(Calendar.DAY_OF_MONTH))
+
+        val startDate = dateFormat.format(startCalendar.time)
+        val endDate = dateFormat.format(endCalendar.time)
+
+        onMonthChangedListener?.invoke(startDate, endDate)
     }
 
     private fun generateDaysForMonth(calendar: Calendar): List<CalendarDay> {

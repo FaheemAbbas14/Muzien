@@ -22,8 +22,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.MemberDto
-import com.tt.muzien.ui.home.HomeActivity
-import com.tt.muzien.ui.member.FragmentInvite
+import com.tt.muzien.interfaces.OnStateChange
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 
 
@@ -37,6 +36,7 @@ class MembersListAdapter(
     private val itemList: List<MemberDto>,
     private val context: Context,
     private val listener: OnItemClickListner,
+    private val stateChange: OnStateChange,
     private val fromSaloon: Boolean = false
 ) :
     RecyclerView.Adapter<MembersListAdapter.MyViewHolder>() {
@@ -76,8 +76,8 @@ class MembersListAdapter(
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         var item: MemberDto = itemList[position]
-        holder.imgMenu.setOnClickListener{
-            showCustomMenu(holder.imgMenu)
+        holder.imgMenu.setOnClickListener {
+            showCustomMenu(holder.imgMenu, stateChange, position)
         }
         if (fromSaloon) {
             holder.llStyle.visibility = View.GONE
@@ -85,9 +85,10 @@ class MembersListAdapter(
         holder.txtName.text = item.name
         holder.txtBookings.text = "${item.bookings} bookings today"
         holder.txtProfesstion.text = item.profession
+        holder.txtProfesstion.visibility=View.GONE
         holder.txtRating.text = item.rating
         holder.txtStyle.text = item.style
-        if (position == 0) {
+        if (item.isManger) {
             holder.txtManager.visibility = View.VISIBLE
         } else {
             holder.txtManager.visibility = View.GONE
@@ -151,7 +152,8 @@ class MembersListAdapter(
             .into(holder.imgProfilePic)
     }
 
-    private fun showCustomMenu(anchor: View) {
+    private fun showCustomMenu(anchor: View, stateChange: OnStateChange, position: Int) {
+
         // Inflate the custom menu layout
         val inflater = LayoutInflater.from(context)
         val menuView = inflater.inflate(R.layout.invite_layout, null)
@@ -168,22 +170,23 @@ class MembersListAdapter(
         val option1: TextView = menuView.findViewById(R.id.invite_salon)
         val option2: TextView = menuView.findViewById(R.id.invite_user)
         val option3: TextView = menuView.findViewById(R.id.delete_user)
-        option1.text="Mark as Manager"
-        option2.text="Inactivate User"
-        option3.text="Delete User"
+        option1.text = "Mark as Manager"
+        option2.text = "Inactivate User"
+        option3.text = "Delete User"
         option1.setOnClickListener {
-
+            stateChange.onStateChange(position, 1)
             // Handle Option 1 click
             popupWindow.dismiss()
         }
 
         option2.setOnClickListener {
-
+            stateChange.onStateChange(position, 2)
             // Handle Option 2 click
             popupWindow.dismiss()
         }
 
         option3.setOnClickListener {
+            stateChange.onStateChange(position, 3)
             // Handle Option 3 click
             popupWindow.dismiss()
         }

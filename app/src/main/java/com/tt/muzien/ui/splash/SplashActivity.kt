@@ -57,44 +57,48 @@ class SplashActivity : AppCompatActivity() {
         ) {
             LoggedInInfo.user = Gson().fromJson(
                 user,
-                com.tt.muzien.data.responses.UserInfo::class.java
+                com.tt.muzien.data.responses.UserData::class.java
             )
-            LoggedInInfo.userId= LoggedInInfo.user?.id!!
-            var remoteDataSource = RemoteDataSource()
-            var authRepository = AuthRepository(
-                remoteDataSource.buildApi(AuthApi::class.java, this),
-                PreferenceManager.getInstance(this)
-            )
-            authViewModel = AuthViewModel(authRepository)
-            authViewModel!!.my.observe(this, Observer {
-                when (it) {
-                    is Resource.Success -> {
-                        LoggedInInfo.user = it.value.data?.user
-                        val gson = Gson()
-                        val userInfo = gson.toJson(it.value.data?.user)
-                        PreferenceManager.getInstance(this)
-                            .putString(Keys.User, userInfo)
-                        if (it.value.data?.user?.fullName == null) {
-                            loginActivity()
+            if (LoggedInInfo.user != null) {
+                LoggedInInfo.userId = LoggedInInfo.user?.id!!
+                var remoteDataSource = RemoteDataSource()
+                var authRepository = AuthRepository(
+                    remoteDataSource.buildApi(AuthApi::class.java, this),
+                    PreferenceManager.getInstance(this)
+                )
+                authViewModel = AuthViewModel(authRepository)
+                authViewModel!!.my.observe(this, Observer {
+                    when (it) {
+                        is Resource.Success -> {
+                            LoggedInInfo.user = it.value.data
+                            val gson = Gson()
+                            val userInfo = gson.toJson(it.value.data)
+                            PreferenceManager.getInstance(this)
+                                .putString(Keys.User, userInfo)
+                            if (it.value.data?.fullName == null) {
+                                loginActivity()
 
-                        } else {
-                            val activity = HomeActivity::class.java
-                            startNewActivity(activity)
-                            finish()
+                            } else {
+                                val activity = HomeActivity::class.java
+                                startNewActivity(activity)
+                                finish()
+                            }
+
                         }
 
+                        is Resource.Failure -> {
+                            Log.d("failed", it.errorBody.toString())
+                            loginActivity()
+                        }
+
+                        else -> {}
                     }
+                })
 
-                    is Resource.Failure -> {
-                        Log.d("failed", it.errorBody.toString())
-                        loginActivity()
-                    }
-
-                    else -> {}
-                }
-            })
-
-            authViewModel!!.my(LoggedInInfo.userId)
+                authViewModel!!.my(LoggedInInfo.userId)
+            } else {
+                loginActivity()
+            }
         } else {
             loginActivity()
         }

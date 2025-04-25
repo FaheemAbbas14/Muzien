@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.annotation.RequiresApi
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.FragmentManager
@@ -28,9 +29,10 @@ import com.tt.muzien.ui.saloon.tabs.FragmentSaloonMembers
 import com.tt.muzien.ui.saloon.tabs.FragmentSaloonReviews
 import com.tt.muzien.ui.saloon.tabs.FragmentSaloonServices
 import com.tt.muzien.utilities.FilterSelection
+import com.tt.muzien.utilities.TimeHelper
 
 
-class SaloonManagerDashboard:BaseFragment<HomeViewModel, FragmentSaloonManagerDashboardBinding, HomeRepository>() {
+class SaloonManagerDashboard: BaseFragment<HomeViewModel, FragmentSaloonManagerDashboardBinding, HomeRepository>() {
 
     var selectedSaloon: SaloonDto? = null
     private lateinit var fragmentManager: FragmentManager
@@ -41,6 +43,8 @@ class SaloonManagerDashboard:BaseFragment<HomeViewModel, FragmentSaloonManagerDa
         // setStatusBar(view)
         fragmentManager = requireActivity().supportFragmentManager
         // setStatusBar(view)
+        binding.imgMore.visibility=View.GONE
+        binding.imgCamera.visibility=View.GONE
         binding.imgMore.setOnClickListener {
 
             //   uploadImage()
@@ -49,65 +53,147 @@ class SaloonManagerDashboard:BaseFragment<HomeViewModel, FragmentSaloonManagerDa
 
             //  uploadImage()
         }
-
+        binding.imgBack.setOnClickListener {
+            FilterSelection.filterData = null
+            (activity as HomeActivity?)?.popFragment()
+        }
         //  (activity as HomeActivity?)?.loadFragment(FragmentSaloonAnalytics(), R.id.tab_container)
-        fragmentManager.beginTransaction().replace(R.id.tab_container, FragmentAnalytics())
+        var nextFragment = FragmentSaloonAnalytics()
+        nextFragment.selectedSaloon = selectedSaloon
+        childFragmentManager.beginTransaction().replace(R.id.tab_container, nextFragment)
             .commit()
+        childFragmentManager.executePendingTransactions()
         binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
             val selectedRadioButton = group.findViewById<RadioButton>(checkedId)
             val fragment: Fragment = when (selectedRadioButton?.id) {
-                R.id.rdoAnalytics -> FragmentAnalytics()
-                R.id.rdoBookings -> FragmentSaloonBookings()
-                R.id.rdoStoreInfo -> FragmentSaloonInfo()
-                R.id.rdoReviews -> FragmentSaloonReviews()
-                R.id.rdoServices -> FragmentSaloonServices()
-                R.id.rdoMembers -> FragmentSaloonMembers()
-                else -> FragmentSaloonAnalytics()
+                R.id.rdoAnalytics -> {
+                    var nextFragment = FragmentSaloonAnalytics()
+                    nextFragment.selectedSaloon = selectedSaloon
+                    nextFragment
+                }
+
+                R.id.rdoBookings -> {
+                    var nextFragment = FragmentSaloonBookings()
+                    nextFragment.selectedSaloon = selectedSaloon
+                    nextFragment
+                }
+
+                R.id.rdoStoreInfo -> {
+                    var nextFragment = FragmentSaloonInfo()
+                    nextFragment.selectedSaloon = selectedSaloon
+                    nextFragment
+                }
+
+                R.id.rdoReviews -> {
+                    var nextFragment = FragmentSaloonReviews()
+                    nextFragment.selectedSaloon = selectedSaloon
+                    nextFragment
+                }
+
+                R.id.rdoServices -> {
+                    val nextFragment = FragmentSaloonServices()
+                    nextFragment.saloonId = selectedSaloon?.id
+                    nextFragment.selectedSaloon = selectedSaloon
+                    nextFragment
+                }
+
+                R.id.rdoMembers -> {
+                    var nextFragment = FragmentSaloonMembers()
+                    nextFragment.selectedSaloon = selectedSaloon
+                    nextFragment
+                }
+
+                else -> {
+                    var nextFragment = FragmentSaloonAnalytics()
+                    nextFragment.selectedSaloon = selectedSaloon
+                    nextFragment
+                }
             }
             resetTabs()
             when (selectedRadioButton?.id) {
 
                 R.id.rdoBookings -> {
+                    setFrameLayoutHeight(true)
                     binding.rdoBookings.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoBookings.setTextColor(resources.getColor(R.color.white))
                 }
 
                 R.id.rdoStoreInfo -> {
+                    setFrameLayoutHeight(false)
                     binding.rdoStoreInfo.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoStoreInfo.setTextColor(resources.getColor(R.color.white))
                 }
 
                 R.id.rdoReviews -> {
+                    setFrameLayoutHeight(true)
                     binding.rdoReviews.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoReviews.setTextColor(resources.getColor(R.color.white))
                 }
 
                 R.id.rdoServices -> {
+                    setFrameLayoutHeight(true)
                     binding.rdoServices.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoServices.setTextColor(resources.getColor(R.color.white))
                 }
 
                 R.id.rdoMembers -> {
+                    setFrameLayoutHeight(true)
                     binding.rdoMembers.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoMembers.setTextColor(resources.getColor(R.color.white))
                 }
 
                 else -> {
+                    setFrameLayoutHeight(false)
                     binding.rdoAnalytics.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoAnalytics.setTextColor(resources.getColor(R.color.white))
                 }
             }
             // (activity as HomeActivity?)?.loadFragment(fragment, R.id.tab_container)
-            fragmentManager.beginTransaction().replace(R.id.tab_container, fragment).commit()
+            childFragmentManager.beginTransaction().replace(R.id.tab_container, fragment).commit()
+            childFragmentManager.executePendingTransactions()
+        }
+        setData()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setData() {
+        binding.txtItemName.text = selectedSaloon?.name
+        binding.txtLocation.text = selectedSaloon?.location
+        binding.txtRating.text = selectedSaloon?.ratings
+        var timing = TimeHelper.getCurrentDayTiming(selectedSaloon?.timing)
+        binding.txtTiming.text = timing
+        if (selectedSaloon?.isOpened == true) {
+            binding.llStatus.setBackgroundDrawable(
+                ResourcesCompat.getDrawable(
+                    requireContext().resources,
+                    R.drawable.rounded_green,
+                    requireContext().theme
+                )
+            )
+            binding.txtStatusTexts.text = "open today"
+        } else {
+            binding.llStatus.setBackgroundDrawable(
+                ResourcesCompat.getDrawable(
+                    requireContext().resources,
+                    R.drawable.rounded_red,
+                    requireContext().theme
+                )
+            )
+            binding.txtStatusTexts.text = "close today"
         }
         setViewPager()
     }
 
     private fun setViewPager() {
-
+        var images = ArrayList<String>()
+        for (image in selectedSaloon?.icon!!) {
+            images.add(image?.image ?: "")
+        }
+        if (images.isEmpty()) {
+            images.add("")
+        }
         // Sample data for ViewPager
-        val items = listOf("", "", "", "")
-        val adapter = ViewPagerAdapter(items)
+        val adapter = ViewPagerAdapter(images)
         binding.viewPager.adapter = adapter
 
         // Attach the DotsIndicator to the ViewPager
@@ -151,7 +237,7 @@ class SaloonManagerDashboard:BaseFragment<HomeViewModel, FragmentSaloonManagerDa
         }
     }
 
-    override fun getViewModel(): Class<com.tt.muzien.ui.home.HomeViewModel> {
+    override fun getViewModel(): Class<HomeViewModel> {
         return HomeViewModel::class.java
     }
 
@@ -161,7 +247,39 @@ class SaloonManagerDashboard:BaseFragment<HomeViewModel, FragmentSaloonManagerDa
     ) = FragmentSaloonManagerDashboardBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        HomeRepository(remoteDataSource.buildApi(HomeApi::class.java,requireContext()), userPreferences)
+        HomeRepository(
+            remoteDataSource.buildApi(HomeApi::class.java, requireContext()),
+            userPreferences
+        )
 
+    @RequiresApi(Build.VERSION_CODES.M)
+    override fun onResume() {
+        super.onResume()
+        (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, true)
+        (activity as HomeActivity?)?.setSystemWindow(true)
+        (activity as HomeActivity?)?.showTabs()
+    }
 
+    @RequiresApi(Build.VERSION_CODES.M)
+    override fun onPause() {
+        super.onPause()
+        (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, true)
+        (activity as HomeActivity?)?.setSystemWindow(true)
+        (activity as HomeActivity?)?.hideTabs()
+    }
+
+    fun setFrameLayoutHeight(enablScrool: Boolean) {
+        if (enablScrool) {
+            val scale = binding.tabContainer.resources.displayMetrics.density
+            val heightInPx = (0 * scale + 0.5f).toInt()
+
+            val layoutParams = binding.tabContainer.layoutParams
+            layoutParams.height = heightInPx
+            binding.tabContainer.layoutParams = layoutParams
+        } else {
+            val layoutParams = binding.tabContainer.layoutParams
+            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            binding.tabContainer.layoutParams = layoutParams
+        }
+    }
 }

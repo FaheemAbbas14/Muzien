@@ -12,11 +12,13 @@ import com.tt.muzien.data.network.MemberApi
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.MemberRepository
 import com.tt.muzien.databinding.FragmentSaloonMembersBinding
+import com.tt.muzien.interfaces.OnStateChange
 import com.tt.muzien.ui.adapters.MembersListAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.FragmentFilter
 import com.tt.muzien.ui.home.HomeActivity
+import com.tt.muzien.ui.member.FragmentViewMember
 import com.tt.muzien.ui.member.MemberViewModel
 import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.FilterSelection
@@ -39,7 +41,7 @@ class FragmentSaloonMembers :
         }
         binding.llAdd.setOnClickListener {
             var nextFragment = FragmentAddSaloonMember()
-            nextFragment.saloonId= selectedSaloon?.id!!
+            nextFragment.saloonId = selectedSaloon?.id!!
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
         if (FilterSelection.filterData != null) {
@@ -57,14 +59,32 @@ class FragmentSaloonMembers :
     }
 
     private fun setMemberAdopter() {
+        if (membersList.isNotEmpty()) {
+            binding.cnstData.visibility = View.VISIBLE
+            binding.llNoDta.visibility = View.GONE
+        } else {
+            binding.cnstData.visibility = View.GONE
+            binding.llNoDta.visibility = View.VISIBLE
+        }
         binding.txtHeading.text = "Members(${membersList.size})"
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(position: Int) {
-//                var nextFragment = FragmentPlaceDetails()
-//                nextFragment.itemId = featuredItemsList[position].id
-//                nextFragment.placeType = EnumItemListType.Featured
-//                (activity as DashboardActivity?)?.loadFragment(nextFragment)
+                var nextFragment = FragmentViewMember()
+                nextFragment.member = membersList[position]
+                (activity as HomeActivity?)?.loadFragment(nextFragment)
 
+            }
+        }
+        val stateChangeListener = object : OnStateChange {
+
+            override fun onStateChange(position: Int, state: Int) {
+                if (state == 1) {
+                    makeManger(membersList[position].id)
+                } else if (state == 2) {
+                    inActiveMember(membersList[position].id)
+                } else {
+                    deleteMember(membersList[position].id)
+                }
             }
         }
         binding.rcyMembers.layoutManager =
@@ -73,7 +93,7 @@ class FragmentSaloonMembers :
             MembersListAdapter(
                 membersList,
                 requireContext(),
-                clickListener, true
+                clickListener, stateChangeListener, true
             )
     }
 
@@ -98,16 +118,21 @@ class FragmentSaloonMembers :
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
                         membersList.clear()
-                        for (member in it.value.data.members) {
+                        for (member in it.value.data) {
                             membersList.add(
                                 MemberDto(
-                                    member.User.picture?:"",
+                                    member.id.toInt(),
+                                    member.userId.toInt(),
+                                    member.User.picture ?: "",
                                     member.isActive,
-                                    member.User.fullName?:"",
-                                    "profession missing",
-                                    "rating missing",
+                                    member.User.fullName ?: "Name",
+                                    "",
+                                    "${member.tRating} (${member.numReviews} ${
+                                        if (member.numReviews.toInt() == 1) "review" else "reviews"
+                                    })",
                                     member.Saloon.name,
-                                    4
+                                    member.todayBookings,
+                                    member.isAdmin
                                 )
                             )
                         }
@@ -128,6 +153,80 @@ class FragmentSaloonMembers :
             }
         }
         viewModel.getMembers(selectedSaloon?.id.toString())
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+    private fun inActiveMember(id: Int) {
+        viewModel.inActiveMember.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    //(activity as HomeActivity?)?.hideLoadingIndicator()
+                    requireView().snackbar("Member inactive successfully")
+                   getMembers()
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.inActiveMember(id)
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
+    private fun deleteMember(id: Int) {
+        viewModel.deleteMember.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                   // (activity as HomeActivity?)?.hideLoadingIndicator()
+                    requireView().snackbar("Member deleted successfully")
+                   getMembers()
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.deleteMember(id)
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+    private fun makeManger(id: Int) {
+        viewModel.makeManger.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    // (activity as HomeActivity?)?.hideLoadingIndicator()
+                    requireView().snackbar("Member marked manager successfully")
+                    //  (activity as HomeActivity?)?.popFragment()
+                    getMembers()
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.makeManager(id)
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 }

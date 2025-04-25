@@ -1,7 +1,10 @@
 package com.tt.muzien.data.repository
 
 import com.tt.muzien.data.network.MemberApi
+import com.tt.muzien.data.requests.AddHolidayRequest
 import com.tt.muzien.data.requests.AddMemberRequest
+import com.tt.muzien.data.requests.AddMemberService
+import com.tt.muzien.data.requests.AddWorkingHourRequest
 
 
 /**
@@ -18,12 +21,62 @@ class MemberRepository(
     ) = safeApiCall {
         api.getMembers()
     }
-    suspend fun getMembers(saloonId: String
+
+    suspend fun getMemberDetails(
+        memberId: Int
+    ) = safeApiCall {
+        api.getMemberDetails(memberId)
+    }
+
+    suspend fun getMembers(
+        saloonId: String
     ) = safeApiCall {
         api.getMembers(saloonId)
     }
-    suspend fun sendInvite(request: AddMemberRequest
+
+    suspend fun sendInvite(
+        request: AddMemberRequest
     ) = safeApiCall {
         api.sendInvite(request)
+    }
+
+    suspend fun inActiveMember(memberId: Int) = safeApiCall {
+        api.inActiveMember(memberId)
+    }
+
+    suspend fun deleteMember(memberId: Int) = safeApiCall {
+        api.deleteMember(memberId)
+    }
+
+    suspend fun makeManager(memberId: Int) = safeApiCall {
+        api.makeManager(memberId)
+    }
+
+    suspend fun getLatestInvite() = safeApiCall {
+        api.getLatestInvite()
+    }
+
+    suspend fun acceptInvite(inviteId: Int) = safeApiCall {
+        api.acceptInvite(inviteId)
+    }
+
+    suspend fun addService(userId: Int, request: AddMemberService) = safeApiCall {
+        api.addService(userId, request)
+    }
+
+    suspend fun addHoliday(userId: Int, request: AddHolidayRequest) = safeApiCall {
+        api.addHoliday(userId, request)
+    }
+
+    suspend fun addWorkingHour(userId: Int, request: AddWorkingHourRequest) = safeApiCall {
+        api.addWorkingHour(userId, request)
+    }
+
+    suspend fun removeWorkingHour(userId: Int, day: String) = safeApiCall {
+        api.removeWorkingHour(userId, day)
+    }
+
+    suspend fun removeHoliday(userId: Int, holidayId: Int) = safeApiCall {
+        api.removeHoliday(userId, holidayId)
     }
 }

@@ -14,8 +14,11 @@ class GetBookingResponse(
 )
 
 data class BookingData(
-    val bookings: List<Booking>,
-    val pagination: Pagination,
+    val items: List<Booking>,
+    val page: Long,
+    val totalPages: Long,
+    val total: Long,
+    val limit: Long,
 )
 
 data class Booking(

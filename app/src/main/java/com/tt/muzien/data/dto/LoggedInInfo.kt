@@ -1,6 +1,6 @@
 package com.tt.muzien.data.dto
 
-import com.tt.muzien.data.responses.UserInfo
+import com.tt.muzien.data.responses.UserData
 
 
 /**
@@ -12,7 +12,7 @@ import com.tt.muzien.data.responses.UserInfo
 object LoggedInInfo {
     var userRole = "Admin"
     var userId: Long = 0
-    var user: UserInfo? = null
+    var user: UserData? = null
     var fullName: String? = null
     var email: String? = null
     var phoneNumber: String? = null

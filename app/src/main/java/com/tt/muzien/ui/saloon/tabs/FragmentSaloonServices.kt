@@ -8,18 +8,14 @@ import android.view.ViewGroup
 import android.widget.ExpandableListView
 import com.tt.muzien.data.dto.SaloonDto
 import com.tt.muzien.data.dto.ServiceInfo
-import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.network.ServiceApi
-import com.tt.muzien.data.repository.HomeRepository
 import com.tt.muzien.data.repository.ServiceRepository
 import com.tt.muzien.databinding.FragmentSaloonServicesBinding
 import com.tt.muzien.ui.adapters.ExpandServiceListAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
-import com.tt.muzien.ui.home.HomeViewModel
-import com.tt.muzien.ui.saloon.SaloonViewModel
 import com.tt.muzien.ui.service.FragmentUpdateService
 import com.tt.muzien.ui.service.ServiceViewModel
 import com.tt.muzien.utilities.Helper
@@ -29,6 +25,7 @@ class FragmentSaloonServices :
     BaseFragment<ServiceViewModel, FragmentSaloonServicesBinding, ServiceRepository>() {
     private val servicesMap = HashMap<String, List<ServiceInfo>>()
     var saloonId: Int? = 1
+    var servicesCount: Int? = 0
     var selectedSaloon: SaloonDto? = null
     private val groupTitles = arrayListOf<String>()
     private val groupServices = arrayListOf<String>()
@@ -37,13 +34,19 @@ class FragmentSaloonServices :
         getCategories()
         binding.llAdd.setOnClickListener {
             var nextFragment = FragmentAddSaloonServices()
-            nextFragment.saloonId=saloonId
+            nextFragment.saloonId = saloonId
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
     }
 
     private fun setServicesAdopter() {
-
+        if (servicesMap.isNotEmpty()) {
+            binding.rcyServices.visibility = View.VISIBLE
+            binding.llNoDta.visibility = View.GONE
+        } else {
+            binding.rcyServices.visibility = View.GONE
+            binding.llNoDta.visibility = View.VISIBLE
+        }
         val adapter = ExpandServiceListAdapter(requireContext(), groupTitles, servicesMap)
         binding.rcyServices.setAdapter(adapter)
         // Adjust height dynamically
@@ -62,16 +65,17 @@ class FragmentSaloonServices :
             val group = groupTitles[groupPosition]
             val child = servicesMap[group]?.get(childPosition)
             var nextFragment = FragmentUpdateService()
-            nextFragment.service=child
-            nextFragment.category=group
+            nextFragment.service = child
+            nextFragment.category = group
             (activity as HomeActivity?)?.loadFragment(nextFragment)
             true
         }
 
         // Handle group expansion
         binding.rcyServices.setOnGroupExpandListener { groupPosition ->
+
             adjustExpandableListViewHeight(binding.rcyServices)
-        //            Toast.makeText(
+            //            Toast.makeText(
 //                requireContext(),
 //                "Expanded: ${groupTitles[groupPosition]}",
 //                Toast.LENGTH_SHORT
@@ -79,6 +83,7 @@ class FragmentSaloonServices :
         }
 
     }
+
     private fun adjustExpandableListViewHeight(listView: ExpandableListView) {
         val adapter = listView.expandableListAdapter ?: return
 
@@ -87,14 +92,14 @@ class FragmentSaloonServices :
             val groupItem = adapter.getGroupView(i, false, null, listView)
             groupItem.measure(0, 0)
             Log.d("ExpandableListView", "parent height: ${groupItem.measuredHeight}")
-            totalHeight += Helper.dpToPx(requireContext(),50)
+            totalHeight += Helper.dpToPx(requireContext(), 50)
 
             if (listView.isGroupExpanded(i)) {
                 for (j in 0 until adapter.getChildrenCount(i)) {
                     val childItem = adapter.getChildView(i, j, false, null, listView)
                     childItem.measure(0, 0)
                     Log.d("ExpandableListView", "child height: ${childItem.measuredHeight}")
-                    totalHeight += Helper.dpToPx(requireContext(),115)
+                    totalHeight += Helper.dpToPx(requireContext(), 115)
                 }
             }
         }
@@ -103,6 +108,7 @@ class FragmentSaloonServices :
         params.height = totalHeight + (listView.dividerHeight * (adapter.groupCount - 1))
         listView.layoutParams = params
     }
+
     override fun getViewModel(): Class<ServiceViewModel> {
         return ServiceViewModel::class.java
     }
@@ -113,7 +119,8 @@ class FragmentSaloonServices :
     ) = FragmentSaloonServicesBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        ServiceRepository(remoteDataSource.buildApi(ServiceApi::class.java,requireContext()))
+        ServiceRepository(remoteDataSource.buildApi(ServiceApi::class.java, requireContext()))
+
     private fun getCategories() {
         viewModel.getCategories.observe(viewLifecycleOwner) {
 
@@ -125,7 +132,7 @@ class FragmentSaloonServices :
                         servicesMap.clear()
                         groupServices.clear()
                         groupTitles.clear()
-                        for (category in it.value.data.categories) {
+                        for (category in it.value.data) {
                             groupTitles.add(category?.name ?: "")
                             groupServices.add("${category?.services?.size}")
                             val servicesList = arrayListOf<ServiceInfo>()
@@ -158,7 +165,7 @@ class FragmentSaloonServices :
                 else -> {}
             }
         }
-        viewModel.getCategories()
+        viewModel.getCategories(selectedSaloon?.id.toString())
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 }

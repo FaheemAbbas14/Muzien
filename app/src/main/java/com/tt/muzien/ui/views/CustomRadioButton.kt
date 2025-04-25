@@ -13,6 +13,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.tt.muzien.R
 
 @SuppressLint("AppCompatCustomView")
@@ -23,7 +24,8 @@ class CustomRadioButton @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
     private val checkIcon: ImageView
-
+    private val iconView: ImageView
+    private val textView: TextView
     var isChecked: Boolean = false
         set(value) {
             field = value
@@ -37,7 +39,26 @@ class CustomRadioButton @JvmOverloads constructor(
 
         // Initialize views
         checkIcon = findViewById(R.id.checkIcon)
+        iconView = findViewById(R.id.radioImage)
+        textView = findViewById(R.id.radioText)
+        // Read custom attributes
+        context.theme.obtainStyledAttributes(
+            attrs,
+            R.styleable.CustomRadioButton,
+            0, 0
+        ).apply {
+            try {
+                val imageRes = getResourceId(R.styleable.CustomRadioButton_image, 0)
+                val text = getString(R.styleable.CustomRadioButton_text)
 
+                if (imageRes != 0) {
+                    iconView.setImageResource(imageRes)
+                }
+                textView.text = text
+            } finally {
+                recycle()
+            }
+        }
         // Default state
         isChecked = false
 

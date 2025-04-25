@@ -19,7 +19,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -209,12 +208,14 @@ class FragmentSignup : BaseFragment<AuthViewModel, FragmentSignupBinding, AuthRe
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onPause() {
         super.onPause()
+        (activity as AuthActivity?)?.setStatusBarIconColor(requireActivity().window, false)
         (activity as AuthActivity?)?.changeStatusBarColor(R.color.colorPrimary)
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onResume() {
         super.onResume()
+        (activity as AuthActivity?)?.setStatusBarIconColor(requireActivity().window, true)
         (activity as AuthActivity?)?.changeStatusBarColor(R.color.white)
     }
 
@@ -317,25 +318,10 @@ class FragmentSignup : BaseFragment<AuthViewModel, FragmentSignupBinding, AuthRe
             when (it) {
                 is Resource.Success -> {
                     Log.d("response", "success " + it.toString())
-                    (activity as AuthActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
-                        LoggedInInfo.user = it.value.data.user
-                        val gson = Gson()
-                        val userInfo = gson.toJson(it.value.data.user)
-                        PreferenceManager.getInstance(requireActivity())
-                            .putString(Keys.User, userInfo)
-                        if (it.value.data.user.fullName == null) {
-                            var nextFragment = FragmentSignup()
-                            (activity as AuthActivity?)?.loadFragment(nextFragment)
-
-                        } else {
-                            val activity = HomeActivity::class.java
-                            requireActivity().startNewActivity(activity)
-                            requireActivity().finish()
-//                            Toast.makeText(requireContext(), "Login success", Toast.LENGTH_SHORT)
-//                                .show()
-                        }
+                        getUserData()
                     } else {
+                        (activity as AuthActivity?)?.hideLoadingIndicator()
                         requireView().snackbar(it.value.message)
                     }
                 }
@@ -356,6 +342,44 @@ class FragmentSignup : BaseFragment<AuthViewModel, FragmentSignupBinding, AuthRe
         )
         viewModel.updateUser(request)
         (activity as AuthActivity?)?.showLoadingIndicator()
+    }
+
+    private fun getUserData() {
+        viewModel.my.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as AuthActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        LoggedInInfo.user = it.value.data
+                        val gson = Gson()
+                        val userInfo = gson.toJson(it.value.data)
+                        PreferenceManager.getInstance(requireActivity())
+                            .putString(Keys.User, userInfo)
+                        val activity = HomeActivity::class.java
+                        requireActivity().startNewActivity(activity)
+                        requireActivity().finish()
+//                            Toast.makeText(requireContext(), "Login success", Toast.LENGTH_SHORT)
+//                                .show()
+
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as AuthActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.my(LoggedInInfo.userId)
+        // (activity as AuthActivity?)?.showLoadingIndicator()
     }
 
     private fun uploadPhoto() {

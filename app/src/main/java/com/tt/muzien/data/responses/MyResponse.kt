@@ -14,22 +14,18 @@ data class MyResponse(
 )
 
 data class UserData(
-    val user: UserInfo,
-)
-
-data class UserInfo(
     val id: Long,
-    val fullName: String?,
-    val email: String?,
+    val fullName: String,
+    val email: String,
     val phoneNumber: String,
     val nationality: String,
-    var picture: String,
+    val picture: String,
     val verified: Boolean,
-    val role: String,
+    var role: String,
     val credit: Long,
     val numReviews: Long,
     val tRating: Long,
     val createdAt: String,
     val updatedAt: String,
+    var status: String?="",
 )
-

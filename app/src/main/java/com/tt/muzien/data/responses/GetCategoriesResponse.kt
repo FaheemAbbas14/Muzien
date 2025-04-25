@@ -9,12 +9,10 @@ package com.tt.muzien.data.responses
  */
 data class GetCategoriesResponse(
     val status: Int,
-    val data: CategoryData,
+    val message: String,
+    val data: List<Category?>,
 )
 
-data class CategoryData(
-    val categories: List<Category?>,
-)
 data class Category(
     val id: Int,
     val name: String,

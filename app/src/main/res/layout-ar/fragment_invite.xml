@@ -106,8 +106,8 @@
         app:layout_constraintTop_toBottomOf="@+id/txtText">
 
 
-        <EditText
-            android:id="@+id/edtInput"
+        <AutoCompleteTextView
+            android:id="@+id/edtSaloon"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
@@ -122,7 +122,6 @@
             android:textColor="@color/colorTextDefault"
             android:textFontWeight="400"
             android:textSize="14sp" />
-
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -14,7 +14,11 @@ data class GetSubscriptionsResponse(
 )
 
 data class SubscriptionData(
-    val subscriptions: List<Subscription>,
+    val items: List<Subscription>,
+    val page: Long,
+    val totalPages: Long,
+    val total: Long,
+    val limit: Long,
 )
 
 data class Subscription(

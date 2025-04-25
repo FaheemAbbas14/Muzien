@@ -83,7 +83,7 @@ class FragmentManageSubscription :
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
                         subscriptiopnsList.clear()
-                        for (subscription in it.value.data.subscriptions) {
+                        for (subscription in it.value.data.items) {
                             subscriptiopnsList.add(
                                 SubscriptionData(subscription.id.toString(), subscription.Saloon.name, subscription.startDate, subscription.validTill)
                             )

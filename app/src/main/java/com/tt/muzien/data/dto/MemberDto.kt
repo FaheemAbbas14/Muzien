@@ -7,4 +7,4 @@ package com.tt.muzien.data.dto
  * faheemabbas60@yahoo.com
  * +923115284424
  */
-data class MemberDto(val profilePic: String,val status: Boolean,val name: String,val profession: String,val rating: String,val style: String,val bookings: Int)
+data class MemberDto(val id: Int,val userId: Int,val profilePic: String,val status: Boolean,val name: String,val profession: String,val rating: String,val style: String,val bookings: String,val isManger: Boolean)

@@ -73,7 +73,7 @@
                     android:gravity="center"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
-                    android:text="@string/open_today"
+
                     android:textColor="@color/white"
                     android:textFontWeight="500"
                     android:textSize="8sp"
@@ -98,7 +98,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="60dp"
                     android:fontFamily="@font/manrope_regular"
-                    android:text="@string/jennifer_austin"
+
                     android:textColor="@color/textBlack"
                     android:textFontWeight="700"
                     android:textSize="22sp"
@@ -111,7 +111,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/manrope_regular"
-                    android:text="@string/france"
+
                     android:textColor="@color/black_shade1"
                     android:textFontWeight="400"
                     android:textSize="12sp"
@@ -129,6 +129,7 @@
                     android:textColor="@color/black_shade1"
                     android:textFontWeight="400"
                     android:textSize="12sp"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="@+id/txtCountry"
                     app:layout_constraintStart_toStartOf="@+id/txtCountry"
                     app:layout_constraintTop_toBottomOf="@+id/txtCountry" />
@@ -167,7 +168,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/manrope_regular"
                         android:gravity="center"
-                        android:text="@string/_4_today"
+
                         android:textColor="@color/black_shade1"
                         android:textFontWeight="400"
                         android:textSize="12sp" />
@@ -177,7 +178,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginEnd="8dp"
-                        android:src="@drawable/arrow_left" />
+                        android:src="@drawable/arrow_right" />
 
 
                 </LinearLayout>
@@ -214,7 +215,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/manrope_regular"
                         android:gravity="center"
-                        android:text="@string/_4_5_10_reviews"
+
                         android:textColor="@color/black_shade1"
                         android:textFontWeight="400"
                         android:textSize="12sp" />
@@ -224,7 +225,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginEnd="8dp"
-                        android:src="@drawable/arrow_left" />
+                        android:src="@drawable/arrow_right" />
 
 
                 </LinearLayout>
@@ -282,12 +283,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/white_rounded10"
-                    android:paddingStart="17dp"
-                    android:paddingTop="15dp"
-                    android:paddingEnd="7dp"
-                    android:paddingBottom="15dp"
-                    app:layout_constraintEnd_toEndOf="@id/llBookings"
-                    app:layout_constraintStart_toStartOf="@id/llBookings"
+                    android:padding="10dp"
+                    app:layout_constraintEnd_toEndOf="@+id/llBookings"
+                    app:layout_constraintStart_toStartOf="@+id/llBookings"
                     app:layout_constraintTop_toBottomOf="@+id/llServices">
 
                     <TextView
@@ -327,13 +325,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="20dp"
                     android:background="@drawable/white_rounded10"
-                    android:paddingStart="17dp"
-                    android:paddingTop="15dp"
-                    android:paddingEnd="7dp"
-                    android:paddingBottom="15dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:padding="10dp"
                     app:layout_constraintEnd_toEndOf="@+id/cnstWorkingHours"
                     app:layout_constraintStart_toStartOf="@+id/cnstWorkingHours"
                     app:layout_constraintTop_toBottomOf="@+id/cnstWorkingHours">
@@ -364,6 +357,14 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/txtHoliday"
                         app:layout_constraintTop_toBottomOf="@+id/txtHoliday" />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcyHolidays"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/txtHoliday"
+                        app:layout_constraintTop_toBottomOf="@+id/txtHolidaysData" />
 
                     <ImageView
                         android:id="@+id/imgAddHoliday"
@@ -371,8 +372,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:src="@drawable/blue_add"
-                        app:layout_constraintStart_toStartOf="@+id/txtHolidaysData"
-                        app:layout_constraintTop_toBottomOf="@+id/txtHolidaysData" />
+                        app:layout_constraintStart_toStartOf="@+id/txtHoliday"
+                        app:layout_constraintTop_toBottomOf="@+id/rcyHolidays" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <ImageView

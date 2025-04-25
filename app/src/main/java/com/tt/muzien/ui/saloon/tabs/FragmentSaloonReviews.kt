@@ -29,12 +29,24 @@ class FragmentSaloonReviews :
     private val reviewsList = arrayListOf<ReviewsInfo>()
     var selectedSaloon: SaloonDto? = null
     var avgRating: Double = 0.0
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getReviews()
     }
 
     private fun setReviewsAdopter() {
+        if (reviewsList.isNotEmpty()) {
+            binding.txtRatings.visibility = View.VISIBLE
+            binding.imageView2.visibility = View.VISIBLE
+            binding.cnstData.visibility = View.VISIBLE
+            binding.llNoDta.visibility = View.GONE
+        } else {
+            binding.txtRatings.visibility = View.GONE
+            binding.imageView2.visibility = View.GONE
+            binding.cnstData.visibility = View.GONE
+            binding.llNoDta.visibility = View.VISIBLE
+        }
         binding.txtRatings.text =
             "$avgRating (${reviewsList.size}${if (reviewsList.size == 1) " review" else " reviews"})"
         //  binding.txtHeading.text = "Members(${membersList.size})"
@@ -79,7 +91,7 @@ class FragmentSaloonReviews :
                     if (it.value.status != 0) {
                         reviewsList.clear()
                         var totalRating = 0.0
-                        for (review in it.value.data.reviews) {
+                        for (review in it.value.data.items) {
                             totalRating += review.rating
                             val photos = arrayListOf<String>()
                             for (image in review.images) {
@@ -104,7 +116,7 @@ class FragmentSaloonReviews :
                                 )
                             )
                         }
-                        avgRating = totalRating / it.value.data.reviews.size
+                        avgRating = totalRating / it.value.data.items.size
                         setReviewsAdopter()
                     } else {
                         requireView().snackbar(it.value.message)

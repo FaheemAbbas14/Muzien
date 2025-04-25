@@ -75,7 +75,7 @@
                     android:gravity="center"
                     android:paddingStart="10dp"
                     android:paddingEnd="10dp"
-                    android:text="@string/open_today"
+
                     android:textColor="@color/white"
                     android:textFontWeight="500"
                     android:textSize="8sp"
@@ -100,7 +100,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="60dp"
                     android:fontFamily="@font/manrope_regular"
-                    android:text="@string/jennifer_austin"
+
                     android:textColor="@color/textBlack"
                     android:textFontWeight="700"
                     android:textSize="22sp"
@@ -113,7 +113,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/manrope_regular"
-                    android:text="@string/france"
+
                     android:textColor="@color/black_shade1"
                     android:textFontWeight="400"
                     android:textSize="12sp"
@@ -127,10 +127,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:fontFamily="@font/manrope_regular"
-                    android:text="@string/the_style_zone"
+
                     android:textColor="@color/black_shade1"
                     android:textFontWeight="400"
                     android:textSize="12sp"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="@+id/txtCountry"
                     app:layout_constraintStart_toStartOf="@+id/txtCountry"
                     app:layout_constraintTop_toBottomOf="@+id/txtCountry" />
@@ -169,7 +170,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/manrope_regular"
                         android:gravity="center"
-                        android:text="@string/_4_today"
+
                         android:textColor="@color/black_shade1"
                         android:textFontWeight="400"
                         android:textSize="12sp" />
@@ -216,7 +217,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/manrope_regular"
                         android:gravity="center"
-                        android:text="@string/_4_5_10_reviews"
+
                         android:textColor="@color/black_shade1"
                         android:textFontWeight="400"
                         android:textSize="12sp" />

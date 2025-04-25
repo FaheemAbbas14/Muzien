@@ -21,4 +21,19 @@ class BookingRepository(
     ) = safeApiCall {
         api.getBookings(saloonIds, startDate, endDate, status,page)
     }
+    suspend fun getCalendarbar(
+        saloonIds: String? = null,
+        startDate: String? = null,
+        endDate: String? = null
+    ) = safeApiCall {
+        api.getCalendarbar(saloonIds, startDate, endDate)
+    }
+    suspend fun getAnalytics(
+        saloonIds: String? = null,
+        startDate: String? = null,
+        endDate: String? = null
+    ) = safeApiCall {
+        api.getAnalytics(saloonIds, startDate, endDate)
+    }
+
 }

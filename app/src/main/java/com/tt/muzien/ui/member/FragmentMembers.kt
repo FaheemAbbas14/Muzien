@@ -11,6 +11,7 @@ import com.tt.muzien.data.network.MemberApi
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.MemberRepository
 import com.tt.muzien.databinding.FragmentMembersBinding
+import com.tt.muzien.interfaces.OnStateChange
 import com.tt.muzien.ui.adapters.MembersListAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
@@ -49,6 +50,13 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
     }
 
     private fun setMemberAdopter() {
+        if (membersList.isNotEmpty()) {
+            binding.cnstData.visibility = View.VISIBLE
+            binding.llNoDta.visibility = View.GONE
+        } else {
+            binding.cnstData.visibility = View.GONE
+            binding.llNoDta.visibility = View.VISIBLE
+        }
         binding.txtHeading.text = "Members(${membersList.size})"
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(position: Int) {
@@ -58,13 +66,26 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
 
             }
         }
+        val stateChangeListener = object : OnStateChange {
+
+            override fun onStateChange(position: Int, state: Int) {
+                if (state == 1) {
+                    makeManger(membersList[position].id)
+                } else if (state == 2) {
+                    inActiveMember(membersList[position].id)
+                } else {
+                    deleteMember(membersList[position].id)
+                }
+            }
+        }
         binding.rcyMembers.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
         binding.rcyMembers.adapter =
             MembersListAdapter(
                 membersList,
                 requireContext(),
-                clickListener
+                clickListener,
+                stateChangeListener
             )
     }
 
@@ -89,16 +110,21 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
                         membersList.clear()
-                        for (member in it.value.data.members) {
+                        for (member in it.value.data) {
                             membersList.add(
                                 MemberDto(
-                                    member.User.picture?:"",
+                                    member.id.toInt(),
+                                    member.userId.toInt(),
+                                    member.User.picture,
                                     member.isActive,
-                                    member.User.fullName?:"",
-                                    "profession missing",
-                                    "rating missing",
+                                    member.User.fullName ?: "Name",
+                                    "",
+                                    "${member.tRating} (${member.numReviews} ${
+                                        if (member.numReviews.toInt() == 1) "review" else "reviews"
+                                    })",
                                     member.Saloon.name,
-                                    4
+                                    member.todayBookings,
+                                    member.isAdmin
                                 )
                             )
                         }
@@ -119,6 +145,83 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
             }
         }
         viewModel.getMembers()
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
+    private fun inActiveMember(id: Int) {
+        viewModel.inActiveMember.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    // (activity as HomeActivity?)?.hideLoadingIndicator()
+                    requireView().snackbar("Member inactive successfully")
+                    getMembers()
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.inActiveMember(id)
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
+    private fun deleteMember(id: Int) {
+        viewModel.deleteMember.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    // (activity as HomeActivity?)?.hideLoadingIndicator()
+                    requireView().snackbar("Member deleted successfully")
+                    //  (activity as HomeActivity?)?.popFragment()
+                    getMembers()
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.deleteMember(id)
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
+    private fun makeManger(id: Int) {
+        viewModel.makeManger.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    // (activity as HomeActivity?)?.hideLoadingIndicator()
+                    requireView().snackbar("Member marked manager successfully")
+                    //  (activity as HomeActivity?)?.popFragment()
+                    getMembers()
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.makeManager(id)
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 }

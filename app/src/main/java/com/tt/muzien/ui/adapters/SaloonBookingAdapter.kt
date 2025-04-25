@@ -39,7 +39,8 @@ class SaloonBookingAdapter(
     private val context: Context,
     private val listener: OnItemClickListner,
     private var bookingStatus: String? = null,
-    private var isFromMain: Boolean = false
+    private var isFromMain: Boolean = false,
+    private var isFromServiceProvider: Boolean = false
 ) :
     RecyclerView.Adapter<SaloonBookingAdapter.MyViewHolder>() {
 
@@ -47,6 +48,8 @@ class SaloonBookingAdapter(
         View.OnClickListener {
         val mainCard: CardView = itemView.findViewById(R.id.mainCard)
         val imgProfilePic: ImageView = itemView.findViewById(R.id.imgProfilePic)
+        val imgName: ImageView = itemView.findViewById(R.id.imgName)
+        val imgUserName: ImageView = itemView.findViewById(R.id.imgUserName)
         val txtName: TextView = itemView.findViewById(R.id.txtName)
         val txtStyle: TextView = itemView.findViewById(R.id.txtStyle)
         val txtUserName: TextView = itemView.findViewById(R.id.txtUserName)
@@ -93,6 +96,14 @@ class SaloonBookingAdapter(
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         try {
+            if (isFromServiceProvider){
+                holder.imgName.visibility= View.GONE
+                holder.txtStyle.visibility= View.GONE
+                holder.imgUserName.visibility= View.GONE
+                holder.txtUserName.visibility= View.GONE
+                holder.txtCancel.visibility= View.GONE
+                holder.imgBarCode.visibility= View.GONE
+            }
             var item: SaloonBookingData = itemList[position]
             if (bookingStatus == "completed") {
                 holder.llReview.visibility = View.VISIBLE

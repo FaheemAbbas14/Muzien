@@ -12,13 +12,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
 class GetSaloonDetailResponse(
     val status: Int,
     val message: String,
-    val data: SaloonDetailsData,
+    val data: SaloonDetailsInfo,
 )
-
-data class SaloonDetailsData(
-    val saloon: SaloonDetailsInfo,
-)
-
 data class SaloonDetailsInfo(
     val id: Long,
     val ownerId: Long,

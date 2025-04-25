@@ -383,12 +383,12 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
                     (activity as AuthActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
                         stopTimer()
-                        LoggedInInfo.user = it.value.data?.user
+                        LoggedInInfo.user = it.value.data
                         val gson = Gson()
-                        val userInfo = gson.toJson(it.value.data?.user)
+                        val userInfo = gson.toJson(it.value.data)
                         PreferenceManager.getInstance(requireActivity())
                             .putString(Keys.User, userInfo)
-                        if (it.value.data?.user?.fullName == null) {
+                        if (it.value.data?.fullName == null) {
                             var nextFragment = FragmentSignup()
                             (activity as AuthActivity?)?.loadFragment(nextFragment)
 

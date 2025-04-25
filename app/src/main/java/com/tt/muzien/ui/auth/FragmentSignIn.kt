@@ -50,8 +50,18 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
                 }
             }
         }
-        binding.countrySpinner.setCountryForNameCode("SA")
-        selectedCountry = binding.countrySpinner.selectedCountryName
+        if (LoggedInInfo.phoneNumber != null && LoggedInInfo.phoneNumber != "") {
+            var (countryCode, phoneNumber) = splitString(LoggedInInfo.phoneNumber!!)
+            binding.txtCountryCode.text = countryCode
+            countryCode = countryCode.replace("+", "")
+            binding.edtPhoneNumber.text =
+                Editable.Factory.getInstance().newEditable(phoneNumber)
+            binding.countrySpinner.setCountryForPhoneCode(Integer.parseInt(countryCode))
+            selectedCountry = binding.countrySpinner.selectedCountryName
+        } else {
+            binding.countrySpinner.setCountryForNameCode("SA")
+            selectedCountry = binding.countrySpinner.selectedCountryName
+        }
         binding.countrySpinner.setOnCountryChangeListener {
             selectedCountry = binding.countrySpinner.selectedCountryName
             val countryCode = binding.countrySpinner.selectedCountryCode
@@ -209,6 +219,8 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
     }
 
     private fun sendOtpNormal(data: String) {
+
+        LoggedInInfo.phoneNumber = data
         viewModel.login.observe(viewLifecycleOwner) {
 
             when (it) {
@@ -216,7 +228,6 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
                     Log.d("response", "success " + it.toString())
                     (activity as AuthActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
-
                         LoggedInInfo.userId = it.value.data?.otp?.userId!!
                         var nextFragment = FragmentOTP()
                         nextFragment.isFromSignup = isFromSignup
@@ -244,6 +255,8 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
     }
 
     private fun register(data: String) {
+
+        LoggedInInfo.phoneNumber = data
         viewModel.register.observe(viewLifecycleOwner) {
 
             when (it) {
@@ -255,6 +268,7 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
                         var nextFragment = FragmentOTP()
                         nextFragment.isFromSignup = isFromSignup
                         nextFragment.phone = data
+                        nextFragment.expiryTime = it.value.data.otp.expiryDate
                         (activity as AuthActivity?)?.loadFragment(nextFragment)
                     } else {
                         requireView().snackbar(it.value.message)
@@ -274,5 +288,18 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
         var request = RegisterRequest(data, "service-provider")
         viewModel.register(request)
         (activity as AuthActivity?)?.showLoadingIndicator()
+    }
+
+    fun splitString(input: String): Pair<String, String> {
+        return if (input.length >= 3) {
+            val firstPart = input.substring(0, 3)  // Get first 3 characters
+            val remainingPart = input.drop(3)      // Get the rest of the string
+            Pair(firstPart, remainingPart)
+        } else {
+            Pair(
+                input,
+                ""
+            )  // If input has less than 3 characters, return the full string and empty
+        }
     }
 }

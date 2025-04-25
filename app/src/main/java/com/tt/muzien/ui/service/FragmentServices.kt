@@ -49,7 +49,13 @@ class FragmentServices :
     }
 
     private fun setServicesAdopter() {
-
+        if (servicesMap.isNotEmpty()) {
+            binding.cnstData.visibility = View.VISIBLE
+            binding.llNoDta.visibility = View.GONE
+        } else {
+            binding.cnstData.visibility = View.GONE
+            binding.llNoDta.visibility = View.VISIBLE
+        }
         val adapter = ExpandServiceListAdapter(
             requireContext(),
             groupTitles,
@@ -104,7 +110,7 @@ class FragmentServices :
                         servicesMap.clear()
                         groupServices.clear()
                         groupTitles.clear()
-                        for (category in it.value.data.categories) {
+                        for (category in it.value.data) {
                             groupTitles.add(category?.name ?: "")
                             groupServices.add("${category?.services?.size}")
                             val servicesList = arrayListOf<ServiceInfo>()

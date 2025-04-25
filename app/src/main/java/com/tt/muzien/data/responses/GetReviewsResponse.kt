@@ -14,8 +14,11 @@ data class GetReviewsResponse(
 )
 
 data class ReviewData(
-    val reviews: List<Review>,
-    val pagination: Pagination,
+    val items: List<Review>,
+    val page: Long,
+    val totalPages: Long,
+    val total: Long,
+    val limit: Long,
 )
 
 data class Review(

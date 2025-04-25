@@ -2,35 +2,46 @@ package com.tt.muzien.ui.bookings
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import androidx.annotation.RequiresApi
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.FilterData
-import com.tt.muzien.data.network.HomeApi
-import com.tt.muzien.data.repository.HomeRepository
+import com.tt.muzien.data.dto.SaloonDto
+import com.tt.muzien.data.network.Resource
+import com.tt.muzien.data.network.SaloonApi
+import com.tt.muzien.data.repository.SaloonRepository
 import com.tt.muzien.databinding.FragmentBookingFilterBinding
 import com.tt.muzien.ui.base.BaseFragment
+import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
-import com.tt.muzien.ui.home.HomeViewModel
+import com.tt.muzien.ui.saloon.SaloonViewModel
+import com.tt.muzien.ui.snackbar
 import com.tt.muzien.ui.views.CustomCalendar
 import com.tt.muzien.utilities.FilterSelection
 import com.tt.muzien.utilities.TimeHelper
 
 
 class FragmentBookingFilter :
-    BaseFragment<HomeViewModel, FragmentBookingFilterBinding, HomeRepository>() {
+    BaseFragment<SaloonViewModel, FragmentBookingFilterBinding, SaloonRepository>() {
     var selection: String = ""
-    var bookingStatus: String?=null
-    var serviceProvider: String?=null
-    var fromDate: String?=null
-    var toDate: String?=null
+    var bookingStatus: String? = null
+    var serviceProvider: String? = null
+    var fromDate: String? = null
+    var toDate: String? = null
     var isFrom: Boolean = true
     var saloon: String = ""
+    var saloonId = 0
+    private val saloonsList = arrayListOf<String>()
+    private val saloonMap = HashMap<String, SaloonDto>()
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        getSaloons()
         binding.radioBookingStatus.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.rbPending -> {
@@ -138,6 +149,9 @@ class FragmentBookingFilter :
                     serviceProvider = binding.edtProvider.text.toString()
                 }
                 if (saloon != "AllSaloon") {
+                    if (saloonId == 0) {
+                        saloonId = saloonMap[binding.edtSaloon.text.toString()]?.id ?: 0
+                    }
                     saloon = binding.edtSaloon.text.toString()
                 }
                 FilterSelection.filterData =
@@ -148,7 +162,8 @@ class FragmentBookingFilter :
                         false,
                         bookingStatus,
                         serviceProvider,
-                        saloon
+                        saloon,
+                        saloonId = saloonId
                     )
                 (activity as HomeActivity?)?.popFragment()
             }
@@ -201,8 +216,8 @@ class FragmentBookingFilter :
         return isValid
     }
 
-    override fun getViewModel(): Class<HomeViewModel> {
-        return HomeViewModel::class.java
+    override fun getViewModel(): Class<SaloonViewModel> {
+        return SaloonViewModel::class.java
     }
 
     override fun getFragmentBinding(
@@ -211,16 +226,80 @@ class FragmentBookingFilter :
     ) = FragmentBookingFilterBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        HomeRepository(remoteDataSource.buildApi(HomeApi::class.java,requireContext()), userPreferences)
+        SaloonRepository(
+            remoteDataSource.buildApi(SaloonApi::class.java, requireContext())
+        )
 
     override fun onResume() {
         super.onResume()
         (activity as HomeActivity?)?.hideTabs()
+        (activity as HomeActivity?)?.setSystemWindow(true)
     }
 
     override fun onPause() {
         super.onPause()
         (activity as HomeActivity?)?.showTabs()
+        (activity as HomeActivity?)?.setSystemWindow(true)
     }
 
+    private fun getSaloons() {
+        viewModel.getSaloon.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        saloonsList.clear()
+                        for (saloon in it.value.data.items) {
+                            if (!saloonsList.contains(saloon.name)) {
+                                saloonsList.add(saloon.name)
+                                var saloonData = SaloonDto(
+                                    saloon.id.toInt(),
+                                    saloon.SaloonImages,
+                                    saloon.name,
+                                    if (saloon.status == "open") true else false,
+                                    saloon.address ?: "",
+                                    "${saloon.tRating} (${saloon.numReviews} ${
+                                        if (saloon.numReviews.toInt() == 1) "review" else "reviews"
+                                    })",
+                                    saloon.SaloonWorkHours,
+                                    saloon.locationLat.toDouble(), saloon.locationLong.toDouble()
+                                )
+                                saloonMap.put(saloon.name, saloonData)
+                            }
+
+
+                        }
+                        setSaloonAdopter()
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.getSaloons()
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
+    private fun setSaloonAdopter() {
+        // Adapter to link the list with AutoCompleteTextView
+        val adapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, saloonsList)
+
+        // Set adapter to AutoCompleteTextView
+        binding.edtSaloon.setAdapter(adapter)
+
+        // Optional: Set the threshold (number of characters before suggestions appear)
+        binding.edtSaloon.threshold = 1
+    }
 }

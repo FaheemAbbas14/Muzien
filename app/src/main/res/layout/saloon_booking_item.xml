@@ -90,6 +90,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
+                    android:id="@+id/imgName"
                     android:layout_width="12dp"
                     android:layout_height="16dp"
                     android:layout_gravity="center"
@@ -119,6 +120,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
+                    android:id="@+id/imgUserName"
                     android:layout_width="12dp"
                     android:layout_height="16dp"
                     android:layout_gravity="center"

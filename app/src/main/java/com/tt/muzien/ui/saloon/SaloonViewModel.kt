@@ -4,12 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.tt.muzien.data.network.Resource
+import com.tt.muzien.data.repository.MemberRepository
 import com.tt.muzien.data.repository.SaloonRepository
+import com.tt.muzien.data.repository.ServiceRepository
 import com.tt.muzien.data.requests.AddHolidayRequest
 import com.tt.muzien.data.requests.AddSubscribtionRequest
 import com.tt.muzien.data.requests.AddWorkingHourRequest
 import com.tt.muzien.data.requests.UpdateSaloonRequest
 import com.tt.muzien.data.responses.AddHolidayResponse
+import com.tt.muzien.data.responses.AddMemberDataResponse
 import com.tt.muzien.data.responses.AddSaloonResponse
 import com.tt.muzien.data.responses.AddSubscribtionResponse
 import com.tt.muzien.data.responses.AddWorkingHourResponse
@@ -34,7 +37,10 @@ import okhttp3.RequestBody
 class SaloonViewModel(
     private val repository: SaloonRepository
 ) : BaseViewModel(repository) {
-
+    private var memberRepository: MemberRepository? = null
+    fun setMemberRepo(memberRepo: MemberRepository) {
+        memberRepository = memberRepo
+    }
     private val _getSaloon: MutableLiveData<Resource<GetSaloonResponse>> = SingleEventLiveData()
     val getSaloon: LiveData<Resource<GetSaloonResponse>> get() = _getSaloon
 
@@ -66,6 +72,10 @@ class SaloonViewModel(
     private val _addSubscriptions: MutableLiveData<Resource<AddSubscribtionResponse>> =
         SingleEventLiveData()
     val addSubscriptions: LiveData<Resource<AddSubscribtionResponse>> get() = _addSubscriptions
+    private val _addMemberData: MutableLiveData<Resource<AddMemberDataResponse>> =
+        SingleEventLiveData()
+    val addMemberData: LiveData<Resource<AddMemberDataResponse>> get() = _addMemberData
+
 
     fun getSaloons(page: Int? = null) = viewModelScope.launch {
         _getSaloon.value = repository.getSaloons(page)
@@ -145,5 +155,12 @@ class SaloonViewModel(
 
     fun addSubscriptions(saloonId: Int, request: AddSubscribtionRequest) = viewModelScope.launch {
         _addSubscriptions.value = repository.addSubscriptions(saloonId, request)
+    }
+    fun addMemberHoliday(userId: Int, request: AddHolidayRequest) = viewModelScope.launch {
+        _addMemberData.value = memberRepository?.addHoliday(userId, request)
+    }
+
+    fun addMemberWorkingHour(userId: Int, request: AddWorkingHourRequest) = viewModelScope.launch {
+        _addMemberData.value = memberRepository?.addWorkingHour(userId, request)
     }
 }

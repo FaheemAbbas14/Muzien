@@ -14,8 +14,11 @@ data class GetSaloonResponse(
 )
 
 data class SaloonData(
-    val saloons: List<SaloonInfo>,
-    val pagination: Pagination,
+    val items: List<SaloonInfo>,
+    val page: Long,
+    val totalPages: Long,
+    val total: Long,
+    val limit: Long,
 )
 
 data class SaloonInfo(
@@ -34,6 +37,7 @@ data class SaloonInfo(
     val SaloonImages: List<SaloonImage>,
     val SaloonWorkHours: List<SaloonWorkHour>,
     val SaloonHolidays: List<SaloonHoliday>,
+    val status: String,
 )
 
 data class SaloonImage(

@@ -23,12 +23,16 @@ import com.tt.muzien.constants.Keys
 import com.tt.muzien.data.dto.LoggedInInfo
 import com.tt.muzien.data.dto.SaloonDto
 import com.tt.muzien.data.network.AuthApi
+import com.tt.muzien.data.network.MemberApi
 import com.tt.muzien.data.network.RemoteDataSource
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.network.SaloonApi
+import com.tt.muzien.data.network.ServiceApi
 import com.tt.muzien.data.network.UserApi
 import com.tt.muzien.data.repository.AuthRepository
+import com.tt.muzien.data.repository.MemberRepository
 import com.tt.muzien.data.repository.SaloonRepository
+import com.tt.muzien.data.repository.ServiceRepository
 import com.tt.muzien.data.repository.UserRepository
 import com.tt.muzien.databinding.ActivityHomeBinding
 import com.tt.muzien.ui.auth.AuthActivity
@@ -38,6 +42,7 @@ import com.tt.muzien.ui.bottomSheets.AddBottomSheet
 import com.tt.muzien.ui.notifications.FragmentNotifications
 import com.tt.muzien.ui.profile.FragmentProfile
 import com.tt.muzien.ui.saloon.FragmentAddSaloon
+import com.tt.muzien.ui.saloon.SaloonViewModel
 import com.tt.muzien.ui.saloon.tabs.FragmentAddSaloonMember
 import com.tt.muzien.ui.saloon.tabs.FragmentAddSaloonServices
 import com.tt.muzien.ui.startNewActivity
@@ -53,11 +58,13 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
     private lateinit var customLoadingIndicator: CustomLoadingIndicator
     var selectedTab: Int = R.id.rdoAnalytics
+    var assignedSaloon: SaloonDto? = null
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+       //  LoggedInInfo.user?.role = "salon-manager"
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         changeStatusBarColor(Color.TRANSPARENT)
@@ -67,85 +74,82 @@ class HomeActivity : AppCompatActivity() {
         setUserData()
         // Default fragment
         if (LoggedInInfo.user?.role == "salon-manager") {
-            var nextFragment = SaloonManagerDashboard()
-            nextFragment.selectedSaloon = SaloonDto(
-                0,
-                listOf(),
-                "The Style Zone",
-                true,
-                "Rd. 2121 Alamal Dist. 12643 Riyadh SA",
-                "4.5 (2398 reviews)",
-                listOf()
-            )
+            getSaloons()
+
+        } else if (LoggedInInfo.user?.role == "service-provider") {
+            var nextFragment = ServiceProviderDashboard()
             loadFragment(nextFragment)
-            binding.constraintLayout2.visibility = View.GONE
-            binding.imgadd.visibility = View.GONE
 
         } else {
             loadFragment(HomeFragment())
-        }
-        binding.llHome.setOnClickListener {
-            binding.homeBg.visibility = View.VISIBLE
-            binding.bookingBg.visibility = View.INVISIBLE
-            binding.homeIcon.setImageDrawable(resources.getDrawable(R.drawable.home_selected))
-            binding.homeTitle.setTextColor(resources.getColor(R.color.colorPrimary))
-            binding.bookingIcon.setImageDrawable(resources.getDrawable(R.drawable.booking_unselected))
-            binding.bookingTitle.setTextColor(resources.getColor(R.color.colorTextLabelDefault))
-            for (i in 0 until supportFragmentManager.backStackEntryCount - 1) {
-                popFragment()
-            }
-        }
-        binding.llBookings.setOnClickListener {
-            binding.homeBg.visibility = View.INVISIBLE
-            binding.bookingBg.visibility = View.VISIBLE
-            binding.homeIcon.setImageDrawable(resources.getDrawable(R.drawable.home_unselected))
-            binding.homeTitle.setTextColor(resources.getColor(R.color.colorTextLabelDefault))
-            binding.bookingIcon.setImageDrawable(resources.getDrawable(R.drawable.booking_selected))
-            binding.bookingTitle.setTextColor(resources.getColor(R.color.colorPrimary))
-            loadFragment(FragmentBookings())
-        }
-        binding.imgadd.setOnClickListener {
 
-            when (selectedTab) {
-
-                R.id.rdoSaloons -> {
-                    var nextFragment = FragmentAddSaloon()
-                    loadFragment(nextFragment)
-                }
-
-                R.id.rdoMembers -> {
-                    var nextFragment = FragmentAddSaloonMember()
-                    nextFragment.fromMain = true
-                    loadFragment(nextFragment)
-                }
-
-                R.id.rdoServices -> {
-                    var nextFragment = FragmentAddSaloonServices()
-                    loadFragment(nextFragment)
-                }
-
-                else -> {
-                    val bottomSheet = AddBottomSheet(this)
-                    bottomSheet.show(supportFragmentManager, bottomSheet.tag)
+            binding.llHome.setOnClickListener {
+                binding.homeBg.visibility = View.VISIBLE
+                binding.bookingBg.visibility = View.INVISIBLE
+                binding.homeIcon.setImageDrawable(resources.getDrawable(R.drawable.home_selected))
+                binding.homeTitle.setTextColor(resources.getColor(R.color.colorPrimary))
+                binding.bookingIcon.setImageDrawable(resources.getDrawable(R.drawable.booking_unselected))
+                binding.bookingTitle.setTextColor(resources.getColor(R.color.colorTextLabelDefault))
+                for (i in 0 until supportFragmentManager.backStackEntryCount - 1) {
+                    popFragment()
                 }
             }
+            binding.llBookings.setOnClickListener {
+                binding.homeBg.visibility = View.INVISIBLE
+                binding.bookingBg.visibility = View.VISIBLE
+                binding.homeIcon.setImageDrawable(resources.getDrawable(R.drawable.home_unselected))
+                binding.homeTitle.setTextColor(resources.getColor(R.color.colorTextLabelDefault))
+                binding.bookingIcon.setImageDrawable(resources.getDrawable(R.drawable.booking_selected))
+                binding.bookingTitle.setTextColor(resources.getColor(R.color.colorPrimary))
+                loadFragment(FragmentBookings())
+            }
+            binding.imgadd.setOnClickListener {
 
+                when (selectedTab) {
+
+                    R.id.rdoSaloons -> {
+                        var nextFragment = FragmentAddSaloon()
+                        loadFragment(nextFragment)
+                    }
+
+                    R.id.rdoMembers -> {
+                        var nextFragment = FragmentAddSaloonMember()
+                        nextFragment.fromMain = true
+                        loadFragment(nextFragment)
+                    }
+
+                    R.id.rdoServices -> {
+                        var nextFragment = FragmentAddSaloonServices()
+                        loadFragment(nextFragment)
+                    }
+
+                    else -> {
+                        val bottomSheet = AddBottomSheet(this)
+                        bottomSheet.show(supportFragmentManager, bottomSheet.tag)
+                    }
+                }
+
+            }
+
+            ViewCompat.setOnApplyWindowInsetsListener(binding.llMainView) { v, insets ->
+                val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                // Adjust the image padding if needed
+                v.setPadding(0, 0, 0, systemBarsInsets.bottom)
+                insets
+            }
         }
+    }
+
+    fun setUserData() {
         binding.imgNotifications.setOnClickListener {
             loadFragment(FragmentNotifications())
         }
         binding.imgProfile.setOnClickListener {
             loadFragment(FragmentProfile())
         }
-        ViewCompat.setOnApplyWindowInsetsListener(binding.llMainView) { v, insets ->
-            val systemBarsInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            // Adjust the image padding if needed
-            v.setPadding(0, 0, 0, systemBarsInsets.bottom)
-            insets
+        binding.imgProfilePic.setOnClickListener {
+            loadFragment(FragmentProfile())
         }
-    }
-
-    fun setUserData() {
         binding.txtUserName.text = "Welcome ${LoggedInInfo.user?.fullName}"
         binding.txtRole.text = "${LoggedInInfo.user?.role}"
         Glide.with(binding.imgProfilePic)
@@ -194,11 +198,19 @@ class HomeActivity : AppCompatActivity() {
             .loadFragment(fragment, supportFragmentManager, container)
     }
 
+    fun showTopBar() {
+        binding.constraintLayout.visibility = View.VISIBLE
+    }
+
     fun showTabs() {
         binding.constraintLayout.visibility = View.VISIBLE
-        if (LoggedInInfo.user?.role != "salon-manager") {
+        if (LoggedInInfo.user?.role == "business-owner") {
             binding.constraintLayout2.visibility = View.VISIBLE
             binding.imgadd.visibility = View.VISIBLE
+        }
+        else{
+            binding.constraintLayout2.visibility = View.GONE
+            binding.imgadd.visibility = View.GONE
         }
     }
 
@@ -270,7 +282,19 @@ class HomeActivity : AppCompatActivity() {
         )
     }
 
+    fun getMemberRepo(): MemberRepository {
+        var remoteDataSource = RemoteDataSource()
+        return MemberRepository(
+            remoteDataSource.buildApi(MemberApi::class.java, this)
+        )
+    }
 
+    fun getServiceRepo(): ServiceRepository {
+        var remoteDataSource = RemoteDataSource()
+        return ServiceRepository(
+            remoteDataSource.buildApi(ServiceApi::class.java, this)
+        )
+    }
 
     fun getUserData() {
         var accessToken = PreferenceManager.getInstance(this).getString(Keys.Access_Token)
@@ -279,7 +303,7 @@ class HomeActivity : AppCompatActivity() {
         ) {
             LoggedInInfo.user = Gson().fromJson(
                 user,
-                com.tt.muzien.data.responses.UserInfo::class.java
+                com.tt.muzien.data.responses.UserData::class.java
             )
             LoggedInInfo.userId = LoggedInInfo.user?.id!!
             var remoteDataSource = RemoteDataSource()
@@ -293,9 +317,9 @@ class HomeActivity : AppCompatActivity() {
 
                     is Resource.Success -> {
                         hideLoadingIndicator()
-                        LoggedInInfo.user = it.value.data?.user
+                        LoggedInInfo.user = it.value.data
                         val gson = Gson()
-                        val userInfo = gson.toJson(it.value.data?.user)
+                        val userInfo = gson.toJson(it.value.data)
                         PreferenceManager.getInstance(this)
                             .putString(Keys.User, userInfo)
                         setUserData()
@@ -323,4 +347,62 @@ class HomeActivity : AppCompatActivity() {
         startNewActivity(activity)
         finish()
     }
+
+    private fun getSaloons() {
+        var remoteDataSource = RemoteDataSource()
+        var saloonRepository = SaloonRepository(
+            remoteDataSource.buildApi(SaloonApi::class.java, this)
+        )
+        var saloonViewModel = SaloonViewModel(saloonRepository)
+        saloonViewModel.getSaloon.observe(this) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    hideLoadingIndicator()
+                    if (it.value.status != 0) {
+
+                        for (saloon in it.value.data.items) {
+
+                            assignedSaloon = SaloonDto(
+                                saloon.id.toInt(),
+                                saloon.SaloonImages,
+                                saloon.name,
+                                if (saloon.status == "open") true else false,
+                                saloon.address ?: "",
+                                "${saloon.tRating} (${saloon.numReviews} ${
+                                    if (saloon.numReviews.toInt() == 1) "review" else "reviews"
+                                })",
+                                saloon.SaloonWorkHours,
+                                saloon.locationLat.toDouble(), saloon.locationLong.toDouble()
+                            )
+
+
+                        }
+                        checkSaloon()
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                }
+
+                else -> {}
+            }
+        }
+        saloonViewModel.getSaloons(page = 1)
+        showLoadingIndicator()
+    }
+
+    private fun checkSaloon() {
+        if (assignedSaloon != null) {
+            var nextFragment = SaloonManagerDashboard()
+            nextFragment.selectedSaloon = assignedSaloon
+            loadFragment(nextFragment)
+            binding.constraintLayout2.visibility = View.GONE
+            binding.imgadd.visibility = View.GONE
+        }
+    }
+
 }

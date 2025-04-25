@@ -10,6 +10,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -49,6 +50,7 @@ class FragmentAddSaloonServices :
     private val services = arrayListOf<String>()
     private val saloonsList = arrayListOf<String>()
     private val saloonMap = HashMap<String, SaloonDto>()
+    var saveAdd = false
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setSaloonRepo((activity as HomeActivity?)?.getSaloonRepo()!!)
@@ -65,6 +67,17 @@ class FragmentAddSaloonServices :
                 if (saloonId == 0) {
                     saloonId = saloonMap[binding.edtSaloon.text.toString()]?.id ?: 0
                 }
+                saveAdd = false
+                addService()
+            }
+        }
+        binding.llSaveAdd.setOnClickListener {
+
+            if (checkValidation()) {
+                if (saloonId == 0) {
+                    saloonId = saloonMap[binding.edtSaloon.text.toString()]?.id ?: 0
+                }
+                saveAdd = true
                 addService()
             }
         }
@@ -246,7 +259,7 @@ class FragmentAddSaloonServices :
                     if (it.value.status != 0) {
                         servicesMap.clear()
                         services.clear()
-                        for (category in it.value.data.categories) {
+                        for (category in it.value.data) {
                             servicesMap.put(category!!.name, category.id)
                             services.add(category.name)
                         }
@@ -301,7 +314,15 @@ class FragmentAddSaloonServices :
                     Log.d("response", "success " + it.toString())
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
-                        showPopupDialog()
+                        if (saveAdd) {
+                            binding.edtServiceName.text = Editable.Factory.getInstance().newEditable("")
+                            binding.edtPrice.text = Editable.Factory.getInstance().newEditable("")
+                            binding.edtDuration.text = Editable.Factory.getInstance().newEditable("")
+                            binding.edtSaloon.text = Editable.Factory.getInstance().newEditable("")
+                            requireView().snackbar("Service added successfully")
+                        } else {
+                            showPopupDialog()
+                        }
                     } else {
                         requireView().snackbar(it.value.message)
                     }
@@ -318,11 +339,13 @@ class FragmentAddSaloonServices :
             }
         }
         var adjustedPrice = Integer.parseInt(binding.edtPrice.text.toString()) * 100
-        val imageFile =
-            Helper.getFileFromUri(requireContext(), image_uri!!) ?: return // Get file from URI
-        val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), imageFile)
-        val imagePart = MultipartBody.Part.createFormData("image", imageFile.name, requestFile)
-
+        var imagePart: MultipartBody.Part? = null
+        if (image_uri != null) {
+            val imageFile =
+                Helper.getFileFromUri(requireContext(), image_uri!!) ?: return // Get file from URI
+            val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), imageFile)
+            imagePart = MultipartBody.Part.createFormData("image", imageFile.name, requestFile)
+        }
         // Create text-based request bodies
         val categoryId = RequestBody.create("text/plain".toMediaTypeOrNull(), "$categoryId")
         val saloonId = RequestBody.create("text/plain".toMediaTypeOrNull(), "$saloonId")
@@ -341,6 +364,7 @@ class FragmentAddSaloonServices :
         )
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
+
     private fun setSaloonAdopter() {
         // Adapter to link the list with AutoCompleteTextView
         val adapter =
@@ -352,6 +376,7 @@ class FragmentAddSaloonServices :
         // Optional: Set the threshold (number of characters before suggestions appear)
         binding.edtSaloon.threshold = 1
     }
+
     private fun getSaloons() {
         viewModel.getSaloon.observe(viewLifecycleOwner) {
 
@@ -361,14 +386,14 @@ class FragmentAddSaloonServices :
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
                         saloonsList.clear()
-                        for (saloon in it.value.data.saloons) {
+                        for (saloon in it.value.data.items) {
                             if (!saloonsList.contains(saloon.name)) {
                                 saloonsList.add(saloon.name)
                                 var saloonData = SaloonDto(
                                     saloon.id.toInt(),
                                     saloon.SaloonImages,
                                     saloon.name,
-                                    saloon.isActive,
+                                    if (saloon.status == "open") true else false,
                                     saloon.address ?: "",
                                     "${saloon.tRating} (${saloon.numReviews} ${
                                         if (saloon.numReviews.toInt() == 1) "review" else "reviews"

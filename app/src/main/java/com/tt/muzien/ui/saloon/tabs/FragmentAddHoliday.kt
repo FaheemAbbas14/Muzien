@@ -25,14 +25,22 @@ class FragmentAddHoliday :
     var selectedDate: String = ""
     var isEdit = false
     var saloonId: Int = 0
+    var userId: Int = 0
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.setMemberRepo((activity as HomeActivity?)?.getMemberRepo()!!)
+        if (userId!=0){
+            binding.txtText.text="Add user holidays"
+        }
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
         }
         binding.llSave.setOnClickListener {
             if (selectedDate != "") {
-                if (isEdit) {
+                if (userId != 0) {
+                    addMemberHoliday()
+
+                } else if (isEdit) {
                     addHoliday()
                 } else {
                     if (!AddSaloonData.holidays.contains(selectedDate)) {
@@ -110,6 +118,38 @@ class FragmentAddHoliday :
         holidays.add(Holiday(selectedDate, selectedDate))
 
         viewModel.addHoliday(saloonId, AddHolidayRequest(holidays))
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
+    private fun addMemberHoliday() {
+        viewModel.addMemberData.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        (activity as HomeActivity?)?.popFragment()
+                        requireView().snackbar("Holiday added successfully")
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        var holidays = ArrayList<Holiday>()
+        holidays.add(Holiday(selectedDate, selectedDate))
+
+        viewModel.addMemberHoliday(userId, AddHolidayRequest(holidays))
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 }

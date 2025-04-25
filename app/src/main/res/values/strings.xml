@@ -121,7 +121,7 @@
     <string name="change_language">Change Language</string>
     <string name="confirm">Confirm</string>
     <string name="edit_about">Edit About</string>
-    <string name="dummy_text"><![CDATA[Lorem Ipsum is simply dummy text of the\n printing and typesetting industry.\n Lorem Ipsum has been the industry\'s standard\n dummy text ever since the 1500s, when an\n unknown printer took a galley of Lorem Ipsum is\n simply dummy text of the printing and\n typesetting industry. Lorem Ipsum has been the\n industry\'s standard.]]></string>
+    <string name="dummy_text">Lorem Ipsum is simply dummy text of the printing and type setting industry.</string>
     <string name="edit_contact">Edit Contact</string>
     <string name="this_month">This Month</string>
     <string name="from">From</string>

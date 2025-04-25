@@ -23,7 +23,7 @@ import com.tt.muzien.data.dto.SaloonDto
 import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.HomeRepository
-import com.tt.muzien.databinding.FragmentAnalyticsBinding
+import com.tt.muzien.databinding.FragmentSaloonAnalyticsBinding
 import com.tt.muzien.ui.adapters.PerformerListAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
@@ -40,7 +40,7 @@ import kotlin.random.Random
 import kotlin.toString
 
 class FragmentSaloonAnalytics :
-    BaseFragment<HomeViewModel, FragmentAnalyticsBinding, HomeRepository>() {
+    BaseFragment<HomeViewModel, FragmentSaloonAnalyticsBinding, HomeRepository>() {
     private var lineChart: LineChart? = null
     private val topPerformerList = arrayListOf<PersonDto>()
     private var isRevenueFilter = false
@@ -57,6 +57,7 @@ class FragmentSaloonAnalytics :
     var completedBookings = 0
     var totalEarnings = 0
     private val graphMap = HashMap<String, Int>()
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -119,6 +120,13 @@ class FragmentSaloonAnalytics :
         binding.txtCompleted.text = "$completedBookings"
         binding.txtCancelled.text = "$cancledBookings"
         binding.txtEarningAmount.text = "$totalEarnings"
+        if (topPerformerList.isNotEmpty() && graphMap.isNotEmpty()) {
+            binding.cnstData.visibility = View.VISIBLE
+            binding.llNoData.visibility = View.GONE
+        } else {
+            binding.cnstData.visibility = View.GONE
+            binding.llNoData.visibility = View.VISIBLE
+        }
         setPerformerAdopter()
         setGraph()
     }
@@ -283,7 +291,7 @@ class FragmentSaloonAnalytics :
     override fun getFragmentBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
-    ) = FragmentAnalyticsBinding.inflate(inflater, container, false)
+    ) = FragmentSaloonAnalyticsBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
         HomeRepository(
@@ -301,18 +309,19 @@ class FragmentSaloonAnalytics :
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
                         topPerformerList.clear()
-                        for (performer in it.value.data.topPerformers) {
+                        if (it.value.data.topPerformers != null) {
+                            for (performer in it.value.data.topPerformers) {
 
-                            topPerformerList.add(
-                                PersonDto(
-                                    performer.picture,
-                                    performer.fullName ?: "",
-                                    "Hair Stylist",
-                                    "${performer.totalBookings} Bookings",
-                                    "SAR ${5 * 1}"
+                                topPerformerList.add(
+                                    PersonDto(
+                                        performer.picture,
+                                        performer.fullName ?: "",
+                                        "Hair Stylist",
+                                        "${performer.totalBookings} Bookings",
+                                        "SAR ${5 * 1}"
+                                    )
                                 )
-                            )
-
+                            }
                         }
                         for (analytics in it.value.data.booking) {
                             if (analytics.status == "completed") {
@@ -325,7 +334,9 @@ class FragmentSaloonAnalytics :
                                 scheduleBookings = analytics.total_count.toInt()
                             }
                         }
-                        totalEarnings = it.value.data.totalEarning.toInt()
+                        if (it.value.data.totalEarning!=null) {
+                            totalEarnings = it.value.data.totalEarning.toInt()
+                        }
                         if (FilterSelection.filterData != null) {
                             val selection = FilterSelection.filterData!!.selection
                             if (selection == "Month") {
@@ -357,6 +368,7 @@ class FragmentSaloonAnalytics :
         )
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getWeeklyRevenue() {
         viewModel.getWeeklyRevenue.observe(viewLifecycleOwner) {
@@ -367,8 +379,8 @@ class FragmentSaloonAnalytics :
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
                         graphMap.clear()
-                        for (revenue in it.value.data?.revenue!!) {
-                            var key=revenue.date?.split("-")[2]!!
+                        for (revenue in it.value.data) {
+                            var key = revenue.date?.split("-")[2]!!
                             graphMap.put("${key.toFloat()}", revenue.count.toInt())
                         }
                         setdata()
@@ -403,7 +415,7 @@ class FragmentSaloonAnalytics :
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
                         graphMap.clear()
-                        for (revenue in it.value.data?.revenue!!) {
+                        for (revenue in it.value.data) {
                             graphMap.put("${revenue.month?.toFloat()}", revenue.count.toInt())
                         }
                         setdata()

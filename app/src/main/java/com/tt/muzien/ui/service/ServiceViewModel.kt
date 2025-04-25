@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.SaloonRepository
 import com.tt.muzien.data.repository.ServiceRepository
-import com.tt.muzien.data.repository.UserRepository
 import com.tt.muzien.data.responses.GenericResponse
 import com.tt.muzien.data.responses.GetCategoriesResponse
 import com.tt.muzien.data.responses.GetSaloonResponse
@@ -31,10 +30,12 @@ class ServiceViewModel(
     fun setSaloonRepo(saloonRepo: SaloonRepository) {
         saloonRepository = saloonRepo
     }
+
     private val _addService: MutableLiveData<Resource<GenericResponse>> = SingleEventLiveData()
     val addService: LiveData<Resource<GenericResponse>> get() = _addService
 
-    private val _getCategories: MutableLiveData<Resource<GetCategoriesResponse>> = SingleEventLiveData()
+    private val _getCategories: MutableLiveData<Resource<GetCategoriesResponse>> =
+        SingleEventLiveData()
     val getCategories: LiveData<Resource<GetCategoriesResponse>> get() = _getCategories
 
     private val _getServices: MutableLiveData<Resource<GetServicesResponse>> = SingleEventLiveData()
@@ -48,7 +49,7 @@ class ServiceViewModel(
     }
 
     fun addService(
-        image: MultipartBody.Part,
+        image: MultipartBody.Part?,
         categoryId: RequestBody,
         saloonId: RequestBody,
         name: RequestBody,
@@ -59,8 +60,8 @@ class ServiceViewModel(
             repository.addService(image, categoryId, saloonId, name, duration, price)
     }
 
-    fun getCategories() = viewModelScope.launch {
-        _getCategories.value = repository.getCategories()
+    fun getCategories(saloonIds: String? = null) = viewModelScope.launch {
+        _getCategories.value = repository.getCategories(saloonIds)
     }
 
     fun getServices() = viewModelScope.launch {

@@ -369,9 +369,9 @@ class FragmentVerifyOTP : BaseFragment<HomeViewModel, FragmentOTPBinding, HomeRe
                     Log.d("response", "success " + it.toString())
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
-                        LoggedInInfo.user = it.value.data?.user
+                        LoggedInInfo.user = it.value.data
                         val gson = Gson()
-                        val userInfo = gson.toJson(it.value.data?.user)
+                        val userInfo = gson.toJson(it.value.data)
                         PreferenceManager.getInstance(requireActivity())
                             .putString(Keys.User, userInfo)
                         (activity as HomeActivity?)?.popFragment()

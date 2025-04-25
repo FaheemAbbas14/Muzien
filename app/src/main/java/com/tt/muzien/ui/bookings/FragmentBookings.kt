@@ -1,16 +1,19 @@
 package com.tt.muzien.ui.bookings
 
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tt.muzien.R
 import com.tt.muzien.data.SaloonBookingData
+import com.tt.muzien.data.dto.BookingsCountData
 import com.tt.muzien.data.dto.CalendarDay
 import com.tt.muzien.data.dto.FilterData
 import com.tt.muzien.data.network.BookingApi
@@ -23,8 +26,11 @@ import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.FilterSelection
+import com.tt.muzien.utilities.TimeHelper
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Locale
 
@@ -42,18 +48,29 @@ class FragmentBookings :
     private var totalPage = 1
     private var selection: Int = 0
     private var isLoading: Boolean = false
+    private val bookingMap = HashMap<Int, BookingsCountData>()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getBooking()
+        val dates = TimeHelper.getWeekAndMonthDates()
+        fromDate = dates["startOfMonth"]
+        toDate = dates["endOfMonth"]
+        binding.customCalendarView.setOnMonthChangedListener { startDate, endDate ->
+            Log.d("CalendarFragment", "Month range: $startDate to $endDate")
+            // Fetch data or update UI based on date range
+            fromDate = startDate
+            toDate = endDate
+            getCalendarbar()
+        }
         binding.customCalendarView.setOnDaySelectedListener { selectedDay ->
             // Toast.makeText(requireContext(), "Selected: ${selectedDay}", Toast.LENGTH_SHORT).show()
             fromDate = selectedDay
             toDate = selectedDay
-            FilterSelection.filterData=FilterData("", fromDate, toDate,false)
+            FilterSelection.filterData = FilterData("", fromDate, toDate, false)
             getBooking()
         }
-        binding.customCalendarView.setDays(generateDaysWithEvents())
+
         binding.imgBookingFilter.setOnClickListener {
             if (bookingStatus != null) {
                 binding.imgBookingFilter.setImageResource(
@@ -64,7 +81,7 @@ class FragmentBookings :
                 bookingStatus = null
                 FilterSelection.filterData!!.bookingStatus = bookingStatus
                 setMargins(false)
-                getBooking()
+                getCalendarbar()
             } else {
                 var nextFragment = FragmentBookingFilter()
                 (activity as HomeActivity?)?.loadFragment(nextFragment)
@@ -97,10 +114,14 @@ class FragmentBookings :
             }
             adopter?.setBookingStatus(bookingStatus)
             adopter?.notifyDataSetChanged()
+            binding.customCalendarView.setMonthFromDate(fromDate ?: "")
             // Toast.makeText(requireContext(), "data received", Toast.LENGTH_SHORT).show()
+            getCalendarbar()
+        } else {
+            getCalendarbar()
         }
-//        val days = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
-//        binding.customCalendarView.setCurrentDay(days.minus(1))
+
+
     }
 
     private fun setMargins(show: Boolean) {
@@ -110,8 +131,7 @@ class FragmentBookings :
         ).apply {
             if (show) {
                 setMargins(40, 100, 40, 0) // Left, Top, Right, Bottom in pixels
-            }
-            else{
+            } else {
                 setMargins(40, 300, 40, 0) // Left, Top, Right, Bottom in pixels
             }
             startToStart = ConstraintLayout.LayoutParams.PARENT_ID
@@ -122,7 +142,14 @@ class FragmentBookings :
     }
 
     private fun setBookingsAdopter() {
-
+        binding.customCalendarView.setDays(generateDaysWithEvents())
+        if (saloonsBookingList.isNotEmpty()) {
+            binding.cnstData.visibility = View.VISIBLE
+            binding.llNoDta.visibility = View.GONE
+        } else {
+            binding.cnstData.visibility = View.GONE
+            binding.llNoDta.visibility = View.VISIBLE
+        }
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(position: Int) {
 //                var nextFragment = FragmentSaloonDetails()
@@ -201,20 +228,79 @@ class FragmentBookings :
 
         for (day in 1..maxDay) {
             val dayOfWeek = SimpleDateFormat("EEE", Locale.getDefault()).format(calendar.time)
-
-            // Example dot data for specific days
-            val eventDotColors = when (day) {
-                5 -> listOf(Color.RED, Color.GREEN) // Two dots
-                10 -> listOf(Color.BLUE) // One dot
-                15 -> listOf(Color.YELLOW, Color.MAGENTA, Color.CYAN) // Three dots
-                else -> emptyList()
+            val bookings = bookingMap[day]
+            val eventDotColors = mutableListOf<Int>()
+            if (bookings != null) {
+                if (bookings.pendingApproval > 0) {
+                    eventDotColors.add(Color.YELLOW)
+                }
+                if (bookings.scheduled > 0) {
+                    eventDotColors.add(Color.BLUE)
+                }
+                if (bookings.completed > 0) {
+                    eventDotColors.add(Color.GREEN)
+                }
+                if (bookings.cancelled > 0) {
+                    eventDotColors.add(Color.BLACK)
+                }
+                if (bookings.overdue > 0) {
+                    eventDotColors.add(Color.RED)
+                }
             }
-
             days.add(CalendarDay(dayOfWeek, day, eventDotColors = eventDotColors))
             calendar.add(Calendar.DAY_OF_MONTH, 1)
         }
 
         return days
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getCalendarbar() {
+        isLoading = true
+        viewModel.getCalendarbar.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    bookingMap.clear()
+                    Log.d("response", "success " + it.toString())
+                    for (day in it.value.data) {
+                        try {
+                            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                            val date = LocalDate.parse(day.date, formatter)
+                            val dayOfMonth = date.dayOfMonth
+                            bookingMap.put(
+                                dayOfMonth,
+                                BookingsCountData(
+                                    day.pendingApproval,
+                                    day.scheduled,
+                                    day.cancelled,
+                                    day.completed,
+                                    day.cancelled
+                                )
+                            )
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+                    getBooking()
+
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+                    isLoading = false
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.getCalendarbar(
+            startDate = fromDate,
+            endDate = toDate
+        )
+        (activity as HomeActivity?)?.showLoadingIndicator()
     }
 
     private fun getBooking() {
@@ -230,8 +316,8 @@ class FragmentBookings :
                         if (page == 1) {
                             saloonsBookingList.clear()
                         }
-                        totalPage = it.value.data.pagination.totalPages.toInt()
-                        for (booking in it.value.data.bookings) {
+                        totalPage = it.value.data.totalPages.toInt()
+                        for (booking in it.value.data.items) {
                             var services = ""
                             for (service in booking.bookingServices) {
                                 services += service.serviceDetails.name
@@ -273,6 +359,6 @@ class FragmentBookings :
             startDate = fromDate,
             endDate = toDate
         )
-        (activity as HomeActivity?)?.showLoadingIndicator()
+        //  (activity as HomeActivity?)?.showLoadingIndicator()
     }
 }

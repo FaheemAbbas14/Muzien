@@ -16,7 +16,7 @@ class ServiceRepository(
 ) : BaseRepository() {
 
     suspend fun addService(
-        image: MultipartBody.Part,
+        image: MultipartBody.Part?,
         categoryId: RequestBody,
         saloonId: RequestBody,
         name: RequestBody,
@@ -27,8 +27,13 @@ class ServiceRepository(
     }
 
     suspend fun getCategories(
+        saloonIds: String? = null
     ) = safeApiCall {
-        api.getCategories()
+        if (saloonIds != null) {
+            api.getCategories(saloonIds)
+        } else {
+            api.getCategories()
+        }
     }
 
     suspend fun getServices(

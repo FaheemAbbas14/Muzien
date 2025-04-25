@@ -53,7 +53,13 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
     }
 
     private fun setSaloonAdopter() {
-
+        if (saloonsList.isNotEmpty()) {
+            binding.cnstData.visibility = View.VISIBLE
+            binding.llNoDta.visibility = View.GONE
+        } else {
+            binding.cnstData.visibility = View.GONE
+            binding.llNoDta.visibility = View.VISIBLE
+        }
         binding.txtHeading.text = "Salons(${saloonsList.size})"
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(position: Int) {
@@ -116,7 +122,7 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
         SaloonRepository(remoteDataSource.buildApi(SaloonApi::class.java, requireContext()))
 
     private fun getSaloons() {
-        isLoading=true
+        isLoading = true
         viewModel.getSaloon.observe(viewLifecycleOwner) {
 
             when (it) {
@@ -128,14 +134,16 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
                         if (page == 1) {
                             saloonsList.clear()
                         }
-                        totalPage = it.value.data.pagination.totalPages.toInt()
-                        for (saloon in it.value.data.saloons) {
+                        if (it.value.data.totalPages!=null) {
+                            totalPage = it.value.data.totalPages.toInt()
+                        }
+                        for (saloon in it.value.data.items) {
                             saloonsList.add(
                                 SaloonDto(
                                     saloon.id.toInt(),
                                     saloon.SaloonImages,
                                     saloon.name,
-                                    saloon.isActive,
+                                    if (saloon.status=="open") true else false,
                                     saloon.address ?: "",
                                     "${saloon.tRating} (${saloon.numReviews} ${
                                         if (saloon.numReviews.toInt() == 1) "review" else "reviews"

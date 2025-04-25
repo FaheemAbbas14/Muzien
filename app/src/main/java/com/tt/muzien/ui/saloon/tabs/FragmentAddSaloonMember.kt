@@ -105,14 +105,14 @@ class FragmentAddSaloonMember :
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
                         saloonsList.clear()
-                        for (saloon in it.value.data.saloons) {
+                        for (saloon in it.value.data.items) {
                             if (!saloonsList.contains(saloon.name)) {
                                 saloonsList.add(saloon.name)
                                 var saloonData = SaloonDto(
                                     saloon.id.toInt(),
                                     saloon.SaloonImages,
                                     saloon.name,
-                                    saloon.isActive,
+                                    if (saloon.status=="open") true else false,
                                     saloon.address ?: "",
                                     "${saloon.tRating} (${saloon.numReviews} ${
                                         if (saloon.numReviews.toInt() == 1) "review" else "reviews"

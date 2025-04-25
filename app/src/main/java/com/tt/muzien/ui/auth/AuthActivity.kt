@@ -4,6 +4,8 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.Window
+import android.view.WindowInsetsController
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -80,6 +82,23 @@ class AuthActivity : AppCompatActivity() {
         } else {
             window.decorView.systemUiVisibility = 0
 
+        }
+    }
+    fun setStatusBarIconColor(window: Window, isLightBackground: Boolean) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // For Android 11 and above
+            window.insetsController?.setSystemBarsAppearance(
+                if (isLightBackground) WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS else 0,
+                WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+            )
+        } else {
+            // For Android 6.0 to 10
+            @Suppress("DEPRECATION")
+            window.decorView.systemUiVisibility = if (isLightBackground) {
+                View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            } else {
+                0
+            }
         }
     }
 

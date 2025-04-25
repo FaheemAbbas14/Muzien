@@ -19,7 +19,6 @@ import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.data.repository.HomeRepository
 import com.tt.muzien.databinding.FragmentSaloonDetailsBinding
 import com.tt.muzien.ui.adapters.ViewPagerAdapter
-import com.tt.muzien.ui.analytics.FragmentAnalytics
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.home.HomeViewModel
@@ -45,6 +44,9 @@ class FragmentSaloonDetails :
         // setStatusBar(view)
         fragmentManager = requireActivity().supportFragmentManager
         // setStatusBar(view)
+
+        binding.imgMore.visibility=View.GONE
+        binding.imgCamera.visibility=View.GONE
         binding.imgMore.setOnClickListener {
 
             //   uploadImage()
@@ -59,7 +61,7 @@ class FragmentSaloonDetails :
         }
         //  (activity as HomeActivity?)?.loadFragment(FragmentSaloonAnalytics(), R.id.tab_container)
         var nextFragment = FragmentSaloonAnalytics()
-        nextFragment.selectedSaloon=selectedSaloon
+        nextFragment.selectedSaloon = selectedSaloon
         fragmentManager.beginTransaction().replace(R.id.tab_container, nextFragment)
             .commit()
         binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
@@ -67,40 +69,44 @@ class FragmentSaloonDetails :
             val fragment: Fragment = when (selectedRadioButton?.id) {
                 R.id.rdoAnalytics -> {
                     var nextFragment = FragmentSaloonAnalytics()
-                    nextFragment.selectedSaloon=selectedSaloon
+                    nextFragment.selectedSaloon = selectedSaloon
                     nextFragment
                 }
 
                 R.id.rdoBookings -> {
                     var nextFragment = FragmentSaloonBookings()
-                    nextFragment.selectedSaloon=selectedSaloon
+                    nextFragment.selectedSaloon = selectedSaloon
                     nextFragment
                 }
-                R.id.rdoStoreInfo ->{
+
+                R.id.rdoStoreInfo -> {
                     var nextFragment = FragmentSaloonInfo()
-                    nextFragment.selectedSaloon=selectedSaloon
+                    nextFragment.selectedSaloon = selectedSaloon
                     nextFragment
                 }
+
                 R.id.rdoReviews -> {
                     var nextFragment = FragmentSaloonReviews()
-                    nextFragment.selectedSaloon=selectedSaloon
+                    nextFragment.selectedSaloon = selectedSaloon
                     nextFragment
                 }
+
                 R.id.rdoServices -> {
                     val nextFragment = FragmentSaloonServices()
                     nextFragment.saloonId = selectedSaloon?.id
-                    nextFragment.selectedSaloon=selectedSaloon
+                    nextFragment.selectedSaloon = selectedSaloon
                     nextFragment
                 }
 
                 R.id.rdoMembers -> {
                     var nextFragment = FragmentSaloonMembers()
-                    nextFragment.selectedSaloon=selectedSaloon
+                    nextFragment.selectedSaloon = selectedSaloon
                     nextFragment
                 }
+
                 else -> {
                     var nextFragment = FragmentSaloonAnalytics()
-                    nextFragment.selectedSaloon=selectedSaloon
+                    nextFragment.selectedSaloon = selectedSaloon
                     nextFragment
                 }
             }
@@ -108,31 +114,37 @@ class FragmentSaloonDetails :
             when (selectedRadioButton?.id) {
 
                 R.id.rdoBookings -> {
+                    setFrameLayoutHeight(true)
                     binding.rdoBookings.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoBookings.setTextColor(resources.getColor(R.color.white))
                 }
 
                 R.id.rdoStoreInfo -> {
+                    setFrameLayoutHeight(false)
                     binding.rdoStoreInfo.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoStoreInfo.setTextColor(resources.getColor(R.color.white))
                 }
 
                 R.id.rdoReviews -> {
+                    setFrameLayoutHeight(true)
                     binding.rdoReviews.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoReviews.setTextColor(resources.getColor(R.color.white))
                 }
 
                 R.id.rdoServices -> {
+                    setFrameLayoutHeight(true)
                     binding.rdoServices.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoServices.setTextColor(resources.getColor(R.color.white))
                 }
 
                 R.id.rdoMembers -> {
+                    setFrameLayoutHeight(true)
                     binding.rdoMembers.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoMembers.setTextColor(resources.getColor(R.color.white))
                 }
 
                 else -> {
+                    setFrameLayoutHeight(false)
                     binding.rdoAnalytics.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoAnalytics.setTextColor(resources.getColor(R.color.white))
                 }
@@ -243,6 +255,7 @@ class FragmentSaloonDetails :
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onResume() {
         super.onResume()
+        (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, false)
         (activity as HomeActivity?)?.setSystemWindow(false)
         (activity as HomeActivity?)?.changeStatusBarColor(Color.TRANSPARENT)
         (activity as HomeActivity?)?.hideTabs()
@@ -251,8 +264,24 @@ class FragmentSaloonDetails :
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onPause() {
         super.onPause()
+        (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, true)
         (activity as HomeActivity?)?.setSystemWindow(true)
         (activity as HomeActivity?)?.changeStatusBarColor(Color.WHITE)
         (activity as HomeActivity?)?.showTabs()
+    }
+
+    fun setFrameLayoutHeight(enablScrool: Boolean) {
+        if (enablScrool) {
+            val scale = binding.tabContainer.resources.displayMetrics.density
+            val heightInPx = (0 * scale + 0.5f).toInt()
+
+            val layoutParams = binding.tabContainer.layoutParams
+            layoutParams.height = heightInPx
+            binding.tabContainer.layoutParams = layoutParams
+        } else {
+            val layoutParams = binding.tabContainer.layoutParams
+            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            binding.tabContainer.layoutParams = layoutParams
+        }
     }
 }

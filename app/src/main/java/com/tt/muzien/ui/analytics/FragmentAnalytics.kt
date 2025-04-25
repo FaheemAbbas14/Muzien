@@ -116,6 +116,14 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
         binding.txtCompleted.text = "$completedBookings"
         binding.txtCancelled.text = "$cancledBookings"
         binding.txtEarningAmount.text = "$totalEarnings"
+        if (topPerformerList.isNotEmpty() && graphMap.isNotEmpty()){
+            binding.cnstData.visibility=View.VISIBLE
+            binding.llNoData.visibility=View.GONE
+        }
+        else{
+            binding.cnstData.visibility=View.GONE
+            binding.llNoData.visibility=View.VISIBLE
+        }
         setPerformerAdopter()
         setGraph()
     }
@@ -298,6 +306,7 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
                         topPerformerList.clear()
+                        if (it.value.data.topPerformers!=null){
                         for (performer in it.value.data.topPerformers) {
 
                             topPerformerList.add(
@@ -309,7 +318,7 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
                                     "SAR ${5 * 1}"
                                 )
                             )
-
+                        }
                         }
                         for (analytics in it.value.data.booking) {
                             if (analytics.status == "completed") {
@@ -322,7 +331,9 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
                                 scheduleBookings = analytics.total_count.toInt()
                             }
                         }
-                        totalEarnings = it.value.data.totalEarning.toInt()
+                        if (it.value.data.totalEarning!=null) {
+                            totalEarnings = it.value.data.totalEarning.toInt()
+                        }
                         if (FilterSelection.filterData != null) {
                             val selection = FilterSelection.filterData!!.selection
                             if (selection == "Month") {
@@ -364,7 +375,7 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
                         graphMap.clear()
-                        for (revenue in it.value.data?.revenue!!) {
+                        for (revenue in it.value.data) {
                             var key=revenue.date?.split("-")[2]!!
                             graphMap.put("${key.toFloat()}", revenue.count.toInt())
                         }
@@ -400,7 +411,7 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
                         graphMap.clear()
-                        for (revenue in it.value.data?.revenue!!) {
+                        for (revenue in it.value.data) {
                             graphMap.put("${revenue.month?.toFloat()}", revenue.count.toInt())
                         }
                         setdata()

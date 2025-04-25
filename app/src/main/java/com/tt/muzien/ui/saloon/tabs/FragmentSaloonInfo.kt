@@ -37,6 +37,8 @@ import com.tt.muzien.ui.adapters.WorkingHoursAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
+import com.tt.muzien.ui.payment.FragmentAddPayment
+import com.tt.muzien.ui.payment.FragmentPayNow
 import com.tt.muzien.ui.saloon.FragmentSearchAddress
 import com.tt.muzien.ui.saloon.SaloonViewModel
 import com.tt.muzien.ui.snackbar
@@ -68,6 +70,8 @@ class FragmentSaloonInfo :
         getSaloons()
         binding.txtRenew.setOnClickListener {
             addSubscriptions()
+//            var nextFragment = FragmentPayNow()
+//            (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
         binding.txtUploadCertificate.setOnClickListener {
             selectDocument()
@@ -241,6 +245,10 @@ class FragmentSaloonInfo :
             binding.txtRenew.text = requireContext().resources.getString(R.string.renew)
             binding.txtUploadedAt.text =
                 TimeHelper.convertISOToDate(selectedSaloonDetails!!.createdAt, "yyyy-MM-dd HH:mm")
+            if (selectedSaloonDetails?.certificate!!.contains("-")) {
+                var nameArray = selectedSaloonDetails?.certificate!!.split("-")
+                binding.txtCertificateName.text = nameArray[nameArray.size - 1]
+            }
         } else {
             binding.imgCertificateIcon.visibility = View.GONE
             binding.txtCertificateName.visibility = View.GONE
@@ -326,7 +334,7 @@ class FragmentSaloonInfo :
                     Log.d("response", "success " + it.toString())
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
-                        selectedSaloonDetails = it.value.data.saloon
+                        selectedSaloonDetails = it.value.data
                         setData()
                     } else {
                         requireView().snackbar(it.value.message)

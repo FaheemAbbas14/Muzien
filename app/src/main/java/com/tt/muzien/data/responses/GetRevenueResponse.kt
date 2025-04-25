@@ -11,11 +11,7 @@ package com.tt.muzien.data.responses
 data class GetRevenueResponse(
     val status: Int,
     val message: String,
-    val data: RevenueData?
-)
-
-data class RevenueData(
-    val revenue: List<Revenue>,
+    val data: List<Revenue>,
 )
 
 data class Revenue(

@@ -7,4 +7,4 @@ package com.tt.muzien.data.requests
  * faheemabbas60@yahoo.com
  * +923115284424
  */
-data class AddMemberRequest(val saloonId: String,val email: String)
+data class AddMemberRequest(val saloonId: String,val email: String?=null,val userId: String?=null)

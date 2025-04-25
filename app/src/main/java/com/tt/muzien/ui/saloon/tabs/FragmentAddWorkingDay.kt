@@ -32,14 +32,22 @@ class FragmentAddWorkingDay :
     var endTime: String = ""
     var isEdit = false
     var saloonId: Int = 0
+    var userId: Int = 0
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.setMemberRepo((activity as HomeActivity?)?.getMemberRepo()!!)
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
         }
+        if (userId!=0){
+            binding.txtText.text="Add user work hours"
+        }
         binding.llSave.setOnClickListener {
             if (checkValidation()) {
-                if (isEdit) {
+                if (userId != 0) {
+                    addMemberWorkHour()
+
+                } else if (isEdit) {
                     addWorkHour()
                 } else {
                     AddSaloonData.startTime = startTime
@@ -257,6 +265,40 @@ class FragmentAddWorkingDay :
             workingHours.add(WorkHour(day, startTime, endTime))
         }
         viewModel.addHour(saloonId, AddWorkingHourRequest(workingHours))
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
+    private fun addMemberWorkHour() {
+        viewModel.addMemberData.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        (activity as HomeActivity?)?.popFragment()
+                        requireView().snackbar("Working hour added successfully")
+
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        var workingHours = ArrayList<WorkHour>()
+        for (day in selectedDays) {
+            workingHours.add(WorkHour(day, startTime, endTime))
+        }
+        viewModel.addMemberWorkingHour(userId, AddWorkingHourRequest(workingHours))
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 

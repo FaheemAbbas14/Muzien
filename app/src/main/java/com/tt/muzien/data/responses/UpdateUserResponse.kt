@@ -9,9 +9,16 @@ package com.tt.muzien.data.responses
  */
 data class UpdateUserResponse(
     val status: Int,
-    val data: UserData,
     val message: String,
+    val data: SignupData,
 )
+
+data class SignupData(
+    val user: UserData,
+)
+
+
+
 
 
 
