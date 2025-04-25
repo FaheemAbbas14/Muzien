@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/llBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        android:weightSum="1"
+        android:background="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imgBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/manrope_bold"
+            android:gravity="center"
+            android:layout_marginStart="15dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:src="@drawable/back_button"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:fontFamily="@font/manrope_regular"
+            android:text="Booking Details"
+            android:textColor="@color/black"
+            android:textFontWeight="700"
+            android:textSize="16sp"
+            tools:layout_editor_absoluteX="38dp"
+            tools:layout_editor_absoluteY="21dp" />
+
+
+        <ImageView
+            android:id="@+id/imgBarcode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginEnd="16dp"
+            android:fontFamily="@font/manrope_bold"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:src="@drawable/barcode"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llBack">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/light_grey"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cnstBookingInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="110dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/rounded_blue_10"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/manrope_regular"
+                        android:text="Booking # 1234567"
+                        android:textColor="@color/white"
+                        android:textFontWeight="700"
+                        android:textSize="16dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cnstServices"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:background="@drawable/white_rounded10"
+                    app:layout_constraintEnd_toEndOf="@+id/cnstBookingInfo"
+                    app:layout_constraintStart_toStartOf="@+id/cnstBookingInfo"
+                    app:layout_constraintTop_toBottomOf="@+id/cnstBookingInfo">
+
+
+                    <TextView
+                        android:id="@+id/txtCustomer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="@font/manrope_regular"
+                        android:text="Customer"
+                        android:textColor="@color/colorTextLabelDefault"
+                        android:textFontWeight="700"
+                        android:textSize="16sp"
+                        app:layout_constraintStart_toStartOf="@+id/imgProfilePic"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/imgProfilePic"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="15dp"
+                        android:src="@drawable/topperformer"
+                        app:civ_border_color="@color/white"
+                        app:civ_border_width="3dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txtCustomer" />
+
+                    <TextView
+                        android:id="@+id/txtName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:fontFamily="@font/manrope_regular"
+                        android:text="David Garcia"
+                        android:textColor="@color/colorTextLabelDefault"
+                        android:textFontWeight="700"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/imgProfilePic"
+                        app:layout_constraintStart_toEndOf="@+id/imgProfilePic"
+                        app:layout_constraintTop_toTopOf="@+id/imgProfilePic" />
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout5"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="vertical"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/imgProfilePic"
+                        app:layout_constraintTop_toBottomOf="@+id/imgProfilePic">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <ImageView
+                                android:layout_width="12dp"
+                                android:layout_height="16dp"
+                                android:layout_gravity="center"
+                                app:srcCompat="@drawable/phone" />
+
+                            <TextView
+                                android:id="@+id/txtPhone"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center|left"
+                                android:layout_marginStart="10dp"
+                                android:fontFamily="@font/manrope_regular"
+                                android:paddingStart="5dp"
+                                android:text="+966 123 1234"
+                                android:textColor="@color/colorTextLabelDefault"
+                                android:textFontWeight="400"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <ImageView
+                                android:layout_width="12dp"
+                                android:layout_height="16dp"
+                                android:layout_gravity="center"
+                                app:srcCompat="@drawable/clock" />
+
+                            <TextView
+                                android:id="@+id/txtTiming"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center|left"
+                                android:layout_marginStart="10dp"
+                                android:fontFamily="@font/manrope_regular"
+                                android:paddingStart="5dp"
+                                android:text="12/04/2024 - 10:00 AM - 1 hr"
+                                android:textColor="@color/colorTextLabelDefault"
+                                android:textFontWeight="400"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/txtServces"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="@font/manrope_regular"
+                        android:text="Servces"
+                        android:textColor="@color/colorTextLabelDefault"
+                        android:textFontWeight="700"
+                        android:textSize="16sp"
+                        app:layout_constraintStart_toStartOf="@+id/imgProfilePic"
+                        app:layout_constraintTop_toBottomOf="@+id/linearLayout5" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rcyServices"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txtServces" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/divider"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginTop="2dp"
+                    android:background="@drawable/blue_dotted"
+                    android:text=""
+                    app:layout_constraintEnd_toEndOf="@+id/cnstServices"
+                    app:layout_constraintStart_toStartOf="@+id/cnstServices"
+                    app:layout_constraintTop_toBottomOf="@+id/cnstServices" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cnstServiceProvider"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/white_rounded10"
+                    android:padding="10dp"
+                    android:layout_marginTop="2dp"
+                    app:layout_constraintEnd_toEndOf="@+id/cnstServices"
+                    app:layout_constraintStart_toStartOf="@+id/cnstServices"
+                    app:layout_constraintTop_toBottomOf="@+id/divider">
+
+                    <TextView
+                        android:id="@+id/txtServiceProvider"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="@font/manrope_regular"
+                        android:text="Service Provider"
+                        android:textColor="@color/colorTextLabelDefault"
+                        android:textFontWeight="700"
+                        android:textSize="16sp"
+                        app:layout_constraintStart_toStartOf="@+id/imgServiceProviderPic"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/imgServiceProviderPic"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="15dp"
+                        android:src="@drawable/topperformer"
+                        app:civ_border_color="@color/white"
+                        app:civ_border_width="3dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txtServiceProvider" />
+
+                    <TextView
+                        android:id="@+id/txtServiceProviderName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/manrope_regular"
+                        android:text="David Garcia"
+                        android:textColor="@color/colorTextLabelDefault"
+                        android:textFontWeight="700"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toEndOf="@+id/imgServiceProviderPic"
+                        app:layout_constraintTop_toTopOf="@+id/imgServiceProviderPic" />
+
+                    <TextView
+                        android:id="@+id/txtServiceProviderCountry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:fontFamily="@font/manrope_regular"
+                        android:text="Pkaistan"
+                        android:textColor="@color/colorTextLabelDefault"
+                        android:textFontWeight="500"
+                        android:textSize="11sp"
+                        app:layout_constraintStart_toEndOf="@+id/imgServiceProviderPic"
+                        app:layout_constraintTop_toBottomOf="@+id/txtServiceProviderName" />
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout6"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="10dp"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/imgServiceProviderPic"
+                        app:layout_constraintTop_toBottomOf="@+id/imgServiceProviderPic">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <ImageView
+                                android:layout_width="12dp"
+                                android:layout_height="16dp"
+                                android:layout_gravity="center"
+                                app:srcCompat="@drawable/style_icon" />
+
+                            <TextView
+                                android:id="@+id/txtStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center|left"
+                                android:layout_marginStart="10dp"
+                                android:fontFamily="@font/manrope_regular"
+                                android:paddingStart="5dp"
+                                android:text="Tye Style Zone"
+                                android:textColor="@color/colorTextLabelDefault"
+                                android:textFontWeight="400"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <ImageView
+                                android:layout_width="12dp"
+                                android:layout_height="16dp"
+                                android:layout_gravity="center"
+                                app:srcCompat="@drawable/location" />
+
+                            <TextView
+                                android:id="@+id/txtAddress"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center|left"
+                                android:layout_marginStart="10dp"
+                                android:fontFamily="@font/manrope_regular"
+                                android:paddingStart="5dp"
+                                android:text="Rd. 2121 Alamal Dist. 12643 Riyadh SA"
+                                android:textColor="@color/colorTextLabelDefault"
+                                android:textFontWeight="400"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/divider2"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginTop="2dp"
+                    android:background="@drawable/blue_dotted"
+                    android:text=""
+                    app:layout_constraintEnd_toEndOf="@+id/cnstServices"
+                    app:layout_constraintStart_toStartOf="@+id/cnstServices"
+                    app:layout_constraintTop_toBottomOf="@+id/cnstServiceProvider" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:paddingBottom="20dp"
+                    android:layout_marginTop="2dp"
+                    android:background="@drawable/white_rounded10"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/cnstServiceProvider"
+                    app:layout_constraintStart_toStartOf="@+id/cnstServiceProvider"
+                    app:layout_constraintTop_toBottomOf="@+id/divider2">
+
+                    <ImageView
+                        android:id="@+id/imageView3"
+                        android:layout_width="40dp"
+                        android:layout_height="55dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="150dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/logo" />
+
+
+                    <ImageView
+                        android:id="@+id/imgPicture"
+                        android:layout_width="92dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="10dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+                        app:layout_constraintStart_toEndOf="@+id/imageView3"
+                        app:layout_constraintTop_toTopOf="@+id/imageView3"
+                        app:srcCompat="@drawable/muzien_text_black" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

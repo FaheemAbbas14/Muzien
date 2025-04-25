@@ -1,0 +1,86 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minWidth="300dp"
+    android:minHeight="200dp"
+    android:background="@drawable/white_rounded10"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingStart="25dp"
+    android:paddingTop="16dp"
+    android:paddingEnd="25dp"
+    android:paddingBottom="16dp">
+
+    <ImageView
+        android:id="@+id/thumb_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="17dp"
+        android:src="@drawable/info_blue_icon" />
+
+    <TextView
+        android:id="@+id/title_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_weight="700"
+        android:fontFamily="@font/manrope_bold"
+        android:gravity="center"
+        android:text="Mark as Completed"
+        android:textColor="@color/black_shade1"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/message_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="400"
+        android:fontFamily="@font/manrope_regular"
+        android:gravity="center"
+        android:text="Are you sure you want to mark\nthe booking as completed?"
+        android:textColor="@color/black_shade1"
+        android:textSize="14sp" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_white_blue"
+            android:paddingStart="27dp"
+            android:paddingTop="14dp"
+            android:paddingEnd="27dp"
+            android:paddingBottom="14dp"
+            android:text="@string/cancel"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimary" />
+
+        <Button
+            android:id="@+id/proceed_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_blue_100"
+            android:paddingStart="17dp"
+            android:paddingTop="14dp"
+            android:paddingEnd="17dp"
+            android:paddingBottom="14dp"
+            android:text="@string/yes_proceed"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+    </LinearLayout>
+</LinearLayout>
