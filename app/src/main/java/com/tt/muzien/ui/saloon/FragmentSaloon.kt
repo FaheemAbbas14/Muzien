@@ -31,6 +31,7 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
     private var totalPage = 1
     private var selection: Int = 0
     private var isLoading: Boolean = false
+    var saloonListAdapter: SaloonListAdapter? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getSaloons()
@@ -71,12 +72,13 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
         }
         binding.rcySaloons.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
-        binding.rcySaloons.adapter =
-            SaloonListAdapter(
-                saloonsList,
-                requireContext(),
-                clickListener
-            )
+        saloonListAdapter = SaloonListAdapter(
+            saloonsList,
+            requireContext(),
+            clickListener
+        )
+        binding.rcySaloons.adapter = saloonListAdapter
+
         binding.rcySaloons.scrollToPosition(selection)
         binding.rcySaloons.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -101,7 +103,7 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
             if (page < totalPage) {
                 page = page + 1
                 selection = saloonsList.size - 1
-                (activity as HomeActivity?)?.showLoadingIndicator()
+                // (activity as HomeActivity?)?.showLoadingIndicator()
                 getSaloons()
 
             }
@@ -128,13 +130,18 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
             when (it) {
                 is Resource.Success -> {
                     Log.d("response", "success " + it.toString())
-                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (page == 1) {
+                        (activity as HomeActivity?)?.hideLoadingIndicator()
+                    }
+                    else{
+                        binding.bottomLoader.visibility=View.GONE
+                    }
                     if (it.value.status != 0) {
                         isLoading = false
                         if (page == 1) {
                             saloonsList.clear()
                         }
-                        if (it.value.data.totalPages!=null) {
+                        if (it.value.data.totalPages != null) {
                             totalPage = it.value.data.totalPages.toInt()
                         }
                         for (saloon in it.value.data.items) {
@@ -143,7 +150,7 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
                                     saloon.id.toInt(),
                                     saloon.SaloonImages,
                                     saloon.name,
-                                    if (saloon.status=="open") true else false,
+                                    if (saloon.status == "open") true else false,
                                     saloon.address ?: "",
                                     "${saloon.tRating} (${saloon.numReviews} ${
                                         if (saloon.numReviews.toInt() == 1) "review" else "reviews"
@@ -156,14 +163,21 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
                         }
                         setSaloonAdopter()
                     } else {
+                        setSaloonAdopter()
                         requireView().snackbar(it.value.message)
                     }
                 }
 
                 is Resource.Failure -> {
+                    setSaloonAdopter()
                     Log.d("response", "failure " + it.toString())
                     isLoading = false
-                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (page == 1) {
+                        (activity as HomeActivity?)?.hideLoadingIndicator()
+                    }
+                    else{
+                        binding.bottomLoader.visibility=View.GONE
+                    }
                     handleApiError(it)
                 }
 
@@ -171,7 +185,12 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
             }
         }
         viewModel.getSaloons(page = page)
-        (activity as HomeActivity?)?.showLoadingIndicator()
+        if (page == 1) {
+            (activity as HomeActivity?)?.showLoadingIndicator()
+        }
+        else{
+            binding.bottomLoader.visibility=View.VISIBLE
+        }
     }
 
 }

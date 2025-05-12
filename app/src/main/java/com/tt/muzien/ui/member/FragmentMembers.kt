@@ -114,7 +114,7 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
                             membersList.add(
                                 MemberDto(
                                     member.id.toInt(),
-                                    member.userId.toInt(),
+                                    member.User.id.toInt(),
                                     member.User.picture,
                                     member.isActive,
                                     member.User.fullName ?: "Name",
@@ -136,7 +136,7 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
 
                 is Resource.Failure -> {
                     Log.d("response", "failure " + it.toString())
-
+                    setMemberAdopter()
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     handleApiError(it)
                 }

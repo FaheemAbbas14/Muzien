@@ -29,6 +29,7 @@ class FragmentSaloonServices :
     var selectedSaloon: SaloonDto? = null
     private val groupTitles = arrayListOf<String>()
     private val groupServices = arrayListOf<String>()
+    private var totalServices = 0
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getCategories()
@@ -40,11 +41,11 @@ class FragmentSaloonServices :
     }
 
     private fun setServicesAdopter() {
-        if (servicesMap.isNotEmpty()) {
-            binding.rcyServices.visibility = View.VISIBLE
+        if (totalServices>0) {
+            binding.nestedScrollView.visibility = View.VISIBLE
             binding.llNoDta.visibility = View.GONE
         } else {
-            binding.rcyServices.visibility = View.GONE
+            binding.nestedScrollView.visibility = View.GONE
             binding.llNoDta.visibility = View.VISIBLE
         }
         val adapter = ExpandServiceListAdapter(requireContext(), groupTitles, servicesMap)
@@ -67,6 +68,7 @@ class FragmentSaloonServices :
             var nextFragment = FragmentUpdateService()
             nextFragment.service = child
             nextFragment.category = group
+            nextFragment.saloonId=saloonId.toString()
             (activity as HomeActivity?)?.loadFragment(nextFragment)
             true
         }
@@ -122,7 +124,7 @@ class FragmentSaloonServices :
         ServiceRepository(remoteDataSource.buildApi(ServiceApi::class.java, requireContext()))
 
     private fun getCategories() {
-        viewModel.getCategories.observe(viewLifecycleOwner) {
+        viewModel.getSaloonCategories.observe(viewLifecycleOwner) {
 
             when (it) {
                 is Resource.Success -> {
@@ -132,15 +134,17 @@ class FragmentSaloonServices :
                         servicesMap.clear()
                         groupServices.clear()
                         groupTitles.clear()
+                        totalServices=0
                         for (category in it.value.data) {
-                            groupTitles.add(category?.name ?: "")
-                            groupServices.add("${category?.services?.size}")
+                            groupTitles.add(category.name)
+                            groupServices.add("${category.services.size}")
                             val servicesList = arrayListOf<ServiceInfo>()
-                            for (service in category!!.services) {
+                            for (service in category.services) {
                                 servicesList.add(
                                     ServiceInfo(
-                                        service?.image!!,
-                                        service?.name!!,
+                                        service.id.toInt(),
+                                        service.image,
+                                        service.name!!,
                                         "Duration: ${service.duration} ${
                                             if (service.duration.toInt() == 1) "min" else "mins"
                                         }",
@@ -148,6 +152,7 @@ class FragmentSaloonServices :
                                     )
                                 )
                             }
+                            totalServices += servicesList.size
                             servicesMap.put(category.name, servicesList)
 
                         }
@@ -157,7 +162,7 @@ class FragmentSaloonServices :
 
                 is Resource.Failure -> {
                     Log.d("response", "failure " + it.toString())
-
+                    setServicesAdopter()
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     handleApiError(it)
                 }

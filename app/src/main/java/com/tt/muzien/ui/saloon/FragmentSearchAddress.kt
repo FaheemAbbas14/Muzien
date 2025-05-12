@@ -6,12 +6,18 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.ListView
+import android.widget.PopupWindow
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.setFragmentResult
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -23,7 +29,10 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.AutocompletePrediction
 import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.net.FetchPlaceRequest
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
@@ -39,6 +48,7 @@ import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.snackbar
+import com.tt.muzien.utilities.Helper.closeKeyboard
 
 
 class FragmentSearchAddress :
@@ -51,7 +61,10 @@ class FragmentSearchAddress :
     var longitude: Double = 0.0
     var isEdit = false
     var saloonId: Int = 0
+    var isUserTyping = true
 
+    // Adapter for suggestions
+    val placeIds = mutableListOf<String>()
     companion object {
         private const val AUTOCOMPLETE_REQUEST_CODE = 1
     }
@@ -67,9 +80,9 @@ class FragmentSearchAddress :
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
         }
-        binding.txtSearch.setOnClickListener {
-            startAutocompleteActivity()
-        }
+//        binding.txtSearch.setOnClickListener {
+//            startAutocompleteActivity()
+//        }
         binding.cnstSave.setOnClickListener {
             if (selectedAddress != "") {
                 if (isEdit) {
@@ -88,6 +101,7 @@ class FragmentSearchAddress :
                 }
             }
         }
+        setAddressAutoComplete()
     }
 
     private fun initGoogleMaps() {
@@ -125,7 +139,7 @@ class FragmentSearchAddress :
 
     private fun setAddressData() {
         binding.txtAddress.text = selectedAddress
-        binding.txtSearch.text = selectedAddress
+        binding.txtSearch.setText(selectedAddress)
     }
 
     private fun moveMarker(latLng: LatLng) {
@@ -157,7 +171,100 @@ class FragmentSearchAddress :
 
         return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
+    private fun setAddressAutoComplete() {
+        val popupWindow = PopupWindow(requireContext())
+        val suggestionList = mutableListOf<String>() // To store the suggestions
+        val adapter = ArrayAdapter(requireContext(), R.layout.places_list_item, suggestionList)
+        val listView = ListView(requireContext())
+        listView.setBackgroundColor(Color.WHITE)
+        listView.adapter = adapter
+        popupWindow.contentView = listView
+        popupWindow.isFocusable = false
+        popupWindow.isOutsideTouchable = true
+        popupWindow.width = ViewGroup.LayoutParams.MATCH_PARENT
+        popupWindow.height = ViewGroup.LayoutParams.WRAP_CONTENT
+        listView.setOnItemClickListener { _, _, position, _ ->
+            closeKeyboard(requireActivity())
+            val selectedPlace = suggestionList[position]
+            fetchPlaceDetails(placeIds[position]) { placeDetails ->
+                selectedAddress = placeDetails.address
+                latitude = placeDetails.latLng.latitude
+                longitude = placeDetails.latLng.longitude
+                updateMarkerLocation(placeDetails.latLng.latitude, placeDetails.latLng.longitude)
+            }
+            popupWindow.dismiss() // Close the dropdown
+        }
+        // Fetch suggestions as the user types
+        binding.txtSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (isUserTyping) { // Only fetch suggestions if the user is typing
+                    val query = s.toString()
+                    if (query.isNotEmpty()) {
+                        fetchPlaces(query) { places ->
+
+                            suggestionList.clear()
+                            placeIds.clear()
+                            for (prediction in places) {
+                                placeIds.add(prediction.placeId)
+                                suggestionList.add(prediction.getPrimaryText(null).toString())
+                            }
+
+                            adapter.notifyDataSetChanged()
+
+                            // Show dropdown below EditText
+                            if (!popupWindow.isShowing) {
+                                popupWindow.showAsDropDown(binding.llSearch)
+                            }
+                        }
+                    } else {
+                        suggestionList.clear()
+                        adapter.notifyDataSetChanged()
+                        popupWindow.dismiss()
+                    }
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
+
+    fun fetchPlaces(query: String, callback: (List<AutocompletePrediction>) -> Unit) {
+        val placesClient = Places.createClient(requireContext())
+        val request = FindAutocompletePredictionsRequest.builder()
+            .setQuery(query)
+            .build()
+
+        placesClient.findAutocompletePredictions(request)
+            .addOnSuccessListener { response ->
+                val places = response.autocompletePredictions
+                callback(places)
+            }
+            .addOnFailureListener { exception ->
+                Log.e("Places API", "Error fetching predictions", exception)
+            }
+
+
+    }
+    private fun fetchPlaceDetails(placeId: String, callback: (Place) -> Unit) {
+        val placesClient = Places.createClient(context)
+        val placeFields = listOf(
+            Place.Field.NAME,
+            Place.Field.ADDRESS,
+            Place.Field.LOCATION,
+        )
+
+        val fetchPlaceRequest = FetchPlaceRequest.builder(placeId, placeFields).build()
+        placesClient.fetchPlace(fetchPlaceRequest)
+            .addOnSuccessListener { response ->
+                val place = response.place
+                callback(place)
+            }
+            .addOnFailureListener { exception ->
+                exception.printStackTrace()
+            }
+    }
     private fun startAutocompleteActivity() {
         // Set the fields to specify which types of place data to return.
         val fields =

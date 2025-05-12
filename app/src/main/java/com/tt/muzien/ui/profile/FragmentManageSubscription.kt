@@ -32,6 +32,14 @@ class FragmentManageSubscription :
     }
 
     private fun setSubscriptionAdopter() {
+        if (subscriptiopnsList.size>0){
+            binding.cnstData.visibility=View.VISIBLE
+            binding.llNoDta.visibility=View.GONE
+        }
+        else{
+            binding.cnstData.visibility=View.GONE
+            binding.llNoDta.visibility=View.VISIBLE
+        }
 
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(position: Int) {
@@ -98,7 +106,7 @@ class FragmentManageSubscription :
 
                 is Resource.Failure -> {
                     Log.d("response", "failure " + it.toString())
-
+                    setSubscriptionAdopter()
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     handleApiError(it)
                 }

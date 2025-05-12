@@ -71,7 +71,17 @@ class FragmentAddWorkingDay :
             checkValidation()
 
         }
+        binding.ddlOpening.setOnClickListener {
+            showTimePicker(requireContext(), binding.edtOpening, true)
+            checkValidation()
+
+        }
         binding.edtClose.setOnClickListener {
+            showTimePicker(requireContext(), binding.edtClose, false)
+            checkValidation()
+
+        }
+        binding.ddlClosing.setOnClickListener {
             showTimePicker(requireContext(), binding.edtClose, false)
             checkValidation()
 

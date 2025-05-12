@@ -287,6 +287,7 @@ class FragmentBookings :
                 }
 
                 is Resource.Failure -> {
+                    setBookingsAdopter()
                     Log.d("response", "failure " + it.toString())
                     isLoading = false
                     (activity as HomeActivity?)?.hideLoadingIndicator()
@@ -344,6 +345,7 @@ class FragmentBookings :
                 }
 
                 is Resource.Failure -> {
+                    setBookingsAdopter()
                     Log.d("response", "failure " + it.toString())
                     isLoading = false
                     (activity as HomeActivity?)?.hideLoadingIndicator()

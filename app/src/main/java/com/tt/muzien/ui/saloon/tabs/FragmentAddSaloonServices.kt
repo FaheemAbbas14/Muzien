@@ -23,6 +23,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.SaloonDto
+import com.tt.muzien.data.dto.ServiceInfo
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.network.ServiceApi
 import com.tt.muzien.data.repository.ServiceRepository
@@ -30,6 +31,7 @@ import com.tt.muzien.databinding.FragmentAddSaloonServicesBinding
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
+import com.tt.muzien.ui.service.FragmentUpdateService
 import com.tt.muzien.ui.service.ServiceViewModel
 import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.Helper
@@ -45,11 +47,14 @@ class FragmentAddSaloonServices :
     private val REQUEST_PERMISSIONS = 3
     private var image_uri: Uri? = null
     private var categoryId: Int? = null
+    private var category: String? = null
     var saloonId: Int? = 0
+    var serviceId: Int? = 0
     private val servicesMap = HashMap<String, Int>()
     private val services = arrayListOf<String>()
     private val saloonsList = arrayListOf<String>()
     private val saloonMap = HashMap<String, SaloonDto>()
+    var service: ServiceInfo? = null
     var saveAdd = false
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -65,7 +70,7 @@ class FragmentAddSaloonServices :
 
             if (checkValidation()) {
                 if (saloonId == 0) {
-                    saloonId = saloonMap[binding.edtSaloon.text.toString()]?.id ?: 0
+                    //  saloonId = saloonMap[binding.edtSaloon.text.toString()]?.id ?: 0
                 }
                 saveAdd = false
                 addService()
@@ -104,6 +109,13 @@ class FragmentAddSaloonServices :
         }
 
         proceedButton.setOnClickListener {
+//            var nextFragment = FragmentAddSaloonService()
+//            nextFragment.serviceId = serviceId ?: 0
+//            (activity as HomeActivity?)?.loadFragment(nextFragment)
+            var nextFragment = FragmentUpdateService()
+            nextFragment.service = service
+            nextFragment.category = category
+            (activity as HomeActivity?)?.loadFragment(nextFragment)
             // Add your logic here (e.g., enable the service)
             dialog.dismiss()
         }
@@ -296,8 +308,8 @@ class FragmentAddSaloonServices :
                 position: Int,
                 id: Long
             ) {
-                val selectedItem = services[position]
-                categoryId = servicesMap.get(selectedItem)
+                category = services[position]
+                categoryId = servicesMap.get(category)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -314,10 +326,23 @@ class FragmentAddSaloonServices :
                     Log.d("response", "success " + it.toString())
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
+                        serviceId = it.value.data.id.toInt()
+                        service = ServiceInfo(
+                            it.value.data.id.toInt(),
+                            it.value.data.image ?: "",
+                            it.value.data.name,
+                            "Duration: ${it.value.data.duration} ${
+                                if (it.value.data.duration.toInt() == 1) "min" else "mins"
+                            }",
+                            "SAR ${it.value.data.price / 100}",
+                            null
+                        )
                         if (saveAdd) {
-                            binding.edtServiceName.text = Editable.Factory.getInstance().newEditable("")
+                            binding.edtServiceName.text =
+                                Editable.Factory.getInstance().newEditable("")
                             binding.edtPrice.text = Editable.Factory.getInstance().newEditable("")
-                            binding.edtDuration.text = Editable.Factory.getInstance().newEditable("")
+                            binding.edtDuration.text =
+                                Editable.Factory.getInstance().newEditable("")
                             binding.edtSaloon.text = Editable.Factory.getInstance().newEditable("")
                             requireView().snackbar("Service added successfully")
                         } else {

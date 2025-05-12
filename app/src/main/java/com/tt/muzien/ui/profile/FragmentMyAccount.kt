@@ -13,7 +13,6 @@ import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.HomeRepository
 import com.tt.muzien.data.requests.LoginRequest
 import com.tt.muzien.databinding.FragmentMyAccountBinding
-import com.tt.muzien.ui.auth.FragmentOTP
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
@@ -30,16 +29,19 @@ class FragmentMyAccount : BaseFragment<HomeViewModel, FragmentMyAccountBinding, 
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
         }
-        var (countryCode, phoneNumber) = splitString(LoggedInInfo.user?.phoneNumber!!)
-        binding.txtCountryCode.text = countryCode
-        countryCode = countryCode.replace("+", "")
-        binding.edtPhoneNumber.text =
-            Editable.Factory.getInstance().newEditable(phoneNumber)
+        if (LoggedInInfo.user?.phoneNumber != null) {
+            var (countryCode, phoneNumber) = splitString(LoggedInInfo.user?.phoneNumber!!)
+            binding.txtCountryCode.text = countryCode
+
+            countryCode = countryCode.replace("+", "")
+            binding.edtPhoneNumber.text =
+                Editable.Factory.getInstance().newEditable(phoneNumber)
+            binding.countrySpinner.setCountryForPhoneCode(Integer.parseInt(countryCode))
+        }
         binding.edtEmail.text =
             Editable.Factory.getInstance().newEditable("${LoggedInInfo.user?.email}")
         binding.edtName.text =
             Editable.Factory.getInstance().newEditable("${LoggedInInfo.user?.fullName}")
-        binding.countrySpinner.setCountryForPhoneCode(Integer.parseInt(countryCode))
         binding.countrySpinner.setOnCountryChangeListener {
             country = binding.countrySpinner.selectedCountryName
             binding.txtCountryCode.text = binding.countrySpinner.selectedCountryCode

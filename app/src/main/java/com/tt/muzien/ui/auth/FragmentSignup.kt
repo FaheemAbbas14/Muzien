@@ -131,6 +131,7 @@ class FragmentSignup : BaseFragment<AuthViewModel, FragmentSignupBinding, AuthRe
         binding.llSave.setOnClickListener {
 
             if (checkValidation()) {
+               // role="salon-manager"
                 LoggedInInfo.fullName = binding.edtName.text.toString()
                 LoggedInInfo.email = binding.edtEmail.text.toString()
                 LoggedInInfo.role = role

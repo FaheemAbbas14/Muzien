@@ -436,7 +436,7 @@
                     android:orientation="horizontal"
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="10dp"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="@+id/llPrice"
                     app:layout_constraintStart_toStartOf="@+id/llPrice"
                     app:layout_constraintTop_toBottomOf="@+id/llPrice">
@@ -479,6 +479,7 @@
                     android:text="@string/select_a_salon_optional"
                     android:textColor="@color/colorTextLabelDefault"
                     android:textSize="11sp"
+                    android:visibility="gone"
                     android:textFontWeight="500"
                     app:layout_constraintBottom_toTopOf="@+id/llSaloon"
                     app:layout_constraintStart_toStartOf="@+id/llSaloon" />

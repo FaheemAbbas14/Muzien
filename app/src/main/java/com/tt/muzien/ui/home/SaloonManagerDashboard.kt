@@ -1,9 +1,7 @@
 package com.tt.muzien.ui.home
 
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,15 +10,14 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.SaloonDto
 import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.data.repository.HomeRepository
-import com.tt.muzien.databinding.FragmentSaloonDetailsBinding
 import com.tt.muzien.databinding.FragmentSaloonManagerDashboardBinding
 import com.tt.muzien.ui.adapters.ViewPagerAdapter
-import com.tt.muzien.ui.analytics.FragmentAnalytics
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.saloon.tabs.FragmentSaloonAnalytics
 import com.tt.muzien.ui.saloon.tabs.FragmentSaloonBookings
@@ -32,10 +29,12 @@ import com.tt.muzien.utilities.FilterSelection
 import com.tt.muzien.utilities.TimeHelper
 
 
-class SaloonManagerDashboard: BaseFragment<HomeViewModel, FragmentSaloonManagerDashboardBinding, HomeRepository>() {
+class SaloonManagerDashboard :
+    BaseFragment<HomeViewModel, FragmentSaloonManagerDashboardBinding, HomeRepository>() {
 
     var selectedSaloon: SaloonDto? = null
     private lateinit var fragmentManager: FragmentManager
+    var showInviationRequired = false
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -43,8 +42,8 @@ class SaloonManagerDashboard: BaseFragment<HomeViewModel, FragmentSaloonManagerD
         // setStatusBar(view)
         fragmentManager = requireActivity().supportFragmentManager
         // setStatusBar(view)
-        binding.imgMore.visibility=View.GONE
-        binding.imgCamera.visibility=View.GONE
+        binding.imgMore.visibility = View.GONE
+        binding.imgCamera.visibility = View.GONE
         binding.imgMore.setOnClickListener {
 
             //   uploadImage()
@@ -157,34 +156,42 @@ class SaloonManagerDashboard: BaseFragment<HomeViewModel, FragmentSaloonManagerD
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setData() {
-        binding.txtItemName.text = selectedSaloon?.name
-        binding.txtLocation.text = selectedSaloon?.location
-        binding.txtRating.text = selectedSaloon?.ratings
-        var timing = TimeHelper.getCurrentDayTiming(selectedSaloon?.timing)
-        binding.txtTiming.text = timing
-        if (selectedSaloon?.isOpened == true) {
-            binding.llStatus.setBackgroundDrawable(
-                ResourcesCompat.getDrawable(
-                    requireContext().resources,
-                    R.drawable.rounded_green,
-                    requireContext().theme
+        if (selectedSaloon != null) {
+            binding.llNoSaloon.visibility = View.GONE
+            binding.llSaloonData.visibility = View.VISIBLE
+            binding.txtItemName.text = selectedSaloon?.name
+            binding.txtLocation.text = selectedSaloon?.location
+            binding.txtRating.text = selectedSaloon?.ratings
+            var timing = TimeHelper.getCurrentDayTiming(selectedSaloon?.timing)
+            binding.txtTiming.text = timing
+            if (selectedSaloon?.isOpened == true) {
+                binding.llStatus.setBackgroundDrawable(
+                    ResourcesCompat.getDrawable(
+                        requireContext().resources,
+                        R.drawable.rounded_green,
+                        requireContext().theme
+                    )
                 )
-            )
-            binding.txtStatusTexts.text = "open today"
+                binding.txtStatusTexts.text = "open today"
+            } else {
+                binding.llStatus.setBackgroundDrawable(
+                    ResourcesCompat.getDrawable(
+                        requireContext().resources,
+                        R.drawable.rounded_red,
+                        requireContext().theme
+                    )
+                )
+                binding.txtStatusTexts.text = "close today"
+            }
+            setViewPager()
         } else {
-            binding.llStatus.setBackgroundDrawable(
-                ResourcesCompat.getDrawable(
-                    requireContext().resources,
-                    R.drawable.rounded_red,
-                    requireContext().theme
-                )
-            )
-            binding.txtStatusTexts.text = "close today"
+            binding.llNoSaloon.visibility = View.VISIBLE
+            binding.llSaloonData.visibility = View.GONE
         }
-        setViewPager()
     }
 
     private fun setViewPager() {
+
         var images = ArrayList<String>()
         for (image in selectedSaloon?.icon!!) {
             images.add(image?.image ?: "")

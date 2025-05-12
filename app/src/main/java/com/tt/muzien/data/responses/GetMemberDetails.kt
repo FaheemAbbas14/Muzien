@@ -39,7 +39,3 @@ data class UserService(
     val service: ServiceInfo,
 )
 
-data class ServiceInfo(
-    val id: Long,
-    val name: String,
-)

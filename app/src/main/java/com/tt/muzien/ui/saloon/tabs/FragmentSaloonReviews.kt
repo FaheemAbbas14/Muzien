@@ -125,7 +125,7 @@ class FragmentSaloonReviews :
 
                 is Resource.Failure -> {
                     Log.d("response", "failure " + it.toString())
-
+                    setReviewsAdopter()
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     handleApiError(it)
                 }

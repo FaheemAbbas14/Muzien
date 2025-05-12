@@ -305,7 +305,7 @@ class ServiceProviderDashboard :
                 is Resource.Success -> {
                     Log.d("response", "success " + it.toString())
                     (activity as HomeActivity?)?.hideLoadingIndicator()
-                    if (it.value.status != 0) {
+                    if (it.value.status != 0 && it.value.data.id!=null) {
                         inviteId=it.value.data.id.toInt()
                         binding.txtInvitedText.text="${it.value.data.InvitedBy.fullName} has invited you to join their salon “${it.value.data.Saloon.name}” as a service provider.\n" +
                                 "\n" +
@@ -438,6 +438,7 @@ class ServiceProviderDashboard :
                 }
 
                 is Resource.Failure -> {
+                    setBookingsAdopter()
                     Log.d("response", "failure " + it.toString())
                     isLoading = false
                     (activity as HomeActivity?)?.hideLoadingIndicator()
@@ -495,6 +496,7 @@ class ServiceProviderDashboard :
                 }
 
                 is Resource.Failure -> {
+                    setBookingsAdopter()
                     Log.d("response", "failure " + it.toString())
                     isLoading = false
                     (activity as HomeActivity?)?.hideLoadingIndicator()

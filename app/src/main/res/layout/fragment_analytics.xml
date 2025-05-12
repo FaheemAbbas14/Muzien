@@ -16,7 +16,7 @@
             android:id="@+id/llNoData"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <ImageView
                 android:id="@+id/imageView3"
@@ -69,7 +69,7 @@
             android:id="@+id/cnstData"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible"
+            android:visibility="gone"
             tools:context=".ui.analytics.FragmentAnalytics">
 
 

@@ -11,14 +11,19 @@ import com.tt.muzien.data.repository.UserRepository
 import com.tt.muzien.data.requests.AddHolidayRequest
 import com.tt.muzien.data.requests.AddMemberRequest
 import com.tt.muzien.data.requests.AddMemberService
+import com.tt.muzien.data.requests.AddSaloonServiceRequest
+import com.tt.muzien.data.requests.AddServiceSaloonRequest
 import com.tt.muzien.data.requests.AddWorkingHourRequest
 import com.tt.muzien.data.responses.AddMemberDataResponse
 import com.tt.muzien.data.responses.AddMemberResponse
+import com.tt.muzien.data.responses.AddServiceResponse
 import com.tt.muzien.data.responses.GetCategoriesResponse
 import com.tt.muzien.data.responses.GetMemberDetails
 import com.tt.muzien.data.responses.GetMembersResponse
 import com.tt.muzien.data.responses.GetSaloonResponse
+import com.tt.muzien.data.responses.GetServicesResponse
 import com.tt.muzien.data.responses.GetsUsersResponse
+import com.tt.muzien.data.responses.SaloonServiceResponse
 import com.tt.muzien.ui.base.BaseViewModel
 import com.tt.muzien.utilities.SingleEventLiveData
 import kotlinx.coroutines.launch
@@ -73,6 +78,10 @@ class MemberViewModel(
     private val _getCategories: MutableLiveData<Resource<GetCategoriesResponse>> =
         SingleEventLiveData()
     val getCategories: LiveData<Resource<GetCategoriesResponse>> get() = _getCategories
+    private val _getSaloonCategories: MutableLiveData<Resource<GetServicesResponse>> =
+        SingleEventLiveData()
+    val getSaloonCategories: LiveData<Resource<GetServicesResponse>> get() = _getSaloonCategories
+
     private val _addMemberData: MutableLiveData<Resource<AddMemberDataResponse>> =
         SingleEventLiveData()
     val addMemberData: LiveData<Resource<AddMemberDataResponse>> get() = _addMemberData
@@ -80,6 +89,10 @@ class MemberViewModel(
     private val _removeHoliday: MutableLiveData<Resource<AddMemberDataResponse>> =
         SingleEventLiveData()
     val removeHoliday: LiveData<Resource<AddMemberDataResponse>> get() = _removeHoliday
+
+    private val _addSaloonService: MutableLiveData<Resource<AddServiceResponse>> =
+        SingleEventLiveData()
+    val addSaloonService: LiveData<Resource<AddServiceResponse>> get() = _addSaloonService
 
     private val _removeWorkingHour: MutableLiveData<Resource<AddMemberDataResponse>> =
         SingleEventLiveData()
@@ -121,9 +134,13 @@ class MemberViewModel(
         _makeManger.value = repository.makeManager(memberId)
     }
 
-    fun getCategories(saloonIds: String? = null) = viewModelScope.launch {
-        _getCategories.value = serviceRepository?.getCategories(saloonIds)
+    fun getCategories() = viewModelScope.launch {
+        _getCategories.value = serviceRepository?.getCategories()
     }
+    fun getCategories(saloonIds: String) = viewModelScope.launch {
+        _getSaloonCategories.value = serviceRepository?.getCategories(saloonIds)
+    }
+
 
     fun addService(userId: Int, request: AddMemberService) = viewModelScope.launch {
         _addMemberData.value = repository.addService(userId, request)
@@ -143,5 +160,8 @@ class MemberViewModel(
 
     fun removeHoliday(userId: Int, request: Int) = viewModelScope.launch {
         _removeHoliday.value = repository.removeHoliday(userId, request)
+    }
+    fun addSaloonService(request: AddServiceSaloonRequest) = viewModelScope.launch {
+        _addSaloonService.value = serviceRepository?.addSaloonService( request)
     }
 }

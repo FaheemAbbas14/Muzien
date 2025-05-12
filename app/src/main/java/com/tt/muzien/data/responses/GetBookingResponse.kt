@@ -41,10 +41,7 @@ data class BookingService(
     val serviceDetails: ServiceDetails,
 )
 
-data class ServiceDetails(
-    val id: Long,
-    val name: String,
-)
+
 
 data class Customer(
     val id: Long,

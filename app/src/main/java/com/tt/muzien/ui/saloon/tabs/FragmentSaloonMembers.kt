@@ -144,7 +144,7 @@ class FragmentSaloonMembers :
 
                 is Resource.Failure -> {
                     Log.d("response", "failure " + it.toString())
-
+                    setMemberAdopter()
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     handleApiError(it)
                 }

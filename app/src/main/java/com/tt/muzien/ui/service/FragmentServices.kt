@@ -26,6 +26,7 @@ class FragmentServices :
     private var bookingDuration: String = ""
     private val groupTitles = arrayListOf<String>()
     private val groupServices = arrayListOf<String>()
+    private var totalServices = 0
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // setServicesAdopter()
@@ -49,7 +50,7 @@ class FragmentServices :
     }
 
     private fun setServicesAdopter() {
-        if (servicesMap.isNotEmpty()) {
+        if (totalServices>0) {
             binding.cnstData.visibility = View.VISIBLE
             binding.llNoDta.visibility = View.GONE
         } else {
@@ -100,7 +101,7 @@ class FragmentServices :
         ServiceRepository(remoteDataSource.buildApi(ServiceApi::class.java, requireContext()))
 
     private fun getCategories() {
-        viewModel.getCategories.observe(viewLifecycleOwner) {
+        viewModel.getServices.observe(viewLifecycleOwner) {
 
             when (it) {
                 is Resource.Success -> {
@@ -110,22 +111,26 @@ class FragmentServices :
                         servicesMap.clear()
                         groupServices.clear()
                         groupTitles.clear()
+                        totalServices=0
                         for (category in it.value.data) {
-                            groupTitles.add(category?.name ?: "")
-                            groupServices.add("${category?.services?.size}")
+                            groupTitles.add(category.name)
+                            groupServices.add("${category.services.size}")
                             val servicesList = arrayListOf<ServiceInfo>()
-                            for (service in category!!.services) {
+                            for (service in category.services) {
                                 servicesList.add(
                                     ServiceInfo(
-                                        service?.image!!,
-                                        service?.name!!,
+                                        service.id.toInt(),
+                                        service.image,
+                                        service.name,
                                         "Duration: ${service.duration} ${
                                             if (service.duration.toInt() == 1) "min" else "mins"
                                         }",
-                                        "SAR ${service.price / 100}"
+                                        "SAR ${service.price / 100}",
+                                        service
                                     )
                                 )
                             }
+                            totalServices += servicesList.size
                             servicesMap.put(category.name, servicesList)
 
                         }
@@ -135,7 +140,7 @@ class FragmentServices :
 
                 is Resource.Failure -> {
                     Log.d("response", "failure " + it.toString())
-
+                    setServicesAdopter()
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     handleApiError(it)
                 }
@@ -143,7 +148,7 @@ class FragmentServices :
                 else -> {}
             }
         }
-        viewModel.getCategories()
+        viewModel.getServices()
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 }

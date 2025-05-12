@@ -21,6 +21,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.tt.muzien.R
+import com.tt.muzien.data.dto.LoggedInInfo
 import com.tt.muzien.data.dto.MemberDto
 import com.tt.muzien.data.dto.WorkingHourData
 import com.tt.muzien.data.network.MemberApi
@@ -56,6 +57,10 @@ class FragmentViewMember :
         setFragmentResultListener("requestKey") { key, bundle ->
             getMemberDetails()
 
+        }
+        if (LoggedInInfo.user?.role == "business-owner") {
+            binding.imgAddWorkingHour.visibility=View.GONE
+            binding.imgAddHoliday.visibility=View.GONE
         }
         binding.imgBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
@@ -200,10 +205,10 @@ class FragmentViewMember :
             memberDetails?.UserHolidays?.size?.let {
                 if (it > 0) {
                     binding.txtHolidaysData.visibility = View.GONE
-                    binding.rcyHolidays?.visibility = View.VISIBLE
+                    binding.rcyHolidays.visibility = View.VISIBLE
                 } else {
                     binding.txtHolidaysData.visibility = View.VISIBLE
-                    binding.rcyHolidays?.visibility = View.GONE
+                    binding.rcyHolidays.visibility = View.GONE
                 }
             }
             holidaysList.clear()
@@ -218,14 +223,14 @@ class FragmentViewMember :
                     deleteHoliday(holidaysMap[holidaysList[pos]]?.toInt() ?: 0)
                 }
             }
-            binding.rcyHolidays?.layoutManager =
+            binding.rcyHolidays.layoutManager =
                 LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
             holidayListAdapter = HolidayListAdapter(
                 holidaysList,
                 false,
                 clickListener
             )
-            binding.rcyHolidays?.adapter = holidayListAdapter
+            binding.rcyHolidays.adapter = holidayListAdapter
         }
 
     }

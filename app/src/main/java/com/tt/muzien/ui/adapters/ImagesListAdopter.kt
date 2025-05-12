@@ -54,6 +54,7 @@ class ImagesListAdopter(
         var item: Uri = itemList[position]
         Glide.with(holder.imgPhoto)
             .load(item)
+            .transform(CenterCrop(), RoundedCornersTransformation(20, 0))
             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)  // Cache both original & transformed image
             .skipMemoryCache(false)  // Cache in memory
             .into(holder.imgPhoto)

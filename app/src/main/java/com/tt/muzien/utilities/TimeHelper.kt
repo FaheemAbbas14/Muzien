@@ -157,7 +157,7 @@ object TimeHelper {
         var day = getCurrentDay()
         if (timings != null) {
             for (hour in timings) {
-                if (hour?.day == day) {
+                if (hour?.day == day.toLowerCase()) {
                     timing = "${hour.openingTime}-${hour.closingTime}"
                 }
             }

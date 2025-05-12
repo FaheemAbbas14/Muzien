@@ -25,7 +25,7 @@
             android:gravity="center"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:src="@drawable/arabic_back"
+            android:src="@drawable/back_button"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
@@ -53,7 +53,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/llBack"
-        app:srcCompat="@drawable/add_service_icon" />
+        app:srcCompat="@drawable/invite_icon" />
 
 
     <TextView
@@ -63,7 +63,7 @@
         android:layout_marginTop="10dp"
         android:background="@android:color/transparent"
         android:fontFamily="@font/manrope_bold"
-        android:text="Add Service"
+        android:text="Select a salon"
         android:textColor="@color/colorTextLabelDefault"
         android:textFontWeight="700"
         android:textSize="22sp"
@@ -80,16 +80,17 @@
         android:layout_marginEnd="30dp"
         android:fontFamily="@font/manrope_regular"
         android:gravity="center"
-        android:text="Select a service"
+        android:text="@string/select_a_salon_to_invite_user"
         android:textColor="@color/colorTextLabelDefault"
         android:textFontWeight="400"
         android:textSize="14sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtLabel" />
 
     <LinearLayout
-        android:id="@+id/llAddService"
+        android:id="@+id/llOpening"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
@@ -101,13 +102,13 @@
         android:paddingHorizontal="10dp"
         android:paddingVertical="10dp"
         android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="@+id/llSave"
-        app:layout_constraintStart_toStartOf="@+id/llSave"
+        app:layout_constraintEnd_toEndOf="@+id/llInvite"
+        app:layout_constraintStart_toStartOf="@+id/llInvite"
         app:layout_constraintTop_toBottomOf="@+id/txtText">
 
 
         <AutoCompleteTextView
-            android:id="@+id/edtService"
+            android:id="@+id/edtSaloon"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
@@ -115,8 +116,8 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:fontFamily="@font/manrope_regular"
-            android:gravity="center|right"
-            android:hint="Service Name"
+            android:gravity="center|left"
+            android:hint="@string/saloon_name"
             android:inputType="text"
             android:paddingEnd="10dp"
             android:textColor="@color/colorTextDefault"
@@ -142,16 +143,17 @@
         android:background="@color/white"
         android:fontFamily="@font/manrope_regular"
         android:inputType="textEmailAddress"
-        android:text="Select Service"
+        android:text="@string/select_saloon"
         android:textColor="@color/colorTextLabelDefault"
         android:textFontWeight="500"
         android:textSize="11sp"
-        app:layout_constraintBottom_toTopOf="@+id/llAddService"
-        app:layout_constraintStart_toStartOf="@+id/llAddService" />
+        app:layout_constraintBottom_toTopOf="@+id/llOpening"
+        app:layout_constraintStart_toStartOf="@+id/llOpening" />
+
 
 
     <LinearLayout
-        android:id="@+id/llSave"
+        android:id="@+id/llInvite"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
@@ -174,7 +176,7 @@
             android:layout_height="match_parent"
             android:fontFamily="@font/manrope_bold"
             android:gravity="center"
-            android:text="Save"
+            android:text="Enable"
             android:textColor="@color/white"
             android:textSize="14sp" />
     </LinearLayout>

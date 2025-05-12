@@ -403,6 +403,13 @@ class HomeActivity : AppCompatActivity() {
             binding.constraintLayout2.visibility = View.GONE
             binding.imgadd.visibility = View.GONE
         }
+        else{
+            var nextFragment = SaloonManagerDashboard()
+            nextFragment.selectedSaloon = assignedSaloon
+            loadFragment(nextFragment)
+            binding.constraintLayout2.visibility = View.GONE
+            binding.imgadd.visibility = View.GONE
+        }
     }
 
 }

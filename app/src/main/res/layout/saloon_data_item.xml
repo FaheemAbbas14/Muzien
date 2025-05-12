@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@android:color/white"
     android:paddingTop="15dp"
-    android:paddingBottom="15dp"
-    android:background="@android:color/white">
+    android:paddingBottom="15dp">
 
     <!-- Salon Name -->
     <TextView
@@ -26,13 +26,13 @@
         android:id="@+id/salon_toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:thumb="@drawable/custom_switch_thumb"
         app:layout_constraintBottom_toBottomOf="@id/salon_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/salon_name"
         app:switchMinWidth="56dp"
         app:switchPadding="12dp"
         app:thumbTextPadding="12dp"
-        android:thumb="@drawable/custom_switch_thumb"
         app:track="@drawable/custom_switch_track" />
 
     <!-- Address -->
@@ -50,18 +50,18 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/location"/>
+            android:src="@drawable/location" />
 
         <TextView
             android:id="@+id/saloon_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:fontFamily="@font/manrope_regular"
             android:text="@string/rd_2121_alamal_dist_12643_riyadh_sa"
             android:textColor="@color/black_shade2"
-            android:textSize="12sp"
             android:textFontWeight="400"
-            android:fontFamily="@font/manrope_regular"/>
+            android:textSize="12sp" />
     </LinearLayout>
 
     <!-- Duration Layout -->
@@ -79,30 +79,35 @@
         app:layout_constraintTop_toBottomOf="@id/address_layout"
         app:layout_constraintWidth_percent="0.45">
 
-
-        <TextView
+        <EditText
             android:id="@+id/edtDuration"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1"
             android:background="@android:color/transparent"
             android:fontFamily="@font/manrope_regular"
             android:gravity="center|left"
-            android:hint="@string/_45_mins"
+            android:hint="30"
             android:inputType="text"
-            android:paddingEnd="10dp"
+            android:paddingStart="5dp"
             android:textColor="@color/colorTextDefault"
             android:textFontWeight="400"
             android:textSize="14sp" />
 
-        <ImageView
+        <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="8dp"
-            app:srcCompat="@drawable/ddl_icon" />
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:background="@color/white"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center"
+            android:inputType="textEmailAddress"
+            android:text="mins"
+            android:textColor="@color/black_shade3"
+            android:textFontWeight="400"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@+id/llPrice"
+            app:layout_constraintStart_toStartOf="@+id/llPrice" />
 
 
     </LinearLayout>

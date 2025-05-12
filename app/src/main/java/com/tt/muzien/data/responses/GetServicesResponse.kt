@@ -9,9 +9,27 @@ package com.tt.muzien.data.responses
  */
 data class GetServicesResponse(
     val status: Int,
-    val data: ServiceData,
+    val data: List<CategoryInfo>,
 )
 
-data class ServiceData(
-    val services: List<Service?>,
+data class CategoryInfo(
+    val id: Long,
+    val name: String,
+    val image: String,
+    val services: List<ServiceInfo>,
+)
+
+data class ServiceInfo(
+    val id: Long,
+    val name: String,
+    val image: String,
+    val duration: Long,
+    val price: Long,
+    val saloonServices: List<SaloonServiceInfo>,
+)
+
+data class SaloonServiceInfo(
+    val saloonId: Long,
+    val duration: Long,
+    val price: Long,
 )

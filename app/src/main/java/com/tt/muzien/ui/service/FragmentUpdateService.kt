@@ -19,30 +19,50 @@ import com.bumptech.glide.request.target.Target
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.ServiceInfo
 import com.tt.muzien.data.dto.ServiceSaloon
-import com.tt.muzien.data.network.HomeApi
-import com.tt.muzien.data.repository.HomeRepository
+import com.tt.muzien.data.network.Resource
+import com.tt.muzien.data.network.ServiceApi
+import com.tt.muzien.data.repository.ServiceRepository
+import com.tt.muzien.data.requests.AddSaloonService
+import com.tt.muzien.data.requests.AddServiceSaloonRequest
+import com.tt.muzien.data.responses.ServiceDetailsInfo
 import com.tt.muzien.databinding.FragmentUpdateServiceBinding
 import com.tt.muzien.ui.adapters.ServiceUpdateListAdopter
 import com.tt.muzien.ui.base.BaseFragment
+import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
-import com.tt.muzien.ui.home.HomeViewModel
+import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.FilterSelection
+import kotlin.collections.arrayListOf
 
 
 class FragmentUpdateService :
-    BaseFragment<HomeViewModel, FragmentUpdateServiceBinding, HomeRepository>() {
+    BaseFragment<ServiceViewModel, FragmentUpdateServiceBinding, ServiceRepository>() {
     var service: ServiceInfo? = null
     var category: String? = null
+    var saloonId: String? = "0"
     private val salonList = arrayListOf<ServiceSaloon>()
     var adapter: ServiceUpdateListAdopter? = null
+    var serviceDetailsInfo: ServiceDetailsInfo? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.setSaloonRepo((activity as HomeActivity?)?.getSaloonRepo()!!)
         binding.imgBack.setOnClickListener {
             FilterSelection.filterData = null
             (activity as HomeActivity?)?.popFragment()
         }
-        setData()
-
+        binding.llSave.setOnClickListener {
+            if (service?.service != null) {
+                addSaloonService()
+            } else {
+                addSaloonService()
+            }
+        }
+        getServicesDetails()
+        if (service?.service != null) {
+            binding.txtSave.text = resources.getString(R.string.update)
+        } else {
+            binding.txtSave.text = resources.getString(R.string.save)
+        }
     }
 
     private fun setData() {
@@ -55,7 +75,7 @@ class FragmentUpdateService :
                 dataSource: DataSource,
                 isFirstResource: Boolean
             ): Boolean {
-                Log.d("imageLoaded", "success ${service?.name}")
+                Log.d("imageLoaded", "success ${serviceDetailsInfo?.name}")
 
                 //  holder.imgProfilePic.scaleType = ImageView.ScaleType.CENTER_CROP
                 return false
@@ -69,56 +89,27 @@ class FragmentUpdateService :
                 isFirstResource: Boolean
             ): Boolean {
 //                holder.imgProfilePic.scaleType = ImageView.ScaleType.CENTER_INSIDE
-                Log.d("imageLoaded", "failed ${service?.name}")
+                Log.d("imageLoaded", "failed ${serviceDetailsInfo?.name}")
                 return false
             }
 
 
         }
         Glide.with(binding.imgCover)
-            .load(service?.icon)
+            .load(serviceDetailsInfo?.image)
             .listener(iconRequestListener)
             .placeholder(R.drawable.hair_cut)
             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)  // Cache both original & transformed image
             .skipMemoryCache(false)  // Cache in memory
             .into(binding.imgCover)
-        binding.txtItemName.text = service?.name
+        binding.txtItemName.text = serviceDetailsInfo?.name
         binding.txtItemCategory.text = "Category: $category"
-        binding.txtItemDuration.text = "${service?.duration}  |  ${service?.rate}"
+        binding.txtItemDuration.text =
+            "${serviceDetailsInfo?.duration} mins | SAR ${serviceDetailsInfo!!.price / 100}"
         setSaloonsAdapter()
     }
 
     private fun setSaloonsAdapter() {
-        salonList.add(
-            ServiceSaloon(
-                "Salon A",
-                "Rd. 2121 Alemal Dist. 12643 Riyadh SA",
-                "45 mins",
-                "SAR",
-                "10",
-                false
-            )
-        )
-        salonList.add(
-            ServiceSaloon(
-                "Salon B",
-                "Rd. 2121 Alemal Dist. 12643 Riyadh SA",
-                "45 mins",
-                "SAR",
-                "10",
-                false
-            )
-        )
-        salonList.add(
-            ServiceSaloon(
-                "Salon C",
-                "Rd. 2121 Alemal Dist. 12643 Riyadh SA",
-                "45 mins",
-                "SAR",
-                "10",
-                false
-            )
-        )
 
         adapter = ServiceUpdateListAdopter(salonList) { position, isEnabled ->
             salonList[position].isEnabled = isEnabled
@@ -130,8 +121,8 @@ class FragmentUpdateService :
         binding.rcySaloons.adapter = adapter
     }
 
-    override fun getViewModel(): Class<HomeViewModel> {
-        return HomeViewModel::class.java
+    override fun getViewModel(): Class<ServiceViewModel> {
+        return ServiceViewModel::class.java
     }
 
     override fun getFragmentBinding(
@@ -140,7 +131,7 @@ class FragmentUpdateService :
     ) = FragmentUpdateServiceBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        HomeRepository(remoteDataSource.buildApi(HomeApi::class.java,requireContext()), userPreferences)
+        ServiceRepository(remoteDataSource.buildApi(ServiceApi::class.java, requireContext()))
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onResume() {
@@ -158,5 +149,146 @@ class FragmentUpdateService :
         (activity as HomeActivity?)?.setSystemWindow(true)
         (activity as HomeActivity?)?.changeStatusBarColor(Color.WHITE)
         (activity as HomeActivity?)?.showTabs()
+    }
+
+    private fun getServicesDetails() {
+        viewModel.getServicesDetails.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    if (it.value.status == 1) {
+                        serviceDetailsInfo = it.value.data
+                        //  if (service?.service == null) {
+                        getSaloons()
+//                        } else {
+//                            (activity as HomeActivity?)?.hideLoadingIndicator()
+//                            setData()
+//                        }
+
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.getServicesDetails(service?.id.toString())
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
+    private fun getSaloons() {
+        viewModel.getServicesStatus.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        salonList.clear()
+                        for (saloon in it.value.data) {
+                            if (saloonId != "0") {
+                                if (saloon.id.toString() == saloonId) {
+                                    salonList.add(
+                                        ServiceSaloon(
+                                            saloon.id.toString(),
+                                            service?.id.toString(),
+                                            saloon.name,
+                                            saloon.address,
+                                            if (saloon.duration > 0) saloon.duration.toString() else serviceDetailsInfo?.duration.toString(),
+                                            "SAR",
+                                            (saloon.price / 100).toString(),
+                                            saloon.serviceEnabled
+                                        )
+                                    )
+                                }
+                            } else {
+                                salonList.add(
+                                    ServiceSaloon(
+                                        saloon.id.toString(),
+                                        service?.id.toString(),
+                                        saloon.name,
+                                        saloon.address,
+                                        if (saloon.duration > 0) saloon.duration.toString() else serviceDetailsInfo?.duration.toString(),
+                                        "SAR",
+                                        (saloon.price / 100).toString(),
+                                        saloon.serviceEnabled
+                                    )
+                                )
+                            }
+
+                        }
+                        setData()
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.getServicesStatus(service?.id.toString())
+    }
+
+    private fun addSaloonService() {
+        viewModel.addSaloonService.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        if (service?.service != null) {
+                            (activity as HomeActivity?)?.popFragment()
+                            requireView().snackbar("Service updated successfully")
+                        } else {
+                            (activity as HomeActivity?)?.popFragment()
+                            (activity as HomeActivity?)?.popFragment()
+                            requireView().snackbar("Service enabled successfully")
+                        }
+
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        var saloonData = arrayListOf<AddSaloonService>()
+        for (saloon in adapter!!.getData()) {
+            saloonData.add(
+                AddSaloonService(
+                    saloon.saloonId,
+                    saloon.serviceId,
+                    saloon.isEnabled.toString(),
+                    saloon.duration.toInt(),
+                    saloon.price.toInt() * 100
+                )
+            )
+        }
+        viewModel.addSaloonService(
+            AddServiceSaloonRequest(saloonData)
+        )
+        (activity as HomeActivity?)?.showLoadingIndicator()
     }
 }
