@@ -80,11 +80,13 @@ class HorizontalCalendarView @JvmOverloads constructor(
         this.onMonthChangedListener = listener
     }
     fun setMonthFromDate(dateString: String, format: String = "yyyy-MM-dd") {
-        val sdf = SimpleDateFormat(format, Locale.getDefault())
-        val date = sdf.parse(dateString) ?: return
+        if (dateString!="") {
+            val sdf = SimpleDateFormat(format, Locale.getDefault())
+            val date = sdf.parse(dateString) ?: return
 
-        calendar.time = date
-        updateCalendar()
+            calendar.time = date
+            updateCalendar()
+        }
     }
     private fun updateCalendar() {
         // Update the month-year header

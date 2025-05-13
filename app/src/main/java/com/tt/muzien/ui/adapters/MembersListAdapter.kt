@@ -83,7 +83,7 @@ class MembersListAdapter(
             holder.llStyle.visibility = View.GONE
         }
         holder.txtName.text = item.name
-        holder.txtBookings.text = "${item.bookings} bookings today"
+        holder.txtBookings.text = "${item.bookings?:0} bookings today"
         holder.txtProfesstion.text = item.profession
         holder.txtProfesstion.visibility=View.GONE
         holder.txtRating.text = item.rating

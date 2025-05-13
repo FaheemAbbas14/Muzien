@@ -39,27 +39,56 @@
                     app:layout_constraintStart_toStartOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+
+
+            <FrameLayout
+                android:id="@+id/unionContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-40dp"
+                android:background="@android:color/transparent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="134dp"
+                    android:adjustViewBounds="true"
+
+                    android:src="@drawable/union" />
+
+                <!-- Optional: Add content inside the shape -->
+                <!--
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Inside the bump"
+                    android:textColor="#000000"
+                    android:textSize="16sp" />
+                -->
+
+            </FrameLayout>
+
             <ImageView
                 android:id="@+id/imgProfilePic"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:layout_marginBottom="-70dp"
-                android:background="@drawable/circular_light_grey"
+                android:layout_marginBottom="-100dp"
                 android:padding="8dp"
                 android:src="@drawable/topperformer"
-                app:layout_constraintBottom_toTopOf="@+id/cnstMainView"
+                app:layout_constraintBottom_toTopOf="@+id/unionContainer"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
-
             <LinearLayout
                 android:id="@+id/llStatus"
                 android:layout_width="wrap_content"
-
-                android:minWidth="60dp"
                 android:layout_height="20dp"
                 android:layout_marginTop="70dp"
                 android:background="@drawable/green_70_rounded"
+                android:minWidth="60dp"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -83,20 +112,19 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cnstMainView"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@color/light_grey"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
+                app:layout_constraintTop_toBottomOf="@+id/imgProfilePic">
 
 
                 <TextView
                     android:id="@+id/txtName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="60dp"
                     android:fontFamily="@font/manrope_regular"
 
                     android:textColor="@color/textBlack"
@@ -257,15 +285,15 @@
                         android:textSize="14sp" />
 
                     <GridView
-                        android:layout_marginTop="10dp"
                         android:id="@+id/gridView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:numColumns="4"
-                        android:verticalSpacing="10dp"
-                        android:horizontalSpacing="10dp"
+                        android:layout_marginTop="10dp"
                         android:gravity="center"
-                        android:stretchMode="columnWidth" />
+                        android:horizontalSpacing="10dp"
+                        android:numColumns="4"
+                        android:stretchMode="columnWidth"
+                        android:verticalSpacing="10dp" />
 
                     <ImageView
                         android:id="@+id/imgAddService"
@@ -357,6 +385,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/txtHoliday"
                         app:layout_constraintTop_toBottomOf="@+id/txtHoliday" />
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rcyHolidays"
                         android:layout_width="0dp"

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.BookingRepository
 import com.tt.muzien.data.repository.MemberRepository
+import com.tt.muzien.data.requests.UpdateBookingRequest
 import com.tt.muzien.data.responses.AcceptInviteResponse
 import com.tt.muzien.data.responses.CalenderBookingResponse
 import com.tt.muzien.data.responses.GetAnalyticsResponse
@@ -40,6 +41,8 @@ class BookingViewModel(
     val getAnalytics: LiveData<Resource<GetAnalyticsResponse>> get() = _getAnalytics
     private val _getLatestInvite: MutableLiveData<Resource<GetLatestInvite>> = SingleEventLiveData()
     val getLatestInvite: LiveData<Resource<GetLatestInvite>> get() = _getLatestInvite
+    private val _updateBooking: MutableLiveData<Resource<Unit>> = SingleEventLiveData()
+    val updateBooking: LiveData<Resource<Unit>> get() = _updateBooking
     private val _acceptInvite: MutableLiveData<Resource<AcceptInviteResponse>> =
         SingleEventLiveData()
     val acceptInvite: LiveData<Resource<AcceptInviteResponse>> get() = _acceptInvite
@@ -81,4 +84,10 @@ class BookingViewModel(
         _acceptInvite.value = memberRepository?.acceptInvite(inviteId)
     }
 
+    fun updateBooking(
+        bookingId: String,
+        requestData: UpdateBookingRequest
+    ) = viewModelScope.launch {
+        _updateBooking.value = repository.updateBooking(bookingId, requestData)
+    }
 }

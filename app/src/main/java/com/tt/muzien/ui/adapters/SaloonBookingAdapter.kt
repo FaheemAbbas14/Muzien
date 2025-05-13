@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -25,6 +26,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.tt.muzien.R
 import com.tt.muzien.data.SaloonBookingData
+import com.tt.muzien.interfaces.IbookingCancel
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 
 
@@ -38,6 +40,7 @@ class SaloonBookingAdapter(
     private val itemList: List<SaloonBookingData>,
     private val context: Context,
     private val listener: OnItemClickListner,
+    private val ibookingCancel: IbookingCancel,
     private var bookingStatus: String? = null,
     private var isFromMain: Boolean = false,
     private var isFromServiceProvider: Boolean = false
@@ -96,13 +99,13 @@ class SaloonBookingAdapter(
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         try {
-            if (isFromServiceProvider){
-                holder.imgName.visibility= View.GONE
-                holder.txtStyle.visibility= View.GONE
-                holder.imgUserName.visibility= View.GONE
-                holder.txtUserName.visibility= View.GONE
-                holder.txtCancel.visibility= View.GONE
-                holder.imgBarCode.visibility= View.GONE
+            if (isFromServiceProvider) {
+                holder.imgName.visibility = View.GONE
+                holder.txtStyle.visibility = View.GONE
+                holder.imgUserName.visibility = View.GONE
+                holder.txtUserName.visibility = View.GONE
+                holder.txtCancel.visibility = View.GONE
+                holder.imgBarCode.visibility = View.GONE
             }
             var item: SaloonBookingData = itemList[position]
             if (bookingStatus == "completed") {
@@ -123,7 +126,7 @@ class SaloonBookingAdapter(
             holder.txtUserName.text = item.personName
             holder.txtService.text = item.service
             holder.txtCancel.setOnClickListener {
-                showPopupDialog()
+                showPopupDialog(position)
             }
             // Implement the RequestListener here
             val iconRequestListener = object : RequestListener<Drawable> {
@@ -173,7 +176,7 @@ class SaloonBookingAdapter(
         bookingStatus = status
     }
 
-    private fun showPopupDialog() {
+    private fun showPopupDialog(position: Int) {
         // Create Dialog
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -184,16 +187,19 @@ class SaloonBookingAdapter(
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         // Find buttons and handle click events
-        val btnCancel = view.findViewById<Button>(R.id.btnCancel)
+        val edtReason = view.findViewById<EditText>(R.id.edtReason)
         val proceedButton = view.findViewById<Button>(R.id.proceed_button)
-
+        val btnCancel = view.findViewById<Button>(R.id.btnCancel)
         btnCancel.setOnClickListener {
             dialog.dismiss() // Dismiss the dialog
         }
 
         proceedButton.setOnClickListener {
-            // Add your logic here (e.g., enable the service)
-            dialog.dismiss()
+            if (edtReason.text.toString() != "") {
+                ibookingCancel.onItemClick(position, edtReason.text.toString())
+                // Add your logic here (e.g., enable the service)
+                dialog.dismiss()
+            }
         }
 
         // Show the dialog

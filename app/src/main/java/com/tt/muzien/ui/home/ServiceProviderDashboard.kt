@@ -21,6 +21,7 @@ import com.tt.muzien.data.network.BookingApi
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.BookingRepository
 import com.tt.muzien.databinding.FragmentServiceProviderDashboardBinding
+import com.tt.muzien.interfaces.IbookingCancel
 import com.tt.muzien.ui.adapters.SaloonBookingAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.bookings.BookingViewModel
@@ -193,10 +194,17 @@ class ServiceProviderDashboard :
 
             }
         }
+        val ibookingCancel = object : IbookingCancel {
+
+            override fun onItemClick(position: Int, reason: String) {
+
+            }
+        }
         adopter = SaloonBookingAdapter(
             saloonsBookingList,
             requireContext(),
             clickListener,
+            ibookingCancel,
             bookingStatus,
             true
         )
@@ -476,6 +484,7 @@ class ServiceProviderDashboard :
                             }
                             saloonsBookingList.add(
                                 SaloonBookingData(
+                                    booking.id.toString(),
                                     booking.customer.picture ?: "",
                                     booking.customer.fullName ?: "",
                                     booking.saloon.name,

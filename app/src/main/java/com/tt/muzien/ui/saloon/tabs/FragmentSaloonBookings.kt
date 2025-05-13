@@ -20,6 +20,7 @@ import com.tt.muzien.data.network.BookingApi
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.BookingRepository
 import com.tt.muzien.databinding.FragmentSaloonBookingsBinding
+import com.tt.muzien.interfaces.IbookingCancel
 import com.tt.muzien.ui.adapters.SaloonBookingAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.bookings.BookingViewModel
@@ -70,7 +71,7 @@ class FragmentSaloonBookings :
             FilterSelection.filterData=FilterData("", fromDate, toDate,false)
             getBooking()
         }
-        binding.customCalendarView.setDays(generateDaysWithEvents())
+       //binding.customCalendarView.setDays(generateDaysWithEvents())
         binding.imgBookingFilter.setOnClickListener {
             if (bookingStatus != null) {
                 binding.imgBookingFilter.setImageResource(
@@ -114,6 +115,7 @@ class FragmentSaloonBookings :
             }
             adopter?.setBookingStatus(bookingStatus)
             adopter?.notifyDataSetChanged()
+            binding.customCalendarView.setMonthFromDate(fromDate ?: "")
             // Toast.makeText(requireContext(), "data received", Toast.LENGTH_SHORT).show()
         }
 //        val days = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
@@ -139,6 +141,7 @@ class FragmentSaloonBookings :
     }
 
     private fun setBookingsAdopter() {
+        binding.customCalendarView.setDays(generateDaysWithEvents())
         if (saloonsBookingList.isNotEmpty()) {
             binding.cnstData.visibility = View.VISIBLE
             binding.llNoDta.visibility = View.GONE
@@ -154,10 +157,17 @@ class FragmentSaloonBookings :
 
             }
         }
+        val ibookingCancel = object : IbookingCancel {
+
+            override fun onItemClick(position: Int, reason: String) {
+
+            }
+        }
         adopter = SaloonBookingAdapter(
             saloonsBookingList,
             requireContext(),
             clickListener,
+            ibookingCancel,
             bookingStatus,
             true
         )
@@ -261,6 +271,7 @@ class FragmentSaloonBookings :
                             }
                             saloonsBookingList.add(
                                 SaloonBookingData(
+                                    booking.id.toString(),
                                     booking.customer.picture ?: "",
                                     booking.customer.fullName ?: "",
                                     booking.saloon.name,

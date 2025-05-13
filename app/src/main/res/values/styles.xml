@@ -9,6 +9,7 @@
         <!-- Optional: Make the window translucent on startup -->
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
+<!--        <item name="android:windowSoftInputMode">adjustResize</item>-->
     </style>
 
     <style name="Widget.AppTheme.ActionBar.Fullscreen" parent="Widget.AppCompat.ActionBar">

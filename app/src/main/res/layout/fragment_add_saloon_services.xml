@@ -495,9 +495,9 @@
                     android:paddingEnd="30dp"
                     android:paddingBottom="15dp"
                     android:scaleType="centerCrop"
-                    app:layout_constraintEnd_toEndOf="@+id/llSaloon"
-                    app:layout_constraintStart_toStartOf="@+id/llSaloon"
-                    app:layout_constraintTop_toBottomOf="@+id/llSaloon"
+                    app:layout_constraintEnd_toEndOf="@+id/llPrice"
+                    app:layout_constraintStart_toStartOf="@+id/llPrice"
+                    app:layout_constraintTop_toBottomOf="@+id/llPrice"
                     app:srcCompat="@drawable/add_service_placeholder" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

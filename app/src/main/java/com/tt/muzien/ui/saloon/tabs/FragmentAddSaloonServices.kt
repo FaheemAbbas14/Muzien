@@ -27,6 +27,8 @@ import com.tt.muzien.data.dto.ServiceInfo
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.network.ServiceApi
 import com.tt.muzien.data.repository.ServiceRepository
+import com.tt.muzien.data.requests.AddSaloonService
+import com.tt.muzien.data.requests.AddServiceSaloonRequest
 import com.tt.muzien.databinding.FragmentAddSaloonServicesBinding
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
@@ -112,12 +114,18 @@ class FragmentAddSaloonServices :
 //            var nextFragment = FragmentAddSaloonService()
 //            nextFragment.serviceId = serviceId ?: 0
 //            (activity as HomeActivity?)?.loadFragment(nextFragment)
-            var nextFragment = FragmentUpdateService()
-            nextFragment.service = service
-            nextFragment.category = category
-            (activity as HomeActivity?)?.loadFragment(nextFragment)
-            // Add your logic here (e.g., enable the service)
-            dialog.dismiss()
+            if (saloonId != null && saloonId != 0) {
+                dialog.dismiss()
+                addSaloonService()
+            } else {
+                var nextFragment = FragmentUpdateService()
+                nextFragment.service = service
+                nextFragment.category = category
+                nextFragment.saloonId = saloonId.toString()
+                (activity as HomeActivity?)?.loadFragment(nextFragment)
+                // Add your logic here (e.g., enable the service)
+                dialog.dismiss()
+            }
         }
 
         // Show the dialog
@@ -272,6 +280,9 @@ class FragmentAddSaloonServices :
                         servicesMap.clear()
                         services.clear()
                         for (category in it.value.data) {
+                            if (categoryId == null) {
+                                categoryId = category?.id
+                            }
                             servicesMap.put(category!!.name, category.id)
                             services.add(category.name)
                         }
@@ -300,8 +311,8 @@ class FragmentAddSaloonServices :
     private fun setCategoryAdopter() {
         val adapter = ArrayAdapter(requireContext(), R.layout.custom_spinner_item, services)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spnCategory?.adapter = adapter
-        binding.spnCategory?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.spnCategory.adapter = adapter
+        binding.spnCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View?,
@@ -338,15 +349,20 @@ class FragmentAddSaloonServices :
                             null
                         )
                         if (saveAdd) {
-                            binding.edtServiceName.text =
-                                Editable.Factory.getInstance().newEditable("")
-                            binding.edtPrice.text = Editable.Factory.getInstance().newEditable("")
-                            binding.edtDuration.text =
-                                Editable.Factory.getInstance().newEditable("")
-                            binding.edtSaloon.text = Editable.Factory.getInstance().newEditable("")
-                            requireView().snackbar("Service added successfully")
+                            if (saloonId != null && saloonId != 0) {
+                                addSaloonService()
+                            } else {
+                                var nextFragment = FragmentUpdateService()
+                                nextFragment.service = service
+                                nextFragment.category = category
+                                nextFragment.saloonId = saloonId.toString()
+                                (activity as HomeActivity?)?.loadFragment(nextFragment)
+                            }
+
                         } else {
+
                             showPopupDialog()
+
                         }
                     } else {
                         requireView().snackbar(it.value.message)
@@ -451,4 +467,56 @@ class FragmentAddSaloonServices :
         // (activity as HomeActivity?)?.showLoadingIndicator()
     }
 
+    private fun addSaloonService() {
+        viewModel.addSaloonService.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        if (saveAdd) {
+                            binding.edtServiceName.text =
+                                Editable.Factory.getInstance().newEditable("")
+                            binding.edtPrice.text = Editable.Factory.getInstance().newEditable("")
+                            binding.edtDuration.text =
+                                Editable.Factory.getInstance().newEditable("")
+                            binding.edtSaloon.text = Editable.Factory.getInstance().newEditable("")
+                            requireView().snackbar("Service added successfully")
+                        } else {
+                            (activity as HomeActivity?)?.popFragment()
+                            requireView().snackbar("Service enabled successfully")
+                        }
+
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        var saloonData = arrayListOf<AddSaloonService>()
+        saloonData.add(
+            AddSaloonService(
+                saloonId.toString(),
+                serviceId.toString(),
+                true.toString(),
+                binding.edtDuration.text.toString().toInt(),
+                binding.edtPrice.text.toString().toInt() * 100
+            )
+        )
+
+        viewModel.addSaloonService(
+            AddServiceSaloonRequest(saloonData)
+        )
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
 }

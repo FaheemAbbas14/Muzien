@@ -113,7 +113,9 @@ class FragmentUpdateService :
 
         adapter = ServiceUpdateListAdopter(salonList) { position, isEnabled ->
             salonList[position].isEnabled = isEnabled
-            adapter?.notifyDataSetChanged()
+            binding.rcySaloons.post {
+                adapter?.notifyItemChanged(position)
+            }
 
         }
 

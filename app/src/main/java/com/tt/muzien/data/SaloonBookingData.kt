@@ -8,6 +8,7 @@ package com.tt.muzien.data
  * +923115284424
  */
 data class SaloonBookingData(
+    var bookingId: String,
     var imageUrl: String,
     var name: String,
     var style: String,

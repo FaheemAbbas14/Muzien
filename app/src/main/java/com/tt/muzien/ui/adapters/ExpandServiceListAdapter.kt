@@ -34,7 +34,7 @@ class ExpandServiceListAdapter(
     private val context: Context,
     private val groupTitles: List<String>,
     private val childItems: Map<String, List<ServiceInfo>>,
-    private val isFromMain: Boolean = false,
+    private val isFromMain: Boolean = true,
     private val servicesCount: List<String>?=null,
 ) : BaseExpandableListAdapter() {
 

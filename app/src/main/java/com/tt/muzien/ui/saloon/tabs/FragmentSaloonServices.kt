@@ -48,7 +48,8 @@ class FragmentSaloonServices :
             binding.nestedScrollView.visibility = View.GONE
             binding.llNoDta.visibility = View.VISIBLE
         }
-        val adapter = ExpandServiceListAdapter(requireContext(), groupTitles, servicesMap)
+        val adapter = ExpandServiceListAdapter(requireContext(), groupTitles, servicesMap, true,
+            groupServices)
         binding.rcyServices.setAdapter(adapter)
         // Adjust height dynamically
         adjustExpandableListViewHeight(binding.rcyServices)
@@ -94,7 +95,7 @@ class FragmentSaloonServices :
             val groupItem = adapter.getGroupView(i, false, null, listView)
             groupItem.measure(0, 0)
             Log.d("ExpandableListView", "parent height: ${groupItem.measuredHeight}")
-            totalHeight += Helper.dpToPx(requireContext(), 50)
+            totalHeight += Helper.dpToPx(requireContext(), 45)
 
             if (listView.isGroupExpanded(i)) {
                 for (j in 0 until adapter.getChildrenCount(i)) {
@@ -136,25 +137,26 @@ class FragmentSaloonServices :
                         groupTitles.clear()
                         totalServices=0
                         for (category in it.value.data) {
-                            groupTitles.add(category.name)
-                            groupServices.add("${category.services.size}")
-                            val servicesList = arrayListOf<ServiceInfo>()
-                            for (service in category.services) {
-                                servicesList.add(
-                                    ServiceInfo(
-                                        service.id.toInt(),
-                                        service.image,
-                                        service.name!!,
-                                        "Duration: ${service.duration} ${
-                                            if (service.duration.toInt() == 1) "min" else "mins"
-                                        }",
-                                        "SAR ${service.price / 100}"
+                            if (category.services.size>0) {
+                                groupTitles.add(category.name)
+                                groupServices.add("${category.services.size}")
+                                val servicesList = arrayListOf<ServiceInfo>()
+                                for (service in category.services) {
+                                    servicesList.add(
+                                        ServiceInfo(
+                                            service.id.toInt(),
+                                            service.image,
+                                            service.name!!,
+                                            "Duration: ${service.duration} ${
+                                                if (service.duration.toInt() == 1) "min" else "mins"
+                                            }",
+                                            "SAR ${service.price / 100}"
+                                        )
                                     )
-                                )
+                                }
+                                totalServices += servicesList.size
+                                servicesMap.put(category.name, servicesList)
                             }
-                            totalServices += servicesList.size
-                            servicesMap.put(category.name, servicesList)
-
                         }
                     }
                     setServicesAdopter()

@@ -19,7 +19,9 @@ import com.tt.muzien.data.dto.FilterData
 import com.tt.muzien.data.network.BookingApi
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.BookingRepository
+import com.tt.muzien.data.requests.UpdateBookingRequest
 import com.tt.muzien.databinding.FragmentBookingsBinding
+import com.tt.muzien.interfaces.IbookingCancel
 import com.tt.muzien.ui.adapters.SaloonBookingAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
@@ -158,10 +160,17 @@ class FragmentBookings :
 
             }
         }
+        val ibookingCancel = object : IbookingCancel {
+
+            override fun onItemClick(position: Int, reason: String) {
+                updateBooking(saloonsBookingList[position].bookingId, reason)
+            }
+        }
         adopter = SaloonBookingAdapter(
             saloonsBookingList,
             requireContext(),
             clickListener,
+            ibookingCancel,
             bookingStatus,
             true
         )
@@ -325,6 +334,7 @@ class FragmentBookings :
                             }
                             saloonsBookingList.add(
                                 SaloonBookingData(
+                                    booking.id.toString(),
                                     booking.customer.picture ?: "",
                                     booking.customer.fullName ?: "",
                                     booking.saloon.name,
@@ -363,4 +373,31 @@ class FragmentBookings :
         )
         //  (activity as HomeActivity?)?.showLoadingIndicator()
     }
+
+    private fun updateBooking(bookingId: String, reason: String) {
+        isLoading = true
+        viewModel.updateBooking.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    requireView().snackbar("Booking updated successfully")
+
+                }
+
+                is Resource.Failure -> {
+                    setBookingsAdopter()
+                    Log.d("response", "failure " + it.toString())
+                    isLoading = false
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.updateBooking(bookingId, UpdateBookingRequest("cancelled", reason))
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
 }

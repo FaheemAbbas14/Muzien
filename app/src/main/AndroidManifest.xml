@@ -41,7 +41,7 @@
         </activity>
         <activity
             android:name=".ui.home.HomeActivity"
-            android:windowSoftInputMode="adjustResize"
+            android:windowSoftInputMode="adjustResize|stateHidden"
             android:exported="false" />
         <activity
             android:name=".ui.auth.AuthActivity"

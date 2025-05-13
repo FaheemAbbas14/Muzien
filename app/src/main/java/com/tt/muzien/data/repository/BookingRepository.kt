@@ -1,6 +1,7 @@
 package com.tt.muzien.data.repository
 
 import com.tt.muzien.data.network.BookingApi
+import com.tt.muzien.data.requests.UpdateBookingRequest
 
 
 /**
@@ -19,8 +20,9 @@ class BookingRepository(
         status: String? = null,
         page: String? = null
     ) = safeApiCall {
-        api.getBookings(saloonIds, startDate, endDate, status,page)
+        api.getBookings(saloonIds, startDate, endDate, status, page)
     }
+
     suspend fun getCalendarbar(
         saloonIds: String? = null,
         startDate: String? = null,
@@ -28,12 +30,20 @@ class BookingRepository(
     ) = safeApiCall {
         api.getCalendarbar(saloonIds, startDate, endDate)
     }
+
     suspend fun getAnalytics(
         saloonIds: String? = null,
         startDate: String? = null,
         endDate: String? = null
     ) = safeApiCall {
         api.getAnalytics(saloonIds, startDate, endDate)
+    }
+
+    suspend fun updateBooking(
+        bookingId: String,
+        requestData: UpdateBookingRequest
+    ) = safeApiCall {
+        api.updateBooking(bookingId, requestData)
     }
 
 }
