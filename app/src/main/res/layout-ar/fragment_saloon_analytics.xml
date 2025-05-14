@@ -5,8 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:scrollbars="none"
-    android:layout_height="match_parent"
-    android:background="@color/light_grey">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,14 +14,16 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/llNoData"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
+            android:layout_height="wrap_content"
+            android:minHeight="400dp"
+            android:layout_gravity="center"
+            android:visibility="visible">
 
             <ImageView
                 android:id="@+id/imageView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="130dp"
+                android:layout_marginBottom="120dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -69,8 +70,8 @@
             android:id="@+id/cnstData"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible"
-            tools:context=".ui.analytics.FragmentAnalytics">
+            android:visibility="gone"
+            android:background="@color/light_grey">
 
 
             <TextView
@@ -157,7 +158,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/manrope_regular"
-                            android:gravity="center|right"
+                            android:gravity="center|left"
                             android:text="@string/scheduled"
                             android:textColor="@color/blue_text"
                             android:textFontWeight="500"
@@ -168,7 +169,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/manrope_regular"
-                            android:gravity="center|right"
+                            android:gravity="center|left"
                             android:text="@string/_30"
                             android:textColor="@color/blue_text"
                             android:textFontWeight="700"
@@ -186,7 +187,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/manrope_regular"
-                            android:gravity="center|right"
+                            android:gravity="center|left"
                             android:text="@string/overdue"
                             android:textColor="@color/red_text"
                             android:textFontWeight="500"
@@ -197,7 +198,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/manrope_regular"
-                            android:gravity="center|right"
+                            android:gravity="center|left"
                             android:text="@string/_30"
                             android:textColor="@color/red_text"
                             android:textFontWeight="700"
@@ -215,7 +216,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/manrope_regular"
-                            android:gravity="center|right"
+                            android:gravity="center|left"
                             android:text="@string/completed"
                             android:textColor="@color/green_text"
                             android:textFontWeight="500"
@@ -226,7 +227,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/manrope_regular"
-                            android:gravity="center|right"
+                            android:gravity="center|left"
                             android:text="@string/_30"
                             android:textColor="@color/green_text"
                             android:textFontWeight="700"
@@ -244,7 +245,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/manrope_regular"
-                            android:gravity="center|right"
+                            android:gravity="center|left"
                             android:text="@string/cancelled"
                             android:textColor="@color/black_shade2"
                             android:textFontWeight="500"
@@ -255,7 +256,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/manrope_regular"
-                            android:gravity="center|right"
+                            android:gravity="center|left"
                             android:text="@string/_30"
                             android:textColor="@color/black_shade2"
                             android:textFontWeight="700"
@@ -364,7 +365,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/manrope_regular"
-                        android:gravity="center|right"
+                        android:gravity="center|left"
                         android:text="@string/sar"
                         android:textColor="@color/black_text"
                         android:textFontWeight="400"
@@ -375,7 +376,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/manrope_regular"
-                        android:gravity="center|right"
+                        android:gravity="center|left"
                         android:text="@string/_1340"
                         android:textColor="@color/black_text"
                         android:textFontWeight="700"

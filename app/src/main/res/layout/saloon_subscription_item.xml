@@ -12,7 +12,7 @@
         android:id="@+id/txtName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/manrope_regular"
+        android:fontFamily="@font/manrope_medium"
         android:text="@string/highbrow_beauty_bar"
         android:textColor="@color/black_shade1"
         android:textFontWeight="700"

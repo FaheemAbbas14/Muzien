@@ -51,6 +51,8 @@
             android:checked="true"
             android:gravity="center"
             android:text="@string/analytics"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textSize="12sp"
             android:textFontWeight="500"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -73,6 +75,8 @@
             android:button="@android:color/transparent"
             android:gravity="center"
             android:text="@string/saloon_4"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/colorTextLabelDefault" />
 
@@ -93,6 +97,8 @@
             android:button="@android:color/transparent"
             android:gravity="center"
             android:text="@string/members_4"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/colorTextLabelDefault" />
 
@@ -111,6 +117,8 @@
             android:button="@android:color/transparent"
             android:gravity="center"
             android:text="@string/services"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textSize="12sp"
             android:textFontWeight="500"
             android:textAppearance="?android:attr/textAppearanceMedium"

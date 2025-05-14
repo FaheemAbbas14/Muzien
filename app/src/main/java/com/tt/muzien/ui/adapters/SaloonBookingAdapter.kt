@@ -125,6 +125,12 @@ class SaloonBookingAdapter(
             holder.txtStyle.text = item.style
             holder.txtUserName.text = item.personName
             holder.txtService.text = item.service
+            if (item.status == "pending-approval"|| item.status == "unpaid" || item.status == "overdue") {
+                holder.txtCancel.visibility = View.VISIBLE
+            }
+            else{
+                holder.txtCancel.visibility = View.GONE
+            }
             holder.txtCancel.setOnClickListener {
                 showPopupDialog(position)
             }

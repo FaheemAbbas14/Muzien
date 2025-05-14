@@ -41,50 +41,52 @@ class FragmentSaloonServices :
     }
 
     private fun setServicesAdopter() {
-        if (totalServices>0) {
-            binding.nestedScrollView.visibility = View.VISIBLE
+        if (totalServices > 0) {
+            binding.cnstData.visibility = View.VISIBLE
             binding.llNoDta.visibility = View.GONE
-        } else {
-            binding.nestedScrollView.visibility = View.GONE
-            binding.llNoDta.visibility = View.VISIBLE
-        }
-        val adapter = ExpandServiceListAdapter(requireContext(), groupTitles, servicesMap, true,
-            groupServices)
-        binding.rcyServices.setAdapter(adapter)
-        // Adjust height dynamically
-        adjustExpandableListViewHeight(binding.rcyServices)
 
-        // Update height on expand/collapse
-        binding.rcyServices.setOnGroupExpandListener {
+            val adapter = ExpandServiceListAdapter(
+                requireContext(), groupTitles, servicesMap, true,
+                groupServices
+            )
+            binding.rcyServices.setAdapter(adapter)
+            // Adjust height dynamically
             adjustExpandableListViewHeight(binding.rcyServices)
-        }
 
-        binding.rcyServices.setOnGroupCollapseListener {
-            adjustExpandableListViewHeight(binding.rcyServices)
-        }
-        // Handle child clicks
-        binding.rcyServices.setOnChildClickListener { _, _, groupPosition, childPosition, _ ->
-            val group = groupTitles[groupPosition]
-            val child = servicesMap[group]?.get(childPosition)
-            var nextFragment = FragmentUpdateService()
-            nextFragment.service = child
-            nextFragment.category = group
-            nextFragment.saloonId=saloonId.toString()
-            (activity as HomeActivity?)?.loadFragment(nextFragment)
-            true
-        }
+            // Update height on expand/collapse
+            binding.rcyServices.setOnGroupExpandListener {
+                adjustExpandableListViewHeight(binding.rcyServices)
+            }
 
-        // Handle group expansion
-        binding.rcyServices.setOnGroupExpandListener { groupPosition ->
+            binding.rcyServices.setOnGroupCollapseListener {
+                adjustExpandableListViewHeight(binding.rcyServices)
+            }
+            // Handle child clicks
+            binding.rcyServices.setOnChildClickListener { _, _, groupPosition, childPosition, _ ->
+                val group = groupTitles[groupPosition]
+                val child = servicesMap[group]?.get(childPosition)
+                var nextFragment = FragmentUpdateService()
+                nextFragment.service = child
+                nextFragment.category = group
+                nextFragment.saloonId = saloonId.toString()
+                (activity as HomeActivity?)?.loadFragment(nextFragment)
+                true
+            }
 
-            adjustExpandableListViewHeight(binding.rcyServices)
-            //            Toast.makeText(
+            // Handle group expansion
+            binding.rcyServices.setOnGroupExpandListener { groupPosition ->
+
+                adjustExpandableListViewHeight(binding.rcyServices)
+                //            Toast.makeText(
 //                requireContext(),
 //                "Expanded: ${groupTitles[groupPosition]}",
 //                Toast.LENGTH_SHORT
 //            ).show()
+            }
+        } else {
+            binding.cnstData.visibility = View.GONE
+            binding.llNoDta.visibility = View.VISIBLE
         }
-
     }
 
     private fun adjustExpandableListViewHeight(listView: ExpandableListView) {
@@ -95,14 +97,14 @@ class FragmentSaloonServices :
             val groupItem = adapter.getGroupView(i, false, null, listView)
             groupItem.measure(0, 0)
             Log.d("ExpandableListView", "parent height: ${groupItem.measuredHeight}")
-            totalHeight += Helper.dpToPx(requireContext(), 45)
+            totalHeight += Helper.dpToPx(requireContext(), 85)
 
             if (listView.isGroupExpanded(i)) {
                 for (j in 0 until adapter.getChildrenCount(i)) {
                     val childItem = adapter.getChildView(i, j, false, null, listView)
                     childItem.measure(0, 0)
                     Log.d("ExpandableListView", "child height: ${childItem.measuredHeight}")
-                    totalHeight += Helper.dpToPx(requireContext(), 115)
+                    totalHeight += Helper.dpToPx(requireContext(), 135)
                 }
             }
         }
@@ -135,9 +137,9 @@ class FragmentSaloonServices :
                         servicesMap.clear()
                         groupServices.clear()
                         groupTitles.clear()
-                        totalServices=0
+                        totalServices = 0
                         for (category in it.value.data) {
-                            if (category.services.size>0) {
+                            if (category.services.size > 0) {
                                 groupTitles.add(category.name)
                                 groupServices.add("${category.services.size}")
                                 val servicesList = arrayListOf<ServiceInfo>()

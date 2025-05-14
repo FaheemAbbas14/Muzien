@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/light_grey">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:weightSum="10">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/llNoDta"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/llAdd"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_weight="9"
+        android:minHeight="400dp"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/imageView3"
@@ -62,43 +61,48 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollView"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cnstData"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
+        android:layout_weight="9"
+        android:minHeight="400dp"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/llAdd"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+
+        <ExpandableListView
+            android:id="@+id/rcyServices"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-
-            <ExpandableListView
-                android:id="@+id/rcyServices"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@android:color/transparent"
-                android:dividerHeight="0dp"
-                android:groupIndicator="@null"
-                android:scrollbars="none"
-                android:visibility="visible" />
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="16dp"
+            android:childDivider="@color/white"
+            android:divider="@color/light_grey"
+            android:dividerHeight="5dp"
+            android:groupIndicator="@null"
+            android:scrollbars="none"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:id="@+id/llAdd"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginStart="45dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="45dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/rounded_blue_100"
+        android:clickable="true"
+        android:focusable="true"
         android:minHeight="50dp"
         android:orientation="horizontal"
         android:paddingHorizontal="10dp"
@@ -118,4 +122,4 @@
             android:textColor="@color/white"
             android:textSize="14sp" />
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

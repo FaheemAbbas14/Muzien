@@ -240,6 +240,10 @@ class FragmentBookings :
             val bookings = bookingMap[day]
             val eventDotColors = mutableListOf<Int>()
             if (bookings != null) {
+                Log.d(
+                    "BookingDetails",
+                    "dayOfWeek ${day} pendingApproval ${bookings.pendingApproval} scheduled ${bookings.scheduled} completed ${bookings.completed} cancelled ${bookings.cancelled} overdue ${bookings.overdue}"
+                )
                 if (bookings.pendingApproval > 0) {
                     eventDotColors.add(Color.YELLOW)
                 }
@@ -380,9 +384,9 @@ class FragmentBookings :
 
             when (it) {
                 is Resource.Success -> {
-                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    // (activity as HomeActivity?)?.hideLoadingIndicator()
                     requireView().snackbar("Booking updated successfully")
-
+                    getBooking()
                 }
 
                 is Resource.Failure -> {

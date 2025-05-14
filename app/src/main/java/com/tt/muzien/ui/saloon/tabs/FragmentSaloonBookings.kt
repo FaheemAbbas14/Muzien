@@ -13,12 +13,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tt.muzien.R
 import com.tt.muzien.data.SaloonBookingData
+import com.tt.muzien.data.dto.BookingsCountData
 import com.tt.muzien.data.dto.CalendarDay
 import com.tt.muzien.data.dto.FilterData
 import com.tt.muzien.data.dto.SaloonDto
 import com.tt.muzien.data.network.BookingApi
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.BookingRepository
+import com.tt.muzien.data.requests.UpdateBookingRequest
 import com.tt.muzien.databinding.FragmentSaloonBookingsBinding
 import com.tt.muzien.interfaces.IbookingCancel
 import com.tt.muzien.ui.adapters.SaloonBookingAdapter
@@ -32,6 +34,8 @@ import com.tt.muzien.utilities.FilterSelection
 import com.tt.muzien.utilities.TimeHelper
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 import java.util.Locale
 
@@ -50,6 +54,7 @@ class FragmentSaloonBookings :
     private var selection: Int = 0
     private var isLoading: Boolean = false
     var selectedSaloon: SaloonDto? = null
+    private val bookingMap = HashMap<Int, BookingsCountData>()
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -61,7 +66,7 @@ class FragmentSaloonBookings :
             // Fetch data or update UI based on date range
             fromDate = startDate
             toDate = endDate
-            getBooking()
+            getCalendarbar()
         }
         getBooking()
         binding.customCalendarView.setOnDaySelectedListener { selectedDay ->
@@ -82,7 +87,7 @@ class FragmentSaloonBookings :
                 bookingStatus = null
                 FilterSelection.filterData!!.bookingStatus = bookingStatus
                 setMargins(false)
-                getBooking()
+                getCalendarbar()
             } else {
                 var nextFragment = FragmentBookingFilter()
                 (activity as HomeActivity?)?.loadFragment(nextFragment)
@@ -116,7 +121,11 @@ class FragmentSaloonBookings :
             adopter?.setBookingStatus(bookingStatus)
             adopter?.notifyDataSetChanged()
             binding.customCalendarView.setMonthFromDate(fromDate ?: "")
+            getCalendarbar()
             // Toast.makeText(requireContext(), "data received", Toast.LENGTH_SHORT).show()
+        }
+        else{
+            getCalendarbar()
         }
 //        val days = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
 //        binding.customCalendarView.setCurrentDay(days.minus(1))
@@ -160,7 +169,7 @@ class FragmentSaloonBookings :
         val ibookingCancel = object : IbookingCancel {
 
             override fun onItemClick(position: Int, reason: String) {
-
+                updateBooking(saloonsBookingList[position].bookingId, reason)
             }
         }
         adopter = SaloonBookingAdapter(
@@ -234,21 +243,32 @@ class FragmentSaloonBookings :
 
         for (day in 1..maxDay) {
             val dayOfWeek = SimpleDateFormat("EEE", Locale.getDefault()).format(calendar.time)
-
-            // Example dot data for specific days
-            val eventDotColors = when (day) {
-                5 -> listOf(Color.RED, Color.GREEN) // Two dots
-                10 -> listOf(Color.BLUE) // One dot
-                15 -> listOf(Color.YELLOW, Color.MAGENTA, Color.CYAN) // Three dots
-                else -> emptyList()
+            val bookings = bookingMap[day]
+            val eventDotColors = mutableListOf<Int>()
+            if (bookings != null) {
+                if (bookings.pendingApproval > 0) {
+                    eventDotColors.add(Color.YELLOW)
+                }
+                if (bookings.scheduled > 0) {
+                    eventDotColors.add(Color.BLUE)
+                }
+                if (bookings.completed > 0) {
+                    eventDotColors.add(Color.GREEN)
+                }
+                if (bookings.cancelled > 0) {
+                    eventDotColors.add(Color.BLACK)
+                }
+                if (bookings.overdue > 0) {
+                    eventDotColors.add(Color.RED)
+                }
             }
-
             days.add(CalendarDay(dayOfWeek, day, eventDotColors = eventDotColors))
             calendar.add(Calendar.DAY_OF_MONTH, 1)
         }
 
         return days
     }
+
 
     private fun getBooking() {
         isLoading = true
@@ -311,4 +331,80 @@ class FragmentSaloonBookings :
         )
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getCalendarbar() {
+        isLoading = true
+        viewModel.getCalendarbar.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    bookingMap.clear()
+                    Log.d("response", "success " + it.toString())
+                    for (day in it.value.data) {
+                        try {
+                            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                            val date = LocalDate.parse(day.date, formatter)
+                            val dayOfMonth = date.dayOfMonth
+                            bookingMap.put(
+                                dayOfMonth,
+                                BookingsCountData(
+                                    day.pendingApproval,
+                                    day.scheduled,
+                                    day.cancelled,
+                                    day.completed,
+                                    day.cancelled
+                                )
+                            )
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+                    getBooking()
+
+                }
+
+                is Resource.Failure -> {
+                    setBookingsAdopter()
+                    Log.d("response", "failure " + it.toString())
+                    isLoading = false
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.getCalendarbar(
+            saloonIds = selectedSaloon?.id.toString(),
+            startDate = fromDate,
+            endDate = toDate
+        )
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+    private fun updateBooking(bookingId: String, reason: String) {
+        isLoading = true
+        viewModel.updateBooking.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                   // (activity as HomeActivity?)?.hideLoadingIndicator()
+                    requireView().snackbar("Booking updated successfully")
+                    getBooking()
+                }
+
+                is Resource.Failure -> {
+                    setBookingsAdopter()
+                    Log.d("response", "failure " + it.toString())
+                    isLoading = false
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.updateBooking(bookingId, UpdateBookingRequest("cancelled", reason))
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
 }

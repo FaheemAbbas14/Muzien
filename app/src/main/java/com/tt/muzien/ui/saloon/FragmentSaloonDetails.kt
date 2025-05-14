@@ -45,8 +45,8 @@ class FragmentSaloonDetails :
         fragmentManager = requireActivity().supportFragmentManager
         // setStatusBar(view)
 
-        binding.imgMore.visibility=View.GONE
-        binding.imgCamera.visibility=View.GONE
+        binding.imgMore.visibility = View.GONE
+        binding.imgCamera.visibility = View.GONE
         binding.imgMore.setOnClickListener {
 
             //   uploadImage()
@@ -114,7 +114,7 @@ class FragmentSaloonDetails :
             when (selectedRadioButton?.id) {
 
                 R.id.rdoBookings -> {
-                    setFrameLayoutHeight(true)
+                  //  setFrameLayoutHeight(true)
                     binding.rdoBookings.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoBookings.setTextColor(resources.getColor(R.color.white))
                 }
@@ -126,19 +126,19 @@ class FragmentSaloonDetails :
                 }
 
                 R.id.rdoReviews -> {
-                    setFrameLayoutHeight(true)
+                   // setFrameLayoutHeight(true)
                     binding.rdoReviews.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoReviews.setTextColor(resources.getColor(R.color.white))
                 }
 
                 R.id.rdoServices -> {
-                    setFrameLayoutHeight(true)
+                   // setFrameLayoutHeight()
                     binding.rdoServices.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoServices.setTextColor(resources.getColor(R.color.white))
                 }
 
                 R.id.rdoMembers -> {
-                    setFrameLayoutHeight(true)
+                  //  setFrameLayoutHeight(true)
                     binding.rdoMembers.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoMembers.setTextColor(resources.getColor(R.color.white))
                 }
@@ -283,5 +283,13 @@ class FragmentSaloonDetails :
             layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
             binding.tabContainer.layoutParams = layoutParams
         }
+    }
+
+    fun setFrameLayoutHeight() {
+
+        val layoutParams = binding.tabContainer.layoutParams
+        layoutParams.height = 0
+        binding.tabContainer.layoutParams = layoutParams
+
     }
 }

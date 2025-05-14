@@ -16,9 +16,7 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.ServiceInfo
@@ -35,7 +33,7 @@ class ExpandServiceListAdapter(
     private val groupTitles: List<String>,
     private val childItems: Map<String, List<ServiceInfo>>,
     private val isFromMain: Boolean = true,
-    private val servicesCount: List<String>?=null,
+    private val servicesCount: List<String>? = null,
 ) : BaseExpandableListAdapter() {
 
     override fun getGroupCount(): Int = groupTitles.size
@@ -65,20 +63,17 @@ class ExpandServiceListAdapter(
         convertView: View?,
         parent: ViewGroup?
     ): View {
-        var view =
-            convertView ?: LayoutInflater.from(context).inflate(R.layout.group_item, parent, false)
-        if (isFromMain) {
-            view = LayoutInflater.from(context).inflate(R.layout.main_service_item, parent, false)
+        var view = LayoutInflater.from(context).inflate(R.layout.main_service_item, parent, false)
 
-            // Change background based on expanded/collapsed state
-            if (isExpanded) {
-                view.setBackgroundDrawable(context.resources.getDrawable(R.drawable.top_rounded_corners))
-            } else {
-                view.setBackgroundDrawable(context.resources.getDrawable(R.drawable.white_rounded10))
-            }
-            val servicesCount = view.findViewById<TextView>(R.id.servicesCount)
-            servicesCount.text = getGroupServices(groupPosition).toString()
+        // Change background based on expanded/collapsed state
+        if (isExpanded) {
+            view.setBackgroundDrawable(context.resources.getDrawable(R.drawable.top_rounded_corners))
+        } else {
+            view.setBackgroundDrawable(context.resources.getDrawable(R.drawable.white_rounded10))
         }
+        val servicesCount = view.findViewById<TextView>(R.id.servicesCount)
+        servicesCount.text = getGroupServices(groupPosition).toString()
+
         val groupTitle = view.findViewById<TextView>(R.id.group_title)
         val groupIcon = view.findViewById<ImageView>(R.id.group_icon)
 

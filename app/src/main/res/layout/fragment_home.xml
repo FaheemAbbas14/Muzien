@@ -50,6 +50,8 @@
             android:button="@android:color/transparent"
             android:checked="true"
             android:gravity="center"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:text="@string/analytics"
             android:textSize="12sp"
             android:textFontWeight="500"
@@ -68,6 +70,8 @@
             android:layout_marginBottom="10dp"
             android:textSize="12sp"
             android:textFontWeight="500"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:fontFamily="@font/manrope_regular"
             android:background="@drawable/rounded_grey"
             android:button="@android:color/transparent"
@@ -93,6 +97,8 @@
             android:button="@android:color/transparent"
             android:gravity="center"
             android:text="@string/members_4"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/colorTextLabelDefault" />
 
@@ -113,6 +119,8 @@
             android:text="@string/services"
             android:textSize="12sp"
             android:textFontWeight="500"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/colorTextLabelDefault" />
 

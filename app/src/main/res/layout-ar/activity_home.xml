@@ -58,30 +58,33 @@
 
         <TextView
             android:id="@+id/txtUserName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:fontFamily="@font/manrope_regular"
-            android:gravity="center"
+            android:gravity="center|right"
             android:text="@string/welcome_idrees"
+            android:singleLine="true"
+            android:ellipsize="end"
             android:textColor="@color/textBlack"
             android:textFontWeight="700"
-            android:textSize="22sp"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toStartOf="@+id/imgNotifications"
             app:layout_constraintStart_toEndOf="@+id/imgProfilePic"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/txtRole"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
             android:fontFamily="@font/manrope_regular"
             android:text="@string/owner"
             android:textColor="@color/textBlack"
             android:textFontWeight="500"
             android:textSize="11sp"
-            app:layout_constraintStart_toEndOf="@+id/imgProfilePic"
+            app:layout_constraintEnd_toStartOf="@+id/imgNotifications"
+            app:layout_constraintStart_toStartOf="@+id/txtUserName"
             app:layout_constraintTop_toBottomOf="@+id/txtUserName" />
 
         <ImageView
@@ -122,8 +125,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="70dp"
         android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -144,8 +148,9 @@
                 android:id="@+id/home_bg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginBottom="15dp"
                 android:src="@drawable/selected_tab_bg"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -154,8 +159,9 @@
                 android:id="@+id/home_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
                 android:src="@drawable/home_selected"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -191,9 +197,10 @@
                 android:id="@+id/booking_bg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginBottom="10dp"
                 android:src="@drawable/selected_tab_bg"
                 android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@+id/booking_title"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -202,8 +209,9 @@
                 android:id="@+id/booking_icon"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
                 android:src="@drawable/booking_home_icon"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -231,11 +239,12 @@
         android:id="@+id/imgadd"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginBottom="-50dp"
+        android:layout_marginBottom="50dp"
         android:background="@drawable/circular_blue"
         android:padding="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/constraintLayout2"
+        app:layout_constraintBottom_toBottomOf="@+id/constraintLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/constraintLayout2"
         app:srcCompat="@drawable/plus_icon" />
 </androidx.constraintlayout.widget.ConstraintLayout>

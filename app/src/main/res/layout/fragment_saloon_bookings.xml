@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/light_grey">
 
 
@@ -36,7 +36,7 @@
     <com.tt.muzien.ui.views.HorizontalCalendarView
         android:id="@+id/customCalendarView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="120dp"
         android:src="@drawable/blue_left_arrow"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
@@ -45,8 +45,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/llNoDta"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:visibility="visible"
+        android:layout_height="wrap_content"
+        android:minHeight="350dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -102,9 +103,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cnstData"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/customCalendarView">
@@ -112,7 +112,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcyBookings"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -47,9 +47,13 @@ class ServiceUpdateListAdopter(
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val salon = salons[position]
-         holder.toggle.isChecked = salon.isEnabled
-        // Handle toggle switch listener
+        // Avoid triggering listener when recycling
+        holder.toggle.setOnCheckedChangeListener(null)
+        holder.toggle.isChecked = salon.isEnabled
+
+        // Set listener AFTER setting checked state
         holder.toggle.setOnCheckedChangeListener { _, isChecked ->
+            salon.isEnabled = isChecked
             if (isChecked) {
                 holder.duration_layout.visibility = View.VISIBLE
                 holder.txtDurationLabel.visibility = View.VISIBLE
@@ -61,7 +65,6 @@ class ServiceUpdateListAdopter(
                 holder.price_layout.visibility = View.GONE
                 holder.txtPriceLabel.visibility = View.GONE
             }
-            onToggleChanged(position, isChecked)
         }
         holder.name.text = salon.name
         holder.address.text = salon.address
