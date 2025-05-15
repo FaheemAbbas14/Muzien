@@ -10,6 +10,11 @@ import androidx.fragment.app.Fragment
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.pow
+import kotlin.math.sin
+import kotlin.math.sqrt
 
 
 /**
@@ -63,4 +68,18 @@ object Helper {
     fun capitalizeFirstWord(variable: String): String {
         return variable.replaceFirstChar { it.uppercase() }
     }
+    fun haversine(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
+        val R = 6371e3 // Earth radius in meters
+
+        val phi1 = lat1 * (Math.PI / 180) // Convert latitude to radians
+        val phi2 = lat2 * (Math.PI / 180) // Convert latitude to radians
+        val deltaPhi = (lat2 - lat1) * (Math.PI / 180) // Difference in latitude in radians
+        val deltaLambda = (lon2 - lon1) * (Math.PI / 180) // Difference in longitude in radians
+
+        val a = sin(deltaPhi / 2).pow(2.0) + cos(phi1) * cos(phi2) * sin(deltaLambda / 2).pow(2.0)
+        val c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+        return R * c
+    }
+
 }

@@ -1,6 +1,8 @@
 package com.tt.muzien.ui.saloon
 
+import android.Manifest
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -8,7 +10,11 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.location.Geocoder
+import android.location.Location
+import android.location.LocationManager
 import android.os.Bundle
+import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -16,10 +22,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.ListView
 import android.widget.PopupWindow
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.setFragmentResult
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -27,6 +37,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.AutocompletePrediction
@@ -48,7 +59,14 @@ import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.snackbar
+import com.tt.muzien.utilities.Helper
 import com.tt.muzien.utilities.Helper.closeKeyboard
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.util.Locale
 
 
 class FragmentSearchAddress :
@@ -62,9 +80,15 @@ class FragmentSearchAddress :
     var isEdit = false
     var saloonId: Int = 0
     var isUserTyping = true
+    var lastSelectedAddress: LatLng? = null
+    var marker: Marker? = null
+    private var job: Job? = null
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private val LOCATION_PERMISSION_REQUEST_CODE = 2
 
     // Adapter for suggestions
     val placeIds = mutableListOf<String>()
+
     companion object {
         private const val AUTOCOMPLETE_REQUEST_CODE = 1
     }
@@ -75,6 +99,8 @@ class FragmentSearchAddress :
         // Initialize the Places SDK
         Places.initialize(requireContext(), apiKey)
         placesClient = Places.createClient(requireContext())
+        // Initialize the FusedLocationProviderClient.
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         //setup google maps
         initGoogleMaps()
         binding.llBack.setOnClickListener {
@@ -120,6 +146,106 @@ class FragmentSearchAddress :
             updateMarkerLocation(latitude, longitude)
             setAddressData()
         }
+        // Set a listener for camera movement
+        mMap.setOnCameraMoveListener {
+            onCameraMove()
+        }
+        mMap.setOnMapClickListener { latLng ->
+            // Add a marker at the clicked location
+            setAddress(latLng)
+            lastSelectedAddress = latLng
+            // Optional: move camera
+            googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+        }
+        checkLocationPermissions()
+    }
+
+    private fun checkLocationPermissions() {
+        // Check for location permissions.
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+            == PackageManager.PERMISSION_GRANTED
+        ) {
+            mMap.isMyLocationEnabled = true
+            //mMap.setOnMyLocationButtonClickListener(requireContext())
+            checkGPSAndProceed()
+        } else {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                LOCATION_PERMISSION_REQUEST_CODE
+            )
+        }
+    }
+
+    private fun checkGPSAndProceed() {
+        val locationManager =
+            requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            getDeviceLocation()
+        } else {
+            showEnableGPSDialog()
+        }
+    }
+
+
+    private fun showEnableGPSDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_enable_gps, null)
+        val dialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setCancelable(false)
+            .create()
+        val btnCancel: Button = dialogView.findViewById(R.id.btnCancel)
+        val btnEnable: Button = dialogView.findViewById(R.id.btnEnable)
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        btnEnable.setOnClickListener {
+            dialog.dismiss()
+            val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+            startActivity(intent)
+
+        }
+
+        dialog.show()
+    }
+
+    private fun getDeviceLocation() {
+        try {
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location: Location? ->
+                    location?.let {
+                        lastSelectedAddress = LatLng(location.latitude, location.longitude)
+                        setAddress(LatLng(location.latitude, location.latitude))
+
+                    }
+                }
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+        }
+    }
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                if (ContextCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    )
+                    == PackageManager.PERMISSION_GRANTED
+                ) {
+                    mMap.isMyLocationEnabled = true
+                    checkGPSAndProceed()
+                }
+            }
+        }
     }
 
     private fun getApiKey(): String {
@@ -133,8 +259,8 @@ class FragmentSearchAddress :
 
     // Add function to update marker location
     private fun updateMarkerLocation(latitude: Double, longitude: Double) {
-        moveMarker(LatLng(latitude, longitude)!!)
-        setAddressData()
+        moveMarker(LatLng(latitude, longitude))
+
     }
 
     private fun setAddressData() {
@@ -143,13 +269,14 @@ class FragmentSearchAddress :
     }
 
     private fun moveMarker(latLng: LatLng) {
-        val bitmapDescriptor = vectorToBitmapDescriptor(requireContext(), R.drawable.location_icon)
+        val bitmapDescriptor = vectorToBitmapDescriptor(requireContext(), R.drawable.map_marker)
+        if (marker != null) {
+            marker!!.remove()
+        }
 
-        // Move the marker to the new location
-
-        mMap.addMarker(
+        marker = mMap.addMarker(
             MarkerOptions().position(latLng).title(selectedAddress)
-                .icon(bitmapDescriptor)
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
         )
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
@@ -171,6 +298,7 @@ class FragmentSearchAddress :
 
         return BitmapDescriptorFactory.fromBitmap(bitmap)
     }
+
     private fun setAddressAutoComplete() {
         val popupWindow = PopupWindow(requireContext())
         val suggestionList = mutableListOf<String>() // To store the suggestions
@@ -191,6 +319,7 @@ class FragmentSearchAddress :
                 latitude = placeDetails.latLng.latitude
                 longitude = placeDetails.latLng.longitude
                 updateMarkerLocation(placeDetails.latLng.latitude, placeDetails.latLng.longitude)
+                setAddressData()
             }
             popupWindow.dismiss() // Close the dropdown
         }
@@ -247,6 +376,7 @@ class FragmentSearchAddress :
 
 
     }
+
     private fun fetchPlaceDetails(placeId: String, callback: (Place) -> Unit) {
         val placesClient = Places.createClient(context)
         val placeFields = listOf(
@@ -265,6 +395,7 @@ class FragmentSearchAddress :
                 exception.printStackTrace()
             }
     }
+
     private fun startAutocompleteActivity() {
         // Set the fields to specify which types of place data to return.
         val fields =
@@ -289,6 +420,7 @@ class FragmentSearchAddress :
                             latitude = place.latLng.latitude
                             longitude = place.latLng.longitude
                             updateMarkerLocation(place.latLng.latitude, place.latLng.longitude)
+                            setAddressData()
                         }
                     }
                 }
@@ -374,5 +506,62 @@ class FragmentSearchAddress :
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 
+    private fun onCameraMove() {
+        if (mMap != null) {
+            val target = mMap.cameraPosition.target
+            marker!!.position = target
+            job?.cancel()
 
+            // Create a new coroutine to handle the delay and reverse geocoding
+            job = CoroutineScope(Dispatchers.Main).launch {
+                delay(1000)
+                if (lastSelectedAddress == null) {
+                    setAddress(target)
+                    lastSelectedAddress = target
+                } else {
+                    val distance = Helper.haversine(
+                        lastSelectedAddress!!.latitude,
+                        lastSelectedAddress!!.longitude,
+                        target.latitude,
+                        target.longitude
+                    )
+                    if (distance >= 250) {
+                        setAddress(target)
+                        lastSelectedAddress = target
+                    }
+                }
+            }
+
+
+        }
+    }
+
+    private fun setAddress(addressLatLng: LatLng) {
+        var address =
+            addressLatLng?.let {
+                getAddressFromLatLng(
+                    it,
+                    requireContext()
+                )
+            }!!
+        binding.txtAddress.setText(address)
+        selectedAddress = address
+        latitude = addressLatLng.latitude
+        longitude = addressLatLng.longitude
+        updateMarkerLocation(addressLatLng.latitude, addressLatLng.longitude)
+    }
+
+    fun getAddressFromLatLng(latLng: LatLng, context: Context): String {
+        val geocoder = Geocoder(context, Locale.getDefault())
+        try {
+            val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+            if (!addresses.isNullOrEmpty()) {
+                val address = addresses[0]
+                return address.getAddressLine(0)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return ""
+    }
 }
