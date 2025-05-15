@@ -28,6 +28,7 @@ import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.FilterSelection
+import com.tt.muzien.utilities.Helper
 import com.tt.muzien.utilities.TimeHelper
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 import java.text.SimpleDateFormat
@@ -45,12 +46,14 @@ class FragmentBookings :
     private var bookingDuration: String? = null
     private var bookingStatus: String? = null
     private var bookingServiceProvider: String? = null
+    private var bookingSaloonId: String? = null
     private var adopter: SaloonBookingAdapter? = null
     private var page = 1
     private var totalPage = 1
     private var selection: Int = 0
     private var isLoading: Boolean = false
     private val bookingMap = HashMap<Int, BookingsCountData>()
+    private var isFromSelection = false
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -61,9 +64,14 @@ class FragmentBookings :
         binding.customCalendarView.setOnMonthChangedListener { startDate, endDate ->
             Log.d("CalendarFragment", "Month range: $startDate to $endDate")
             // Fetch data or update UI based on date range
-            fromDate = startDate
-            toDate = endDate
-            getCalendarbar()
+            if (!isFromSelection) {
+                fromDate = startDate
+                toDate = endDate
+                getCalendarbar()
+            }
+            else{
+                isFromSelection=false
+            }
         }
         binding.customCalendarView.setOnDaySelectedListener { selectedDay ->
             // Toast.makeText(requireContext(), "Selected: ${selectedDay}", Toast.LENGTH_SHORT).show()
@@ -75,6 +83,7 @@ class FragmentBookings :
 
         binding.imgBookingFilter.setOnClickListener {
             if (bookingStatus != null) {
+                bookingStatus = ""
                 binding.imgBookingFilter.setImageResource(
                     R.drawable.filter_icon
                 )
@@ -95,8 +104,9 @@ class FragmentBookings :
             bookingServiceProvider = FilterSelection.filterData!!.serviceProvider
             fromDate = FilterSelection.filterData!!.from
             toDate = FilterSelection.filterData!!.to
+            bookingSaloonId= FilterSelection.filterData!!.saloonId.toString()
             if (FilterSelection.filterData!!.selection != "") {
-
+                isFromSelection=true
                 bookingDuration = FilterSelection.filterData!!.selection.toString()
                 if (bookingDuration == "Custom") {
                     //  binding.txtMonth.text = "$fromDate To ${toDate}"
@@ -109,7 +119,7 @@ class FragmentBookings :
                 binding.imgBookingFilter.setImageResource(
                     R.drawable.blue_cancel
                 )
-                binding.txtBookingStatus.text = "$bookingStatus Bookings"
+                binding.txtBookingStatus.setText("${Helper.capitalizeFirstWord(bookingStatus!!)} Bookings")
                 binding.customCalendarView.visibility = View.GONE
                 setMargins(true)
 
@@ -127,17 +137,23 @@ class FragmentBookings :
     }
 
     private fun setMargins(show: Boolean) {
-        val layoutParams = ConstraintLayout.LayoutParams(
-            ConstraintLayout.LayoutParams.MATCH_PARENT,
-            ConstraintLayout.LayoutParams.WRAP_CONTENT
-        ).apply {
-            if (show) {
-                setMargins(40, 100, 40, 0) // Left, Top, Right, Bottom in pixels
-            } else {
-                setMargins(40, 300, 40, 0) // Left, Top, Right, Bottom in pixels
-            }
-            startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-            topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+        val layoutParams = binding.rcyBookings.layoutParams as ConstraintLayout.LayoutParams
+
+        layoutParams.width = 0  // match constraints
+        layoutParams.height = 0
+
+        layoutParams.marginStart = Helper.dpToPx(requireContext(), 10)
+        layoutParams.marginEnd = Helper.dpToPx(requireContext(), 10)
+        layoutParams.bottomMargin = Helper.dpToPx(requireContext(), 10)
+
+        layoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+        layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
+        layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+        layoutParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+        if (show) {
+            layoutParams.setMargins(20, 100, 20, 0) // Left, Top, Right, Bottom in pixels
+        } else {
+            layoutParams.setMargins(20, 0, 20, 0) // Left, Top, Right, Bottom in pixels
         }
 
         binding.rcyBookings.layoutParams = layoutParams
@@ -311,6 +327,7 @@ class FragmentBookings :
             }
         }
         viewModel.getCalendarbar(
+            saloonIds = bookingSaloonId,
             startDate = fromDate,
             endDate = toDate
         )
@@ -370,6 +387,7 @@ class FragmentBookings :
             }
         }
         viewModel.getBookings(
+            saloonIds = bookingSaloonId,
             page = page.toString(),
             status = bookingStatus,
             startDate = fromDate,

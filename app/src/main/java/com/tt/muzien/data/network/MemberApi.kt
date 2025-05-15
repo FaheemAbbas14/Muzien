@@ -36,7 +36,7 @@ interface MemberApi {
 
     @GET("v1/members/list")
     suspend fun getMembers(
-        @Query("saloonIds") saloonIds: String,
+        @Query("saloonIds") saloonIds: String, @Query("isActive") isActive: Boolean?=null,
     ): GetMembersResponse
 
     @POST("v1/members/invite")

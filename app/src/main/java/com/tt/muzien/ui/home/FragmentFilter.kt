@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.setFragmentResult
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.FilterData
 import com.tt.muzien.data.network.AuthApi
@@ -21,13 +20,39 @@ import com.tt.muzien.utilities.TimeHelper
 
 class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRepository>() {
     var selection: String = ""
-    var fromDate: String?=null
-    var toDate: String?=null
+    var fromDate: String? = null
+    var toDate: String? = null
     var isFrom: Boolean = true
     var isFromRevenue: Boolean = false
+    var status = false
+    var selectedStatus: String = ""
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (status) {
+            binding.selectedOptionText.text = requireContext().getString(R.string.timeperiod)
+            binding.selectedOptionText.text = "Select Status"
+            binding.radioGroup.visibility = View.GONE
+            binding.radioGroupStatus.visibility = View.VISIBLE
+        } else {
+            binding.selectedOptionText.text = requireContext().getString(R.string.timeperiod)
+            binding.radioGroup.visibility = View.GONE
+            binding.radioGroupStatus.visibility = View.VISIBLE
+        }
+        binding.radioGroupStatus.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.rbActive -> {
+                    selectedStatus = "Active"
+                }
+
+                R.id.rbInActive -> {
+                    selectedStatus = "InActive"
+
+                }
+
+            }
+        }
         binding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.rbWeek -> {
@@ -78,7 +103,7 @@ class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRe
         binding.llApply.setOnClickListener {
             if (checkValidation()) {
                 FilterSelection.filterData =
-                    FilterData(selection, fromDate, toDate,isFromRevenue)
+                    FilterData(selection, fromDate, toDate, isFromRevenue, status = selectedStatus)
                 (activity as HomeActivity?)?.popFragment()
             }
         }
@@ -86,7 +111,8 @@ class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRe
             (activity as HomeActivity?)?.popFragment()
         }
         // Set the listener for date selection
-        binding.customCalendar.setOnDateSelectedListener(object : CustomCalendar.OnDateSelectedListener {
+        binding.customCalendar.setOnDateSelectedListener(object :
+            CustomCalendar.OnDateSelectedListener {
             override fun onDateSelected(date: String) {
                 // Handle the selected date
                 if (isFrom) {
@@ -110,7 +136,7 @@ class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRe
 
     private fun checkValidation(): Boolean {
         var isValid = true
-        if (selection == "") {
+        if (selection == "" && selectedStatus == "") {
             binding.txtSelectionError.visibility = View.VISIBLE
             isValid = false
         } else {
@@ -142,7 +168,10 @@ class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRe
     ) = FragmentFilterBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        AuthRepository(remoteDataSource.buildApi(AuthApi::class.java,requireContext()), userPreferences)
+        AuthRepository(
+            remoteDataSource.buildApi(AuthApi::class.java, requireContext()),
+            userPreferences
+        )
 
     override fun onResume() {
         super.onResume()

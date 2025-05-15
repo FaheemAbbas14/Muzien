@@ -109,6 +109,7 @@
     <string name="overdue_incomplete">Overdue/Incomplete</string>
     <string name="select_a_option">Select a option</string>
     <string name="timeperiod">Time Period</string>
+    <string name="selectstatus">Select Status</string>
     <string name="all">All</string>
     <string name="custome_timeperiod">Custome Time Period</string>
     <string name="select_date">Select Date</string>
@@ -230,6 +231,8 @@
     <string name="contact">Contact</string>
     <string name="_966_123_1234">+966 123 1234</string>
     <string name="address">Address</string>
+    <string name="inactive">InActive</string>
+    <string name="active">Active</string>
     <string-array name="language_options">
         <item>English</item>
         <item>Arabic</item>

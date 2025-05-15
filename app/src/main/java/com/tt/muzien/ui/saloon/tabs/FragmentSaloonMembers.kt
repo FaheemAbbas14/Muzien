@@ -32,11 +32,13 @@ class FragmentSaloonMembers :
     private var toDate: String = ""
     private var bookingDuration: String = ""
     var selectedSaloon: SaloonDto? = null
+    private var isActive: Boolean? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getMembers()
+
         binding.imgFilter.setOnClickListener {
             var nextFragment = FragmentFilter()
+            nextFragment.status = true
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
         binding.llAdd.setOnClickListener {
@@ -45,16 +47,20 @@ class FragmentSaloonMembers :
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
         if (FilterSelection.filterData != null) {
-            val selection = FilterSelection.filterData!!.selection
-            val fromDateFilter = FilterSelection.filterData!!.from
-            val toDateFilter = FilterSelection.filterData!!.to
-            if (selection != "") {
-                bookingDuration = selection.toString()
-                fromDate = fromDateFilter.toString()
-                toDate = toDateFilter.toString()
+            if (FilterSelection.filterData!!.status != null && FilterSelection.filterData!!.status != "") {
+                if (FilterSelection.filterData!!.status == "Active") {
+                    isActive = true
+                } else {
+                    isActive = false
+                }
                 getMembers()
             }
 
+
+
+        }
+        else{
+            getMembers()
         }
     }
 
@@ -122,7 +128,7 @@ class FragmentSaloonMembers :
                             membersList.add(
                                 MemberDto(
                                     member.id.toInt(),
-                                    member.userId.toInt(),
+                                    member.User.id.toInt(),
                                     member.User.picture ?: "",
                                     member.isActive,
                                     member.User.fullName ?: "Name",
@@ -152,9 +158,10 @@ class FragmentSaloonMembers :
                 else -> {}
             }
         }
-        viewModel.getMembers(selectedSaloon?.id.toString())
+        viewModel.getMembers(selectedSaloon?.id.toString(), isActive)
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
+
     private fun inActiveMember(id: Int) {
         viewModel.inActiveMember.observe(viewLifecycleOwner) {
 
@@ -163,7 +170,7 @@ class FragmentSaloonMembers :
                     Log.d("response", "success " + it.toString())
                     //(activity as HomeActivity?)?.hideLoadingIndicator()
                     requireView().snackbar("Member inactive successfully")
-                   getMembers()
+                    getMembers()
                 }
 
                 is Resource.Failure -> {
@@ -186,9 +193,9 @@ class FragmentSaloonMembers :
             when (it) {
                 is Resource.Success -> {
                     Log.d("response", "success " + it.toString())
-                   // (activity as HomeActivity?)?.hideLoadingIndicator()
+                    // (activity as HomeActivity?)?.hideLoadingIndicator()
                     requireView().snackbar("Member deleted successfully")
-                   getMembers()
+                    getMembers()
                 }
 
                 is Resource.Failure -> {
@@ -204,6 +211,7 @@ class FragmentSaloonMembers :
         viewModel.deleteMember(id)
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
+
     private fun makeManger(id: Int) {
         viewModel.makeManger.observe(viewLifecycleOwner) {
 

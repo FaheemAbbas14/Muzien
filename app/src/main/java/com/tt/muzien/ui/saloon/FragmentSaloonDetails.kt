@@ -66,6 +66,7 @@ class FragmentSaloonDetails :
             .commit()
         binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
             val selectedRadioButton = group.findViewById<RadioButton>(checkedId)
+           // FilterSelection.filterData=null
             val fragment: Fragment = when (selectedRadioButton?.id) {
                 R.id.rdoAnalytics -> {
                     var nextFragment = FragmentSaloonAnalytics()

@@ -1,5 +1,7 @@
 package com.tt.muzien.ui.service
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -65,7 +67,6 @@ class FragmentServices :
             groupServices
         )
         binding.rcyServices.setAdapter(adapter)
-
         // Handle child clicks
         binding.rcyServices.setOnChildClickListener { _, _, groupPosition, childPosition, _ ->
             val group = groupTitles[groupPosition]

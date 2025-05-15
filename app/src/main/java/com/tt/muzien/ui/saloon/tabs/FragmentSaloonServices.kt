@@ -46,8 +46,7 @@ class FragmentSaloonServices :
             binding.llNoDta.visibility = View.GONE
 
             val adapter = ExpandServiceListAdapter(
-                requireContext(), groupTitles, servicesMap, true,
-                groupServices
+                requireContext(), groupTitles, servicesMap, servicesCount = groupServices
             )
             binding.rcyServices.setAdapter(adapter)
             // Adjust height dynamically
@@ -104,7 +103,7 @@ class FragmentSaloonServices :
                     val childItem = adapter.getChildView(i, j, false, null, listView)
                     childItem.measure(0, 0)
                     Log.d("ExpandableListView", "child height: ${childItem.measuredHeight}")
-                    totalHeight += Helper.dpToPx(requireContext(), 135)
+                    totalHeight += Helper.dpToPx(requireContext(), 175)
                 }
             }
         }

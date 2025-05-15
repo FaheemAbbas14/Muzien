@@ -114,8 +114,9 @@ class MemberViewModel(
         _getMemberDetails.value = repository.getMemberDetails(memberId)
     }
 
-    fun getMembers(saloonId: String) = viewModelScope.launch {
-        _getMembers.value = repository.getMembers(saloonId)
+    fun getMembers(saloonId: String,
+                   isActive: Boolean?=null) = viewModelScope.launch {
+        _getMembers.value = repository.getMembers(saloonId,isActive)
     }
 
     fun sendInvite(request: AddMemberRequest) = viewModelScope.launch {

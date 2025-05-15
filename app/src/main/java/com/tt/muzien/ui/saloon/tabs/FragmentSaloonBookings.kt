@@ -31,6 +31,7 @@ import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.FilterSelection
+import com.tt.muzien.utilities.Helper
 import com.tt.muzien.utilities.TimeHelper
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 import java.text.SimpleDateFormat
@@ -54,6 +55,7 @@ class FragmentSaloonBookings :
     private var selection: Int = 0
     private var isLoading: Boolean = false
     var selectedSaloon: SaloonDto? = null
+    private var isFromSelection = false
     private val bookingMap = HashMap<Int, BookingsCountData>()
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -64,9 +66,14 @@ class FragmentSaloonBookings :
         binding.customCalendarView.setOnMonthChangedListener { startDate, endDate ->
             Log.d("CalendarFragment", "Month range: $startDate to $endDate")
             // Fetch data or update UI based on date range
-            fromDate = startDate
-            toDate = endDate
-            getCalendarbar()
+            if (!isFromSelection) {
+                fromDate = startDate
+                toDate = endDate
+                getCalendarbar()
+            }
+            else{
+                isFromSelection=false
+            }
         }
         getBooking()
         binding.customCalendarView.setOnDaySelectedListener { selectedDay ->
@@ -100,7 +107,7 @@ class FragmentSaloonBookings :
             fromDate = FilterSelection.filterData!!.from
             toDate = FilterSelection.filterData!!.to
             if (FilterSelection.filterData!!.selection != "") {
-
+                isFromSelection=true
                 bookingDuration = FilterSelection.filterData!!.selection.toString()
                 if (bookingDuration == "Custom") {
                     //  binding.txtMonth.text = "$fromDate To ${toDate}"
@@ -113,7 +120,7 @@ class FragmentSaloonBookings :
                 binding.imgBookingFilter.setImageResource(
                     R.drawable.blue_cancel
                 )
-                binding.txtBookingStatus.text = "$bookingStatus Bookings"
+                binding.txtBookingStatus.setText("${Helper.capitalizeFirstWord(bookingStatus!!)} Bookings")
                 binding.customCalendarView.visibility = View.GONE
                 setMargins(true)
 
@@ -132,21 +139,26 @@ class FragmentSaloonBookings :
     }
 
     private fun setMargins(show: Boolean) {
-        val layoutParams = ConstraintLayout.LayoutParams(
-            ConstraintLayout.LayoutParams.MATCH_PARENT,
-            ConstraintLayout.LayoutParams.WRAP_CONTENT
-        ).apply {
-            if (show) {
-                setMargins(40, 100, 40, 0) // Left, Top, Right, Bottom in pixels
-            }
-            else{
-                setMargins(80, 100, 40, 0) // Left, Top, Right, Bottom in pixels
-            }
-            startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-            topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-        }
+        val layoutParams = binding.rcyBookings.layoutParams as ConstraintLayout.LayoutParams
 
+        layoutParams.width = 0  // Match constraints (like 0dp)
+        layoutParams.height = ConstraintLayout.LayoutParams.WRAP_CONTENT
+
+        layoutParams.marginStart = Helper.dpToPx(requireContext(),10)
+        layoutParams.marginEnd = Helper.dpToPx(requireContext(),10)
+
+        layoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+        layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
+        layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
+        layoutParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
+        if (show) {
+            layoutParams.setMargins(20, 100, 20, 0) // Left, Top, Right, Bottom in pixels
+        }
+        else{
+            layoutParams.setMargins(20, 0, 20, 0) // Left, Top, Right, Bottom in pixels
+        }
         binding.rcyBookings.layoutParams = layoutParams
+
     }
 
     private fun setBookingsAdopter() {

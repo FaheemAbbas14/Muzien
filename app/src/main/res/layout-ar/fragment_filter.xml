@@ -135,6 +135,47 @@
                 android:textSize="14sp" />
 
         </RadioGroup>
+        <RadioGroup
+            android:id="@+id/radioGroupStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:orientation="vertical">
+
+
+            <!-- Custom RadioButton for Week -->
+            <RadioButton
+                android:id="@+id/rbActive"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:drawableRight="@drawable/custom_tick_button"
+                android:fontFamily="@font/manrope_regular"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:text="@string/active"
+                android:textColor="@color/colorTextLabelDefault"
+                android:textFontWeight="500"
+                android:textSize="14sp" />
+
+            <!-- Custom RadioButton for Month -->
+            <RadioButton
+                android:id="@+id/rbInActive"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:drawableRight="@drawable/custom_tick_button"
+                android:fontFamily="@font/manrope_regular"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:text="@string/inactive"
+                android:textColor="@color/colorTextLabelDefault"
+                android:textFontWeight="500"
+                android:textSize="14sp" />
+
+
+
+        </RadioGroup>
 
         <TextView
             android:id="@+id/txtSelectionError"

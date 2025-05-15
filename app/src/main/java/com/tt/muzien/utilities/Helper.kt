@@ -60,4 +60,7 @@ object Helper {
             context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
+    fun capitalizeFirstWord(variable: String): String {
+        return variable.replaceFirstChar { it.uppercase() }
+    }
 }

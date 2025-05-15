@@ -103,7 +103,7 @@
         android:layout_marginEnd="10dp"
         android:background="@android:color/transparent"
         android:childDivider="@color/white"
-        android:divider="@color/light_grey"
+        android:divider="@android:color/transparent"
         android:dividerHeight="10dp"
         android:groupIndicator="@null"
         android:orientation="vertical"

@@ -9,8 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -33,7 +35,8 @@ class ExpandServiceListAdapter(
     private val groupTitles: List<String>,
     private val childItems: Map<String, List<ServiceInfo>>,
     private val isFromMain: Boolean = true,
-    private val servicesCount: List<String>? = null,
+    private val servicesCount: List<String>? = null
+
 ) : BaseExpandableListAdapter() {
 
     override fun getGroupCount(): Int = groupTitles.size
@@ -64,12 +67,15 @@ class ExpandServiceListAdapter(
         parent: ViewGroup?
     ): View {
         var view = LayoutInflater.from(context).inflate(R.layout.main_service_item, parent, false)
-
+        val constraintLayout4 = view.findViewById<LinearLayout>(R.id.constraintLayout4)
+        val divider = view.findViewById<View>(R.id.divider)
         // Change background based on expanded/collapsed state
         if (isExpanded) {
-            view.setBackgroundDrawable(context.resources.getDrawable(R.drawable.top_rounded_corners))
+            divider.visibility = View.GONE
+            constraintLayout4.setBackgroundDrawable(context.resources.getDrawable(R.drawable.top_rounded_corners))
         } else {
-            view.setBackgroundDrawable(context.resources.getDrawable(R.drawable.white_rounded10))
+            divider.visibility = View.GONE
+            constraintLayout4.setBackgroundDrawable(context.resources.getDrawable(R.drawable.white_rounded10))
         }
         val servicesCount = view.findViewById<TextView>(R.id.servicesCount)
         servicesCount.text = getGroupServices(groupPosition).toString()
@@ -92,11 +98,14 @@ class ExpandServiceListAdapter(
     ): View {
         val view =
             convertView ?: LayoutInflater.from(context).inflate(R.layout.child_item, parent, false)
-        if (isFromMain) {
-            view.setBackgroundDrawable(context.resources.getDrawable(R.color.white))
+        val constraintLayout4 = view.findViewById<ConstraintLayout>(R.id.constraintLayout4)
+        if (isLastChild) {
+            constraintLayout4.setBackgroundDrawable(context.resources.getDrawable(R.drawable.white_bottom_rounded))
         }
 
-
+        val divider = view.findViewById<View>(R.id.divider)
+// Show divider only if this is the last child
+        divider.visibility = if (isLastChild) View.VISIBLE else View.GONE
         val imgProfilePic = view.findViewById<ImageView>(R.id.imgProfilePic)
         val txtName = view.findViewById<TextView>(R.id.txtName)
         val txtDuration = view.findViewById<TextView>(R.id.txtDuration)

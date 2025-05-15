@@ -29,9 +29,10 @@ class MemberRepository(
     }
 
     suspend fun getMembers(
-        saloonId: String
+        saloonId: String,
+        isActive: Boolean?=null
     ) = safeApiCall {
-        api.getMembers(saloonId)
+        api.getMembers(saloonId,isActive)
     }
 
     suspend fun sendInvite(
