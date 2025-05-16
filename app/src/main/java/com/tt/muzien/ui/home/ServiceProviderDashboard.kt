@@ -47,6 +47,8 @@ class ServiceProviderDashboard :
     private var bookingDuration: String? = null
     private var bookingStatus: String? = null
     private var bookingServiceProvider: String? = null
+    private var bookingSaloonId: String? = null
+    private var bookingServiceProviderId: String? = null
     private var adopter: SaloonBookingAdapter? = null
     private var page = 1
     private var totalPage = 1
@@ -57,8 +59,8 @@ class ServiceProviderDashboard :
     var overdueBookings = 0
     var cancledBookings = 0
     var completedBookings = 0
-    var inviteId = 0
-    var slaoonId = 0
+    var inviteId: Int? = null
+    var saloonId: Int? = null
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -99,6 +101,7 @@ class ServiceProviderDashboard :
                 getAnalytics()
             } else {
                 var nextFragment = FragmentBookingFilter()
+                nextFragment.showSaloon=false
                 (activity as HomeActivity?)?.loadFragment(nextFragment)
             }
         }
@@ -108,7 +111,17 @@ class ServiceProviderDashboard :
             bookingServiceProvider = FilterSelection.filterData!!.serviceProvider
             fromDate = FilterSelection.filterData!!.from
             toDate = FilterSelection.filterData!!.to
-            slaoonId= FilterSelection.filterData!!.saloonId
+            saloonId= FilterSelection.filterData!!.saloonId
+            if (FilterSelection.filterData!!.saloonId != null) {
+                bookingSaloonId = FilterSelection.filterData!!.saloonId.toString()
+            } else {
+                bookingSaloonId = null
+            }
+            if (FilterSelection.filterData!!.serviceProviderId != null) {
+                bookingServiceProviderId = FilterSelection.filterData!!.serviceProviderId.toString()
+            } else {
+                bookingServiceProviderId = null
+            }
             if (FilterSelection.filterData!!.selection != "") {
 
                 bookingDuration = FilterSelection.filterData!!.selection.toString()
@@ -366,7 +379,7 @@ class ServiceProviderDashboard :
             }
         }
         viewModel.acceptInvite(
-            inviteId
+            inviteId?:0
         )
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
@@ -517,7 +530,8 @@ class ServiceProviderDashboard :
             }
         }
         viewModel.getBookings(
-            saloonIds = if (slaoonId>0) slaoonId.toString() else null,
+            saloonIds = saloonId.toString(),
+            serviceProviderId = if (bookingServiceProviderId != null) bookingServiceProviderId else null,
             page = page.toString(),
             status = bookingStatus,
             startDate = fromDate,

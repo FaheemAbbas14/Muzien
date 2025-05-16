@@ -49,12 +49,13 @@ class BookingViewModel(
 
     fun getBookings(
         saloonIds: String? = null,
+        serviceProviderId: String? = null,
         startDate: String? = null,
         endDate: String? = null,
         status: String? = null,
         page: String? = null
     ) = viewModelScope.launch {
-        _getBooking.value = repository.getBookings(saloonIds, startDate, endDate, status, page)
+        _getBooking.value = repository.getBookings(saloonIds,serviceProviderId, startDate, endDate, status, page)
     }
 
     fun getCalendarbar(

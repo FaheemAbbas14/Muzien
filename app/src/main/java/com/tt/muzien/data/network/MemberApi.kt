@@ -10,6 +10,7 @@ import com.tt.muzien.data.responses.AddMemberResponse
 import com.tt.muzien.data.responses.GetLatestInvite
 import com.tt.muzien.data.responses.GetMemberDetails
 import com.tt.muzien.data.responses.GetMembersResponse
+import com.tt.muzien.data.responses.GetServiceProviderResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -26,7 +27,7 @@ import retrofit2.http.Query
  */
 interface MemberApi {
     @GET("v1/members/mySaloonsMembers")
-    suspend fun getMembers(
+    suspend fun getMembers( @Query("isActive") isActive: Boolean? = null
     ): GetMembersResponse
 
     @GET("v1/members/{memberId}")
@@ -36,7 +37,7 @@ interface MemberApi {
 
     @GET("v1/members/list")
     suspend fun getMembers(
-        @Query("saloonIds") saloonIds: String, @Query("isActive") isActive: Boolean?=null,
+        @Query("saloonIds") saloonIds: String, @Query("isActive") isActive: Boolean? = null,
     ): GetMembersResponse
 
     @POST("v1/members/invite")
@@ -87,8 +88,14 @@ interface MemberApi {
     suspend fun removeWorkingHour(
         @Path("userId") userId: Int, @Path("day") day: String
     ): AddMemberDataResponse
+
     @DELETE("v1/user/{userId}/holiday/{holidayId}")
     suspend fun removeHoliday(
         @Path("userId") userId: Int, @Path("holidayId") holidayId: Int
     ): AddMemberDataResponse
+
+    @GET("v1/members/my-saloom-members-summery")
+    suspend fun getServiceProvider(
+        @Query("isActive") isActive: Boolean? = null, @Query("isAdmin") isAdmin: Boolean? = null,
+    ): GetServiceProviderResponse
 }

@@ -11,7 +11,6 @@ import com.tt.muzien.data.repository.UserRepository
 import com.tt.muzien.data.requests.AddHolidayRequest
 import com.tt.muzien.data.requests.AddMemberRequest
 import com.tt.muzien.data.requests.AddMemberService
-import com.tt.muzien.data.requests.AddSaloonServiceRequest
 import com.tt.muzien.data.requests.AddServiceSaloonRequest
 import com.tt.muzien.data.requests.AddWorkingHourRequest
 import com.tt.muzien.data.responses.AddMemberDataResponse
@@ -21,9 +20,9 @@ import com.tt.muzien.data.responses.GetCategoriesResponse
 import com.tt.muzien.data.responses.GetMemberDetails
 import com.tt.muzien.data.responses.GetMembersResponse
 import com.tt.muzien.data.responses.GetSaloonResponse
+import com.tt.muzien.data.responses.GetServiceProviderResponse
 import com.tt.muzien.data.responses.GetServicesResponse
 import com.tt.muzien.data.responses.GetsUsersResponse
-import com.tt.muzien.data.responses.SaloonServiceResponse
 import com.tt.muzien.ui.base.BaseViewModel
 import com.tt.muzien.utilities.SingleEventLiveData
 import kotlinx.coroutines.launch
@@ -97,6 +96,9 @@ class MemberViewModel(
     private val _removeWorkingHour: MutableLiveData<Resource<AddMemberDataResponse>> =
         SingleEventLiveData()
     val removeWorkingHour: LiveData<Resource<AddMemberDataResponse>> get() = _removeWorkingHour
+    private val _getServiceProviders: MutableLiveData<Resource<GetServiceProviderResponse>> =
+        SingleEventLiveData()
+    val getServiceProviders: LiveData<Resource<GetServiceProviderResponse>> get() = _getServiceProviders
 
     fun getUsers() = viewModelScope.launch {
         _getUsers.value = userRepository?.getUsers()
@@ -106,17 +108,19 @@ class MemberViewModel(
         _getSaloon.value = saloonRepository?.getSaloons()
     }
 
-    fun getMembers() = viewModelScope.launch {
-        _getMembers.value = repository.getMembers()
+    fun getMembers(  isActive: Boolean?=null) = viewModelScope.launch {
+        _getMembers.value = repository.getMembers(isActive)
     }
 
     fun getMemberDetails(memberId: Int) = viewModelScope.launch {
         _getMemberDetails.value = repository.getMemberDetails(memberId)
     }
 
-    fun getMembers(saloonId: String,
-                   isActive: Boolean?=null) = viewModelScope.launch {
-        _getMembers.value = repository.getMembers(saloonId,isActive)
+    fun getMembers(
+        saloonId: String,
+        isActive: Boolean? = null
+    ) = viewModelScope.launch {
+        _getMembers.value = repository.getMembers(saloonId, isActive)
     }
 
     fun sendInvite(request: AddMemberRequest) = viewModelScope.launch {
@@ -138,6 +142,7 @@ class MemberViewModel(
     fun getCategories() = viewModelScope.launch {
         _getCategories.value = serviceRepository?.getCategories()
     }
+
     fun getCategories(saloonIds: String) = viewModelScope.launch {
         _getSaloonCategories.value = serviceRepository?.getCategories(saloonIds)
     }
@@ -162,7 +167,12 @@ class MemberViewModel(
     fun removeHoliday(userId: Int, request: Int) = viewModelScope.launch {
         _removeHoliday.value = repository.removeHoliday(userId, request)
     }
+
+    fun getServiceProvider(isActive: Boolean, isAdmin: Boolean) = viewModelScope.launch {
+        _getServiceProviders.value = repository.getServiceProvider(isActive, isAdmin)
+    }
+
     fun addSaloonService(request: AddServiceSaloonRequest) = viewModelScope.launch {
-        _addSaloonService.value = serviceRepository?.addSaloonService( request)
+        _addSaloonService.value = serviceRepository?.addSaloonService(request)
     }
 }

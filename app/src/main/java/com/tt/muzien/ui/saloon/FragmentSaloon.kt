@@ -24,13 +24,11 @@ import com.zabihah.ui.ui.interfaces.OnItemClickListner
 
 class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, SaloonRepository>() {
     private val saloonsList = arrayListOf<SaloonDto>()
-    private var fromDate: String = ""
-    private var toDate: String = ""
-    private var bookingDuration: String = ""
     private var page = 1
     private var totalPage = 1
     private var selection: Int = 0
     private var isLoading: Boolean = false
+    private var isActive: Boolean? = null
     var saloonListAdapter: SaloonListAdapter? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -40,15 +38,15 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
         if (FilterSelection.filterData != null) {
-            val selection = FilterSelection.filterData!!.selection
-            val fromDateFilter = FilterSelection.filterData!!.from
-            val toDateFilter = FilterSelection.filterData!!.to
-            if (selection != "") {
-                bookingDuration = selection.toString()
-                fromDate = fromDateFilter.toString()
-                toDate = toDateFilter.toString()
+            if (FilterSelection.filterData!!.status != null && FilterSelection.filterData!!.status != "") {
+                if (FilterSelection.filterData!!.status == "Active") {
+                    isActive = true
+                } else {
+                    isActive = false
+                }
                 getSaloons()
             }
+
 
         }
     }

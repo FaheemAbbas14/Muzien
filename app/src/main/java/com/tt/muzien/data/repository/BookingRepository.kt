@@ -15,12 +15,13 @@ class BookingRepository(
 ) : BaseRepository() {
     suspend fun getBookings(
         saloonIds: String? = null,
+        serviceProviderId: String? = null,
         startDate: String? = null,
         endDate: String? = null,
         status: String? = null,
         page: String? = null
     ) = safeApiCall {
-        api.getBookings(saloonIds, startDate, endDate, status, page)
+        api.getBookings(saloonIds,serviceProviderId, startDate, endDate, status, page)
     }
 
     suspend fun getCalendarbar(

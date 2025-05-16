@@ -34,13 +34,21 @@ class FragmentBookingFilter :
     var toDate: String? = null
     var isFrom: Boolean = true
     var saloon: String = ""
-    var saloonId = 0
+    var saloonId: Int? = null
+    var serviceProviderId: Int? = null
+    var showSaloon: Boolean = true
     private val saloonsList = arrayListOf<String>()
     private val saloonMap = HashMap<String, SaloonDto>()
+    private val serviceProviderList = arrayListOf<String>()
+    private val serviceProviderMap = HashMap<String, Int>()
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.setMemberRepo((activity as HomeActivity?)?.getMemberRepo()!!)
+        if (!showSaloon) {
+            binding.llMainSaloon.visibility = View.GONE
+        }
         getSaloons()
         binding.radioBookingStatus.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
@@ -147,10 +155,18 @@ class FragmentBookingFilter :
             if (checkValidation()) {
                 if (serviceProvider != "AllProvider") {
                     serviceProvider = binding.edtProvider.text.toString()
+                    if (serviceProviderId == null && binding.edtProvider.text.toString() != "") {
+                        serviceProviderId =
+                            serviceProviderMap[binding.edtProvider.text.toString()] ?: 0
+                    } else {
+                        serviceProviderId = null
+                    }
                 }
                 if (saloon != "AllSaloon") {
-                    if (saloonId == 0) {
-                        saloonId = saloonMap[binding.edtSaloon.text.toString()]?.id ?: 0
+                    if (saloonId == null && binding.edtSaloon.text.toString() != "") {
+                        saloonId = saloonMap[binding.edtSaloon.text.toString()]?.id ?: null
+                    } else {
+                        saloonId = null
                     }
                     saloon = binding.edtSaloon.text.toString()
                 }
@@ -163,7 +179,8 @@ class FragmentBookingFilter :
                         bookingStatus,
                         serviceProvider,
                         saloon,
-                        saloonId = saloonId
+                        saloonId = saloonId,
+                        serviceProviderId = serviceProviderId
                     )
                 (activity as HomeActivity?)?.popFragment()
             }
@@ -248,7 +265,7 @@ class FragmentBookingFilter :
             when (it) {
                 is Resource.Success -> {
                     Log.d("response", "success " + it.toString())
-                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    // (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
                         saloonsList.clear()
                         for (saloon in it.value.data.items) {
@@ -271,7 +288,8 @@ class FragmentBookingFilter :
 
 
                         }
-                        setSaloonAdopter()
+                        getServiceProvider()
+
                     } else {
                         requireView().snackbar(it.value.message)
                     }
@@ -291,6 +309,47 @@ class FragmentBookingFilter :
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 
+    private fun getServiceProvider() {
+        viewModel.getServiceProviders.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        serviceProviderList.clear()
+                        for (serviceProvider in it.value.data) {
+                            if (!serviceProviderList.contains(serviceProvider.User.fullName)) {
+                                serviceProviderList.add(serviceProvider.User.fullName)
+                                serviceProviderMap.put(
+                                    serviceProvider.User.fullName,
+                                    serviceProvider.User.id.toInt()
+                                )
+                            }
+
+
+                        }
+                        setSaloonAdopter()
+                        setServiceProviderAdopter()
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.getServiceProviders(true, null)
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
     private fun setSaloonAdopter() {
         // Adapter to link the list with AutoCompleteTextView
         val adapter =
@@ -301,5 +360,21 @@ class FragmentBookingFilter :
 
         // Optional: Set the threshold (number of characters before suggestions appear)
         binding.edtSaloon.threshold = 1
+    }
+
+    private fun setServiceProviderAdopter() {
+        // Adapter to link the list with AutoCompleteTextView
+        val adapter =
+            ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_dropdown_item_1line,
+                serviceProviderList
+            )
+
+        // Set adapter to AutoCompleteTextView
+        binding.edtProvider.setAdapter(adapter)
+
+        // Optional: Set the threshold (number of characters before suggestions appear)
+        binding.edtProvider.threshold = 1
     }
 }

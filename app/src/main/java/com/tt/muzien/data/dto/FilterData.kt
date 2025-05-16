@@ -15,6 +15,7 @@ data class FilterData(
     var bookingStatus: String? = null,
     val serviceProvider: String? = null,
     val saloon: String = "",
-    val saloonId: Int = 0,
+    val saloonId: Int? = null,
+    val serviceProviderId: Int? = null,
     val status: String? = ""
 )

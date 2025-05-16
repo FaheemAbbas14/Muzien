@@ -49,6 +49,8 @@ class FragmentSaloonBookings :
     private var bookingDuration: String? = null
     private var bookingStatus: String? = null
     private var bookingServiceProvider: String? = null
+    private var bookingSaloonId: String? = null
+    private var bookingServiceProviderId: String? = null
     private var adopter: SaloonBookingAdapter? = null
     private var page = 1
     private var totalPage = 1
@@ -57,6 +59,7 @@ class FragmentSaloonBookings :
     var selectedSaloon: SaloonDto? = null
     private var isFromSelection = false
     private val bookingMap = HashMap<Int, BookingsCountData>()
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -70,9 +73,8 @@ class FragmentSaloonBookings :
                 fromDate = startDate
                 toDate = endDate
                 getCalendarbar()
-            }
-            else{
-                isFromSelection=false
+            } else {
+                isFromSelection = false
             }
         }
         getBooking()
@@ -80,10 +82,10 @@ class FragmentSaloonBookings :
             // Toast.makeText(requireContext(), "Selected: ${selectedDay}", Toast.LENGTH_SHORT).show()
             fromDate = selectedDay
             toDate = selectedDay
-            FilterSelection.filterData=FilterData("", fromDate, toDate,false)
+            FilterSelection.filterData = FilterData("", fromDate, toDate, false)
             getBooking()
         }
-       //binding.customCalendarView.setDays(generateDaysWithEvents())
+        //binding.customCalendarView.setDays(generateDaysWithEvents())
         binding.imgBookingFilter.setOnClickListener {
             if (bookingStatus != null) {
                 binding.imgBookingFilter.setImageResource(
@@ -97,6 +99,7 @@ class FragmentSaloonBookings :
                 getCalendarbar()
             } else {
                 var nextFragment = FragmentBookingFilter()
+                nextFragment.showSaloon=false
                 (activity as HomeActivity?)?.loadFragment(nextFragment)
             }
         }
@@ -106,8 +109,18 @@ class FragmentSaloonBookings :
             bookingServiceProvider = FilterSelection.filterData!!.serviceProvider
             fromDate = FilterSelection.filterData!!.from
             toDate = FilterSelection.filterData!!.to
+            if (FilterSelection.filterData!!.saloonId != null) {
+                bookingSaloonId = FilterSelection.filterData!!.saloonId.toString()
+            } else {
+                bookingSaloonId = null
+            }
+            if (FilterSelection.filterData!!.serviceProviderId != null) {
+                bookingServiceProviderId = FilterSelection.filterData!!.serviceProviderId.toString()
+            } else {
+                bookingServiceProviderId = null
+            }
             if (FilterSelection.filterData!!.selection != "") {
-                isFromSelection=true
+                isFromSelection = true
                 bookingDuration = FilterSelection.filterData!!.selection.toString()
                 if (bookingDuration == "Custom") {
                     //  binding.txtMonth.text = "$fromDate To ${toDate}"
@@ -130,8 +143,7 @@ class FragmentSaloonBookings :
             binding.customCalendarView.setMonthFromDate(fromDate ?: "")
             getCalendarbar()
             // Toast.makeText(requireContext(), "data received", Toast.LENGTH_SHORT).show()
-        }
-        else{
+        } else {
             getCalendarbar()
         }
 //        val days = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
@@ -144,8 +156,8 @@ class FragmentSaloonBookings :
         layoutParams.width = 0  // Match constraints (like 0dp)
         layoutParams.height = ConstraintLayout.LayoutParams.WRAP_CONTENT
 
-        layoutParams.marginStart = Helper.dpToPx(requireContext(),10)
-        layoutParams.marginEnd = Helper.dpToPx(requireContext(),10)
+        layoutParams.marginStart = Helper.dpToPx(requireContext(), 10)
+        layoutParams.marginEnd = Helper.dpToPx(requireContext(), 10)
 
         layoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
         layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
@@ -153,8 +165,7 @@ class FragmentSaloonBookings :
         layoutParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
         if (show) {
             layoutParams.setMargins(20, 100, 20, 0) // Left, Top, Right, Bottom in pixels
-        }
-        else{
+        } else {
             layoutParams.setMargins(20, 0, 20, 0) // Left, Top, Right, Bottom in pixels
         }
         binding.rcyBookings.layoutParams = layoutParams
@@ -336,6 +347,7 @@ class FragmentSaloonBookings :
         }
         viewModel.getBookings(
             saloonIds = selectedSaloon?.id.toString(),
+            serviceProviderId = if (bookingServiceProviderId != null) bookingServiceProviderId else null,
             page = page.toString(),
             status = bookingStatus,
             startDate = fromDate,
@@ -343,6 +355,7 @@ class FragmentSaloonBookings :
         )
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getCalendarbar() {
         isLoading = true
@@ -393,13 +406,14 @@ class FragmentSaloonBookings :
         )
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
+
     private fun updateBooking(bookingId: String, reason: String) {
         isLoading = true
         viewModel.updateBooking.observe(viewLifecycleOwner) {
 
             when (it) {
                 is Resource.Success -> {
-                   // (activity as HomeActivity?)?.hideLoadingIndicator()
+                    // (activity as HomeActivity?)?.hideLoadingIndicator()
                     requireView().snackbar("Booking updated successfully")
                     getBooking()
                 }

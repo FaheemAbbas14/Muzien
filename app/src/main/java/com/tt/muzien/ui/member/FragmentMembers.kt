@@ -23,37 +23,29 @@ import com.zabihah.ui.ui.interfaces.OnItemClickListner
 
 class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, MemberRepository>() {
     private val membersList = arrayListOf<MemberDto>()
-    private var fromDate: String = ""
-    private var toDate: String = ""
-    private var bookingDuration: String = ""
     private var isActive: Boolean? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setSaloonRepo((activity as HomeActivity?)?.getSaloonRepo()!!)
-        getMembers()
         binding.imgFilter.setOnClickListener {
             var nextFragment = FragmentFilter()
             nextFragment.status = true
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
         if (FilterSelection.filterData != null) {
-            val selection = FilterSelection.filterData!!.selection
-            val fromDateFilter = FilterSelection.filterData!!.from
-            val toDateFilter = FilterSelection.filterData!!.to
             if (FilterSelection.filterData!!.status != null && FilterSelection.filterData!!.status != "") {
                 if (FilterSelection.filterData!!.status == "Active") {
                     isActive = true
                 } else {
                     isActive = false
                 }
-            }
-            if (selection != "") {
-                bookingDuration = selection.toString()
-                fromDate = fromDateFilter.toString()
-                toDate = toDateFilter.toString()
                 getMembers()
             }
 
+
+        }
+        else{
+            getMembers()
         }
     }
 
@@ -152,7 +144,7 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
                 else -> {}
             }
         }
-        viewModel.getMembers()
+        viewModel.getMembers(isActive)
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 

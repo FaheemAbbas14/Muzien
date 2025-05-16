@@ -21,6 +21,7 @@ interface BookingApi {
     @GET("v1/booking")
     suspend fun getBookings(
         @Query("saloonIds") saloonIds: String? = null,
+        @Query("serviceProviderIds") serviceProviderIds: String? = null,
         @Query("startDate") startDate: String? = null,
         @Query("endDate") endDate: String? = null,
         @Query("status") status: String? = null,

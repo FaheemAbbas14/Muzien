@@ -9,4 +9,15 @@ package com.tt.muzien.data.responses
  */
 data class GetServiceProviderResponse( val status: Int,
                                        val message: String,
-                                       val data: Any,)
+                                       val data: List<ServiceProviderInfo>,)
+data class ServiceProviderInfo(
+    val id: Long,
+    val isAdmin: Boolean,
+    val isActive: Boolean,
+    val User: UserInfo,
+)
+
+data class UserInfo(
+    val id: Long,
+    val fullName: String,
+)

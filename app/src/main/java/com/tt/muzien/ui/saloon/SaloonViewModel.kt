@@ -85,8 +85,8 @@ class SaloonViewModel(
         _getSaloonDetails.value = repository.getSaloonsDetail(saloonId)
     }
 
-    fun getServiceProviders() = viewModelScope.launch {
-        _getServiceProviders.value = repository.getServiceProviders()
+    fun getServiceProviders(isActive: Boolean, isAdmin: Boolean?) = viewModelScope.launch {
+        _getServiceProviders.value = memberRepository?.getServiceProvider(isActive,isAdmin)
     }
 
     fun getSaloonsSubscriptions(saloonId: Int? = null) = viewModelScope.launch {

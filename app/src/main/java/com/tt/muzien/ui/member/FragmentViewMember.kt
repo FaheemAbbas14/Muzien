@@ -33,6 +33,7 @@ import com.tt.muzien.ui.adapters.HolidayListAdapter
 import com.tt.muzien.ui.adapters.ServiceGridviewAdapter
 import com.tt.muzien.ui.adapters.WorkingHoursAdapter
 import com.tt.muzien.ui.base.BaseFragment
+import com.tt.muzien.ui.bookings.FragmentMemberBookings
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.saloon.tabs.FragmentAddHoliday
@@ -67,6 +68,18 @@ class FragmentViewMember :
         }
         binding.imgMenu.setOnClickListener {
             showCustomMenu(binding.imgMenu)
+        }
+        binding.llRatings.setOnClickListener {
+            var nextFragment = FragmentViewMemberReviews()
+            nextFragment.selectedSaloon = 7
+            nextFragment.selectedMember = member?.userId ?: 0
+            (activity as HomeActivity?)?.loadFragment(nextFragment)
+        }
+        binding.llBookings.setOnClickListener {
+            var nextFragment = FragmentMemberBookings()
+            nextFragment.selectedSaloon = 7
+            nextFragment.selectedMember = member?.userId ?: 0
+            (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
         binding.imgAddHoliday.setOnClickListener {
             var nextFragment = FragmentAddHoliday()
