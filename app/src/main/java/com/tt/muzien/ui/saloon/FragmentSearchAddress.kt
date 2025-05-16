@@ -71,7 +71,8 @@ import java.util.Locale
 
 class FragmentSearchAddress :
     BaseFragment<SaloonViewModel, FragmentSearchAddressBinding, SaloonRepository>(),
-    OnMapReadyCallback {
+    OnMapReadyCallback,
+    GoogleMap.OnMyLocationButtonClickListener {
     private lateinit var placesClient: PlacesClient
     private lateinit var mMap: GoogleMap
     var selectedAddress: String = ""
@@ -140,6 +141,7 @@ class FragmentSearchAddress :
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        checkLocationPermissions()
         // Set the map type
         mMap.mapType = GoogleMap.MAP_TYPE_TERRAIN  // Change to desired map type
         if (latitude != 0.0 && longitude != 0.0) {
@@ -157,7 +159,6 @@ class FragmentSearchAddress :
             // Optional: move camera
             googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
         }
-        checkLocationPermissions()
     }
 
     private fun checkLocationPermissions() {
@@ -169,7 +170,7 @@ class FragmentSearchAddress :
             == PackageManager.PERMISSION_GRANTED
         ) {
             mMap.isMyLocationEnabled = true
-            //mMap.setOnMyLocationButtonClickListener(requireContext())
+            mMap.setOnMyLocationButtonClickListener(this)
             checkGPSAndProceed()
         } else {
             ActivityCompat.requestPermissions(
@@ -218,8 +219,9 @@ class FragmentSearchAddress :
             fusedLocationClient.lastLocation
                 .addOnSuccessListener { location: Location? ->
                     location?.let {
+                        Log.d("currentLocation","latitude ${location.latitude} longitude ${location.longitude}")
                         lastSelectedAddress = LatLng(location.latitude, location.longitude)
-                        setAddress(LatLng(location.latitude, location.latitude))
+                        setAddress(LatLng(location.latitude, location.longitude))
 
                     }
                 }
@@ -227,6 +229,7 @@ class FragmentSearchAddress :
             e.printStackTrace()
         }
     }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -509,7 +512,9 @@ class FragmentSearchAddress :
     private fun onCameraMove() {
         if (mMap != null) {
             val target = mMap.cameraPosition.target
-            marker!!.position = target
+            if (marker!=null) {
+                marker!!.position = target
+            }
             job?.cancel()
 
             // Create a new coroutine to handle the delay and reverse geocoding
@@ -537,18 +542,22 @@ class FragmentSearchAddress :
     }
 
     private fun setAddress(addressLatLng: LatLng) {
-        var address =
-            addressLatLng?.let {
+        try {
+
+            Log.d("currentLocation","selected latitude ${addressLatLng.latitude} longitude ${addressLatLng.longitude}")
+            var address =
                 getAddressFromLatLng(
-                    it,
+                    addressLatLng,
                     requireContext()
                 )
-            }!!
-        binding.txtAddress.setText(address)
-        selectedAddress = address
-        latitude = addressLatLng.latitude
-        longitude = addressLatLng.longitude
-        updateMarkerLocation(addressLatLng.latitude, addressLatLng.longitude)
+            binding.txtAddress.setText(address)
+            selectedAddress = address
+            latitude = addressLatLng.latitude
+            longitude = addressLatLng.longitude
+            updateMarkerLocation(addressLatLng.latitude, addressLatLng.longitude)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     fun getAddressFromLatLng(latLng: LatLng, context: Context): String {
@@ -563,5 +572,10 @@ class FragmentSearchAddress :
             e.printStackTrace()
         }
         return ""
+    }
+
+    override fun onMyLocationButtonClick(): Boolean {
+        checkLocationPermissions()
+        return false
     }
 }
