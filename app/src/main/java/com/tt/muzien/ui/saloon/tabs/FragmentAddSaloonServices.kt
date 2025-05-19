@@ -114,18 +114,15 @@ class FragmentAddSaloonServices :
 //            var nextFragment = FragmentAddSaloonService()
 //            nextFragment.serviceId = serviceId ?: 0
 //            (activity as HomeActivity?)?.loadFragment(nextFragment)
-            if (saloonId != null && saloonId != 0) {
-                dialog.dismiss()
-                addSaloonService()
-            } else {
-                var nextFragment = FragmentUpdateService()
-                nextFragment.service = service
-                nextFragment.category = category
-                nextFragment.saloonId = saloonId.toString()
-                (activity as HomeActivity?)?.loadFragment(nextFragment)
-                // Add your logic here (e.g., enable the service)
-                dialog.dismiss()
-            }
+
+            var nextFragment = FragmentUpdateService()
+            nextFragment.service = service
+            nextFragment.category = category
+            nextFragment.saloonId = saloonId.toString()
+            (activity as HomeActivity?)?.loadFragment(nextFragment)
+            // Add your logic here (e.g., enable the service)
+            dialog.dismiss()
+
         }
 
         // Show the dialog
@@ -360,8 +357,11 @@ class FragmentAddSaloonServices :
                             }
 
                         } else {
-
-                            showPopupDialog()
+                            if (saloonId != null && saloonId != 0) {
+                                addSaloonService()
+                            } else {
+                                showPopupDialog()
+                            }
 
                         }
                     } else {

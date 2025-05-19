@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,13 +16,13 @@ import com.tt.muzien.data.SaloonBookingData
 import com.tt.muzien.data.dto.BookingsCountData
 import com.tt.muzien.data.dto.CalendarDay
 import com.tt.muzien.data.dto.FilterData
-import com.tt.muzien.data.dto.SaloonDto
 import com.tt.muzien.data.network.BookingApi
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.BookingRepository
 import com.tt.muzien.data.requests.UpdateBookingRequest
+import com.tt.muzien.data.responses.ReviewDetails
 import com.tt.muzien.databinding.FragmentMemberBookingsBinding
-import com.tt.muzien.databinding.FragmentSaloonBookingsBinding
+import com.tt.muzien.interfaces.IBookingStatusUpdate
 import com.tt.muzien.interfaces.IbookingCancel
 import com.tt.muzien.ui.adapters.SaloonBookingAdapter
 import com.tt.muzien.ui.base.BaseFragment
@@ -65,20 +64,32 @@ class FragmentMemberBookings :
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
         }
-        val dates = TimeHelper.getWeekAndMonthDates()
-        fromDate = dates["startOfMonth"]
-        toDate = dates["endOfMonth"]
+        if (FilterSelection.filterData == null) {
+            val currentDate = LocalDate.now()
+            val formattedDate = currentDate.format(DateTimeFormatter.ISO_DATE)
+            fromDate = formattedDate
+            toDate = formattedDate
+            val dayOfMonth = LocalDate.now().dayOfMonth
+            binding.customCalendarView.setCurrentDay(dayOfMonth - 1)
+        } else {
+            if (FilterSelection.filterData!!.from != null) {
+                fromDate = FilterSelection.filterData!!.from
+                toDate = FilterSelection.filterData!!.to
+            }
+        }
         binding.customCalendarView.setOnMonthChangedListener { startDate, endDate ->
             Log.d("CalendarFragment", "Month range: $startDate to $endDate")
             // Fetch data or update UI based on date range
-            if (!isFromSelection) {
-                fromDate = startDate
-                toDate = endDate
-                getCalendarbar()
-            }
-            else{
-                isFromSelection=false
-            }
+//            if (!isFromSelection) {
+//                // binding.customCalendarView.setCurrentDay(-1)
+//                fromDate = startDate
+//                toDate = endDate
+//                FilterSelection.filterData = FilterData("", fromDate, toDate, false)
+//                page = 1
+//                getCalendarbar()
+//            } else {
+//                isFromSelection = false
+//            }
         }
         getBooking()
         binding.customCalendarView.setOnDaySelectedListener { selectedDay ->
@@ -110,8 +121,13 @@ class FragmentMemberBookings :
 
             bookingStatus = FilterSelection.filterData!!.bookingStatus
             bookingServiceProvider = FilterSelection.filterData!!.serviceProvider
-            fromDate = FilterSelection.filterData!!.from
-            toDate = FilterSelection.filterData!!.to
+            if (FilterSelection.filterData!!.from!=null){
+                fromDate = FilterSelection.filterData!!.from
+                toDate = FilterSelection.filterData!!.to
+            }
+            else{
+                isFromSelection=true
+            }
             if (FilterSelection.filterData!!.saloonId != null) {
                 bookingSaloonId = FilterSelection.filterData!!.saloonId.toString()
             } else {
@@ -133,6 +149,7 @@ class FragmentMemberBookings :
 
             }
             if (bookingStatus != null && bookingStatus != "") {
+                page=1
                 binding.imgBookingFilter.setImageResource(
                     R.drawable.blue_cancel
                 )
@@ -197,7 +214,14 @@ class FragmentMemberBookings :
         val ibookingCancel = object : IbookingCancel {
 
             override fun onItemClick(position: Int, reason: String) {
-                updateBooking(saloonsBookingList[position].bookingId, reason)
+                updateBooking(saloonsBookingList[position].bookingId, reason, "cancelled")
+            }
+        }
+        val iBookingStatusUpdate = object : IBookingStatusUpdate {
+
+            override fun onBookingClick(position: Int, status: String) {
+                updateBooking(saloonsBookingList[position].bookingId, "", status)
+
             }
         }
         adopter = SaloonBookingAdapter(
@@ -205,6 +229,7 @@ class FragmentMemberBookings :
             requireContext(),
             clickListener,
             ibookingCancel,
+            iBookingStatusUpdate,
             bookingStatus,
             true
         )
@@ -320,6 +345,16 @@ class FragmentMemberBookings :
                             for (service in booking.bookingServices) {
                                 services += service.serviceDetails.name
                             }
+                            var cancelledBy: String? = null
+                            var cancelledReason: String? = null
+                            for (remarks in booking.bookingRemarks) {
+                                cancelledBy = remarks?.user?.fullName
+                                cancelledReason = remarks?.comment
+                            }
+                            var reviewDetails: ReviewDetails? = null
+                            for (review in booking.bookingReviews) {
+                                reviewDetails=review?.reviewDetails
+                            }
                             saloonsBookingList.add(
                                 SaloonBookingData(
                                     booking.id.toString(),
@@ -331,7 +366,10 @@ class FragmentMemberBookings :
                                     booking.date,
                                     booking.time,
                                     booking.status,
-                                    booking.duration
+                                    booking.duration,
+                                    cancelledBy,
+                                    cancelledReason,
+                                    reviewDetails
                                 )
                             )
                         }
@@ -413,7 +451,7 @@ class FragmentMemberBookings :
         )
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
-    private fun updateBooking(bookingId: String, reason: String) {
+    private fun updateBooking(bookingId: String, reason: String, status: String) {
         isLoading = true
         viewModel.updateBooking.observe(viewLifecycleOwner) {
 
@@ -435,8 +473,7 @@ class FragmentMemberBookings :
                 else -> {}
             }
         }
-        viewModel.updateBooking(bookingId, UpdateBookingRequest("cancelled", reason))
+        viewModel.updateBooking(bookingId, UpdateBookingRequest(status, reason))
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
-
 }

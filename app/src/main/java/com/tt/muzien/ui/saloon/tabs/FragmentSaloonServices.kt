@@ -96,14 +96,14 @@ class FragmentSaloonServices :
             val groupItem = adapter.getGroupView(i, false, null, listView)
             groupItem.measure(0, 0)
             Log.d("ExpandableListView", "parent height: ${groupItem.measuredHeight}")
-            totalHeight += Helper.dpToPx(requireContext(), 85)
+            totalHeight += Helper.dpToPx(requireContext(), 80)
 
             if (listView.isGroupExpanded(i)) {
                 for (j in 0 until adapter.getChildrenCount(i)) {
                     val childItem = adapter.getChildView(i, j, false, null, listView)
                     childItem.measure(0, 0)
                     Log.d("ExpandableListView", "child height: ${childItem.measuredHeight}")
-                    totalHeight += Helper.dpToPx(requireContext(), 175)
+                    totalHeight += Helper.dpToPx(requireContext(), 120)
                 }
             }
         }

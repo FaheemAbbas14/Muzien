@@ -74,7 +74,7 @@ class ExpandServiceListAdapter(
             divider.visibility = View.GONE
             constraintLayout4.setBackgroundDrawable(context.resources.getDrawable(R.drawable.top_rounded_corners))
         } else {
-            divider.visibility = View.GONE
+            divider.visibility = View.VISIBLE
             constraintLayout4.setBackgroundDrawable(context.resources.getDrawable(R.drawable.white_rounded10))
         }
         val servicesCount = view.findViewById<TextView>(R.id.servicesCount)

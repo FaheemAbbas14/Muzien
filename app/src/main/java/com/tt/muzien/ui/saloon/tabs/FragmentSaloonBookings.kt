@@ -21,7 +21,9 @@ import com.tt.muzien.data.network.BookingApi
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.BookingRepository
 import com.tt.muzien.data.requests.UpdateBookingRequest
+import com.tt.muzien.data.responses.ReviewDetails
 import com.tt.muzien.databinding.FragmentSaloonBookingsBinding
+import com.tt.muzien.interfaces.IBookingStatusUpdate
 import com.tt.muzien.interfaces.IbookingCancel
 import com.tt.muzien.ui.adapters.SaloonBookingAdapter
 import com.tt.muzien.ui.base.BaseFragment
@@ -32,7 +34,6 @@ import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.FilterSelection
 import com.tt.muzien.utilities.Helper
-import com.tt.muzien.utilities.TimeHelper
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -63,26 +64,42 @@ class FragmentSaloonBookings :
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val dates = TimeHelper.getWeekAndMonthDates()
-        fromDate = dates["startOfMonth"]
-        toDate = dates["endOfMonth"]
+        if (FilterSelection.filterData == null) {
+            val currentDate = LocalDate.now()
+            val formattedDate = currentDate.format(DateTimeFormatter.ISO_DATE)
+            fromDate = formattedDate
+            toDate = formattedDate
+            val dayOfMonth = LocalDate.now().dayOfMonth
+            binding.customCalendarView.setCurrentDay(dayOfMonth - 1)
+        } else {
+            if (FilterSelection.filterData!!.from != null) {
+                fromDate = FilterSelection.filterData!!.from
+                toDate = FilterSelection.filterData!!.to
+            }
+        }
         binding.customCalendarView.setOnMonthChangedListener { startDate, endDate ->
             Log.d("CalendarFragment", "Month range: $startDate to $endDate")
             // Fetch data or update UI based on date range
-            if (!isFromSelection) {
-                fromDate = startDate
-                toDate = endDate
-                getCalendarbar()
-            } else {
-                isFromSelection = false
-            }
+//            if (!isFromSelection) {
+//                // binding.customCalendarView.setCurrentDay(-1)
+//                fromDate = startDate
+//                toDate = endDate
+//                FilterSelection.filterData = FilterData("", fromDate, toDate, false)
+//                page = 1
+//                getCalendarbar()
+//            } else {
+//                isFromSelection = false
+//            }
         }
         getBooking()
         binding.customCalendarView.setOnDaySelectedListener { selectedDay ->
             // Toast.makeText(requireContext(), "Selected: ${selectedDay}", Toast.LENGTH_SHORT).show()
             fromDate = selectedDay
             toDate = selectedDay
+            FilterSelection.filterData!!.from = fromDate
+            FilterSelection.filterData!!.to = toDate
             FilterSelection.filterData = FilterData("", fromDate, toDate, false)
+            page = 1
             getBooking()
         }
         //binding.customCalendarView.setDays(generateDaysWithEvents())
@@ -99,7 +116,7 @@ class FragmentSaloonBookings :
                 getCalendarbar()
             } else {
                 var nextFragment = FragmentBookingFilter()
-                nextFragment.showSaloon=false
+                nextFragment.showSaloon = false
                 (activity as HomeActivity?)?.loadFragment(nextFragment)
             }
         }
@@ -107,8 +124,12 @@ class FragmentSaloonBookings :
 
             bookingStatus = FilterSelection.filterData!!.bookingStatus
             bookingServiceProvider = FilterSelection.filterData!!.serviceProvider
-            fromDate = FilterSelection.filterData!!.from
-            toDate = FilterSelection.filterData!!.to
+            if (FilterSelection.filterData!!.from != null) {
+                fromDate = FilterSelection.filterData!!.from
+                toDate = FilterSelection.filterData!!.to
+            } else {
+                isFromSelection = true
+            }
             if (FilterSelection.filterData!!.saloonId != null) {
                 bookingSaloonId = FilterSelection.filterData!!.saloonId.toString()
             } else {
@@ -130,6 +151,7 @@ class FragmentSaloonBookings :
 
             }
             if (bookingStatus != null && bookingStatus != "") {
+                page = 1
                 binding.imgBookingFilter.setImageResource(
                     R.drawable.blue_cancel
                 )
@@ -192,7 +214,14 @@ class FragmentSaloonBookings :
         val ibookingCancel = object : IbookingCancel {
 
             override fun onItemClick(position: Int, reason: String) {
-                updateBooking(saloonsBookingList[position].bookingId, reason)
+                updateBooking(saloonsBookingList[position].bookingId, reason, "cancelled")
+            }
+        }
+        val iBookingStatusUpdate = object : IBookingStatusUpdate {
+
+            override fun onBookingClick(position: Int, status: String) {
+                updateBooking(saloonsBookingList[position].bookingId, "", status)
+
             }
         }
         adopter = SaloonBookingAdapter(
@@ -200,6 +229,7 @@ class FragmentSaloonBookings :
             requireContext(),
             clickListener,
             ibookingCancel,
+            iBookingStatusUpdate,
             bookingStatus,
             true
         )
@@ -312,6 +342,16 @@ class FragmentSaloonBookings :
                             for (service in booking.bookingServices) {
                                 services += service.serviceDetails.name
                             }
+                            var cancelledBy: String? = null
+                            var cancelledReason: String? = null
+                            for (remarks in booking.bookingRemarks) {
+                                cancelledBy = remarks?.user?.fullName
+                                cancelledReason = remarks?.comment
+                            }
+                            var reviewDetails: ReviewDetails? = null
+                            for (review in booking.bookingReviews) {
+                                reviewDetails=review?.reviewDetails
+                            }
                             saloonsBookingList.add(
                                 SaloonBookingData(
                                     booking.id.toString(),
@@ -323,7 +363,10 @@ class FragmentSaloonBookings :
                                     booking.date,
                                     booking.time,
                                     booking.status,
-                                    booking.duration
+                                    booking.duration,
+                                    cancelledBy,
+                                    cancelledReason,
+                                    reviewDetails
                                 )
                             )
                         }
@@ -407,7 +450,7 @@ class FragmentSaloonBookings :
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 
-    private fun updateBooking(bookingId: String, reason: String) {
+    private fun updateBooking(bookingId: String, reason: String, status: String) {
         isLoading = true
         viewModel.updateBooking.observe(viewLifecycleOwner) {
 
@@ -429,7 +472,7 @@ class FragmentSaloonBookings :
                 else -> {}
             }
         }
-        viewModel.updateBooking(bookingId, UpdateBookingRequest("cancelled", reason))
+        viewModel.updateBooking(bookingId, UpdateBookingRequest(status, reason))
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 

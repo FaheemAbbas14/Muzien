@@ -1,5 +1,7 @@
 package com.tt.muzien.data
 
+import com.tt.muzien.data.responses.ReviewDetails
+
 
 /**
  * Created by Faheem Abbas on 18/12/2024.
@@ -17,5 +19,8 @@ data class SaloonBookingData(
     var date: String,
     var time: String,
     var status: String,
-    var duration: Long
+    var duration: Long,
+    var cancelledBy: String? = null,
+    var cancelledReason: String? = null,
+    val reviewDetails: ReviewDetails?,
 )

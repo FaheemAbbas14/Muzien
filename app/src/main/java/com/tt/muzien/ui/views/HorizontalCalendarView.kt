@@ -96,7 +96,9 @@ class HorizontalCalendarView @JvmOverloads constructor(
         // Generate days for the current month
         val days = generateDaysForMonth(calendar)
         adapter.setDays(days)
-
+// 👇 Add this line to unselect the day when month changes
+        adapter.setSelected(-1)
+        recyclerView.scrollToPosition(0)
         // Disable next button if current month and year match today's month and year
         val today = Calendar.getInstance()
         val isCurrentMonth = calendar.get(Calendar.MONTH) == today.get(Calendar.MONTH)

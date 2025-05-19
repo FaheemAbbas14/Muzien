@@ -32,8 +32,8 @@ data class Booking(
     val customer: Customer,
     val serviceProvider: ServiceProvider,
     val saloon: SaloonDetails,
-    val bookingRemarks: List<Any?>,
-    val bookingReviews: List<Any?>,
+    val bookingRemarks: List<BookingRemark?>,
+    val bookingReviews: List<BookingReview?>,
 )
 
 data class BookingService(
@@ -41,7 +41,31 @@ data class BookingService(
     val serviceDetails: ServiceDetails,
 )
 
+data class BookingReview(
+    val id: Long,
+    val reviewDetails: ReviewDetails,
+)
 
+data class ReviewDetails(
+    val id: Long,
+    val rating: Long,
+    val comment: String,
+    val createdAt: String,
+    val updatedAt: String,
+    val reviewer: BookingReviewer,
+    val images: List<Image>,
+)
+
+data class BookingReviewer(
+    val id: Long,
+    val fullName: String,
+    val picture: Any?,
+    val role: String,
+)
+
+data class Image(
+    val image: String,
+)
 
 data class Customer(
     val id: Long,
@@ -58,6 +82,18 @@ data class ServiceProvider(
 data class SaloonDetails(
     val id: Long,
     val name: String,
+)
+data class BookingRemark(
+    val id: Long,
+    val movedFrom: String,
+    val movedTo: String,
+    val comment: String,
+    val user: RemarksUser,
+)
+
+data class RemarksUser(
+    val id: Long,
+    val fullName: String,
 )
 
 

@@ -21,7 +21,9 @@ import com.tt.muzien.data.network.BookingApi
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.BookingRepository
 import com.tt.muzien.data.requests.UpdateBookingRequest
+import com.tt.muzien.data.responses.ReviewDetails
 import com.tt.muzien.databinding.FragmentServiceProviderDashboardBinding
+import com.tt.muzien.interfaces.IBookingStatusUpdate
 import com.tt.muzien.interfaces.IbookingCancel
 import com.tt.muzien.ui.adapters.SaloonBookingAdapter
 import com.tt.muzien.ui.base.BaseFragment
@@ -30,7 +32,6 @@ import com.tt.muzien.ui.bookings.FragmentBookingFilter
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.FilterSelection
-import com.tt.muzien.utilities.TimeHelper
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -61,23 +62,36 @@ class ServiceProviderDashboard :
     var completedBookings = 0
     var inviteId: Int? = null
     var saloonId: Int? = null
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setMemberRepo((activity as HomeActivity?)?.getMemberRepo()!!)
-      //  LoggedInInfo.user?.status = "Invited"
-        val dates = TimeHelper.getWeekAndMonthDates()
-        fromDate = dates["startOfMonth"]
-        toDate = dates["endOfMonth"]
-        binding.llAccept.setOnClickListener {
-            acceptInvite()
+        //  LoggedInInfo.user?.status = "Invited"
+        if (FilterSelection.filterData == null) {
+            val currentDate = LocalDate.now()
+            val formattedDate = currentDate.format(DateTimeFormatter.ISO_DATE)
+            fromDate = formattedDate
+            toDate = formattedDate
+            val dayOfMonth = LocalDate.now().dayOfMonth
+            binding.customCalendarView.setCurrentDay(dayOfMonth - 1)
+        } else {
+            if (FilterSelection.filterData!!.from != null) {
+                fromDate = FilterSelection.filterData!!.from
+                toDate = FilterSelection.filterData!!.to
+            }
         }
         binding.customCalendarView.setOnMonthChangedListener { startDate, endDate ->
             Log.d("CalendarFragment", "Month range: $startDate to $endDate")
             // Fetch data or update UI based on date range
-            fromDate = startDate
-            toDate = endDate
-            getAnalytics()
+
+            // binding.customCalendarView.setCurrentDay(-1)
+//            fromDate = startDate
+//            toDate = endDate
+//            FilterSelection.filterData = FilterData("", fromDate, toDate, false)
+//            page = 1
+//            getAnalytics()
+
         }
         binding.customCalendarView.setOnDaySelectedListener { selectedDay ->
             // Toast.makeText(requireContext(), "Selected: ${selectedDay}", Toast.LENGTH_SHORT).show()
@@ -101,7 +115,7 @@ class ServiceProviderDashboard :
                 getAnalytics()
             } else {
                 var nextFragment = FragmentBookingFilter()
-                nextFragment.showSaloon=false
+                nextFragment.showSaloon = false
                 (activity as HomeActivity?)?.loadFragment(nextFragment)
             }
         }
@@ -109,9 +123,12 @@ class ServiceProviderDashboard :
 
             bookingStatus = FilterSelection.filterData!!.bookingStatus
             bookingServiceProvider = FilterSelection.filterData!!.serviceProvider
-            fromDate = FilterSelection.filterData!!.from
-            toDate = FilterSelection.filterData!!.to
-            saloonId= FilterSelection.filterData!!.saloonId
+            if (FilterSelection.filterData!!.from != null) {
+                fromDate = FilterSelection.filterData!!.from
+                toDate = FilterSelection.filterData!!.to
+            }
+
+            saloonId = FilterSelection.filterData!!.saloonId
             if (FilterSelection.filterData!!.saloonId != null) {
                 bookingSaloonId = FilterSelection.filterData!!.saloonId.toString()
             } else {
@@ -133,6 +150,7 @@ class ServiceProviderDashboard :
 
             }
             if (bookingStatus != null && bookingStatus != "") {
+                page = 1
                 binding.imgBookingFilter.setImageResource(
                     R.drawable.blue_cancel
                 )
@@ -143,7 +161,7 @@ class ServiceProviderDashboard :
             }
             adopter?.setBookingStatus(bookingStatus)
             adopter?.notifyDataSetChanged()
-            if (fromDate!="") {
+            if (fromDate != "") {
                 binding.customCalendarView.setMonthFromDate(fromDate ?: "")
             }
             // Toast.makeText(requireContext(), "data received", Toast.LENGTH_SHORT).show()
@@ -211,7 +229,14 @@ class ServiceProviderDashboard :
         val ibookingCancel = object : IbookingCancel {
 
             override fun onItemClick(position: Int, reason: String) {
-                updateBooking(saloonsBookingList[position].bookingId, reason)
+                updateBooking(saloonsBookingList[position].bookingId, reason, "cancelled")
+            }
+        }
+        val iBookingStatusUpdate = object : IBookingStatusUpdate {
+
+            override fun onBookingClick(position: Int, status: String) {
+                updateBooking(saloonsBookingList[position].bookingId, "", status)
+
             }
         }
         adopter = SaloonBookingAdapter(
@@ -219,6 +244,7 @@ class ServiceProviderDashboard :
             requireContext(),
             clickListener,
             ibookingCancel,
+            iBookingStatusUpdate,
             bookingStatus,
             true
         )
@@ -327,11 +353,12 @@ class ServiceProviderDashboard :
                 is Resource.Success -> {
                     Log.d("response", "success " + it.toString())
                     (activity as HomeActivity?)?.hideLoadingIndicator()
-                    if (it.value.status != 0 && it.value.data.id!=null) {
-                        inviteId=it.value.data.id.toInt()
-                        binding.txtInvitedText.text="${it.value.data.InvitedBy.fullName} has invited you to join their salon “${it.value.data.Saloon.name}” as a service provider.\n" +
-                                "\n" +
-                                "Do you want to accept?"
+                    if (it.value.status != 0 && it.value.data.id != null) {
+                        inviteId = it.value.data.id.toInt()
+                        binding.txtInvitedText.text =
+                            "${it.value.data.InvitedBy.fullName} has invited you to join their salon “${it.value.data.Saloon.name}” as a service provider.\n" +
+                                    "\n" +
+                                    "Do you want to accept?"
                         binding.llAcceptInvite.visibility = View.VISIBLE
                         binding.llSendInvite.visibility = View.GONE
                         binding.llBookings.visibility = View.GONE
@@ -379,7 +406,7 @@ class ServiceProviderDashboard :
             }
         }
         viewModel.acceptInvite(
-            inviteId?:0
+            inviteId ?: 0
         )
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
@@ -496,6 +523,16 @@ class ServiceProviderDashboard :
                             for (service in booking.bookingServices) {
                                 services += service.serviceDetails.name
                             }
+                            var cancelledBy: String? = null
+                            var cancelledReason: String? = null
+                            for (remarks in booking.bookingRemarks) {
+                                cancelledBy = remarks?.user?.fullName
+                                cancelledReason = remarks?.comment
+                            }
+                            var reviewDetails: ReviewDetails? = null
+                            for (review in booking.bookingReviews) {
+                                reviewDetails = review?.reviewDetails
+                            }
                             saloonsBookingList.add(
                                 SaloonBookingData(
                                     booking.id.toString(),
@@ -507,7 +544,10 @@ class ServiceProviderDashboard :
                                     booking.date,
                                     booking.time,
                                     booking.status,
-                                    booking.duration
+                                    booking.duration,
+                                    cancelledBy,
+                                    cancelledReason,
+                                    reviewDetails
                                 )
                             )
                         }
@@ -539,15 +579,16 @@ class ServiceProviderDashboard :
         )
         //  (activity as HomeActivity?)?.showLoadingIndicator()
     }
-    private fun updateBooking(bookingId: String, reason: String) {
+
+    private fun updateBooking(bookingId: String, reason: String, status: String) {
         isLoading = true
         viewModel.updateBooking.observe(viewLifecycleOwner) {
 
             when (it) {
                 is Resource.Success -> {
-                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    // (activity as HomeActivity?)?.hideLoadingIndicator()
                     requireView().snackbar("Booking updated successfully")
-
+                    getBooking()
                 }
 
                 is Resource.Failure -> {
@@ -561,7 +602,7 @@ class ServiceProviderDashboard :
                 else -> {}
             }
         }
-        viewModel.updateBooking(bookingId, UpdateBookingRequest("cancelled", reason))
+        viewModel.updateBooking(bookingId, UpdateBookingRequest(status, reason))
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 

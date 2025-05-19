@@ -26,6 +26,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.tt.muzien.R
 import com.tt.muzien.data.SaloonBookingData
+import com.tt.muzien.interfaces.IBookingStatusUpdate
 import com.tt.muzien.interfaces.IbookingCancel
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 
@@ -41,6 +42,7 @@ class SaloonBookingAdapter(
     private val context: Context,
     private val listener: OnItemClickListner,
     private val ibookingCancel: IbookingCancel,
+    private val iBookingStatusUpdate: IBookingStatusUpdate,
     private var bookingStatus: String? = null,
     private var isFromMain: Boolean = false,
     private var isFromServiceProvider: Boolean = false
@@ -108,28 +110,45 @@ class SaloonBookingAdapter(
                 holder.imgBarCode.visibility = View.GONE
             }
             var item: SaloonBookingData = itemList[position]
-            if (bookingStatus == "completed") {
+            Log.d("bookingStatus", "${item.status}")
+            if (item.status == "completed" && item.reviewDetails != null) {
                 holder.llReview.visibility = View.VISIBLE
-            } else if (bookingStatus == "cancelled") {
+                holder.llCancel.visibility = View.GONE
+                holder.llPending.visibility = View.GONE
+            } else if (item.status == "cancelled" && item.cancelledBy != null) {
+                holder.llReview.visibility = View.GONE
+                holder.llPending.visibility = View.GONE
                 holder.llCancel.visibility = View.VISIBLE
-            } else if (bookingStatus == "pending-approval") {
+            } else if (item.status == "pending-approval") {
+                holder.llReview.visibility = View.GONE
+                holder.llCancel.visibility = View.GONE
                 holder.llPending.visibility = View.VISIBLE
-            } else if (bookingStatus == "overdue") {
+            } else if (item.status == "overdue") {
+                holder.llReview.visibility = View.GONE
+                holder.llCancel.visibility = View.GONE
+                holder.llPending.visibility = View.GONE
                 holder.mainCard.setBackgroundDrawable(context.resources.getDrawable(R.drawable.rounded_overdue))
             }
-            if (isFromMain) {
-                holder.llMainView.visibility = View.VISIBLE
-            }
+//            if (isFromMain) {
+//                holder.llMainView.visibility = View.VISIBLE
+//            }
             holder.txtDateTime.text = "${item.date} - ${item.time} - ${item.duration} mins"
             holder.txtName.text = item.name
             holder.txtStyle.text = item.style
             holder.txtUserName.text = item.personName
             holder.txtService.text = item.service
-            if (item.status == "pending-approval"|| item.status == "unpaid" || item.status == "overdue") {
-                holder.txtCancel.visibility = View.VISIBLE
+            holder.txtCancelBy.text = "Cancelled by ${item.cancelledBy}"
+            holder.txtReason.text = item.cancelledReason
+            if (item.status == "unpaid" || item.status == "overdue") {
+                holder.llMainView.visibility = View.VISIBLE
+            } else {
+                holder.llMainView.visibility = View.GONE
             }
-            else{
-                holder.txtCancel.visibility = View.GONE
+            holder.txtReject.setOnClickListener {
+                iBookingStatusUpdate.onBookingClick(position, "cancelled")
+            }
+            holder.txtApprove.setOnClickListener {
+                iBookingStatusUpdate.onBookingClick(position, "scheduled")
             }
             holder.txtCancel.setOnClickListener {
                 showPopupDialog(position)
@@ -173,6 +192,20 @@ class SaloonBookingAdapter(
                 .skipMemoryCache(false)  // Cache in memory
                 .into(holder.imgProfilePic)
 
+            if (item.reviewDetails != null) {
+                holder.txtItemName.text = item.reviewDetails.reviewer.fullName
+                holder.txtAddedOn.text = item.reviewDetails.createdAt
+                holder.txtReview.text = item.reviewDetails.comment
+                holder.txtRatings.text = "${item.reviewDetails.rating}"
+                Glide.with(holder.imgItemIcon)
+                    .load(item.reviewDetails.reviewer.picture)
+                    .placeholder(R.drawable.topperformer)
+                    .circleCrop()
+                    .listener(iconRequestListener)
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)  // Cache both original & transformed image
+                    .skipMemoryCache(false)  // Cache in memory
+                    .into(holder.imgItemIcon)
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }

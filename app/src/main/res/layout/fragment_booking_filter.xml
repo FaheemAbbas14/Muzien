@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/light_grey"
     android:fitsSystemWindows="true"
     tools:context=".ui.home.FragmentFilter">
 
@@ -62,7 +62,6 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="10dp"
-        android:background="@color/light_grey"
         android:scrollbars="none"
         app:layout_constraintBottom_toTopOf="@+id/llApply"
         app:layout_constraintEnd_toEndOf="parent"
