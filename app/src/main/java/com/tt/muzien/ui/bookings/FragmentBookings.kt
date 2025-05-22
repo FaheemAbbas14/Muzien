@@ -162,7 +162,11 @@ class FragmentBookings :
             getCalendarbar()
         }
 
-
+        binding.swipeRefresh.setOnRefreshListener {
+            binding.swipeRefresh.isRefreshing = false
+            page=1
+            getCalendarbar()
+        }
     }
 
     private fun setMargins(show: Boolean) {

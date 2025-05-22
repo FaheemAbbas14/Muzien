@@ -232,7 +232,7 @@ class FragmentAddSaloon :
 
     private fun openGallery() {
         val galleryIntent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-            type = "image/*"
+            type = "image/jpeg"
             putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
             addCategory(Intent.CATEGORY_OPENABLE)
         }
@@ -519,7 +519,7 @@ class FragmentAddSaloon :
             for (uri in image_uris) {
                 val imageFile =
                     Helper.getFileFromUri(requireContext(), uri!!) ?: return // Get file from URI
-                val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), imageFile)
+                val requestFile = RequestBody.create("image/jpeg".toMediaTypeOrNull(), imageFile)
                 val imagePart =
                     MultipartBody.Part.createFormData("images", imageFile.name, requestFile)
                 images.add(imagePart)

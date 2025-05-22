@@ -1,7 +1,6 @@
 package com.tt.muzien.ui.home
 
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -49,8 +48,7 @@ import com.tt.muzien.ui.saloon.tabs.FragmentAddSaloonServices
 import com.tt.muzien.ui.startNewActivity
 import com.tt.muzien.ui.views.CustomLoadingIndicator
 import com.tt.muzien.utilities.FontScaleContextWrapper
-import com.tt.muzien.utilities.FragmentManager
-import com.tt.muzien.utilities.Helper.fixedFontScaleResources
+import com.tt.muzien.utilities.FragmentNavigator
 import com.tt.muzien.utilities.LocaleHelper
 import com.tt.muzien.utilities.PreferenceManager
 
@@ -96,9 +94,10 @@ class HomeActivity : AppCompatActivity() {
                 binding.homeTitle.setTextColor(resources.getColor(R.color.colorPrimary))
                 binding.bookingIcon.setImageDrawable(resources.getDrawable(R.drawable.booking_unselected))
                 binding.bookingTitle.setTextColor(resources.getColor(R.color.colorTextLabelDefault))
-                for (i in 0 until supportFragmentManager.backStackEntryCount - 1) {
-                    popFragment()
-                }
+//                for (i in 0 until supportFragmentManager.backStackEntryCount - 1) {
+//                    popFragment()
+//                }
+                loadFragment(HomeFragment())
             }
             binding.llBookings.setOnClickListener {
                 binding.homeBg.visibility = View.INVISIBLE
@@ -191,14 +190,14 @@ class HomeActivity : AppCompatActivity() {
     }
 
     fun loadFragment(newFragment: Fragment) {
-        FragmentManager().loadFragment(newFragment, supportFragmentManager)
+        FragmentNavigator().loadFragment(newFragment, supportFragmentManager)
     }
 
     fun loadFragment(
         fragment: Fragment,
         container: Int,
     ) {
-        FragmentManager()
+        FragmentNavigator()
             .loadFragment(fragment, supportFragmentManager, container)
     }
 
@@ -225,7 +224,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     fun popFragment() {
-        FragmentManager().popFragment(supportFragmentManager)
+        FragmentNavigator().popFragment(supportFragmentManager)
     }
 
     fun setSystemWindow(value: Boolean) {

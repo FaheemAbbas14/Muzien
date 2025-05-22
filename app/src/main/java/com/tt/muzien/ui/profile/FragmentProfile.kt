@@ -87,6 +87,7 @@ class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, Home
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
         binding.llBack.setOnClickListener {
+            (activity as HomeActivity?)?.showTabs()
             (activity as HomeActivity?)?.popFragment()
         }
         binding.llLogout.setOnClickListener {
@@ -131,10 +132,6 @@ class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, Home
         (activity as HomeActivity?)?.hideTabs()
     }
 
-    override fun onPause() {
-        super.onPause()
-        (activity as HomeActivity?)?.showTabs()
-    }
 
     private fun uploadImage() {
         if (checkPermissions()) {
@@ -256,7 +253,7 @@ class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, Home
         }
         val imageFile =
             Helper.getFileFromUri(requireContext(), image_uri!!) ?: return // Get file from URI
-        val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), imageFile)
+        val requestFile = RequestBody.create("image/jpeg".toMediaTypeOrNull(), imageFile)
         val imagePart = MultipartBody.Part.createFormData("image", imageFile.name, requestFile)
 
         viewModel.uploadImage(imagePart)
@@ -291,5 +288,11 @@ class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, Home
         }
         viewModel.logout()
         // (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            (activity as HomeActivity?)?.hideTabs()
+        }
     }
 }

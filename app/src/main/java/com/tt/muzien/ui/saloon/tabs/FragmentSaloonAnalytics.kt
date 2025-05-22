@@ -111,6 +111,11 @@ class FragmentSaloonAnalytics :
                 getAnalytics()
             }
         }
+//        binding.swipeRefresh.setOnRefreshListener {
+//            binding.swipeRefresh.isRefreshing = false
+//           // page=1
+//            getAnalytics()
+//        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

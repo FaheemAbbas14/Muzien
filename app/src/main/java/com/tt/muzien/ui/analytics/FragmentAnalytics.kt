@@ -59,6 +59,11 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // binding.homeLayout.setBackgroundColor(Color.argb(10, 30, 69, 148))
+        binding.swipeRefresh.setOnRefreshListener {
+            binding.swipeRefresh.isRefreshing = false
+           // page=1
+           getAnalytics()
+        }
         lineChart = binding.lineChart
         if (FilterSelection.filterData == null) {
             val dates = TimeHelper.getWeekAndMonthDates()

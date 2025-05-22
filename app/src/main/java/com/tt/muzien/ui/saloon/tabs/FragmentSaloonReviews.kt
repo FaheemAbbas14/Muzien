@@ -29,10 +29,16 @@ class FragmentSaloonReviews :
     private val reviewsList = arrayListOf<ReviewsInfo>()
     var selectedSaloon: SaloonDto? = null
     var avgRating: Double = 0.0
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getReviews()
+//        binding.swipeRefresh.setOnRefreshListener {
+//            binding.swipeRefresh.isRefreshing = false
+//            // page=1
+//            getReviews()
+//        }
     }
 
     private fun setReviewsAdopter() {
@@ -109,7 +115,7 @@ class FragmentSaloonReviews :
                                             "dd/MM/yyyy"
                                         )
                                     }",
-                                    "Service Provider: John",
+                                    "${review.user.role}: ${review.user.fullName}",
                                     review.rating.toString(),
                                     review.comment,
                                     photos

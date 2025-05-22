@@ -236,12 +236,21 @@ class FragmentAddWorkingDay :
 
     override fun onResume() {
         super.onResume()
+        (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, true)
+        (activity as HomeActivity?)?.changeStatusBarColor(requireActivity().resources.getColor(R.color.white))
         (activity as HomeActivity?)?.hideTabs()
     }
-
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, true)
+            (activity as HomeActivity?)?.changeStatusBarColor(requireActivity().resources.getColor(R.color.white))
+            (activity as HomeActivity?)?.hideTabs()
+        }
+    }
     override fun onPause() {
         super.onPause()
-        (activity as HomeActivity?)?.showTabs()
+       // (activity as HomeActivity?)?.showTabs()
     }
 
     private fun addWorkHour() {

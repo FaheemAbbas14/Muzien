@@ -30,7 +30,8 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, HomeReposi
         fragmentManager = requireActivity().supportFragmentManager
         //seTabs()
         // (activity as DashboardActivity?)?.loadFragment(fragment,R.id.container,fragmentManager)
-        fragmentManager.beginTransaction().replace(R.id.container, FragmentAnalytics()).commit()
+       // fragmentManager.beginTransaction().replace(R.id.container, FragmentAnalytics()).commit()
+        showFragment(FragmentAnalytics())
         binding.rdoHomeTabs.setOnCheckedChangeListener { group, checkedId ->
             val selectedRadioButton = group.findViewById<RadioButton>(checkedId)
             val fragment: Fragment = when (selectedRadioButton?.id) {
@@ -62,7 +63,8 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, HomeReposi
                 }
             }
             // (activity as DashboardActivity?)?.loadFragment(fragment,R.id.container,fragmentManager)
-            fragmentManager.beginTransaction().replace(R.id.container, fragment).commit()
+            showFragment(fragment)
+           // fragmentManager.beginTransaction().replace(R.id.container, fragment).commit()
         }
         // Register a callback for the back button
         requireActivity().onBackPressedDispatcher.addCallback(
@@ -78,7 +80,25 @@ class HomeFragment : BaseFragment<HomeViewModel, FragmentHomeBinding, HomeReposi
                 }
             })
     }
+    fun showFragment(fragment: Fragment) {
+        val childManager = childFragmentManager
+        val transaction = childManager.beginTransaction()
 
+        // Hide all other fragments
+        for (frag in childManager.fragments) {
+            if (frag.isVisible) transaction.hide(frag)
+        }
+        val tag = fragment::class.java.simpleName
+        // Check if fragment already exists
+        var existingFragment = childManager.findFragmentByTag(tag)
+        if (existingFragment == null) {
+            transaction.add(R.id.container, fragment, tag)
+        } else {
+            transaction.show(existingFragment)
+        }
+
+        transaction.commit()
+    }
     private fun resetTabs() {
         binding.rdoAnalytics.setBackgroundDrawable(resources.getDrawable(R.drawable.rounded_grey))
         binding.rdoAnalytics.setTextColor(resources.getColor(R.color.colorTextLabelDefault))

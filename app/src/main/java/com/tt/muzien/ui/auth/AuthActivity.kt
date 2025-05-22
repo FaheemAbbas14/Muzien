@@ -18,7 +18,7 @@ import com.tt.muzien.databinding.ActivityAuthBinding
 import com.tt.muzien.ui.onboarding.FragmentWelcome
 import com.tt.muzien.ui.views.CustomLoadingIndicator
 import com.tt.muzien.utilities.FontScaleContextWrapper
-import com.tt.muzien.utilities.FragmentManager
+import com.tt.muzien.utilities.FragmentNavigator
 import com.tt.muzien.utilities.LocaleHelper
 import com.tt.muzien.utilities.PreferenceManager
 
@@ -70,11 +70,11 @@ class AuthActivity : AppCompatActivity() {
     }
 
     fun loadFragment(newFragment: Fragment) {
-        FragmentManager().loadFragment(newFragment, supportFragmentManager)
+        FragmentNavigator().loadFragment(newFragment, supportFragmentManager)
     }
 
     fun popFragment() {
-        FragmentManager().popFragment(supportFragmentManager)
+        FragmentNavigator().popFragment(supportFragmentManager)
     }
 
     @RequiresApi(Build.VERSION_CODES.M)

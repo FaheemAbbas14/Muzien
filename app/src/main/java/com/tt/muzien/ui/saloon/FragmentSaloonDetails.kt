@@ -62,8 +62,9 @@ class FragmentSaloonDetails :
         //  (activity as HomeActivity?)?.loadFragment(FragmentSaloonAnalytics(), R.id.tab_container)
         var nextFragment = FragmentSaloonAnalytics()
         nextFragment.selectedSaloon = selectedSaloon
-        fragmentManager.beginTransaction().replace(R.id.tab_container, nextFragment)
-            .commit()
+//        fragmentManager.beginTransaction().replace(R.id.tab_container, nextFragment)
+//            .commit()
+        showFragment(nextFragment)
         binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
             val selectedRadioButton = group.findViewById<RadioButton>(checkedId)
            // FilterSelection.filterData=null
@@ -151,11 +152,30 @@ class FragmentSaloonDetails :
                 }
             }
             // (activity as HomeActivity?)?.loadFragment(fragment, R.id.tab_container)
-            fragmentManager.beginTransaction().replace(R.id.tab_container, fragment).commit()
+//            fragmentManager.beginTransaction().replace(R.id.tab_container, fragment).commit()
+            showFragment(fragment)
         }
         setData()
     }
+    fun showFragment(fragment: Fragment) {
+        val childManager = childFragmentManager
+        val transaction = childManager.beginTransaction()
 
+        // Hide all other fragments
+        for (frag in childManager.fragments) {
+            if (frag.isVisible) transaction.hide(frag)
+        }
+        val tag = fragment::class.java.simpleName
+        // Check if fragment already exists
+        var existingFragment = childManager.findFragmentByTag(tag)
+        if (existingFragment == null) {
+            transaction.add(R.id.tab_container, fragment, tag)
+        } else {
+            transaction.show(existingFragment)
+        }
+
+        transaction.commit()
+    }
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setData() {
         binding.txtItemName.text = selectedSaloon?.name
@@ -261,7 +281,15 @@ class FragmentSaloonDetails :
         (activity as HomeActivity?)?.changeStatusBarColor(Color.TRANSPARENT)
         (activity as HomeActivity?)?.hideTabs()
     }
-
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, false)
+            (activity as HomeActivity?)?.setSystemWindow(false)
+            (activity as HomeActivity?)?.changeStatusBarColor(Color.TRANSPARENT)
+            (activity as HomeActivity?)?.hideTabs()
+        }
+    }
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onPause() {
         super.onPause()

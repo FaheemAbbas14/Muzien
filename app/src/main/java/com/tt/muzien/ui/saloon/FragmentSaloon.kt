@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.tt.muzien.R
 import com.tt.muzien.data.dto.SaloonDto
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.network.SaloonApi
@@ -20,7 +21,6 @@ import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.FilterSelection
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
-import com.tt.muzien.R
 
 class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, SaloonRepository>() {
     private val saloonsList = arrayListOf<SaloonDto>()
@@ -33,6 +33,11 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         getSaloons()
+        binding.swipeRefresh.setOnRefreshListener {
+            binding.swipeRefresh.isRefreshing = false
+            page=1
+            getSaloons()
+        }
         binding.imgFilter.setOnClickListener {
             var nextFragment = FragmentFilter()
             (activity as HomeActivity?)?.loadFragment(nextFragment)
@@ -130,9 +135,8 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
                     Log.d("response", "success " + it.toString())
                     if (page == 1) {
                         (activity as HomeActivity?)?.hideLoadingIndicator()
-                    }
-                    else{
-                        binding.bottomLoader.visibility=View.GONE
+                    } else {
+                        binding.bottomLoader.visibility = View.GONE
                     }
                     if (it.value.status != 0) {
                         isLoading = false
@@ -172,9 +176,8 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
                     isLoading = false
                     if (page == 1) {
                         (activity as HomeActivity?)?.hideLoadingIndicator()
-                    }
-                    else{
-                        binding.bottomLoader.visibility=View.GONE
+                    } else {
+                        binding.bottomLoader.visibility = View.GONE
                     }
                     handleApiError(it)
                 }
@@ -185,9 +188,8 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
         viewModel.getSaloons(page = page)
         if (page == 1) {
             (activity as HomeActivity?)?.showLoadingIndicator()
-        }
-        else{
-            binding.bottomLoader.visibility=View.VISIBLE
+        } else {
+            binding.bottomLoader.visibility = View.VISIBLE
         }
     }
 

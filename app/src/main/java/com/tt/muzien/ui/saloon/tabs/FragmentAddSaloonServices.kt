@@ -384,7 +384,7 @@ class FragmentAddSaloonServices :
         if (image_uri != null) {
             val imageFile =
                 Helper.getFileFromUri(requireContext(), image_uri!!) ?: return // Get file from URI
-            val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), imageFile)
+            val requestFile = RequestBody.create("image/jpeg".toMediaTypeOrNull(), imageFile)
             imagePart = MultipartBody.Part.createFormData("image", imageFile.name, requestFile)
         }
         // Create text-based request bodies

@@ -21,7 +21,6 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.tt.muzien.R
-import com.tt.muzien.data.dto.LoggedInInfo
 import com.tt.muzien.data.dto.MemberDto
 import com.tt.muzien.data.dto.WorkingHourData
 import com.tt.muzien.data.network.MemberApi
@@ -52,9 +51,15 @@ class FragmentViewMember :
     private val holidaysList = arrayListOf<String>()
     private var holidayListAdapter: HolidayListAdapter? = null
     private val holidaysMap = HashMap<String, Long>()
+    var isFromSaloon = false
     var position: Int = 0
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.swipeRefresh.setOnRefreshListener {
+            binding.swipeRefresh.isRefreshing = false
+            //page=1
+            getMemberDetails()
+        }
         setFragmentResultListener("requestKey") { key, bundle ->
             getMemberDetails()
 
@@ -185,7 +190,8 @@ class FragmentViewMember :
         binding.txtName.text = memberDetails?.fullName
         binding.txtCountry.text = memberDetails?.nationality
         binding.txtStyle.text = "Missing style"
-        binding.txtBookingsCount.text = "${memberDetails?.totalBookings} ${if (memberDetails?.totalBookings?.toInt() == 1) "booking" else "bookings"}"
+        binding.txtBookingsCount.text =
+            "${memberDetails?.totalBookings} ${if (memberDetails?.totalBookings?.toInt() == 1) "booking" else "bookings"}"
         binding.txtRatings.text = "${memberDetails?.tRating} (${memberDetails?.numReviews} ${
             if (memberDetails?.numReviews?.toInt() == 1) "review" else "reviews"
         })"
@@ -301,9 +307,20 @@ class FragmentViewMember :
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onResume() {
         super.onResume()
+        (activity as HomeActivity?)?.setSystemWindow(true)
         (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, false)
         (activity as HomeActivity?)?.changeStatusBarColor(requireActivity().resources.getColor(R.color.colorPrimary))
         (activity as HomeActivity?)?.hideTabs()
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            (activity as HomeActivity?)?.setSystemWindow(true)
+            (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, false)
+            (activity as HomeActivity?)?.changeStatusBarColor(requireActivity().resources.getColor(R.color.colorPrimary))
+            (activity as HomeActivity?)?.hideTabs()
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.M)

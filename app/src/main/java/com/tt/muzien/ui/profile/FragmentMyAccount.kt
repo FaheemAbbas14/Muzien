@@ -117,7 +117,7 @@ class FragmentMyAccount : BaseFragment<HomeViewModel, FragmentMyAccountBinding, 
 
     override fun onPause() {
         super.onPause()
-        (activity as HomeActivity?)?.showTabs()
+      //  (activity as HomeActivity?)?.showTabs()
     }
 
     fun splitString(input: String): Pair<String, String> {

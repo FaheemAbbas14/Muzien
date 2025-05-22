@@ -408,7 +408,7 @@ class FragmentSignup : BaseFragment<AuthViewModel, FragmentSignupBinding, AuthRe
             }
         }
         val imageFile = getFileFromUri(requireContext(), image_uri!!) ?: return // Get file from URI
-        val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), imageFile)
+        val requestFile = RequestBody.create("image/jpeg".toMediaTypeOrNull(), imageFile)
         val imagePart = MultipartBody.Part.createFormData("image", imageFile.name, requestFile)
 
         viewModel.uploadImage(imagePart)

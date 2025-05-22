@@ -67,6 +67,11 @@ class FragmentSaloonInfo :
     private val holidaysMap = HashMap<String, Long>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+//        binding.swipeRefresh.setOnRefreshListener {
+//            binding.swipeRefresh.isRefreshing = false
+//           // page=1
+//          getSaloons()
+//        }
         getSaloons()
         binding.txtRenew.setOnClickListener {
             addSubscriptions()

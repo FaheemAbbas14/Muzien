@@ -63,6 +63,11 @@ class FragmentUpdateService :
         } else {
             binding.txtSave.text = resources.getString(R.string.save)
         }
+        binding.swipeRefresh.setOnRefreshListener {
+            binding.swipeRefresh.isRefreshing = false
+            //page=1
+            getServicesDetails()
+        }
     }
 
     private fun setData() {

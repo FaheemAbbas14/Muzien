@@ -122,7 +122,7 @@ class FragmentViewMemberReviews :
                                             "dd/MM/yyyy"
                                         )
                                     }",
-                                    "Service Provider: John",
+                                    "${review.user.role}: ${review.user.fullName}",
                                     review.rating.toString(),
                                     review.comment,
                                     photos

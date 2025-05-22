@@ -58,11 +58,14 @@ class FragmentSaloonMembers :
             }
 
 
-
-        }
-        else{
+        } else {
             getMembers()
         }
+//        binding.swipeRefresh.setOnRefreshListener {
+//            binding.swipeRefresh.isRefreshing = false
+//            // page=1
+//            getMembers()
+//        }
     }
 
     private fun setMemberAdopter() {
@@ -78,6 +81,7 @@ class FragmentSaloonMembers :
             override fun onItemClick(position: Int) {
                 var nextFragment = FragmentViewMember()
                 nextFragment.member = membersList[position]
+                nextFragment.isFromSaloon = true
                 (activity as HomeActivity?)?.loadFragment(nextFragment)
 
             }

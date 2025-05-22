@@ -32,6 +32,11 @@ class FragmentSaloonServices :
     private var totalServices = 0
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+//        binding.swipeRefresh.setOnRefreshListener {
+//            binding.swipeRefresh.isRefreshing = false
+//           // page = 1
+//            getCategories()
+//        }
         getCategories()
         binding.llAdd.setOnClickListener {
             var nextFragment = FragmentAddSaloonServices()

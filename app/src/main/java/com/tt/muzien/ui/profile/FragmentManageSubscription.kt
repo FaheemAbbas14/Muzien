@@ -29,6 +29,11 @@ class FragmentManageSubscription :
             (activity as HomeActivity?)?.popFragment()
         }
         getSaloonsSubscriptions()
+        binding.swipeRefresh.setOnRefreshListener {
+            binding.swipeRefresh.isRefreshing = false
+            // page=1
+            getSaloonsSubscriptions()
+        }
     }
 
     private fun setSubscriptionAdopter() {

@@ -40,6 +40,7 @@ data class Saloon(
 data class ReviewUser(
     val id: Long,
     val fullName: String?,
+    val role: String,
 )
 
 data class Reviewer(

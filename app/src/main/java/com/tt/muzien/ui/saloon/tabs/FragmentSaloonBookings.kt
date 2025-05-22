@@ -166,6 +166,11 @@ class FragmentSaloonBookings :
         } else {
             getCalendarbar()
         }
+//        binding.swipeRefresh.setOnRefreshListener {
+//            binding.swipeRefresh.isRefreshing = false
+//            page=1
+//            getCalendarbar()
+//        }
 //        val days = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
 //        binding.customCalendarView.setCurrentDay(days.minus(1))
     }

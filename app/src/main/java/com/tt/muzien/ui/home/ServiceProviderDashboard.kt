@@ -180,6 +180,22 @@ class ServiceProviderDashboard :
                 getAnalytics()
             }
         }
+        binding.swipeRefresh.setOnRefreshListener {
+            binding.swipeRefresh.isRefreshing = false
+            page=1
+            if (LoggedInInfo.user?.status == "None") {
+                binding.llSendInvite.visibility = View.VISIBLE
+                binding.llAcceptInvite.visibility = View.GONE
+                binding.llBookings.visibility = View.GONE
+            } else if (LoggedInInfo.user?.status == "invited") {
+                getLatestInvite()
+            } else {
+                binding.llBookings.visibility = View.VISIBLE
+                binding.llAcceptInvite.visibility = View.GONE
+                binding.llSendInvite.visibility = View.GONE
+                getAnalytics()
+            }
+        }
         binding.llAccept.setOnClickListener {
             acceptInvite()
         }

@@ -7,6 +7,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.FragmentManager
 import com.tt.muzien.data.dto.ServiceInfo
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.network.ServiceApi
@@ -32,6 +34,11 @@ class FragmentServices :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // setServicesAdopter()
+        binding.swipeRefresh.setOnRefreshListener {
+            binding.swipeRefresh.isRefreshing = false
+            //page=1
+            getCategories()
+        }
         binding.imgFilter.setOnClickListener {
             var nextFragment = FragmentFilter()
             (activity as HomeActivity?)?.loadFragment(nextFragment)
@@ -151,5 +158,12 @@ class FragmentServices :
         }
         viewModel.getServices()
         (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            //Toast.makeText(requireContext(),"service shown", Toast.LENGTH_SHORT).show()
+            // Fragment is shown again
+        }
     }
 }
