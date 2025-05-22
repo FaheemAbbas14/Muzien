@@ -9,11 +9,16 @@ package com.tt.muzien
  */
 import android.app.Application
 import android.content.Context
+import com.tt.muzien.utilities.FontScaleContextWrapper
 import com.tt.muzien.utilities.LocaleHelper
 import com.tt.muzien.utilities.PreferenceManager
 
 class Application : Application() {
     override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(LocaleHelper.setLocale(base, PreferenceManager.getInstance(base).getLanguage()))
+        val languageUpdatedContext =
+            LocaleHelper.setLocale(base, PreferenceManager.getInstance(base).getLanguage())
+        val fontSafeContext = FontScaleContextWrapper.wrap(languageUpdatedContext)
+        super.attachBaseContext(fontSafeContext)
     }
+
 }

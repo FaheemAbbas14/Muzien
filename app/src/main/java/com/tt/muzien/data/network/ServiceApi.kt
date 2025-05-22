@@ -41,6 +41,9 @@ interface ServiceApi {
     @GET("v1/service/myservices")
     suspend fun getCategories(
     ): GetCategoriesResponse
+    @GET("v1/service/category")
+    suspend fun getAllCategories(
+    ): GetCategoriesResponse
 
     @GET("v1/saloon/service/{saloonId}")
     suspend fun getCategories(

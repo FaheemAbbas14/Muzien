@@ -1,6 +1,7 @@
 package com.tt.muzien.ui.home
 
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -47,7 +48,9 @@ import com.tt.muzien.ui.saloon.tabs.FragmentAddSaloonMember
 import com.tt.muzien.ui.saloon.tabs.FragmentAddSaloonServices
 import com.tt.muzien.ui.startNewActivity
 import com.tt.muzien.ui.views.CustomLoadingIndicator
+import com.tt.muzien.utilities.FontScaleContextWrapper
 import com.tt.muzien.utilities.FragmentManager
+import com.tt.muzien.utilities.Helper.fixedFontScaleResources
 import com.tt.muzien.utilities.LocaleHelper
 import com.tt.muzien.utilities.PreferenceManager
 
@@ -59,12 +62,13 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var customLoadingIndicator: CustomLoadingIndicator
     var selectedTab: Int = R.id.rdoAnalytics
     var assignedSaloon: SaloonDto? = null
+    var isServiceProvider = false
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-       //  LoggedInInfo.user?.role = "salon-manager"
+        //  LoggedInInfo.user?.role = "salon-manager"
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
         changeStatusBarColor(Color.TRANSPARENT)
@@ -74,11 +78,13 @@ class HomeActivity : AppCompatActivity() {
         setUserData()
         // Default fragment
         if (LoggedInInfo.user?.role == "salon-manager") {
+            isServiceProvider = false
             getSaloons()
 
         } else if (LoggedInInfo.user?.role == "service-provider") {
-            var nextFragment = ServiceProviderDashboard()
-            loadFragment(nextFragment)
+            isServiceProvider = true
+            getSaloons()
+
 
         } else {
             loadFragment(HomeFragment())
@@ -162,12 +168,10 @@ class HomeActivity : AppCompatActivity() {
     }
 
     override fun attachBaseContext(base: Context) {
-        super.attachBaseContext(
-            LocaleHelper.setLocale(
-                base,
-                PreferenceManager.getInstance(base).getLanguage()
-            )
-        )
+        val languageUpdatedContext =
+            LocaleHelper.setLocale(base, PreferenceManager.getInstance(base).getLanguage())
+        val fontSafeContext = FontScaleContextWrapper.wrap(languageUpdatedContext)
+        super.attachBaseContext(fontSafeContext)
     }
 
     fun setSelectedTab(selected: Int?) {
@@ -207,8 +211,7 @@ class HomeActivity : AppCompatActivity() {
         if (LoggedInInfo.user?.role == "business-owner") {
             binding.constraintLayout2.visibility = View.VISIBLE
             binding.imgadd.visibility = View.VISIBLE
-        }
-        else{
+        } else {
             binding.constraintLayout2.visibility = View.GONE
             binding.imgadd.visibility = View.GONE
         }
@@ -397,13 +400,18 @@ class HomeActivity : AppCompatActivity() {
 
     private fun checkSaloon() {
         if (assignedSaloon != null) {
-            var nextFragment = SaloonManagerDashboard()
-            nextFragment.selectedSaloon = assignedSaloon
-            loadFragment(nextFragment)
-            binding.constraintLayout2.visibility = View.GONE
-            binding.imgadd.visibility = View.GONE
-        }
-        else{
+            if (isServiceProvider) {
+                var nextFragment = ServiceProviderDashboard()
+                nextFragment.saloonId = assignedSaloon!!.id.toInt()
+                loadFragment(nextFragment)
+            } else {
+                var nextFragment = SaloonManagerDashboard()
+                nextFragment.selectedSaloon = assignedSaloon
+                loadFragment(nextFragment)
+                binding.constraintLayout2.visibility = View.GONE
+                binding.imgadd.visibility = View.GONE
+            }
+        } else {
             var nextFragment = SaloonManagerDashboard()
             nextFragment.selectedSaloon = assignedSaloon
             loadFragment(nextFragment)

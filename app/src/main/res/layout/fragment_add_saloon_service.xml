@@ -63,7 +63,7 @@
         android:layout_marginTop="10dp"
         android:background="@android:color/transparent"
         android:fontFamily="@font/manrope_bold"
-        android:text="Select a salon"
+        android:text="@string/select_a_salon"
         android:textColor="@color/colorTextLabelDefault"
         android:textFontWeight="700"
         android:textSize="22sp"
@@ -176,7 +176,7 @@
             android:layout_height="match_parent"
             android:fontFamily="@font/manrope_bold"
             android:gravity="center"
-            android:text="Enable"
+            android:text="@string/enable"
             android:textColor="@color/white"
             android:textSize="14sp" />
     </LinearLayout>

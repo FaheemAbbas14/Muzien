@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.tt.muzien.R
 import com.tt.muzien.data.dto.MemberDto
 import com.tt.muzien.data.dto.SaloonDto
 import com.tt.muzien.data.network.MemberApi
@@ -72,7 +73,7 @@ class FragmentSaloonMembers :
             binding.cnstData.visibility = View.GONE
             binding.llNoDta.visibility = View.VISIBLE
         }
-        binding.txtHeading.text = "Members(${membersList.size})"
+        binding.txtHeading.text = "${resources.getString(R.string.members)}(${membersList.size})"
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(position: Int) {
                 var nextFragment = FragmentViewMember()

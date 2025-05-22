@@ -27,7 +27,7 @@
         android:layout_weight="700"
         android:fontFamily="@font/manrope_bold"
         android:gravity="center"
-        android:text="Mark as Completed"
+        android:text="@string/mark_as_completed"
         android:textColor="@color/black_shade1"
         android:textSize="22sp" />
 
@@ -38,7 +38,7 @@
         android:layout_weight="400"
         android:fontFamily="@font/manrope_regular"
         android:gravity="center"
-        android:text="Are you sure you want to mark\nthe booking as completed?"
+        android:text="@string/are_you_sure_you_want_to_mark_nthe_booking_as_completed"
         android:textColor="@color/black_shade1"
         android:textSize="14sp" />
 

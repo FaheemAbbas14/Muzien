@@ -27,7 +27,7 @@
         android:layout_weight="700"
         android:fontFamily="@font/manrope_bold"
         android:gravity="center"
-        android:text="Completed\nSuccessfully"
+        android:text="@string/completed_nsuccessfully"
         android:textColor="@color/blue_text"
         android:textSize="22sp" />
 
@@ -38,7 +38,7 @@
         android:layout_weight="400"
         android:fontFamily="@font/manrope_regular"
         android:gravity="center"
-        android:text="The booking as been marked\ncompleted successfully"
+        android:text="@string/the_booking_as_been_marked_ncompleted_successfully"
         android:textColor="@color/black_shade1"
         android:textSize="14sp" />
 

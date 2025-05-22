@@ -51,6 +51,7 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="@font/manrope_bold"
                 android:maxLines="1"
+                android:gravity="right"
                 android:text="@string/the_style_zone"
                 android:textColor="@color/colorTextDefault"
                 android:textFontWeight="700"

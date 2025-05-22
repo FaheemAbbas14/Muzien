@@ -12,7 +12,7 @@
         android:fontFamily="@font/manrope_regular"
         android:gravity="center"
         android:paddingBottom="16dp"
-        android:text="Location disabled"
+        android:text="@string/location_disabled"
         android:textColor="@color/black_shade1"
         android:textFontWeight="600"
         android:textSize="16sp" />
@@ -24,7 +24,7 @@
         android:fontFamily="@font/manrope_regular"
         android:gravity="center"
         android:paddingBottom="16dp"
-        android:text="GPS is disabled.You have to enable it to get your current location"
+        android:text="@string/gps_is_disabled_you_have_to_enable_it_to_get_your_current_location"
         android:textFontWeight="400"
         android:textSize="16sp" />
 
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="4.8"
             android:background="@drawable/rounded_white_grey_4"
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:textColor="@color/colorTextLabelDefault" />
 
         <Button
@@ -52,7 +52,7 @@
             android:layout_marginStart="8dp"
             android:layout_weight="4.8"
             android:background="@drawable/rounded_white_grey_4"
-            android:text="Enable"
+            android:text="@string/enable"
             android:textColor="@color/red_text" />
     </LinearLayout>
 </LinearLayout>

@@ -1,6 +1,7 @@
 package com.tt.muzien.ui.splash
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -21,6 +22,8 @@ import com.tt.muzien.ui.auth.AuthActivity
 import com.tt.muzien.ui.auth.AuthViewModel
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.startNewActivity
+import com.tt.muzien.utilities.FontScaleContextWrapper
+import com.tt.muzien.utilities.LocaleHelper
 import com.tt.muzien.utilities.PreferenceManager
 import kotlinx.coroutines.launch
 
@@ -108,5 +111,11 @@ class SplashActivity : AppCompatActivity() {
         val activity = AuthActivity::class.java
         startNewActivity(activity)
         finish()
+    }
+    override fun attachBaseContext(base: Context) {
+        val languageUpdatedContext =
+            LocaleHelper.setLocale(base, PreferenceManager.getInstance(base).getLanguage())
+        val fontSafeContext = FontScaleContextWrapper.wrap(languageUpdatedContext)
+        super.attachBaseContext(fontSafeContext)
     }
 }

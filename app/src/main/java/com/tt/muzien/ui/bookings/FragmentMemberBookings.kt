@@ -114,6 +114,7 @@ class FragmentMemberBookings :
             } else {
                 var nextFragment = FragmentBookingFilter()
                 nextFragment.showSaloon=false
+                nextFragment.showServiceProvider=false
                 (activity as HomeActivity?)?.loadFragment(nextFragment)
             }
         }
@@ -393,7 +394,7 @@ class FragmentMemberBookings :
         }
         viewModel.getBookings(
             saloonIds = if (bookingSaloonId != null) bookingSaloonId else null,
-            serviceProviderId = if (bookingServiceProviderId != null) bookingServiceProviderId else null,
+            serviceProviderId = if (selectedMember != null) selectedMember.toString() else null,
             page = page.toString(),
             status = bookingStatus,
             startDate = fromDate,

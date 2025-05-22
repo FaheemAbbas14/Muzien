@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/light_grey">
 
 
@@ -36,17 +36,17 @@
     <com.tt.muzien.ui.views.HorizontalCalendarView
         android:id="@+id/customCalendarView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="120dp"
         android:src="@drawable/blue_left_arrow"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/llNoDta"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:minHeight="350dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -61,7 +61,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/booking_blue" />
+            android:layout_marginBottom="150dp"
+            app:srcCompat="@drawable/no_booking_icon" />
 
 
         <TextView
@@ -71,7 +72,7 @@
             android:layout_marginTop="15dp"
             android:background="@android:color/transparent"
             android:fontFamily="@font/manrope_bold"
-            android:text="Members not available yet."
+            android:text="@string/bookings_not_available_yet"
             android:textColor="@color/colorTextLabelDefault"
             android:textFontWeight="700"
             android:textSize="22sp"
@@ -88,7 +89,7 @@
             android:layout_marginEnd="50dp"
             android:fontFamily="@font/manrope_regular"
             android:gravity="center"
-            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+            android:text="@string/lorem_ipsum_is_simply_dummy_text_of_the_printing_and_typesetting_industry_lorem_ipsum_has_been_the_industry_s_standard_dummy_text_n_n12_12_2023"
             android:textColor="@color/colorTextLabelDefault"
             android:textFontWeight="400"
             android:textSize="14sp"
@@ -102,9 +103,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cnstData"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/customCalendarView">
@@ -112,7 +112,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcyBookings"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             app:layout_constraintBottom_toBottomOf="parent"

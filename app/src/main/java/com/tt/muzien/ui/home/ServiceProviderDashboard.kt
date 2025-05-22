@@ -180,7 +180,9 @@ class ServiceProviderDashboard :
                 getAnalytics()
             }
         }
-
+        binding.llAccept.setOnClickListener {
+            acceptInvite()
+        }
 
     }
 
@@ -390,6 +392,7 @@ class ServiceProviderDashboard :
                     Log.d("response", "success " + it.toString())
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
+                        saloonId = it.value.data.saloonId.toInt()
                         getAnalytics()
                     } else {
                         requireView().snackbar(it.value.message)

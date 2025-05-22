@@ -190,7 +190,7 @@
     <string name="_12_04_2024_10_00_am_1_5_hr">12/04/2024 - 10:00 AM - 1.5 hr</string>
     <string name="cancelled_by_customer">Cancelled by Customer</string>
     <string name="reason">Reason</string>
-    <string name="lorem_ipsum_is_simply_dummy_text_of_the_printing_and_typesetting_industry_lorem_ipsum_has_been_the_industry_s_standard_dummy_text_n_n12_12_2023"><![CDATA[Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text \n\n12/12/2023]]></string>
+    <string name="lorem_ipsum_is_simply_dummy_text_of_the_printing_and_typesetting_industry_lorem_ipsum_has_been_the_industry_s_standard_dummy_text_n_n12_12_2023"><![CDATA[Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text]]></string>
     <string name="reject">Reject</string>
     <string name="approve">Approve</string>
     <string name="jennifer_austin">Jennifer Austin</string>
@@ -237,4 +237,34 @@
         <item>English</item>
         <item>Arabic</item>
     </string-array>
+    <string name="noanalytics">Analytics not available yet.</string>
+    <string name="mark_as_completed">Mark as Completed</string>
+    <string name="are_you_sure_you_want_to_mark_nthe_booking_as_completed">Are you sure you want to mark\nthe booking as completed?</string>
+    <string name="completed_nsuccessfully">Completed\nSuccessfully</string>
+    <string name="the_booking_as_been_marked_ncompleted_successfully">The booking as been marked\ncompleted successfully</string>
+    <string name="location_disabled">Location disabled</string>
+    <string name="gps_is_disabled_you_have_to_enable_it_to_get_your_current_location">GPS is disabled.You have to enable it to get your current location</string>
+    <string name="enable">Enable</string>
+    <string name="select_a_salon">Select a salon</string>
+    <string name="select_a_service">Select a service</string>
+    <string name="booking_details">Booking Details</string>
+    <string name="booking_1234567">Booking # 1234567</string>
+    <string name="customer">Customer</string>
+    <string name="david_garcia">David Garcia</string>
+    <string name="service_provider">Service Provider</string>
+    <string name="pakistan">Pakistan</string>
+    <string name="bookings_not_available_yet">Bookings not available yet.</string>
+    <string name="subscriptions_not_available_yet">Subscriptions not available yet.</string>
+    <string name="members_not_available_yet">Members not available yet.</string>
+    <string name="saloon_not_available_yet">Saloon not available yet.</string>
+    <string name="no_saloon_assigned">No saloon assigned</string>
+    <string name="reviews_not_available_yet">Reviews not available yet.</string>
+    <string name="service_not_available_yet">Service not available yet.</string>
+    <string name="need_an_invite">Need An Invite</string>
+    <string name="you_are_invited">You are Invited</string>
+    <string name="accept_invitation">Accept Invitation</string>
+    <string name="no_bookings">No Bookings</string>
+    <string name="john_smith_has_invited_you_to_join_their_salon_the_style_zone_as_a_service_provider_do_you_want_to_accept">John Smith has invited you to join their salon “The Style Zone” as a service provider. Do you want to accept?</string>
+    <string name="saloons">Saloons</string>
+
 </resources>

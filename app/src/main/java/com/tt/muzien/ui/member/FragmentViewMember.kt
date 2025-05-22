@@ -59,10 +59,10 @@ class FragmentViewMember :
             getMemberDetails()
 
         }
-        if (LoggedInInfo.user?.role == "business-owner") {
-            binding.imgAddWorkingHour.visibility=View.GONE
-            binding.imgAddHoliday.visibility=View.GONE
-        }
+//        if (LoggedInInfo.user?.role == "business-owner") {
+//            binding.imgAddWorkingHour.visibility=View.GONE
+//            binding.imgAddHoliday.visibility=View.GONE
+//        }
         binding.imgBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
         }

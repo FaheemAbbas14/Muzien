@@ -297,7 +297,7 @@ class FragmentAddSaloonServices :
                 else -> {}
             }
         }
-        viewModel.getCategories()
+        viewModel.getAllCategories()
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 

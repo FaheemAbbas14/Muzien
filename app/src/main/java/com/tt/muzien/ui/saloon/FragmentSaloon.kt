@@ -20,7 +20,7 @@ import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.FilterSelection
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
-
+import com.tt.muzien.R
 
 class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, SaloonRepository>() {
     private val saloonsList = arrayListOf<SaloonDto>()
@@ -59,7 +59,7 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
             binding.cnstData.visibility = View.GONE
             binding.llNoDta.visibility = View.VISIBLE
         }
-        binding.txtHeading.text = "Salons(${saloonsList.size})"
+        binding.txtHeading.text = "${resources.getString(R.string.saloons)}(${saloonsList.size})"
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(position: Int) {
                 var nextFragment = FragmentSaloonDetails()

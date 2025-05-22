@@ -2,6 +2,8 @@ package com.tt.muzien.utilities
 
 import android.content.ContentResolver
 import android.content.Context
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.net.Uri
 import android.provider.OpenableColumns
 import android.view.View
@@ -81,5 +83,13 @@ object Helper {
 
         return R * c
     }
-
+    fun Context.fixedFontScaleResources(): Resources {
+        val res = this.resources
+        val config = Configuration(res.configuration)
+        if (config.fontScale != 1f) {
+            config.fontScale = 1f
+            res.updateConfiguration(config, res.displayMetrics)
+        }
+        return res
+    }
 }

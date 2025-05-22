@@ -1,5 +1,6 @@
 package com.tt.muzien.ui.auth
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -16,7 +17,9 @@ import com.tt.muzien.data.dto.LoggedInInfo
 import com.tt.muzien.databinding.ActivityAuthBinding
 import com.tt.muzien.ui.onboarding.FragmentWelcome
 import com.tt.muzien.ui.views.CustomLoadingIndicator
+import com.tt.muzien.utilities.FontScaleContextWrapper
 import com.tt.muzien.utilities.FragmentManager
+import com.tt.muzien.utilities.LocaleHelper
 import com.tt.muzien.utilities.PreferenceManager
 
 /**
@@ -102,5 +105,10 @@ class AuthActivity : AppCompatActivity() {
         }
     }
 
-
+    override fun attachBaseContext(base: Context) {
+        val languageUpdatedContext =
+            LocaleHelper.setLocale(base, PreferenceManager.getInstance(base).getLanguage())
+        val fontSafeContext = FontScaleContextWrapper.wrap(languageUpdatedContext)
+        super.attachBaseContext(fontSafeContext)
+    }
 }

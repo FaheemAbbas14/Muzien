@@ -97,6 +97,9 @@ class ServiceViewModel(
     fun getCategories() = viewModelScope.launch {
         _getCategories.value = repository.getCategories()
     }
+    fun getAllCategories() = viewModelScope.launch {
+        _getCategories.value = repository.getAllCategories()
+    }
 
     fun getCategories(saloonIds: String) = viewModelScope.launch {
         _getSaloonCategories.value = repository.getCategories(saloonIds)

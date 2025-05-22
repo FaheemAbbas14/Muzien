@@ -10,4 +10,11 @@ package com.tt.muzien.data.responses
  */
 data class AcceptInviteResponse(val status: Int,
                                 val message: String,
-                                val data: Any,)
+                                val data: AcceptInviteData,)
+data class AcceptInviteData(
+    val isAdmin: Boolean,
+    val isActive: Boolean,
+    val id: Long,
+    val userId: Long,
+    val saloonId: Long,
+)

@@ -46,6 +46,11 @@ class ServiceRepository(
         api.getCategories()
 
     }
+    suspend fun getAllCategories() = safeApiCall {
+
+        api.getAllCategories()
+
+    }
 
     suspend fun getServices(
     ) = safeApiCall {

@@ -37,6 +37,7 @@ class FragmentBookingFilter :
     var saloonId: Int? = null
     var serviceProviderId: Int? = null
     var showSaloon: Boolean = true
+    var showServiceProvider: Boolean = true
     private val saloonsList = arrayListOf<String>()
     private val saloonMap = HashMap<String, SaloonDto>()
     private val serviceProviderList = arrayListOf<String>()
@@ -48,6 +49,9 @@ class FragmentBookingFilter :
         viewModel.setMemberRepo((activity as HomeActivity?)?.getMemberRepo()!!)
         if (!showSaloon) {
             binding.llMainSaloon.visibility = View.GONE
+        }
+        if (!showServiceProvider) {
+            binding.llMainServiceProvider.visibility = View.GONE
         }
         getSaloons()
         binding.radioBookingStatus.setOnCheckedChangeListener { _, checkedId ->

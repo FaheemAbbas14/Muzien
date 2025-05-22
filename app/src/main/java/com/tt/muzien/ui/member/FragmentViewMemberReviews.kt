@@ -146,7 +146,7 @@ class FragmentViewMemberReviews :
                 else -> {}
             }
         }
-        viewModel.getReviews(selectedSaloon?.toString())
+        viewModel.getReviews(reviewId = selectedMember.toString())
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 }

@@ -96,8 +96,6 @@ class FragmentSaloonBookings :
             // Toast.makeText(requireContext(), "Selected: ${selectedDay}", Toast.LENGTH_SHORT).show()
             fromDate = selectedDay
             toDate = selectedDay
-            FilterSelection.filterData!!.from = fromDate
-            FilterSelection.filterData!!.to = toDate
             FilterSelection.filterData = FilterData("", fromDate, toDate, false)
             page = 1
             getBooking()
