@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/manrope_regular"
+        android:gravity="center"
+        android:paddingBottom="16dp"
+        android:text="@string/location_disabled"
+        android:textColor="@color/black_shade1"
+        android:textFontWeight="600"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/txtDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/manrope_regular"
+        android:gravity="center"
+        android:paddingBottom="16dp"
+        android:text="@string/gps_is_disabled_you_have_to_enable_it_to_get_your_current_location"
+        android:textFontWeight="400"
+        android:textSize="16sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:gravity="end"
+        android:orientation="horizontal"
+        android:weightSum="10">
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4.8"
+            android:background="@drawable/rounded_white_grey_4"
+            android:text="@string/cancel"
+            android:textColor="@color/colorTextLabelDefault" />
+
+        <Button
+            android:id="@+id/btnEnable"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="4.8"
+            android:background="@drawable/rounded_white_grey_4"
+            android:text="@string/enable"
+            android:textColor="@color/red_text" />
+    </LinearLayout>
+</LinearLayout>
