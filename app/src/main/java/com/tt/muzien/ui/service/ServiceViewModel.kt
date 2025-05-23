@@ -6,14 +6,12 @@ import androidx.lifecycle.viewModelScope
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.SaloonRepository
 import com.tt.muzien.data.repository.ServiceRepository
-import com.tt.muzien.data.requests.AddSaloonServiceRequest
 import com.tt.muzien.data.requests.AddServiceSaloonRequest
 import com.tt.muzien.data.responses.AddServiceResponse
 import com.tt.muzien.data.responses.GetCategoriesResponse
 import com.tt.muzien.data.responses.GetSaloonResponse
 import com.tt.muzien.data.responses.GetServiceStatusResponse
 import com.tt.muzien.data.responses.GetServicesResponse
-import com.tt.muzien.data.responses.SaloonServiceResponse
 import com.tt.muzien.data.responses.ServiceDetailsResponse
 import com.tt.muzien.ui.base.BaseViewModel
 import com.tt.muzien.utilities.SingleEventLiveData
@@ -97,6 +95,7 @@ class ServiceViewModel(
     fun getCategories() = viewModelScope.launch {
         _getCategories.value = repository.getCategories()
     }
+
     fun getAllCategories() = viewModelScope.launch {
         _getCategories.value = repository.getAllCategories()
     }
@@ -116,7 +115,8 @@ class ServiceViewModel(
     fun getServicesDetails(serviceId: String) = viewModelScope.launch {
         _getServicesDetails.value = repository.getServicesDetails(serviceId)
     }
+
     fun addSaloonService(request: AddServiceSaloonRequest) = viewModelScope.launch {
-        _addSaloonService.value = repository.addSaloonService( request)
+        _addSaloonService.value = repository.addSaloonService(request)
     }
 }

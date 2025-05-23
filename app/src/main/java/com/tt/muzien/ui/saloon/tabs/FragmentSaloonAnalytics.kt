@@ -31,6 +31,7 @@ import com.tt.muzien.ui.home.FragmentFilter
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.home.HomeViewModel
 import com.tt.muzien.ui.snackbar
+import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.FilterSelection
 import com.tt.muzien.utilities.TimeHelper
 import java.time.LocalDate
@@ -69,7 +70,7 @@ class FragmentSaloonAnalytics :
             bookingToDate = dates["endOfWeek"]
             revenueFromDate = dates["startOfMonth"]
             revenueToDate = dates["endOfMonth"]
-            getAnalytics()
+            getAnalytics(false)
         }
 
 
@@ -84,33 +85,7 @@ class FragmentSaloonAnalytics :
             nextFragment.isFromRevenue = true
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
-        if (FilterSelection.filterData != null) {
-            val selection = FilterSelection.filterData!!.selection
-            val fromDate = FilterSelection.filterData!!.from
-            val toDate = FilterSelection.filterData!!.to
-            if (selection != "") {
-                if (!FilterSelection.filterData!!.fromRevenue) {
-                    bookingDuration = selection.toString()
-                    bookingFromDate = fromDate.toString()
-                    bookingToDate = toDate.toString()
-                    if (selection == "Custom") {
-                        binding.txtDuration.text = "$fromDate To ${toDate}"
-                    } else {
-                        binding.txtDuration.text = selection
-                    }
-                } else {
-                    revenueDuration = selection.toString()
-                    revenueFromDate = fromDate.toString()
-                    revenueToDate = toDate.toString()
-                    if (selection == "Custom") {
-                        binding.txtRevenueType.text = "$fromDate To ${toDate}"
-                    } else {
-                        binding.txtRevenueType.text = selection
-                    }
-                }
-                getAnalytics()
-            }
-        }
+        getAnalytics(false)
 //        binding.swipeRefresh.setOnRefreshListener {
 //            binding.swipeRefresh.isRefreshing = false
 //           // page=1
@@ -305,7 +280,7 @@ class FragmentSaloonAnalytics :
         )
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun getAnalytics() {
+    private fun getAnalytics(bool: Boolean) {
         viewModel.getAnalytics.observe(viewLifecycleOwner) {
 
             when (it) {
@@ -339,7 +314,7 @@ class FragmentSaloonAnalytics :
                                 scheduleBookings = analytics.total_count.toInt()
                             }
                         }
-                        if (it.value.data.totalEarning!=null) {
+                        if (it.value.data.totalEarning != null) {
                             totalEarnings = it.value.data.totalEarning.toInt()
                         }
                         if (FilterSelection.filterData != null) {
@@ -441,5 +416,43 @@ class FragmentSaloonAnalytics :
         viewModel.getMonthlyRevenue(
         )
         // (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            if (Appelement.reload) {
+                Appelement.reload = false
+                if (FilterSelection.filterData != null) {
+                    val selection = FilterSelection.filterData!!.selection
+                    val fromDate = FilterSelection.filterData!!.from
+                    val toDate = FilterSelection.filterData!!.to
+                    if (selection != "") {
+                        if (!FilterSelection.filterData!!.fromRevenue) {
+                            bookingDuration = selection.toString()
+                            bookingFromDate = fromDate.toString()
+                            bookingToDate = toDate.toString()
+                            if (selection == "Custom") {
+                                binding.txtDuration.text = "$fromDate To ${toDate}"
+                            } else {
+                                binding.txtDuration.text = selection
+                            }
+                        } else {
+                            revenueDuration = selection.toString()
+                            revenueFromDate = fromDate.toString()
+                            revenueToDate = toDate.toString()
+                            if (selection == "Custom") {
+                                binding.txtRevenueType.text = "$fromDate To ${toDate}"
+                            } else {
+                                binding.txtRevenueType.text = selection
+                            }
+                        }
+                        getAnalytics(false)
+                    }
+                }
+
+            }
+        }
     }
 }

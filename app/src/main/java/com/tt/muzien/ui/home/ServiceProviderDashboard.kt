@@ -31,7 +31,9 @@ import com.tt.muzien.ui.bookings.BookingViewModel
 import com.tt.muzien.ui.bookings.FragmentBookingFilter
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.snackbar
+import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.FilterSelection
+import com.tt.muzien.utilities.Helper
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -112,77 +114,30 @@ class ServiceProviderDashboard :
                 bookingStatus = null
                 FilterSelection.filterData!!.bookingStatus = bookingStatus
                 setMargins(false)
-                getAnalytics()
+                getAnalytics(false)
             } else {
                 var nextFragment = FragmentBookingFilter()
                 nextFragment.showSaloon = false
                 (activity as HomeActivity?)?.loadFragment(nextFragment)
             }
         }
-        if (FilterSelection.filterData != null) {
 
-            bookingStatus = FilterSelection.filterData!!.bookingStatus
-            bookingServiceProvider = FilterSelection.filterData!!.serviceProvider
-            if (FilterSelection.filterData!!.from != null) {
-                fromDate = FilterSelection.filterData!!.from
-                toDate = FilterSelection.filterData!!.to
-            }
-
-            saloonId = FilterSelection.filterData!!.saloonId
-            if (FilterSelection.filterData!!.saloonId != null) {
-                bookingSaloonId = FilterSelection.filterData!!.saloonId.toString()
-            } else {
-                bookingSaloonId = null
-            }
-            if (FilterSelection.filterData!!.serviceProviderId != null) {
-                bookingServiceProviderId = FilterSelection.filterData!!.serviceProviderId.toString()
-            } else {
-                bookingServiceProviderId = null
-            }
-            if (FilterSelection.filterData!!.selection != "") {
-
-                bookingDuration = FilterSelection.filterData!!.selection.toString()
-                if (bookingDuration == "Custom") {
-                    //  binding.txtMonth.text = "$fromDate To ${toDate}"
-                } else {
-                    // binding.txtMonth.text = bookingDuration
-                }
-
-            }
-            if (bookingStatus != null && bookingStatus != "") {
-                page = 1
-                binding.imgBookingFilter.setImageResource(
-                    R.drawable.blue_cancel
-                )
-                binding.txtBookingStatus.text = "$bookingStatus Bookings"
-                binding.customCalendarView.visibility = View.GONE
-                setMargins(true)
-
-            }
-            adopter?.setBookingStatus(bookingStatus)
-            adopter?.notifyDataSetChanged()
-            if (fromDate != "") {
-                binding.customCalendarView.setMonthFromDate(fromDate ?: "")
-            }
-            // Toast.makeText(requireContext(), "data received", Toast.LENGTH_SHORT).show()
-            getAnalytics()
+        if (LoggedInInfo.user?.status == "None") {
+            binding.llSendInvite.visibility = View.VISIBLE
+            binding.llAcceptInvite.visibility = View.GONE
+            binding.llBookings.visibility = View.GONE
+        } else if (LoggedInInfo.user?.status == "invited") {
+            getLatestInvite()
         } else {
-            if (LoggedInInfo.user?.status == "None") {
-                binding.llSendInvite.visibility = View.VISIBLE
-                binding.llAcceptInvite.visibility = View.GONE
-                binding.llBookings.visibility = View.GONE
-            } else if (LoggedInInfo.user?.status == "invited") {
-                getLatestInvite()
-            } else {
-                binding.llBookings.visibility = View.VISIBLE
-                binding.llAcceptInvite.visibility = View.GONE
-                binding.llSendInvite.visibility = View.GONE
-                getAnalytics()
-            }
+            binding.llBookings.visibility = View.VISIBLE
+            binding.llAcceptInvite.visibility = View.GONE
+            binding.llSendInvite.visibility = View.GONE
+            getAnalytics(false)
         }
+
         binding.swipeRefresh.setOnRefreshListener {
-            binding.swipeRefresh.isRefreshing = false
-            page=1
+            // binding.swipeRefresh.isRefreshing = false
+            page = 1
             if (LoggedInInfo.user?.status == "None") {
                 binding.llSendInvite.visibility = View.VISIBLE
                 binding.llAcceptInvite.visibility = View.GONE
@@ -193,7 +148,7 @@ class ServiceProviderDashboard :
                 binding.llBookings.visibility = View.VISIBLE
                 binding.llAcceptInvite.visibility = View.GONE
                 binding.llSendInvite.visibility = View.GONE
-                getAnalytics()
+                getAnalytics(true)
             }
         }
         binding.llAccept.setOnClickListener {
@@ -409,7 +364,7 @@ class ServiceProviderDashboard :
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
                         saloonId = it.value.data.saloonId.toInt()
-                        getAnalytics()
+                        getAnalytics(false)
                     } else {
                         requireView().snackbar(it.value.message)
                     }
@@ -431,12 +386,13 @@ class ServiceProviderDashboard :
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun getAnalytics() {
+    private fun getAnalytics(reload: Boolean) {
         viewModel.getAnalytics.observe(viewLifecycleOwner) {
 
             when (it) {
                 is Resource.Success -> {
                     Log.d("response", "success " + it.toString())
+                    binding.swipeRefresh.isRefreshing = false
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
 
@@ -451,7 +407,7 @@ class ServiceProviderDashboard :
                                 scheduleBookings = analytics.total_count.toInt()
                             }
                         }
-                        getCalendarbar()
+                        getCalendarbar(false)
                     } else {
                         requireView().snackbar(it.value.message)
                     }
@@ -459,6 +415,7 @@ class ServiceProviderDashboard :
 
                 is Resource.Failure -> {
                     Log.d("response", "failure " + it.toString())
+                    binding.swipeRefresh.isRefreshing = false
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     handleApiError(it)
                 }
@@ -470,11 +427,13 @@ class ServiceProviderDashboard :
             startDate = fromDate,
             endDate = toDate
         )
-        (activity as HomeActivity?)?.showLoadingIndicator()
+        if (reload) {
+            (activity as HomeActivity?)?.showLoadingIndicator()
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun getCalendarbar() {
+    private fun getCalendarbar(reload: Boolean) {
         isLoading = true
         viewModel.getCalendarbar.observe(viewLifecycleOwner) {
 
@@ -520,7 +479,9 @@ class ServiceProviderDashboard :
             startDate = fromDate,
             endDate = toDate
         )
-        (activity as HomeActivity?)?.showLoadingIndicator()
+        if (reload) {
+            (activity as HomeActivity?)?.showLoadingIndicator()
+        }
     }
 
     private fun getBooking() {
@@ -625,4 +586,61 @@ class ServiceProviderDashboard :
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            if (Appelement.reload) {
+                Appelement.reload = false
+                if (FilterSelection.filterData != null) {
+
+                    bookingStatus = FilterSelection.filterData!!.bookingStatus
+                    bookingServiceProvider = FilterSelection.filterData!!.serviceProvider
+                    if (FilterSelection.filterData!!.from != null) {
+                        fromDate = FilterSelection.filterData!!.from
+                        toDate = FilterSelection.filterData!!.to
+                    }
+                    if (FilterSelection.filterData!!.saloonId != null) {
+                        bookingSaloonId = FilterSelection.filterData!!.saloonId.toString()
+                    } else {
+                        bookingSaloonId = null
+                    }
+                    if (FilterSelection.filterData!!.serviceProviderId != null) {
+                        bookingServiceProviderId =
+                            FilterSelection.filterData!!.serviceProviderId.toString()
+                    } else {
+                        bookingServiceProviderId = null
+                    }
+                    if (FilterSelection.filterData!!.selection != "") {
+
+                        bookingDuration = FilterSelection.filterData!!.selection.toString()
+                        if (bookingDuration == "Custom") {
+                            //  binding.txtMonth.text = "$fromDate To ${toDate}"
+                        } else {
+                            // binding.txtMonth.text = bookingDuration
+                        }
+
+                    }
+                    if (bookingStatus != null && bookingStatus != "") {
+                        page = 1
+                        binding.imgBookingFilter.setImageResource(
+                            R.drawable.blue_cancel
+                        )
+                        binding.txtBookingStatus.setText("${Helper.capitalizeFirstWord(bookingStatus!!)} Bookings")
+                        binding.customCalendarView.visibility = View.GONE
+                        setMargins(true)
+
+                    }
+                    adopter?.setBookingStatus(bookingStatus)
+                    adopter?.notifyDataSetChanged()
+                    binding.customCalendarView.setMonthFromDate(fromDate ?: "")
+                    // Toast.makeText(requireContext(), "data received", Toast.LENGTH_SHORT).show()
+                    getAnalytics(false)
+                } else {
+                    getAnalytics(false)
+                }
+
+            }
+        }
+    }
 }

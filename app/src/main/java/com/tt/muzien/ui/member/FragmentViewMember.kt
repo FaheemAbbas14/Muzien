@@ -56,12 +56,12 @@ class FragmentViewMember :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.swipeRefresh.setOnRefreshListener {
-            binding.swipeRefresh.isRefreshing = false
+           // binding.swipeRefresh.isRefreshing = false
             //page=1
-            getMemberDetails()
+            getMemberDetails(true)
         }
         setFragmentResultListener("requestKey") { key, bundle ->
-            getMemberDetails()
+            getMemberDetails(false)
 
         }
 //        if (LoggedInInfo.user?.role == "business-owner") {
@@ -101,7 +101,7 @@ class FragmentViewMember :
             nextFragment.userId = member?.userId!!
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
-        getMemberDetails()
+        getMemberDetails(false)
 
     }
 
@@ -331,11 +331,12 @@ class FragmentViewMember :
         (activity as HomeActivity?)?.showTabs()
     }
 
-    private fun getMemberDetails() {
+    private fun getMemberDetails(reload: Boolean) {
         viewModel.getMemberDetails.observe(viewLifecycleOwner) {
 
             when (it) {
                 is Resource.Success -> {
+                    binding.swipeRefresh.isRefreshing = false
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status == 1) {
                         servicesList.clear()
@@ -350,7 +351,7 @@ class FragmentViewMember :
 
                 is Resource.Failure -> {
                     Log.d("response", "failure " + it.toString())
-
+                    binding.swipeRefresh.isRefreshing = false
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     handleApiError(it)
                 }
@@ -359,7 +360,9 @@ class FragmentViewMember :
             }
         }
         viewModel.getMemberDetails(member?.userId ?: 0)
-        (activity as HomeActivity?)?.showLoadingIndicator()
+        if (!reload) {
+            (activity as HomeActivity?)?.showLoadingIndicator()
+        }
     }
 
     private fun inActiveMember() {

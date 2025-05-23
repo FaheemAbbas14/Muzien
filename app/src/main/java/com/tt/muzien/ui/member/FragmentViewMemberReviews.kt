@@ -3,7 +3,6 @@ package com.tt.muzien.ui.member
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,11 +10,9 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.ReviewsInfo
-import com.tt.muzien.data.dto.SaloonDto
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.network.ReviewApi
 import com.tt.muzien.data.repository.ReviewRepository
-import com.tt.muzien.databinding.FragmentSaloonReviewsBinding
 import com.tt.muzien.databinding.FragmentViewMemberReviewsBinding
 import com.tt.muzien.ui.adapters.ReviewsListAdapter
 import com.tt.muzien.ui.base.BaseFragment
@@ -39,7 +36,12 @@ class FragmentViewMemberReviews :
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
         }
-        getReviews()
+        getReviews(false)
+        binding.swipeRefresh.setOnRefreshListener {
+            //binding.swipeRefresh.isRefreshing = false
+
+            getReviews(true)
+        }
     }
 
     private fun setReviewsAdopter() {
@@ -94,12 +96,13 @@ class FragmentViewMemberReviews :
         ReviewRepository(remoteDataSource.buildApi(ReviewApi::class.java, requireContext()))
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun getReviews() {
+    private fun getReviews(reload: Boolean) {
         viewModel.getReviews.observe(viewLifecycleOwner) {
 
             when (it) {
                 is Resource.Success -> {
                     Log.d("response", "success " + it.toString())
+                    binding.swipeRefresh.isRefreshing = false
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
                         reviewsList.clear()
@@ -139,6 +142,7 @@ class FragmentViewMemberReviews :
                 is Resource.Failure -> {
                     Log.d("response", "failure " + it.toString())
                     setReviewsAdopter()
+                    binding.swipeRefresh.isRefreshing = false
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     handleApiError(it)
                 }
@@ -147,6 +151,8 @@ class FragmentViewMemberReviews :
             }
         }
         viewModel.getReviews(reviewId = selectedMember.toString())
-        (activity as HomeActivity?)?.showLoadingIndicator()
+        if (!reload) {
+            (activity as HomeActivity?)?.showLoadingIndicator()
+        }
     }
 }

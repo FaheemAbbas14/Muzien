@@ -22,6 +22,7 @@ import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.saloon.SaloonViewModel
 import com.tt.muzien.ui.snackbar
+import com.tt.muzien.utilities.Appelement
 import java.util.Calendar
 
 
@@ -261,6 +262,7 @@ class FragmentAddWorkingDay :
                     Log.d("response", "success " + it.toString())
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
+                        Appelement.reload=true
                         (activity as HomeActivity?)?.popFragment()
                         requireView().snackbar("Working hour added successfully")
 
@@ -295,6 +297,7 @@ class FragmentAddWorkingDay :
                     Log.d("response", "success " + it.toString())
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
+                        Appelement.reload=true
                         (activity as HomeActivity?)?.popFragment()
                         requireView().snackbar("Working hour added successfully")
 

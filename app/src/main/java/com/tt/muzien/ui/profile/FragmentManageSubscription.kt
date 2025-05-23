@@ -28,11 +28,11 @@ class FragmentManageSubscription :
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
         }
-        getSaloonsSubscriptions()
+        getSaloonsSubscriptions(false)
         binding.swipeRefresh.setOnRefreshListener {
-            binding.swipeRefresh.isRefreshing = false
+           // binding.swipeRefresh.isRefreshing = false
             // page=1
-            getSaloonsSubscriptions()
+            getSaloonsSubscriptions(true)
         }
     }
 
@@ -87,12 +87,13 @@ class FragmentManageSubscription :
         (activity as HomeActivity?)?.showTabs()
     }
 
-    private fun getSaloonsSubscriptions() {
+    private fun getSaloonsSubscriptions(reload: Boolean) {
         viewModel.getSaloonsSubscriptions.observe(viewLifecycleOwner) {
 
             when (it) {
                 is Resource.Success -> {
                     Log.d("response", "success " + it.toString())
+                    binding.swipeRefresh.isRefreshing = false
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
                         subscriptiopnsList.clear()
@@ -112,6 +113,7 @@ class FragmentManageSubscription :
                 is Resource.Failure -> {
                     Log.d("response", "failure " + it.toString())
                     setSubscriptionAdopter()
+                    binding.swipeRefresh.isRefreshing = false
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     handleApiError(it)
                 }
@@ -122,7 +124,9 @@ class FragmentManageSubscription :
 
 
         viewModel.getSaloonsSubscriptions()
-        (activity as HomeActivity?)?.showLoadingIndicator()
+        if (!reload) {
+            (activity as HomeActivity?)?.showLoadingIndicator()
+        }
     }
 
 }

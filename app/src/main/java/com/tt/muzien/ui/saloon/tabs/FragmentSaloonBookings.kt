@@ -32,6 +32,7 @@ import com.tt.muzien.ui.bookings.FragmentBookingFilter
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.snackbar
+import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.FilterSelection
 import com.tt.muzien.utilities.Helper
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
@@ -111,68 +112,16 @@ class FragmentSaloonBookings :
                 bookingStatus = null
                 FilterSelection.filterData!!.bookingStatus = bookingStatus
                 setMargins(false)
-                getCalendarbar()
+                getCalendarbar(false)
             } else {
                 var nextFragment = FragmentBookingFilter()
                 nextFragment.showSaloon = false
                 (activity as HomeActivity?)?.loadFragment(nextFragment)
             }
         }
-        if (FilterSelection.filterData != null) {
 
-            bookingStatus = FilterSelection.filterData!!.bookingStatus
-            bookingServiceProvider = FilterSelection.filterData!!.serviceProvider
-            if (FilterSelection.filterData!!.from != null) {
-                fromDate = FilterSelection.filterData!!.from
-                toDate = FilterSelection.filterData!!.to
-            } else {
-                isFromSelection = true
-            }
-            if (FilterSelection.filterData!!.saloonId != null) {
-                bookingSaloonId = FilterSelection.filterData!!.saloonId.toString()
-            } else {
-                bookingSaloonId = null
-            }
-            if (FilterSelection.filterData!!.serviceProviderId != null) {
-                bookingServiceProviderId = FilterSelection.filterData!!.serviceProviderId.toString()
-            } else {
-                bookingServiceProviderId = null
-            }
-            if (FilterSelection.filterData!!.selection != "") {
-                isFromSelection = true
-                bookingDuration = FilterSelection.filterData!!.selection.toString()
-                if (bookingDuration == "Custom") {
-                    //  binding.txtMonth.text = "$fromDate To ${toDate}"
-                } else {
-                    // binding.txtMonth.text = bookingDuration
-                }
+        getCalendarbar(false)
 
-            }
-            if (bookingStatus != null && bookingStatus != "") {
-                page = 1
-                binding.imgBookingFilter.setImageResource(
-                    R.drawable.blue_cancel
-                )
-                binding.txtBookingStatus.setText("${Helper.capitalizeFirstWord(bookingStatus!!)} Bookings")
-                binding.customCalendarView.visibility = View.GONE
-                setMargins(true)
-
-            }
-            adopter?.setBookingStatus(bookingStatus)
-            adopter?.notifyDataSetChanged()
-            binding.customCalendarView.setMonthFromDate(fromDate ?: "")
-            getCalendarbar()
-            // Toast.makeText(requireContext(), "data received", Toast.LENGTH_SHORT).show()
-        } else {
-            getCalendarbar()
-        }
-//        binding.swipeRefresh.setOnRefreshListener {
-//            binding.swipeRefresh.isRefreshing = false
-//            page=1
-//            getCalendarbar()
-//        }
-//        val days = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
-//        binding.customCalendarView.setCurrentDay(days.minus(1))
     }
 
     private fun setMargins(show: Boolean) {
@@ -353,7 +302,7 @@ class FragmentSaloonBookings :
                             }
                             var reviewDetails: ReviewDetails? = null
                             for (review in booking.bookingReviews) {
-                                reviewDetails=review?.reviewDetails
+                                reviewDetails = review?.reviewDetails
                             }
                             saloonsBookingList.add(
                                 SaloonBookingData(
@@ -403,7 +352,7 @@ class FragmentSaloonBookings :
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun getCalendarbar() {
+    private fun getCalendarbar(bool: Boolean) {
         isLoading = true
         viewModel.getCalendarbar.observe(viewLifecycleOwner) {
 
@@ -479,4 +428,63 @@ class FragmentSaloonBookings :
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            if (Appelement.reload) {
+                Appelement.reload = false
+                if (FilterSelection.filterData != null) {
+
+                    bookingStatus = FilterSelection.filterData!!.bookingStatus
+                    bookingServiceProvider = FilterSelection.filterData!!.serviceProvider
+                    if (FilterSelection.filterData!!.from != null) {
+                        fromDate = FilterSelection.filterData!!.from
+                        toDate = FilterSelection.filterData!!.to
+                    } else {
+                        isFromSelection = true
+                    }
+                    if (FilterSelection.filterData!!.saloonId != null) {
+                        bookingSaloonId = FilterSelection.filterData!!.saloonId.toString()
+                    } else {
+                        bookingSaloonId = null
+                    }
+                    if (FilterSelection.filterData!!.serviceProviderId != null) {
+                        bookingServiceProviderId =
+                            FilterSelection.filterData!!.serviceProviderId.toString()
+                    } else {
+                        bookingServiceProviderId = null
+                    }
+                    if (FilterSelection.filterData!!.selection != "") {
+                        isFromSelection = true
+                        bookingDuration = FilterSelection.filterData!!.selection.toString()
+                        if (bookingDuration == "Custom") {
+                            //  binding.txtMonth.text = "$fromDate To ${toDate}"
+                        } else {
+                            // binding.txtMonth.text = bookingDuration
+                        }
+
+                    }
+                    if (bookingStatus != null && bookingStatus != "") {
+                        page = 1
+                        binding.imgBookingFilter.setImageResource(
+                            R.drawable.blue_cancel
+                        )
+                        binding.txtBookingStatus.setText("${Helper.capitalizeFirstWord(bookingStatus!!)} Bookings")
+                        binding.customCalendarView.visibility = View.GONE
+                        setMargins(true)
+
+                    }
+                    adopter?.setBookingStatus(bookingStatus)
+                    adopter?.notifyDataSetChanged()
+                    binding.customCalendarView.setMonthFromDate(fromDate ?: "")
+                    // Toast.makeText(requireContext(), "data received", Toast.LENGTH_SHORT).show()
+                    getCalendarbar(false)
+                } else {
+                    getCalendarbar(false)
+                }
+
+            }
+        }
+    }
 }

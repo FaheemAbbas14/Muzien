@@ -21,6 +21,7 @@ import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.saloon.SaloonViewModel
 import com.tt.muzien.ui.snackbar
 import com.tt.muzien.ui.views.CustomCalendar
+import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.FilterSelection
 import com.tt.muzien.utilities.TimeHelper
 
@@ -186,6 +187,7 @@ class FragmentBookingFilter :
                         saloonId = saloonId,
                         serviceProviderId = serviceProviderId
                     )
+                Appelement.reload = true
                 (activity as HomeActivity?)?.popFragment()
             }
         }

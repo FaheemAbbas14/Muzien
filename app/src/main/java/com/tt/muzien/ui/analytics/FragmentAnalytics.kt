@@ -30,6 +30,7 @@ import com.tt.muzien.ui.home.FragmentFilter
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.home.HomeViewModel
 import com.tt.muzien.ui.snackbar
+import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.FilterSelection
 import com.tt.muzien.utilities.TimeHelper
 import java.time.LocalDate
@@ -59,10 +60,11 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // binding.homeLayout.setBackgroundColor(Color.argb(10, 30, 69, 148))
+
         binding.swipeRefresh.setOnRefreshListener {
-            binding.swipeRefresh.isRefreshing = false
-           // page=1
-           getAnalytics()
+            // binding.swipeRefresh.isRefreshing = false
+            // page=1
+            getAnalytics(true)
         }
         lineChart = binding.lineChart
         if (FilterSelection.filterData == null) {
@@ -71,7 +73,7 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
             bookingToDate = dates["endOfWeek"]
             revenueFromDate = dates["startOfMonth"]
             revenueToDate = dates["endOfMonth"]
-            getAnalytics()
+            getAnalytics(false)
         }
 
         binding.imgBookingFilter.setOnClickListener {
@@ -85,33 +87,7 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
             nextFragment.isFromRevenue = true
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
-        if (FilterSelection.filterData != null) {
-            val selection = FilterSelection.filterData!!.selection
-            val fromDate = FilterSelection.filterData!!.from
-            val toDate = FilterSelection.filterData!!.to
-            if (selection != "") {
-                if (!FilterSelection.filterData!!.fromRevenue) {
-                    bookingDuration = selection.toString()
-                    bookingFromDate = fromDate.toString()
-                    bookingToDate = toDate.toString()
-                    if (selection == "Custom") {
-                        binding.txtDuration.text = "$fromDate To ${toDate}"
-                    } else {
-                        binding.txtDuration.text = selection
-                    }
-                } else {
-                    revenueDuration = selection.toString()
-                    revenueFromDate = fromDate.toString()
-                    revenueToDate = toDate.toString()
-                    if (selection == "Custom") {
-                        binding.txtRevenueType.text = "$fromDate To ${toDate}"
-                    } else {
-                        binding.txtRevenueType.text = selection
-                    }
-                }
-                getAnalytics()
-            }
-        }
+        getAnalytics(false)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -121,13 +97,12 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
         binding.txtCompleted.text = "$completedBookings"
         binding.txtCancelled.text = "$cancledBookings"
         binding.txtEarningAmount.text = "$totalEarnings"
-        if (topPerformerList.isNotEmpty() && graphMap.isNotEmpty()){
-            binding.cnstData.visibility=View.VISIBLE
-            binding.llNoData.visibility=View.GONE
-        }
-        else{
-            binding.cnstData.visibility=View.GONE
-            binding.llNoData.visibility=View.VISIBLE
+        if (topPerformerList.isNotEmpty() && graphMap.isNotEmpty()) {
+            binding.cnstData.visibility = View.VISIBLE
+            binding.llNoData.visibility = View.GONE
+        } else {
+            binding.cnstData.visibility = View.GONE
+            binding.llNoData.visibility = View.VISIBLE
         }
         setPerformerAdopter()
         setGraph()
@@ -302,28 +277,29 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
         )
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun getAnalytics() {
+    private fun getAnalytics(reload: Boolean) {
         viewModel.getAnalytics.observe(viewLifecycleOwner) {
 
             when (it) {
                 is Resource.Success -> {
                     Log.d("response", "success " + it.toString())
+                    binding.swipeRefresh.isRefreshing = false
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
                         topPerformerList.clear()
-                        if (it.value.data.topPerformers!=null){
-                        for (performer in it.value.data.topPerformers) {
+                        if (it.value.data.topPerformers != null) {
+                            for (performer in it.value.data.topPerformers) {
 
-                            topPerformerList.add(
-                                PersonDto(
-                                    performer.picture,
-                                    performer.fullName ?: "",
-                                    "Hair Stylist",
-                                    "${performer.totalBookings} Bookings",
-                                    "SAR ${5 * 1}"
+                                topPerformerList.add(
+                                    PersonDto(
+                                        performer.picture,
+                                        performer.fullName ?: "",
+                                        "Hair Stylist",
+                                        "${performer.totalBookings} Bookings",
+                                        "SAR ${5 * 1}"
+                                    )
                                 )
-                            )
-                        }
+                            }
                         }
                         for (analytics in it.value.data.booking) {
                             if (analytics.status == "completed") {
@@ -336,7 +312,7 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
                                 scheduleBookings = analytics.total_count.toInt()
                             }
                         }
-                        if (it.value.data.totalEarning!=null) {
+                        if (it.value.data.totalEarning != null) {
                             totalEarnings = it.value.data.totalEarning.toInt()
                         }
                         if (FilterSelection.filterData != null) {
@@ -356,6 +332,7 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
 
                 is Resource.Failure -> {
                     Log.d("response", "failure " + it.toString())
+                    binding.swipeRefresh.isRefreshing = false
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     handleApiError(it)
                 }
@@ -367,7 +344,9 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
             startDate = bookingFromDate,
             endDate = bookingToDate
         )
-        (activity as HomeActivity?)?.showLoadingIndicator()
+        if (!reload) {
+            (activity as HomeActivity?)?.showLoadingIndicator()
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -381,7 +360,7 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
                     if (it.value.status != 0) {
                         graphMap.clear()
                         for (revenue in it.value.data) {
-                            var key=revenue.date?.split("-")[2]!!
+                            var key = revenue.date?.split("-")[2]!!
                             graphMap.put("${key.toFloat()}", revenue.count.toInt())
                         }
                         setdata()
@@ -437,5 +416,43 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
         viewModel.getMonthlyRevenue(
         )
         // (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            if (Appelement.reload) {
+                Appelement.reload = false
+                if (FilterSelection.filterData != null) {
+                    val selection = FilterSelection.filterData!!.selection
+                    val fromDate = FilterSelection.filterData!!.from
+                    val toDate = FilterSelection.filterData!!.to
+                    if (selection != "") {
+                        if (!FilterSelection.filterData!!.fromRevenue) {
+                            bookingDuration = selection.toString()
+                            bookingFromDate = fromDate.toString()
+                            bookingToDate = toDate.toString()
+                            if (selection == "Custom") {
+                                binding.txtDuration.text = "$fromDate To ${toDate}"
+                            } else {
+                                binding.txtDuration.text = selection
+                            }
+                        } else {
+                            revenueDuration = selection.toString()
+                            revenueFromDate = fromDate.toString()
+                            revenueToDate = toDate.toString()
+                            if (selection == "Custom") {
+                                binding.txtRevenueType.text = "$fromDate To ${toDate}"
+                            } else {
+                                binding.txtRevenueType.text = selection
+                            }
+                        }
+                        getAnalytics(false)
+                    }
+                }
+
+            }
+        }
     }
 }

@@ -19,6 +19,7 @@ import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.saloon.SaloonViewModel
 import com.tt.muzien.ui.snackbar
+import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.InputValidator
 
 
@@ -86,10 +87,7 @@ class EditSaloonContact :
 //                        } else {
                         requireView().snackbar("Saloon updated successfully")
                         (activity as HomeActivity?)?.hideLoadingIndicator()
-                        val resultBundle = Bundle().apply {
-                            putBoolean("reload", true) // Replace with your data
-                        }
-                        setFragmentResult("requestKey", resultBundle)
+                        Appelement.reload=true
                         (activity as HomeActivity?)?.popFragment()
                         //  }
                     } else {

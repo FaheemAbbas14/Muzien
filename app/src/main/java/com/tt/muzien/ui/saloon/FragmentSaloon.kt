@@ -19,6 +19,7 @@ import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.FragmentFilter
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.snackbar
+import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.FilterSelection
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 
@@ -32,28 +33,18 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
     var saloonListAdapter: SaloonListAdapter? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getSaloons()
+        getSaloons(false)
+        binding.swipeRefresh.recyclerView = binding.rcySaloons
         binding.swipeRefresh.setOnRefreshListener {
             binding.swipeRefresh.isRefreshing = false
-            page=1
-            getSaloons()
+            page = 1
+            getSaloons(true)
         }
         binding.imgFilter.setOnClickListener {
             var nextFragment = FragmentFilter()
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
-        if (FilterSelection.filterData != null) {
-            if (FilterSelection.filterData!!.status != null && FilterSelection.filterData!!.status != "") {
-                if (FilterSelection.filterData!!.status == "Active") {
-                    isActive = true
-                } else {
-                    isActive = false
-                }
-                getSaloons()
-            }
-
-
-        }
+        getSaloons(false)
     }
 
     private fun setSaloonAdopter() {
@@ -107,7 +98,7 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
                 page = page + 1
                 selection = saloonsList.size - 1
                 // (activity as HomeActivity?)?.showLoadingIndicator()
-                getSaloons()
+                getSaloons(false)
 
             }
         }
@@ -126,7 +117,7 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
     override fun getFragmentRepository() =
         SaloonRepository(remoteDataSource.buildApi(SaloonApi::class.java, requireContext()))
 
-    private fun getSaloons() {
+    private fun getSaloons(reload: Boolean) {
         isLoading = true
         viewModel.getSaloon.observe(viewLifecycleOwner) {
 
@@ -134,6 +125,7 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
                 is Resource.Success -> {
                     Log.d("response", "success " + it.toString())
                     if (page == 1) {
+                        binding.swipeRefresh.isRefreshing = false
                         (activity as HomeActivity?)?.hideLoadingIndicator()
                     } else {
                         binding.bottomLoader.visibility = View.GONE
@@ -175,6 +167,7 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
                     Log.d("response", "failure " + it.toString())
                     isLoading = false
                     if (page == 1) {
+                        binding.swipeRefresh.isRefreshing = false
                         (activity as HomeActivity?)?.hideLoadingIndicator()
                     } else {
                         binding.bottomLoader.visibility = View.GONE
@@ -187,9 +180,35 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
         }
         viewModel.getSaloons(page = page)
         if (page == 1) {
-            (activity as HomeActivity?)?.showLoadingIndicator()
+            if (!reload) {
+                (activity as HomeActivity?)?.showLoadingIndicator()
+            }
         } else {
             binding.bottomLoader.visibility = View.VISIBLE
+        }
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            if (Appelement.reload) {
+                Appelement.reload = false
+                if (FilterSelection.filterData != null) {
+                    if (FilterSelection.filterData!!.status != null && FilterSelection.filterData!!.status != "") {
+                        if (FilterSelection.filterData!!.status == "Active") {
+                            isActive = true
+                        } else {
+                            isActive = false
+                        }
+                        getSaloons(false)
+                    }
+
+
+                } else {
+                    getSaloons(false)
+                }
+
+            }
         }
     }
 

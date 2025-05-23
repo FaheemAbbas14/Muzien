@@ -29,9 +29,9 @@ import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.snackbar
+import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.FilterSelection
 import com.tt.muzien.utilities.Helper
-import com.tt.muzien.utilities.TimeHelper
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -58,6 +58,7 @@ class FragmentMemberBookings :
     var selectedMember: Int? = null
     private var isFromSelection = false
     private val bookingMap = HashMap<Int, BookingsCountData>()
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -91,12 +92,13 @@ class FragmentMemberBookings :
 //                isFromSelection = false
 //            }
         }
-        getBooking()
+
         binding.customCalendarView.setOnDaySelectedListener { selectedDay ->
             // Toast.makeText(requireContext(), "Selected: ${selectedDay}", Toast.LENGTH_SHORT).show()
             fromDate = selectedDay
             toDate = selectedDay
-            FilterSelection.filterData=FilterData("", fromDate, toDate,false)
+            FilterSelection.filterData = FilterData("", fromDate, toDate, false)
+            (activity as HomeActivity?)?.showLoadingIndicator()
             getBooking()
         }
         //binding.customCalendarView.setDays(generateDaysWithEvents())
@@ -110,63 +112,20 @@ class FragmentMemberBookings :
                 bookingStatus = null
                 FilterSelection.filterData!!.bookingStatus = bookingStatus
                 setMargins(false)
-                getCalendarbar()
+                getCalendarbar(false)
             } else {
                 var nextFragment = FragmentBookingFilter()
-                nextFragment.showSaloon=false
-                nextFragment.showServiceProvider=false
+                nextFragment.showSaloon = false
+                nextFragment.showServiceProvider = false
                 (activity as HomeActivity?)?.loadFragment(nextFragment)
             }
         }
-        if (FilterSelection.filterData != null) {
 
-            bookingStatus = FilterSelection.filterData!!.bookingStatus
-            bookingServiceProvider = FilterSelection.filterData!!.serviceProvider
-            if (FilterSelection.filterData!!.from!=null){
-                fromDate = FilterSelection.filterData!!.from
-                toDate = FilterSelection.filterData!!.to
-            }
-            else{
-                isFromSelection=true
-            }
-            if (FilterSelection.filterData!!.saloonId != null) {
-                bookingSaloonId = FilterSelection.filterData!!.saloonId.toString()
-            } else {
-                bookingSaloonId = null
-            }
-            if (FilterSelection.filterData!!.serviceProviderId != null) {
-                bookingServiceProviderId = FilterSelection.filterData!!.serviceProviderId.toString()
-            } else {
-                bookingServiceProviderId = null
-            }
-            if (FilterSelection.filterData!!.selection != "") {
-                isFromSelection=true
-                bookingDuration = FilterSelection.filterData!!.selection.toString()
-                if (bookingDuration == "Custom") {
-                    //  binding.txtMonth.text = "$fromDate To ${toDate}"
-                } else {
-                    // binding.txtMonth.text = bookingDuration
-                }
-
-            }
-            if (bookingStatus != null && bookingStatus != "") {
-                page=1
-                binding.imgBookingFilter.setImageResource(
-                    R.drawable.blue_cancel
-                )
-                binding.txtBookingStatus.setText("${Helper.capitalizeFirstWord(bookingStatus!!)} Bookings")
-                binding.customCalendarView.visibility = View.GONE
-                setMargins(true)
-
-            }
-            adopter?.setBookingStatus(bookingStatus)
-            adopter?.notifyDataSetChanged()
-            binding.customCalendarView.setMonthFromDate(fromDate ?: "")
-            getCalendarbar()
-            // Toast.makeText(requireContext(), "data received", Toast.LENGTH_SHORT).show()
-        }
-        else{
-            getCalendarbar()
+        getCalendarbar(false)
+        binding.swipeRefresh.setOnRefreshListener {
+            //binding.swipeRefresh.isRefreshing = false
+            page = 1
+            getCalendarbar(true)
         }
 //        val days = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
 //        binding.customCalendarView.setCurrentDay(days.minus(1))
@@ -178,8 +137,8 @@ class FragmentMemberBookings :
         layoutParams.width = 0  // Match constraints (like 0dp)
         layoutParams.height = ConstraintLayout.LayoutParams.WRAP_CONTENT
 
-        layoutParams.marginStart = Helper.dpToPx(requireContext(),10)
-        layoutParams.marginEnd = Helper.dpToPx(requireContext(),10)
+        layoutParams.marginStart = Helper.dpToPx(requireContext(), 10)
+        layoutParams.marginEnd = Helper.dpToPx(requireContext(), 10)
 
         layoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
         layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
@@ -187,8 +146,7 @@ class FragmentMemberBookings :
         layoutParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
         if (show) {
             layoutParams.setMargins(20, 150, 20, 20) // Left, Top, Right, Bottom in pixels
-        }
-        else{
+        } else {
             layoutParams.setMargins(20, 0, 20, 0) // Left, Top, Right, Bottom in pixels
         }
         binding.rcyBookings.layoutParams = layoutParams
@@ -291,7 +249,6 @@ class FragmentMemberBookings :
     }
 
 
-
     private fun generateDaysWithEvents(): List<CalendarDay> {
         val days = mutableListOf<CalendarDay>()
         val calendar = Calendar.getInstance()
@@ -335,6 +292,7 @@ class FragmentMemberBookings :
                 is Resource.Success -> {
                     Log.d("response", "success " + it.toString())
                     (activity as HomeActivity?)?.hideLoadingIndicator()
+                    binding.swipeRefresh.isRefreshing = false
                     if (it.value.status != 0) {
                         isLoading = false
                         if (page == 1) {
@@ -354,7 +312,7 @@ class FragmentMemberBookings :
                             }
                             var reviewDetails: ReviewDetails? = null
                             for (review in booking.bookingReviews) {
-                                reviewDetails=review?.reviewDetails
+                                reviewDetails = review?.reviewDetails
                             }
                             saloonsBookingList.add(
                                 SaloonBookingData(
@@ -385,6 +343,7 @@ class FragmentMemberBookings :
                     setBookingsAdopter()
                     Log.d("response", "failure " + it.toString())
                     isLoading = false
+                    binding.swipeRefresh.isRefreshing = false
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     handleApiError(it)
                 }
@@ -400,10 +359,11 @@ class FragmentMemberBookings :
             startDate = fromDate,
             endDate = toDate
         )
-        (activity as HomeActivity?)?.showLoadingIndicator()
+
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun getCalendarbar() {
+    private fun getCalendarbar(reload: Boolean) {
         isLoading = true
         viewModel.getCalendarbar.observe(viewLifecycleOwner) {
 
@@ -438,6 +398,7 @@ class FragmentMemberBookings :
                     setBookingsAdopter()
                     Log.d("response", "failure " + it.toString())
                     isLoading = false
+                    binding.swipeRefresh.isRefreshing = false
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     handleApiError(it)
                 }
@@ -450,8 +411,11 @@ class FragmentMemberBookings :
             startDate = fromDate,
             endDate = toDate
         )
-        (activity as HomeActivity?)?.showLoadingIndicator()
+        if (!reload) {
+            (activity as HomeActivity?)?.showLoadingIndicator()
+        }
     }
+
     private fun updateBooking(bookingId: String, reason: String, status: String) {
         isLoading = true
         viewModel.updateBooking.observe(viewLifecycleOwner) {
@@ -476,5 +440,68 @@ class FragmentMemberBookings :
         }
         viewModel.updateBooking(bookingId, UpdateBookingRequest(status, reason))
         (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, true)
+            (activity as HomeActivity?)?.changeStatusBarColor(requireActivity().resources.getColor(R.color.white))
+            (activity as HomeActivity?)?.hideTabs()
+            if (Appelement.reload) {
+                Appelement.reload = false
+                if (FilterSelection.filterData != null) {
+
+                    bookingStatus = FilterSelection.filterData!!.bookingStatus
+                    bookingServiceProvider = FilterSelection.filterData!!.serviceProvider
+                    if (FilterSelection.filterData!!.from != null) {
+                        fromDate = FilterSelection.filterData!!.from
+                        toDate = FilterSelection.filterData!!.to
+                    } else {
+                        isFromSelection = true
+                    }
+                    if (FilterSelection.filterData!!.saloonId != null) {
+                        bookingSaloonId = FilterSelection.filterData!!.saloonId.toString()
+                    } else {
+                        bookingSaloonId = null
+                    }
+                    if (FilterSelection.filterData!!.serviceProviderId != null) {
+                        bookingServiceProviderId =
+                            FilterSelection.filterData!!.serviceProviderId.toString()
+                    } else {
+                        bookingServiceProviderId = null
+                    }
+                    if (FilterSelection.filterData!!.selection != "") {
+                        isFromSelection = true
+                        bookingDuration = FilterSelection.filterData!!.selection.toString()
+                        if (bookingDuration == "Custom") {
+                            //  binding.txtMonth.text = "$fromDate To ${toDate}"
+                        } else {
+                            // binding.txtMonth.text = bookingDuration
+                        }
+
+                    }
+                    if (bookingStatus != null && bookingStatus != "") {
+                        page = 1
+                        binding.imgBookingFilter.setImageResource(
+                            R.drawable.blue_cancel
+                        )
+                        binding.txtBookingStatus.setText("${Helper.capitalizeFirstWord(bookingStatus!!)} Bookings")
+                        binding.customCalendarView.visibility = View.GONE
+                        setMargins(true)
+
+                    }
+                    adopter?.setBookingStatus(bookingStatus)
+                    adopter?.notifyDataSetChanged()
+                    binding.customCalendarView.setMonthFromDate(fromDate ?: "")
+                    // Toast.makeText(requireContext(), "data received", Toast.LENGTH_SHORT).show()
+                    getCalendarbar(false)
+                } else {
+                    getCalendarbar(false)
+                }
+
+            }
+        }
     }
 }

@@ -1,14 +1,10 @@
 package com.tt.muzien.ui.service
 
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.fragment.app.FragmentManager
 import com.tt.muzien.data.dto.ServiceInfo
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.network.ServiceApi
@@ -19,6 +15,7 @@ import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.FragmentFilter
 import com.tt.muzien.ui.home.HomeActivity
+import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.FilterSelection
 
 
@@ -34,10 +31,10 @@ class FragmentServices :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // setServicesAdopter()
+        binding.swipeRefresh.listView = binding.rcyServices
         binding.swipeRefresh.setOnRefreshListener {
-            binding.swipeRefresh.isRefreshing = false
             //page=1
-            getCategories()
+            getCategories(true)
         }
         binding.imgFilter.setOnClickListener {
             var nextFragment = FragmentFilter()
@@ -55,11 +52,11 @@ class FragmentServices :
             }
 
         }
-        getCategories()
+        getCategories(false)
     }
 
     private fun setServicesAdopter() {
-        if (totalServices>0) {
+        if (totalServices > 0) {
             binding.cnstData.visibility = View.VISIBLE
             binding.llNoDta.visibility = View.GONE
         } else {
@@ -108,18 +105,19 @@ class FragmentServices :
     override fun getFragmentRepository() =
         ServiceRepository(remoteDataSource.buildApi(ServiceApi::class.java, requireContext()))
 
-    private fun getCategories() {
+    private fun getCategories(reload: Boolean?=false) {
         viewModel.getServices.observe(viewLifecycleOwner) {
 
             when (it) {
                 is Resource.Success -> {
+                    binding.swipeRefresh.isRefreshing = false
                     Log.d("response", "success " + it.toString())
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
                         servicesMap.clear()
                         groupServices.clear()
                         groupTitles.clear()
-                        totalServices=0
+                        totalServices = 0
                         for (category in it.value.data) {
                             groupTitles.add(category.name)
                             groupServices.add("${category.services.size}")
@@ -149,6 +147,7 @@ class FragmentServices :
                 is Resource.Failure -> {
                     Log.d("response", "failure " + it.toString())
                     setServicesAdopter()
+                    binding.swipeRefresh.isRefreshing = false
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     handleApiError(it)
                 }
@@ -157,13 +156,18 @@ class FragmentServices :
             }
         }
         viewModel.getServices()
-        (activity as HomeActivity?)?.showLoadingIndicator()
+        if (!reload!!) {
+            (activity as HomeActivity?)?.showLoadingIndicator()
+        }
     }
+
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
-            //Toast.makeText(requireContext(),"service shown", Toast.LENGTH_SHORT).show()
-            // Fragment is shown again
+           if (Appelement.reload){
+               Appelement.reload=false
+               getCategories(false)
+           }
         }
     }
 }

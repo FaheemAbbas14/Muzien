@@ -22,6 +22,7 @@ import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.member.FragmentViewMember
 import com.tt.muzien.ui.member.MemberViewModel
 import com.tt.muzien.ui.snackbar
+import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.FilterSelection
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 
@@ -36,7 +37,7 @@ class FragmentSaloonMembers :
     private var isActive: Boolean? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        getMembers()
         binding.imgFilter.setOnClickListener {
             var nextFragment = FragmentFilter()
             nextFragment.status = true
@@ -47,20 +48,7 @@ class FragmentSaloonMembers :
             nextFragment.saloonId = selectedSaloon?.id!!
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
-        if (FilterSelection.filterData != null) {
-            if (FilterSelection.filterData!!.status != null && FilterSelection.filterData!!.status != "") {
-                if (FilterSelection.filterData!!.status == "Active") {
-                    isActive = true
-                } else {
-                    isActive = false
-                }
-                getMembers()
-            }
 
-
-        } else {
-            getMembers()
-        }
 //        binding.swipeRefresh.setOnRefreshListener {
 //            binding.swipeRefresh.isRefreshing = false
 //            // page=1
@@ -120,7 +108,7 @@ class FragmentSaloonMembers :
     override fun getFragmentRepository() =
         MemberRepository(remoteDataSource.buildApi(MemberApi::class.java, requireContext()))
 
-    private fun getMembers() {
+    private fun getMembers(reload: Boolean? = false) {
         viewModel.getMembers.observe(viewLifecycleOwner) {
 
             when (it) {
@@ -164,7 +152,9 @@ class FragmentSaloonMembers :
             }
         }
         viewModel.getMembers(selectedSaloon?.id.toString(), isActive)
-        (activity as HomeActivity?)?.showLoadingIndicator()
+        if (reload == false) {
+            (activity as HomeActivity?)?.showLoadingIndicator()
+        }
     }
 
     private fun inActiveMember(id: Int) {
@@ -241,5 +231,29 @@ class FragmentSaloonMembers :
         }
         viewModel.makeManager(id)
         (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            if (Appelement.reload) {
+                Appelement.reload = false
+                if (FilterSelection.filterData != null) {
+                    if (FilterSelection.filterData!!.status != null && FilterSelection.filterData!!.status != "") {
+                        if (FilterSelection.filterData!!.status == "Active") {
+                            isActive = true
+                        } else {
+                            isActive = false
+                        }
+                        getMembers()
+                    }
+
+
+                } else {
+                    getMembers(true)
+                }
+
+            }
+        }
     }
 }

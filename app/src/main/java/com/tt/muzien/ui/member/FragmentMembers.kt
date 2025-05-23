@@ -19,6 +19,7 @@ import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.FragmentFilter
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.snackbar
+import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.FilterSelection
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 
@@ -28,31 +29,18 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setSaloonRepo((activity as HomeActivity?)?.getSaloonRepo()!!)
+        binding.swipeRefresh.recyclerView = binding.rcyMembers
         binding.swipeRefresh.setOnRefreshListener {
-            binding.swipeRefresh.isRefreshing = false
-           // page=1
-            getMembers()
+            // binding.swipeRefresh.isRefreshing = false
+            // page=1
+            getMembers(true)
         }
         binding.imgFilter.setOnClickListener {
             var nextFragment = FragmentFilter()
             nextFragment.status = true
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
-        if (FilterSelection.filterData != null) {
-            if (FilterSelection.filterData!!.status != null && FilterSelection.filterData!!.status != "") {
-                if (FilterSelection.filterData!!.status == "Active") {
-                    isActive = true
-                } else {
-                    isActive = false
-                }
-                getMembers()
-            }
-
-
-        }
-        else{
-            getMembers()
-        }
+        getMembers(false)
     }
 
     private fun setMemberAdopter() {
@@ -107,12 +95,13 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
     override fun getFragmentRepository() =
         MemberRepository(remoteDataSource.buildApi(MemberApi::class.java, requireContext()))
 
-    private fun getMembers() {
+    private fun getMembers(reload: Boolean) {
         viewModel.getMembers.observe(viewLifecycleOwner) {
 
             when (it) {
                 is Resource.Success -> {
                     Log.d("response", "success " + it.toString())
+                    binding.swipeRefresh.isRefreshing = false
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
                         membersList.clear()
@@ -143,6 +132,7 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
                 is Resource.Failure -> {
                     Log.d("response", "failure " + it.toString())
                     setMemberAdopter()
+                    binding.swipeRefresh.isRefreshing = false
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     handleApiError(it)
                 }
@@ -151,7 +141,9 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
             }
         }
         viewModel.getMembers(isActive)
-        (activity as HomeActivity?)?.showLoadingIndicator()
+        if (!reload) {
+            (activity as HomeActivity?)?.showLoadingIndicator()
+        }
     }
 
     private fun inActiveMember(id: Int) {
@@ -162,7 +154,7 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
                     Log.d("response", "success " + it.toString())
                     // (activity as HomeActivity?)?.hideLoadingIndicator()
                     requireView().snackbar("Member inactive successfully")
-                    getMembers()
+                    getMembers(false)
                 }
 
                 is Resource.Failure -> {
@@ -188,7 +180,7 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
                     // (activity as HomeActivity?)?.hideLoadingIndicator()
                     requireView().snackbar("Member deleted successfully")
                     //  (activity as HomeActivity?)?.popFragment()
-                    getMembers()
+                    getMembers(false)
                 }
 
                 is Resource.Failure -> {
@@ -214,7 +206,7 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
                     // (activity as HomeActivity?)?.hideLoadingIndicator()
                     requireView().snackbar("Member marked manager successfully")
                     //  (activity as HomeActivity?)?.popFragment()
-                    getMembers()
+                    getMembers(false)
                 }
 
                 is Resource.Failure -> {
@@ -229,5 +221,29 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
         }
         viewModel.makeManager(id)
         (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            if (Appelement.reload) {
+                Appelement.reload = false
+                if (FilterSelection.filterData != null) {
+                    if (FilterSelection.filterData!!.status != null && FilterSelection.filterData!!.status != "") {
+                        if (FilterSelection.filterData!!.status == "Active") {
+                            isActive = true
+                        } else {
+                            isActive = false
+                        }
+                        getMembers(false)
+                    }
+
+
+                } else {
+                    getMembers(false)
+                }
+
+            }
+        }
     }
 }

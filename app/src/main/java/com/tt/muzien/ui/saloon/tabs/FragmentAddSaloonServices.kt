@@ -36,6 +36,7 @@ import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.service.FragmentUpdateService
 import com.tt.muzien.ui.service.ServiceViewModel
 import com.tt.muzien.ui.snackbar
+import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.Helper
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -63,6 +64,7 @@ class FragmentAddSaloonServices :
         viewModel.setSaloonRepo((activity as HomeActivity?)?.getSaloonRepo()!!)
         getSaloons()
         binding.llBack.setOnClickListener {
+            // Appelement.reload=true
             (activity as HomeActivity?)?.popFragment()
         }
         binding.imgPhoto.setOnClickListener {
@@ -163,11 +165,21 @@ class FragmentAddSaloonServices :
 
     override fun onResume() {
         super.onResume()
+        if (saloonId != null && saloonId != 0) {
+            (activity as HomeActivity?)?.setSystemWindow(true)
+            (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, true)
+        }
+        //  (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, true)
         (activity as HomeActivity?)?.hideTabs()
     }
 
     override fun onPause() {
         super.onPause()
+        if (saloonId != null && saloonId != 0) {
+            (activity as HomeActivity?)?.setSystemWindow(false)
+            (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, false)
+        }
+        // (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, false)
         (activity as HomeActivity?)?.showTabs()
     }
 
@@ -484,6 +496,7 @@ class FragmentAddSaloonServices :
                             binding.edtSaloon.text = Editable.Factory.getInstance().newEditable("")
                             requireView().snackbar("Service added successfully")
                         } else {
+                            Appelement.reload = true
                             (activity as HomeActivity?)?.popFragment()
                             requireView().snackbar("Service enabled successfully")
                         }

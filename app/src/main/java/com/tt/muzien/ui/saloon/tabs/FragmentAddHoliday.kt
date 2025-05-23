@@ -19,6 +19,7 @@ import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.saloon.SaloonViewModel
 import com.tt.muzien.ui.snackbar
 import com.tt.muzien.ui.views.CustomCalendar
+import com.tt.muzien.utilities.Appelement
 
 
 class FragmentAddHoliday :
@@ -107,6 +108,7 @@ class FragmentAddHoliday :
                     Log.d("response", "success " + it.toString())
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
+                        Appelement.reload=true
                         (activity as HomeActivity?)?.popFragment()
                         requireView().snackbar("Holiday added successfully")
                     } else {
@@ -139,6 +141,7 @@ class FragmentAddHoliday :
                     Log.d("response", "success " + it.toString())
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
+                        Appelement.reload=true
                         (activity as HomeActivity?)?.popFragment()
                         requireView().snackbar("Holiday added successfully")
                     } else {

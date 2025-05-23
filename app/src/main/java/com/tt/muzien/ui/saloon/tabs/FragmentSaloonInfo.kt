@@ -37,11 +37,10 @@ import com.tt.muzien.ui.adapters.WorkingHoursAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
-import com.tt.muzien.ui.payment.FragmentAddPayment
-import com.tt.muzien.ui.payment.FragmentPayNow
 import com.tt.muzien.ui.saloon.FragmentSearchAddress
 import com.tt.muzien.ui.saloon.SaloonViewModel
 import com.tt.muzien.ui.snackbar
+import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.Helper
 import com.tt.muzien.utilities.TimeHelper
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
@@ -542,54 +541,18 @@ class FragmentSaloonInfo :
                 uploadSaloonCertificate()
             }
         }
-//        if (resultCode == Activity.RESULT_OK) {
-//            when (requestCode) {
-//                REQUEST_CAMERA -> {
-//                    if (image_uri != null) {
-//                        if (isCertificate) {
-//                            certificate_uri = image_uri
-//                            binding.imgCertificate.setImageURI(image_uri)
-//                            binding.cnstCertificateData.visibility = View.VISIBLE
-//                            binding.imgCertificate.visibility = View.GONE
-//                        } else {
-//                            image_uris.add(image_uri!!)
-//                            AddSaloonData.image_uris = image_uris
-//                            setImagesAdopter()
-//                        }
-//
-//
-//                    }
-//
-//                }
-//
-//                REQUEST_GALLERY -> {
-//                    if (data?.clipData != null) {
-//                        // Multiple images selected
-//                        val count = data.clipData!!.itemCount
-//                        for (i in 0 until count) {
-//                            val imageUri = data.clipData!!.getItemAt(i).uri
-//                            image_uris.add(imageUri)
-//                        }
-//                        // Handle multiple images (e.g., display or upload them)
-//
-//                        setImagesAdopter()
-//                    } else if (data?.data != null) {
-//                        // Single image selected
-//                        val imageUri = data.data!!
-//                        if (isCertificate) {
-//                            certificate_uri = image_uri
-//                            binding.imgCertificate.setImageURI(imageUri)
-//                            binding.cnstCertificateData.visibility = View.VISIBLE
-//                            binding.imgCertificate.visibility = View.GONE
-//                        } else {
-//                            // Handle single image
-//                            image_uris.add(imageUri)
-//                            setImagesAdopter()
-//                        }
-//                    }
-//
-//                }
-        //   }
-        //    }
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            if (Appelement.reload) {
+                Appelement.reload = false
+                getSaloons()
+
+            }
+        }
     }
 }

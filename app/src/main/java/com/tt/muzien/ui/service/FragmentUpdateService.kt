@@ -31,6 +31,7 @@ import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.snackbar
+import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.FilterSelection
 import kotlin.collections.arrayListOf
 
@@ -43,10 +44,12 @@ class FragmentUpdateService :
     private val salonList = arrayListOf<ServiceSaloon>()
     var adapter: ServiceUpdateListAdopter? = null
     var serviceDetailsInfo: ServiceDetailsInfo? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setSaloonRepo((activity as HomeActivity?)?.getSaloonRepo()!!)
         binding.imgBack.setOnClickListener {
+            //Appelement.reload=true
             FilterSelection.filterData = null
             (activity as HomeActivity?)?.popFragment()
         }
@@ -57,16 +60,17 @@ class FragmentUpdateService :
                 addSaloonService()
             }
         }
-        getServicesDetails()
+        getServicesDetails(false)
         if (service?.service != null) {
             binding.txtSave.text = resources.getString(R.string.update)
         } else {
             binding.txtSave.text = resources.getString(R.string.save)
         }
+        binding.swipeRefresh.recyclerView = binding.rcySaloons
         binding.swipeRefresh.setOnRefreshListener {
-            binding.swipeRefresh.isRefreshing = false
+            // binding.swipeRefresh.isRefreshing = false
             //page=1
-            getServicesDetails()
+            getServicesDetails(true)
         }
     }
 
@@ -158,7 +162,7 @@ class FragmentUpdateService :
         (activity as HomeActivity?)?.showTabs()
     }
 
-    private fun getServicesDetails() {
+    private fun getServicesDetails(reload: Boolean) {
         viewModel.getServicesDetails.observe(viewLifecycleOwner) {
 
             when (it) {
@@ -177,7 +181,7 @@ class FragmentUpdateService :
 
                 is Resource.Failure -> {
                     Log.d("response", "failure " + it.toString())
-
+                    binding.swipeRefresh.isRefreshing = false
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     handleApiError(it)
                 }
@@ -186,7 +190,9 @@ class FragmentUpdateService :
             }
         }
         viewModel.getServicesDetails(service?.id.toString())
-        (activity as HomeActivity?)?.showLoadingIndicator()
+        if (!reload) {
+            (activity as HomeActivity?)?.showLoadingIndicator()
+        }
     }
 
     private fun getSaloons() {
@@ -195,6 +201,7 @@ class FragmentUpdateService :
             when (it) {
                 is Resource.Success -> {
                     Log.d("response", "success " + it.toString())
+                    binding.swipeRefresh.isRefreshing = false
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
                         salonList.clear()
@@ -238,7 +245,7 @@ class FragmentUpdateService :
 
                 is Resource.Failure -> {
                     Log.d("response", "failure " + it.toString())
-
+                    binding.swipeRefresh.isRefreshing = false
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     handleApiError(it)
                 }
@@ -257,7 +264,9 @@ class FragmentUpdateService :
                     Log.d("response", "success " + it.toString())
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
+                        Appelement.reload = true
                         if (service?.service != null) {
+
                             (activity as HomeActivity?)?.popFragment()
                             requireView().snackbar("Service updated successfully")
                         } else {

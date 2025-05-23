@@ -14,6 +14,7 @@ import com.tt.muzien.databinding.FragmentFilterBinding
 import com.tt.muzien.ui.auth.AuthViewModel
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.views.CustomCalendar
+import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.FilterSelection
 import com.tt.muzien.utilities.TimeHelper
 
@@ -102,6 +103,7 @@ class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRe
         }
         binding.llApply.setOnClickListener {
             if (checkValidation()) {
+                Appelement.reload = true
                 FilterSelection.filterData =
                     FilterData(selection, fromDate, toDate, isFromRevenue, status = selectedStatus)
                 (activity as HomeActivity?)?.popFragment()

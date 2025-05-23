@@ -18,6 +18,7 @@ import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.service.FragmentUpdateService
 import com.tt.muzien.ui.service.ServiceViewModel
+import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.Helper
 
 
@@ -32,12 +33,8 @@ class FragmentSaloonServices :
     private var totalServices = 0
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        binding.swipeRefresh.setOnRefreshListener {
-//            binding.swipeRefresh.isRefreshing = false
-//           // page = 1
-//            getCategories()
-//        }
-        getCategories()
+
+        getCategories(false)
         binding.llAdd.setOnClickListener {
             var nextFragment = FragmentAddSaloonServices()
             nextFragment.saloonId = saloonId
@@ -130,7 +127,7 @@ class FragmentSaloonServices :
     override fun getFragmentRepository() =
         ServiceRepository(remoteDataSource.buildApi(ServiceApi::class.java, requireContext()))
 
-    private fun getCategories() {
+    private fun getCategories(reload: Boolean) {
         viewModel.getSaloonCategories.observe(viewLifecycleOwner) {
 
             when (it) {
@@ -179,6 +176,18 @@ class FragmentSaloonServices :
             }
         }
         viewModel.getCategories(selectedSaloon?.id.toString())
-        (activity as HomeActivity?)?.showLoadingIndicator()
+        if (reload) {
+            (activity as HomeActivity?)?.showLoadingIndicator()
+        }
+    }
+
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            if (Appelement.reload){
+                Appelement.reload=false
+                getCategories(true)
+            }
+        }
     }
 }

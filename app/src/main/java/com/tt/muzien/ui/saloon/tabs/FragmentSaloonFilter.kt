@@ -15,6 +15,7 @@ import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.home.HomeViewModel
 import com.tt.muzien.ui.views.CustomCalendar
+import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.FilterSelection
 import com.tt.muzien.utilities.TimeHelper
 
@@ -118,16 +119,7 @@ class FragmentSaloonFilter :
         }
         binding.llApply.setOnClickListener {
             if (checkValidation()) {
-//                val result = Bundle().apply {
-//                    putString("selection", selection) // Replace with your data
-//                    putString("bookingStatus", bookingStatus) // Replace with your data
-//                    putString("serviceProvider", serviceProvider) // Replace with your data
-//                    putString("fromDate", fromDate) // Replace with your data
-//                    putString("toDate", toDate) // Replace with your data
-//                }
-//
-//// Set the result before popping the current fragment
-//                parentFragmentManager.setFragmentResult("requestKey", result)
+                Appelement.reload = true
                 FilterSelection.filterData =
                     FilterData(selection, fromDate, toDate, false, bookingStatus, serviceProvider)
                 (activity as HomeActivity?)?.popFragment()
