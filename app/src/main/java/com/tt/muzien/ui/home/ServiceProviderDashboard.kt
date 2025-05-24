@@ -427,7 +427,7 @@ class ServiceProviderDashboard :
             startDate = fromDate,
             endDate = toDate
         )
-        if (reload) {
+        if (!reload) {
             (activity as HomeActivity?)?.showLoadingIndicator()
         }
     }

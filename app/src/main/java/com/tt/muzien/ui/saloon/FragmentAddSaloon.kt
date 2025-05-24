@@ -45,6 +45,7 @@ import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.saloon.tabs.FragmentAddHoliday
 import com.tt.muzien.ui.saloon.tabs.FragmentAddWorkingDay
 import com.tt.muzien.ui.snackbar
+import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.Helper
 import com.tt.muzien.utilities.InputValidator
 import com.tt.muzien.utilities.TimeHelper
@@ -492,10 +493,7 @@ class FragmentAddSaloon :
                         AddSaloonData.clear()
                         requireView().snackbar("Saloon added successfully")
                         (activity as HomeActivity?)?.hideLoadingIndicator()
-                        val resultBundle = Bundle().apply {
-                            putBoolean("reload", true) // Replace with your data
-                        }
-                        setFragmentResult("requestKey", resultBundle)
+                        Appelement.reload=true
                         (activity as HomeActivity?)?.popFragment()
                         //  }
                     } else {

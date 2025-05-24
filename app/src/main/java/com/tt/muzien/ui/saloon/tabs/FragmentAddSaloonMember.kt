@@ -17,6 +17,7 @@ import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.member.MemberViewModel
 import com.tt.muzien.ui.snackbar
+import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.InputValidator
 
 
@@ -227,6 +228,7 @@ class FragmentAddSaloonMember :
                     Log.d("response", "success " + it.toString())
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
+                        Appelement.reload=true
                         (activity as HomeActivity?)?.popFragment()
                         requireView().snackbar("Invitation sent successfully")
                     } else {
