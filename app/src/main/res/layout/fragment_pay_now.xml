@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="10dp"
         android:orientation="horizontal"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
@@ -90,54 +89,175 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtLabel" />
 
+    <LinearLayout
+        android:id="@+id/llDiscount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rounded_white_grey"
+        android:minHeight="80dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="@+id/txtText"
+        app:layout_constraintStart_toStartOf="@+id/txtText"
+        app:layout_constraintTop_toBottomOf="@+id/txtText">
+
+        <TextView
+            android:id="@+id/txtDiscount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="30dp"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/green_text"
+            android:textFontWeight="600"
+            android:textSize="28sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center"
+            android:text="@string/your_first_subscription"
+            android:textColor="@color/black_shade1"
+            android:textFontWeight="400"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtActualFee"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/manrope_medium"
+        android:gravity="center|start"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textFontWeight="700"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/llDiscount"
+        app:layout_constraintTop_toBottomOf="@+id/llDiscount" />
+
     <TextView
         android:id="@+id/txtTotalFee"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:fontFamily="@font/manrope_regular"
-        android:gravity="center"
-        android:text="@string/total_fee_1_000_sar"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/manrope_medium"
+        android:gravity="center|start"
         android:textColor="@color/colorTextLabelDefault"
         android:textFontWeight="700"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/txtText"
-        app:layout_constraintTop_toBottomOf="@+id/txtText" />
+        app:layout_constraintTop_toBottomOf="@+id/llDiscount" />
 
-    <RadioGroup
-        android:id="@+id/rdoPayment"
+    <LinearLayout
+        android:id="@+id/llGooglePay"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginTop="10dp"
-        android:orientation="vertical"
+        android:background="@drawable/rounded_white_grey_4"
+        android:gravity="center|start"
+        android:orientation="horizontal"
+        android:paddingStart="20dp"
+        android:visibility="gone"
+        android:paddingTop="14sp"
+        android:paddingBottom="14sp"
         app:layout_constraintEnd_toEndOf="@+id/txtText"
         app:layout_constraintStart_toStartOf="@+id/txtText"
         app:layout_constraintTop_toBottomOf="@+id/txtTotalFee">
 
-        <com.tt.muzien.ui.views.CustomRadioButton
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/rounded_white_grey_4"
-            app:image="@drawable/google_pay_icon"
-            app:text="Google Pay" />
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/google_pay" />
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/manrope_regular"
+            android:text="@string/google_pay"
+            android:textColor="@color/black_shade1"
+            android:textFontWeight="400"
+            android:textSize="16sp" />
 
-    </RadioGroup>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/grey_right" />
+        <!--        <RadioButton-->
+        <!--            android:id="@+id/swGooglePlay"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginEnd="8dp" />-->
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/llSTCPay"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/rounded_white_grey_4"
+        android:gravity="center|start"
+        android:orientation="horizontal"
+        android:paddingStart="20dp"
+        android:paddingTop="14sp"
+        android:paddingBottom="14sp"
+        app:layout_constraintEnd_toEndOf="@+id/txtText"
+        app:layout_constraintStart_toStartOf="@+id/txtText"
+        app:layout_constraintTop_toBottomOf="@+id/llGooglePay">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/stcpay" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/manrope_regular"
+            android:text="@string/stc_pay"
+            android:textColor="@color/black_shade1"
+            android:textFontWeight="400"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/grey_right" />
+        <!--        <RadioButton-->
+        <!--            android:id="@+id/swGooglePlay"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginEnd="8dp" />-->
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/llOtherPayment"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:paddingTop="14sp"
-        android:paddingBottom="14sp"
-        android:paddingStart="20dp"
         android:layout_marginTop="10dp"
+        android:background="@drawable/rounded_white_grey_4"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:background="@drawable/rounded_white_grey_4"
+        android:paddingStart="20dp"
+        android:paddingTop="14sp"
+        android:paddingBottom="14sp"
         app:layout_constraintEnd_toEndOf="@+id/txtText"
         app:layout_constraintStart_toStartOf="@+id/txtText"
-        app:layout_constraintTop_toBottomOf="@+id/rdoPayment">
+        app:layout_constraintTop_toBottomOf="@+id/llSTCPay">
 
         <ImageView
             android:id="@+id/radioImage"
@@ -152,8 +272,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/other_method"
             android:fontFamily="@font/manrope_regular"
+            android:text="@string/other_method"
             android:textColor="@color/black_shade1"
             android:textFontWeight="400"
             android:textSize="16sp" />
@@ -188,6 +308,7 @@
         app:layout_constraintEnd_toEndOf="@+id/llOtherPayment"
         app:layout_constraintStart_toEndOf="@+id/imageView13"
         app:layout_constraintTop_toTopOf="@+id/imageView13" />
+
     <LinearLayout
         android:id="@+id/llPayNow"
         android:layout_width="0dp"
@@ -202,7 +323,7 @@
         android:orientation="horizontal"
         android:paddingHorizontal="10dp"
         android:paddingVertical="10dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">

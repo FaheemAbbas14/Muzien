@@ -1,6 +1,7 @@
 package com.tt.muzien.ui.home
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -40,6 +41,7 @@ import com.tt.muzien.ui.auth.AuthViewModel
 import com.tt.muzien.ui.bookings.FragmentBookings
 import com.tt.muzien.ui.bottomSheets.AddBottomSheet
 import com.tt.muzien.ui.notifications.FragmentNotifications
+import com.tt.muzien.ui.payment.FragmentAddPayment
 import com.tt.muzien.ui.profile.FragmentProfile
 import com.tt.muzien.ui.saloon.FragmentAddSaloon
 import com.tt.muzien.ui.saloon.SaloonViewModel
@@ -66,6 +68,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         //  LoggedInInfo.user?.role = "salon-manager"
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -219,6 +222,12 @@ class HomeActivity : AppCompatActivity() {
     fun hideTabs() {
         binding.constraintLayout2.visibility = View.GONE
         binding.constraintLayout.visibility = View.GONE
+        binding.imgadd.visibility = View.GONE
+
+    }
+    fun invisibleTabs() {
+        binding.constraintLayout2.visibility = View.GONE
+        binding.constraintLayout.visibility = View.INVISIBLE
         binding.imgadd.visibility = View.GONE
 
     }

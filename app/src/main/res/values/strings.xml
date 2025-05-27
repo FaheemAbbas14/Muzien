@@ -159,7 +159,7 @@
     <string name="access_your_saloon_revenue_and_continuously_enhance_your_service_quality">Access your saloon revenue and continuously enhance your service quality</string>
     <string name="salon_subscription_fee">Salon Subscription Fee</string>
     <string name="_1_year_subscription">1 year subscription</string>
-    <string name="total_fee_1_000_sar">Total Fee: 1,000 SAR</string>
+    <string name="total_fee">Total Fee:</string>
     <string name="other_method">Other Method</string>
     <string name="profile">Profile</string>
     <string name="salon_owner">Salon owner</string>
@@ -266,5 +266,10 @@
     <string name="no_bookings">No Bookings</string>
     <string name="john_smith_has_invited_you_to_join_their_salon_the_style_zone_as_a_service_provider_do_you_want_to_accept">John Smith has invited you to join their salon “The Style Zone” as a service provider. Do you want to accept?</string>
     <string name="saloons">Saloons</string>
+    <string name="google_pay">Google Pay</string>
+    <string name="your_first_subscription">Your first subscription</string>
+    <string name="actual_fee">Actual Fee:</string>
+    <string name="card_name">Card Holder\'s Name</string>
+    <string name="stc_pay">STC Pay</string>
 
 </resources>

@@ -2,7 +2,7 @@ package com.tt.muzien.data.repository
 
 import com.tt.muzien.data.network.SaloonApi
 import com.tt.muzien.data.requests.AddHolidayRequest
-import com.tt.muzien.data.requests.AddSubscribtionRequest
+import com.tt.muzien.data.requests.AddSubscriptionRequest
 import com.tt.muzien.data.requests.AddWorkingHourRequest
 import com.tt.muzien.data.requests.UpdateSaloonRequest
 import okhttp3.MultipartBody
@@ -19,13 +19,13 @@ class SaloonRepository(
     private val api: SaloonApi,
 ) : BaseRepository() {
     suspend fun getSaloons(
-        page: Int? = null
+        page: Int? = null,
     ) = safeApiCall {
         api.getSaloons(page)
     }
 
     suspend fun getSaloonsDetail(
-        saloonId: Int? = null
+        saloonId: Int? = null,
     ) = safeApiCall {
         api.getSaloonsDetail(saloonId)
     }
@@ -36,13 +36,29 @@ class SaloonRepository(
     }
 
     suspend fun addSubscriptions(
-        saloonId: Int, requestData: AddSubscribtionRequest
+        saloonId: Int, requestData: AddSubscriptionRequest,
     ) = safeApiCall {
         api.addSubscriptions(saloonId, requestData)
     }
 
+    suspend fun updateSubscriptions(
+        saloonId: Int, subscriptionId: Int, requestData: AddSubscriptionRequest,
+    ) = safeApiCall {
+        api.updateSubscriptions(saloonId, subscriptionId, requestData)
+    }
+
+    suspend fun getPlans(
+        name: String? = null,
+        isActive: Boolean? = null,
+        days: Int? = null,
+    ) = safeApiCall {
+
+        api.getPlans(name, isActive, days)
+
+    }
+
     suspend fun getSaloonsSubscriptions(
-        saloonId: Int?
+        saloonId: Int?,
     ) = safeApiCall {
         if (saloonId != null) {
             api.getSpecificSaloonsSubscriptions(saloonId)
@@ -61,7 +77,7 @@ class SaloonRepository(
         phoneNumber: RequestBody,
         address: RequestBody,
         hoursParts: MutableMap<String, RequestBody>,
-        holidays: MutableMap<String, RequestBody>
+        holidays: MutableMap<String, RequestBody>,
     ) = safeApiCall {
         api.addSaloon(
             certificate,
@@ -78,13 +94,14 @@ class SaloonRepository(
     }
 
     suspend fun updateSaloon(
-        saloonId: Int, requestData: UpdateSaloonRequest
+        saloonId: Int, requestData: UpdateSaloonRequest,
     ) = safeApiCall {
         api.updateSaloon(
             saloonId,
             requestData
         )
     }
+
     suspend fun uploadSaloonCertificate(
         saloonId: Int, requestData: MultipartBody.Part?,
     ) = safeApiCall {
@@ -95,25 +112,25 @@ class SaloonRepository(
     }
 
     suspend fun addHour(
-        saloonId: Int, request: AddWorkingHourRequest
+        saloonId: Int, request: AddWorkingHourRequest,
     ) = safeApiCall {
         api.addHour(saloonId, request)
     }
 
     suspend fun deleteHoliday(
-        saloonId: Int, holidayId: Int
+        saloonId: Int, holidayId: Int,
     ) = safeApiCall {
         api.deleteHoliday(saloonId, holidayId)
     }
 
     suspend fun deleteWorkingHour(
-        saloonId: Int, day: String
+        saloonId: Int, day: String,
     ) = safeApiCall {
         api.deleteWorkingHour(saloonId, day)
     }
 
     suspend fun addHoliday(
-        saloonId: Int, request: AddHolidayRequest
+        saloonId: Int, request: AddHolidayRequest,
     ) = safeApiCall {
         api.addHoliday(saloonId, request)
     }

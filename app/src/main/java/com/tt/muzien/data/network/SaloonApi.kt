@@ -1,7 +1,7 @@
 package com.tt.muzien.data.network
 
 import com.tt.muzien.data.requests.AddHolidayRequest
-import com.tt.muzien.data.requests.AddSubscribtionRequest
+import com.tt.muzien.data.requests.AddSubscriptionRequest
 import com.tt.muzien.data.requests.AddWorkingHourRequest
 import com.tt.muzien.data.requests.UpdateSaloonRequest
 import com.tt.muzien.data.responses.AddHolidayResponse
@@ -9,6 +9,7 @@ import com.tt.muzien.data.responses.AddSaloonResponse
 import com.tt.muzien.data.responses.AddSubscribtionResponse
 import com.tt.muzien.data.responses.AddWorkingHourResponse
 import com.tt.muzien.data.responses.DeleteHolidayResponse
+import com.tt.muzien.data.responses.GetPlansResponse
 import com.tt.muzien.data.responses.GetSaloonDetailResponse
 import com.tt.muzien.data.responses.GetSaloonResponse
 import com.tt.muzien.data.responses.GetServiceProviderResponse
@@ -102,6 +103,9 @@ interface SaloonApi {
     @GET("v1/saloon/my/subscriptions")
     suspend fun getSaloonsSubscriptions(
     ): GetSubscriptionsResponse
+    @GET("v1/admin/plans")
+    suspend fun getPlans(@Query("name") name: String?=null,@Query("isActive") isActive: Boolean??=null,@Query("durationInDays") durationInDays: Int??=null,
+    ):GetPlansResponse
 
     @GET("v1/saloon/{saloonId}/subscription")
     suspend fun getSpecificSaloonsSubscriptions(
@@ -111,6 +115,13 @@ interface SaloonApi {
     @POST("v1/saloon/{saloonId}/subscription")
     suspend fun addSubscriptions(
         @Path("saloonId") saloonId: Int,
-        @Body requestData: AddSubscribtionRequest
+        @Body requestData: AddSubscriptionRequest
+    ): AddSubscribtionResponse
+
+    @POST("v1/saloon/{saloonId}/subscription/:{subscriptionId}")
+    suspend fun updateSubscriptions(
+        @Path("saloonId") saloonId: Int,
+        @Path("subscriptionId") subscriptionId: Int,
+        @Body requestData: AddSubscriptionRequest
     ): AddSubscribtionResponse
 }

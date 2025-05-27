@@ -8,9 +8,10 @@ package com.tt.muzien.data.requests
  * faheem.abbas@bajcotechnologies.com
  * +923115284424
  */
-data class AddSubscribtionRequest(
+data class AddSubscriptionRequest(
     val transactionId: String,
     val amount: Int,
     val startDate: String,
     val validTill: String,
+    val planId: Int,
 )

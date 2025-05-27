@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="40dp"
         android:orientation="horizontal"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
@@ -67,9 +67,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
     <LinearLayout
-        android:id="@+id/llCardNumber"
+        android:id="@+id/llCardName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
@@ -88,6 +87,70 @@
 
 
         <EditText
+            android:id="@+id/edtCardName"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center|left"
+            android:hint="Card Holder Name"
+            android:inputType="textCapWords|textPersonName"
+            android:imeOptions="actionDone"
+            android:paddingEnd="10dp"
+            android:textColor="@color/colorTextDefault"
+            android:textFontWeight="400"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="8dp"
+            android:visibility="gone"
+            app:srcCompat="@drawable/other_card" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="-10dp"
+        android:background="@color/white"
+        android:fontFamily="@font/manrope_regular"
+        android:inputType="textEmailAddress"
+        android:text="@string/card_name"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textFontWeight="500"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toTopOf="@+id/llCardName"
+        app:layout_constraintStart_toStartOf="@+id/llCardName" />
+
+    <LinearLayout
+        android:id="@+id/llCardNumber"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="30dp"
+        android:background="@drawable/rounded_white_grey"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="60dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/imgVisa"
+        app:layout_constraintTop_toBottomOf="@+id/llCardName">
+
+
+        <EditText
             android:id="@+id/edtCardNumber"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -96,9 +159,10 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:fontFamily="@font/manrope_regular"
-            android:gravity="center|right"
-            android:hint="@string/abc"
-            android:inputType="text"
+            android:gravity="center|left"
+            android:inputType="number"
+            android:maxLength="19"
+            android:hint="XXXX XXXX XXXX XXXX"
             android:paddingEnd="10dp"
             android:textColor="@color/colorTextDefault"
             android:textFontWeight="400"
@@ -149,8 +213,8 @@
         app:layout_constraintTop_toBottomOf="@+id/llCardNumber">
 
 
-        <EditText
-            android:id="@+id/edtServiceName"
+        <TextView
+            android:id="@+id/edtExp"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
@@ -158,15 +222,17 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:fontFamily="@font/manrope_regular"
-            android:gravity="center|right"
-            android:hint="@string/dd_mm"
+            android:gravity="center|left"
+            android:hint="MM/YY"
             android:inputType="text"
+            android:maxLength="5"
             android:paddingEnd="10dp"
             android:textColor="@color/colorTextDefault"
             android:textFontWeight="400"
             android:textSize="14sp" />
 
         <ImageView
+            android:id="@+id/imgCalender"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -212,7 +278,7 @@
 
 
         <EditText
-            android:id="@+id/edtDuration"
+            android:id="@+id/edtCVV"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="center"
@@ -220,9 +286,10 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:fontFamily="@font/manrope_regular"
-            android:gravity="center|right"
-            android:hint="@string/abc"
-            android:inputType="text"
+            android:gravity="center|left"
+            android:hint="CVV"
+            android:inputType="numberPassword"
+            android:maxLength="4"
             android:paddingEnd="10dp"
             android:textColor="@color/colorTextDefault"
             android:textFontWeight="400"
@@ -265,7 +332,7 @@
         android:orientation="horizontal"
         android:paddingHorizontal="10dp"
         android:paddingVertical="10dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/llCardNumber"
         app:layout_constraintStart_toStartOf="@+id/llCardNumber"
         app:layout_constraintTop_toBottomOf="@+id/llExpiryDate">
@@ -280,7 +347,7 @@
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:fontFamily="@font/manrope_regular"
-            android:gravity="center|right"
+            android:gravity="center|left"
             android:hint="@string/abc"
             android:inputType="text"
             android:paddingEnd="10dp"
@@ -305,6 +372,7 @@
         android:textColor="@color/colorTextLabelDefault"
         android:textFontWeight="500"
         android:textSize="11sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/llZipcode"
         app:layout_constraintStart_toStartOf="@+id/llZipcode" />
     <ImageView
@@ -313,8 +381,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:src="@drawable/lock_icon"
-        app:layout_constraintStart_toStartOf="@+id/llZipcode"
-        app:layout_constraintTop_toBottomOf="@+id/llZipcode" />
+        app:layout_constraintStart_toStartOf="@+id/llExpiryDate"
+        app:layout_constraintTop_toBottomOf="@+id/llExpiryDate" />
 
     <TextView
         android:id="@+id/textView9"
@@ -369,7 +437,7 @@
         app:layout_constraintTop_toBottomOf="@+id/llBack" />
 
     <ImageView
-        android:id="@+id/imageView17"
+        android:id="@+id/imgMaster"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginStart="10dp"

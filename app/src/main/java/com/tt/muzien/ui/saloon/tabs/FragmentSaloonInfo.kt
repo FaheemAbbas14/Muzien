@@ -24,12 +24,12 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.AddSaloonData
+import com.tt.muzien.data.dto.PayDto
 import com.tt.muzien.data.dto.SaloonDto
 import com.tt.muzien.data.dto.WorkingHourData
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.network.SaloonApi
 import com.tt.muzien.data.repository.SaloonRepository
-import com.tt.muzien.data.requests.AddSubscribtionRequest
 import com.tt.muzien.data.responses.SaloonDetailsInfo
 import com.tt.muzien.databinding.FragmentSaloonInfoBinding
 import com.tt.muzien.ui.adapters.HolidayListAdapter
@@ -37,6 +37,7 @@ import com.tt.muzien.ui.adapters.WorkingHoursAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
+import com.tt.muzien.ui.payment.FragmentPayNow
 import com.tt.muzien.ui.saloon.FragmentSearchAddress
 import com.tt.muzien.ui.saloon.SaloonViewModel
 import com.tt.muzien.ui.snackbar
@@ -59,6 +60,7 @@ class FragmentSaloonInfo :
     private var holidayListAdapter: HolidayListAdapter? = null
     private var isExpanded = false
     var selectedSaloon: SaloonDto? = null
+    var subscriptionId:Int? = null
     var selectedSaloonDetails: SaloonDetailsInfo? = null
     var position: Int = 0
     private var certificate_uri: Uri? = null
@@ -73,9 +75,7 @@ class FragmentSaloonInfo :
 //        }
         getSaloons()
         binding.txtRenew.setOnClickListener {
-            addSubscriptions()
-//            var nextFragment = FragmentPayNow()
-//            (activity as HomeActivity?)?.loadFragment(nextFragment)
+            getPlans()
         }
         binding.txtUploadCertificate.setOnClickListener {
             selectDocument()
@@ -318,7 +318,7 @@ class FragmentSaloonInfo :
 
     override fun getFragmentBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = FragmentSaloonInfoBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
@@ -417,44 +417,6 @@ class FragmentSaloonInfo :
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 
-    private fun addSubscriptions() {
-        viewModel.addSubscriptions.observe(viewLifecycleOwner) {
-
-            when (it) {
-                is Resource.Success -> {
-                    Log.d("response", "success " + it.toString())
-                    (activity as HomeActivity?)?.hideLoadingIndicator()
-                    if (it.value.status != 0) {
-                        getSaloons()
-                        requireView().snackbar("Subscription added successfully")
-                    } else {
-                        requireView().snackbar(it.value.message)
-                    }
-                }
-
-                is Resource.Failure -> {
-                    Log.d("response", "failure " + it.toString())
-
-                    (activity as HomeActivity?)?.hideLoadingIndicator()
-                    handleApiError(it)
-                }
-
-                else -> {}
-            }
-        }
-
-
-        viewModel.addSubscriptions(
-            selectedSaloon?.id ?: 0,
-            AddSubscribtionRequest(
-                selectedSaloonDetails?.id.toString(),
-                100,
-                "2025-03-01",
-                "2026-02-28"
-            )
-        )
-        (activity as HomeActivity?)?.showLoadingIndicator()
-    }
 
     private fun uploadSaloonCertificate() {
         viewModel.uploadSaloonCertificate.observe(viewLifecycleOwner) {
@@ -554,5 +516,53 @@ class FragmentSaloonInfo :
 
             }
         }
+    }
+
+    private fun getPlans() {
+        viewModel.getPlans.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        for (plan in it.value.data) {
+                            if (plan.name == "saloon-annual" && plan.isActive) {
+                                var nextFragment = FragmentPayNow()
+                                nextFragment.subscriptionId=subscriptionId
+                                var payDto =
+                                    PayDto(
+                                        selectedSaloon?.id ?: 0,
+                                        plan.id.toInt(),
+                                        selectedSaloon?.name ?: "",
+                                        plan.name,
+                                        plan.actualFee.toInt() * 100,
+                                        (plan.actualFee - plan.discountedFee).toInt() * 100,
+                                        plan.discountedFee.toInt() * 100,
+                                        plan.currency,
+                                        plan.durationInDays.toInt()
+                                    )
+                                nextFragment.payDto = payDto
+                                (activity as HomeActivity?)?.loadFragment(nextFragment)
+                            }
+                        }
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.getPlans()
+        (activity as HomeActivity?)?.showLoadingIndicator()
     }
 }

@@ -41,9 +41,11 @@ android {
       signingConfig signingConfigs.config
       proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
       buildConfigField "String", "baseUrl", '"http://dev.api.muzien.com/"'
+      buildConfigField "String", "moyasarKey", '"pk_test_d9SWVPGGwx8betLcwtN9vtSJi4wnmHMFwUqxsyC7"'
         }
     debug {
       buildConfigField "String", "baseUrl", '"http://dev.api.muzien.com/"'
+      buildConfigField "String", "moyasarKey", '"pk_test_d9SWVPGGwx8betLcwtN9vtSJi4wnmHMFwUqxsyC7"'
       }
   }
 
@@ -85,7 +87,7 @@ dependencies {
   implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
   //Jetpack datastore
-  implementation "androidx.datastore:datastore-preferences:1.1.6"
+  implementation "androidx.datastore:datastore-preferences:1.1.7"
 
   //ViewModel and LiveData
   implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
@@ -120,7 +122,7 @@ dependencies {
   androidTestImplementation 'androidx.test.ext:junit:1.2.1'
   androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 
-  implementation 'com.google.android.gms:play-services-maps:19.2.0'
+  implementation 'com.google.android.gms:play-services-maps:18.1.0'
   implementation("com.tbuonomo:dotsindicator:5.1.0")
 
   // Import the Firebase BoM
@@ -141,6 +143,7 @@ dependencies {
   implementation 'com.google.android.flexbox:flexbox:3.0.0'
 
   implementation 'com.google.android.gms:play-services-wallet:19.4.0'
+  implementation 'com.github.Moyasar:moyasar-android-sdk:1.0.8'
 
 }
 kapt {
