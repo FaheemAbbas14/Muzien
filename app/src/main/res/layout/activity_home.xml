@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="false"
-    android:background="@color/white"
+    android:background="@color/light_grey"
     tools:context=".ui.home.HomeActivity">
 
     <View
@@ -126,7 +126,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="70dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="10dp"
         android:background="@drawable/bg"

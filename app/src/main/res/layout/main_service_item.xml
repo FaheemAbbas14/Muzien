@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/blue_down_icon" />
+            android:src="@drawable/black_right_arrow" />
 
 
     </LinearLayout>

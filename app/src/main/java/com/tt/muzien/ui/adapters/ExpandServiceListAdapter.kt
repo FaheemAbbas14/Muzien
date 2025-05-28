@@ -84,7 +84,7 @@ class ExpandServiceListAdapter(
         val groupIcon = view.findViewById<ImageView>(R.id.group_icon)
 
         groupTitle.text = getGroup(groupPosition).toString()
-        groupIcon.setImageResource(if (isExpanded) R.drawable.blue_up_icon else R.drawable.blue_down_icon)
+        groupIcon.setImageResource(if (isExpanded) R.drawable.black_up_arrow else R.drawable.black_right_arrow)
 
         return view
     }

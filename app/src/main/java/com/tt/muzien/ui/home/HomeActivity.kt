@@ -2,7 +2,14 @@ package com.tt.muzien.ui.home
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -145,6 +152,11 @@ class HomeActivity : AppCompatActivity() {
                 v.setPadding(0, 0, 0, systemBarsInsets.bottom)
                 insets
             }
+        }
+
+        binding.constraintLayout2.post {
+            binding.constraintLayout2.setLayerType(View.LAYER_TYPE_SOFTWARE, null) // for shadow
+            binding.constraintLayout2.background = createSvgBackgroundWithSmallShadow(this, binding.constraintLayout2.width, binding.constraintLayout2.height)
         }
     }
 
@@ -428,5 +440,74 @@ class HomeActivity : AppCompatActivity() {
             binding.imgadd.visibility = View.GONE
         }
     }
+    fun createSvgBackgroundWithSmallShadow(
+        context: Context,
+        width: Int,
+        height: Int,
+        bottomPaddingDp: Float = 1f // 1 dp padding and shadow offset
+    ): Drawable {
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.WHITE
+            style = Paint.Style.FILL
+            // Shadow with 1dp vertical offset and a smaller blur radius
+            setShadowLayer(8f, 0f, bottomPaddingDp * context.resources.displayMetrics.density, Color.parseColor("#22000000"))
+        }
+
+        val path = Path()
+
+        val scaleX = width / 360f
+        val scaleY = height / 60f
+
+        // Convert dp padding to px, then to viewport coords
+        val density = context.resources.displayMetrics.density
+        val bottomPaddingPx = bottomPaddingDp * density
+        val paddingInViewport = bottomPaddingPx / scaleY
+
+        fun shiftY(y: Float) = (y - paddingInViewport).coerceAtLeast(0f) * scaleY
+
+        path.moveTo(180f * scaleX, shiftY(18.75f))
+        path.cubicTo(
+            159.28f * scaleX, shiftY(18.75f),
+            138.005f * scaleX, shiftY(0f),
+            117.285f * scaleX, shiftY(0f)
+        )
+        path.lineTo(45f * scaleX, shiftY(0f))
+        path.cubicTo(
+            28.4315f * scaleX, shiftY(0f),
+            15f * scaleX, shiftY(13.4315f),
+            15f * scaleX, shiftY(30f)
+        )
+        path.cubicTo(
+            15f * scaleX, shiftY(46.5685f),
+            28.4315f * scaleX, shiftY(60f),
+            45f * scaleX, shiftY(60f)
+        )
+        path.lineTo(315f * scaleX, shiftY(60f))
+        path.cubicTo(
+            331.569f * scaleX, shiftY(60f),
+            345f * scaleX, shiftY(46.5685f),
+            345f * scaleX, shiftY(30f)
+        )
+        path.cubicTo(
+            345f * scaleX, shiftY(13.4315f),
+            331.569f * scaleX, shiftY(0f),
+            315f * scaleX, shiftY(0f)
+        )
+        path.lineTo(242.715f * scaleX, shiftY(0f))
+        path.cubicTo(
+            221.995f * scaleX, shiftY(0f),
+            200.72f * scaleX, shiftY(18.75f),
+            180f * scaleX, shiftY(18.75f)
+        )
+        path.close()
+
+        canvas.drawPath(path, paint)
+        return BitmapDrawable(context.resources, bitmap)
+    }
+
+
 
 }
