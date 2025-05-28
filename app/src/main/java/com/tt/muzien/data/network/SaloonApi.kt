@@ -38,6 +38,7 @@ interface SaloonApi {
     @GET("v1/saloon/my-saloons")
     suspend fun getSaloons(
         @Query("page") page: Int?,
+        @Query("isActive") isActive: Boolean?=null,
     ): GetSaloonResponse
 
     @GET("v1/saloon/{saloonId}")

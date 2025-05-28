@@ -1,9 +1,11 @@
 package com.tt.muzien.ui.profile
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.data.repository.HomeRepository
@@ -21,7 +23,7 @@ class FragmentAddAdminHolidays :
     BaseFragment<HomeViewModel, FragmentAddAdminHolidaysBinding, HomeRepository>() {
     private val adminHolidays = arrayListOf<String>()
     private var holidayListAdapter: HolidayListAdapter? = null
-    private var selectedDay: String? = null
+    private var selectedDay: ArrayList<String> = arrayListOf()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHolidaysAdopter()
@@ -30,20 +32,21 @@ class FragmentAddAdminHolidays :
         }
         binding.llSave.enable(false)
         binding.llSave.setOnClickListener {
-            adminHolidays.add(selectedDay ?: "")
+            for (date in selectedDay) {
+
+                adminHolidays.add(date)
+            }
             holidayListAdapter?.notifyDataSetChanged()
 
         }
-
+        binding.customCalendar.setMultiSelectEnabled(true)
         // Set the listener for date selection
         binding.customCalendar.setOnDateSelectedListener(object :
             CustomCalendar.OnDateSelectedListener {
-            override fun onDateSelected(date: String) {
-                // Handle the selected date
-                binding.llSave.enable(true)
-                selectedDay = date
-                //   Toast.makeText(requireContext(), "Selected date: $date", Toast.LENGTH_SHORT).show()
 
+            override fun onDatesSelected(selectedDates: ArrayList<String>) {
+                binding.llSave.enable(true)
+                selectedDay = selectedDates
             }
         })
 
@@ -74,15 +77,26 @@ class FragmentAddAdminHolidays :
 
     override fun getFragmentBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = FragmentAddAdminHolidaysBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        HomeRepository(remoteDataSource.buildApi(HomeApi::class.java,requireContext()), userPreferences)
+        HomeRepository(
+            remoteDataSource.buildApi(HomeApi::class.java, requireContext()),
+            userPreferences
+        )
 
     override fun onResume() {
         super.onResume()
         (activity as HomeActivity?)?.hideTabs()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            (activity as HomeActivity?)?.hideTabs()
+        }
     }
 
     override fun onPause() {

@@ -81,6 +81,10 @@ class FragmentAddSaloon :
             AddSaloonData.clear()
             (activity as HomeActivity?)?.popFragment()
         }
+        binding.txtCancel.setOnClickListener {
+            AddSaloonData.clear()
+            (activity as HomeActivity?)?.popFragment()
+        }
         setFragmentResultListener("requestKey") { key, bundle ->
             var reload = bundle.getBoolean("reload")
             if (reload) {
@@ -477,7 +481,14 @@ class FragmentAddSaloon :
         setData()
         (activity as HomeActivity?)?.hideTabs()
     }
-
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            setData()
+            (activity as HomeActivity?)?.hideTabs()
+        }
+    }
     override fun onPause() {
         super.onPause()
         (activity as HomeActivity?)?.showTabs()

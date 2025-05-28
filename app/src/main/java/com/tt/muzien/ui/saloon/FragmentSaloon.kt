@@ -49,10 +49,10 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
 
     private fun setSaloonAdopter() {
         if (saloonsList.isNotEmpty()) {
-            binding.cnstData.visibility = View.VISIBLE
+            binding.rcySaloons.visibility = View.VISIBLE
             binding.llNoDta.visibility = View.GONE
         } else {
-            binding.cnstData.visibility = View.GONE
+            binding.rcySaloons.visibility = View.GONE
             binding.llNoDta.visibility = View.VISIBLE
         }
         binding.txtHeading.text = "${resources.getString(R.string.saloons)}(${saloonsList.size})"
@@ -145,6 +145,7 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
                                     saloon.SaloonImages,
                                     saloon.name,
                                     if (saloon.status == "open") true else false,
+                                    saloon.status,
                                     saloon.address ?: "",
                                     "${saloon.tRating} (${saloon.numReviews} ${
                                         if (saloon.numReviews.toInt() == 1) "review" else "reviews"
@@ -178,7 +179,7 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
                 else -> {}
             }
         }
-        viewModel.getSaloons(page = page)
+        viewModel.getSaloons(page = page, isActive = isActive)
         if (page == 1) {
             if (!reload) {
                 (activity as HomeActivity?)?.showLoadingIndicator()
@@ -210,6 +211,14 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
 
             }
         }
+        else{
+            if (isActive!=null){
+                isActive=null
+                Appelement.reload = true
+                FilterSelection.filterData=null
+            }
+        }
+
     }
 
 }

@@ -8,6 +8,7 @@ import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.Editable
@@ -19,6 +20,7 @@ import android.view.Window
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.tt.muzien.R
@@ -29,6 +31,7 @@ import com.tt.muzien.data.network.ServiceApi
 import com.tt.muzien.data.repository.ServiceRepository
 import com.tt.muzien.data.requests.AddSaloonService
 import com.tt.muzien.data.requests.AddServiceSaloonRequest
+import com.tt.muzien.data.requests.UpdateServiceRequest
 import com.tt.muzien.databinding.FragmentAddSaloonServicesBinding
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
@@ -50,7 +53,7 @@ class FragmentAddSaloonServices :
     private val REQUEST_PERMISSIONS = 3
     private var image_uri: Uri? = null
     private var categoryId: Int? = null
-    private var category: String? = null
+    var category: String? = null
     var saloonId: Int? = 0
     var serviceId: Int? = 0
     private val servicesMap = HashMap<String, Int>()
@@ -62,6 +65,20 @@ class FragmentAddSaloonServices :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setSaloonRepo((activity as HomeActivity?)?.getSaloonRepo()!!)
+        if (saloonId == 0) {
+            binding.llSaveAdd.visibility = View.GONE
+            binding.llSave.setBackgroundDrawable(resources.getDrawable(R.drawable.rounded_blue_100))
+            binding.txtSave.setTextColor(resources.getColor(R.color.white))
+        }
+        if (service != null) {
+            binding.txtLabel.text= getString(R.string.update_service)
+            binding.imgPhoto.visibility = View.GONE
+            binding.edtServiceName.text = Editable.Factory.getInstance().newEditable(service?.name)
+            binding.edtDuration.text =
+                Editable.Factory.getInstance().newEditable("${service?.service?.duration}")
+            binding.edtPrice.text = Editable.Factory.getInstance()
+                .newEditable("${(service?.service?.price ?: 0) / 100}")
+        }
         getSaloons()
         binding.llBack.setOnClickListener {
             // Appelement.reload=true
@@ -73,11 +90,15 @@ class FragmentAddSaloonServices :
         binding.llSave.setOnClickListener {
 
             if (checkValidation()) {
-                if (saloonId == 0) {
-                    //  saloonId = saloonMap[binding.edtSaloon.text.toString()]?.id ?: 0
+                if (service != null) {
+                    updateService()
+                } else {
+                    if (saloonId == 0) {
+                        //  saloonId = saloonMap[binding.edtSaloon.text.toString()]?.id ?: 0
+                    }
+                    saveAdd = false
+                    addService()
                 }
-                saveAdd = false
-                addService()
             }
         }
         binding.llSaveAdd.setOnClickListener {
@@ -157,7 +178,7 @@ class FragmentAddSaloonServices :
 
     override fun getFragmentBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = FragmentAddSaloonServicesBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
@@ -165,7 +186,7 @@ class FragmentAddSaloonServices :
 
     override fun onResume() {
         super.onResume()
-        if (saloonId != null && saloonId != 0) {
+        if ((saloonId != null && saloonId != 0) || service != null) {
             (activity as HomeActivity?)?.setSystemWindow(true)
             (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, true)
         }
@@ -173,9 +194,23 @@ class FragmentAddSaloonServices :
         (activity as HomeActivity?)?.hideTabs()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            if ((saloonId != null && saloonId != 0) || service != null) {
+                (activity as HomeActivity?)?.setSystemWindow(true)
+                (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, true)
+            }
+
+            //  (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, true)
+            (activity as HomeActivity?)?.hideTabs()
+        }
+    }
+
     override fun onPause() {
         super.onPause()
-        if (saloonId != null && saloonId != 0) {
+        if ((saloonId != null && saloonId != 0) || service != null) {
             (activity as HomeActivity?)?.setSystemWindow(false)
             (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, false)
         }
@@ -326,7 +361,7 @@ class FragmentAddSaloonServices :
                 parent: AdapterView<*>?,
                 view: View?,
                 position: Int,
-                id: Long
+                id: Long,
             ) {
                 category = services[position]
                 categoryId = servicesMap.get(category)
@@ -336,6 +371,44 @@ class FragmentAddSaloonServices :
                 // Handle when no item is selected (optional)
             }
         }
+        if (category != null) {
+            categoryId = servicesMap.get(category)
+            binding.spnCategory.setSelection(services.indexOf(category))
+        }
+    }
+
+    private fun updateService() {
+        viewModel.updateService.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    Appelement.reload = true
+                    (activity as HomeActivity?)?.popFragment()
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        var adjustedPrice = Integer.parseInt(binding.edtPrice.text.toString()) * 100
+        viewModel.updateService(
+            service?.id?:0,
+            UpdateServiceRequest(
+                categoryId ?: 0,
+                binding.edtServiceName.text.toString(),
+                Integer.parseInt(binding.edtDuration.text.toString()),
+                adjustedPrice
+            )
+        )
+        (activity as HomeActivity?)?.showLoadingIndicator()
     }
 
     private fun addService() {
@@ -447,6 +520,7 @@ class FragmentAddSaloonServices :
                                     saloon.SaloonImages,
                                     saloon.name,
                                     if (saloon.status == "open") true else false,
+                                    saloon.status,
                                     saloon.address ?: "",
                                     "${saloon.tRating} (${saloon.numReviews} ${
                                         if (saloon.numReviews.toInt() == 1) "review" else "reviews"

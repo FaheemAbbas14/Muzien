@@ -63,7 +63,14 @@ class FragmentAddService :
         (activity as HomeActivity?)?.changeStatusBarColor(requireActivity().resources.getColor(R.color.white))
         (activity as HomeActivity?)?.hideTabs()
     }
-
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            (activity as HomeActivity?)?.changeStatusBarColor(requireActivity().resources.getColor(R.color.white))
+            (activity as HomeActivity?)?.hideTabs()
+        }
+    }
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onPause() {
         super.onPause()

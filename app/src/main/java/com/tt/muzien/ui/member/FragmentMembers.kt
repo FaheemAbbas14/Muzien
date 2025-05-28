@@ -45,10 +45,10 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
 
     private fun setMemberAdopter() {
         if (membersList.isNotEmpty()) {
-            binding.cnstData.visibility = View.VISIBLE
+            binding.rcyMembers.visibility = View.VISIBLE
             binding.llNoDta.visibility = View.GONE
         } else {
-            binding.cnstData.visibility = View.GONE
+            binding.rcyMembers.visibility = View.GONE
             binding.llNoDta.visibility = View.VISIBLE
         }
         binding.txtHeading.text = "${resources.getString(R.string.members)}(${membersList.size})"

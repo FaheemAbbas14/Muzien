@@ -192,6 +192,7 @@ class FragmentSaloonDetails :
                 )
             )
             binding.txtStatusTexts.text = "open today"
+            binding.llTimes.visibility=View.VISIBLE
         } else {
             binding.llStatus.setBackgroundDrawable(
                 ResourcesCompat.getDrawable(
@@ -201,6 +202,7 @@ class FragmentSaloonDetails :
                 )
             )
             binding.txtStatusTexts.text = "close today"
+            binding.llTimes.visibility=View.GONE
         }
         setViewPager()
     }

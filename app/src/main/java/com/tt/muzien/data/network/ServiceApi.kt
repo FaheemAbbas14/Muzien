@@ -1,12 +1,11 @@
 package com.tt.muzien.data.network
 
-import com.tt.muzien.data.requests.AddSaloonServiceRequest
 import com.tt.muzien.data.requests.AddServiceSaloonRequest
+import com.tt.muzien.data.requests.UpdateServiceRequest
 import com.tt.muzien.data.responses.AddServiceResponse
 import com.tt.muzien.data.responses.GetCategoriesResponse
 import com.tt.muzien.data.responses.GetServiceStatusResponse
 import com.tt.muzien.data.responses.GetServicesResponse
-import com.tt.muzien.data.responses.SaloonServiceResponse
 import com.tt.muzien.data.responses.ServiceDetailsResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -35,12 +34,13 @@ interface ServiceApi {
         @Part("saloonId") saloonId: RequestBody,
         @Part("name") name: RequestBody,
         @Part("duration") duration: RequestBody,
-        @Part("price") price: RequestBody
+        @Part("price") price: RequestBody,
     ): AddServiceResponse
 
     @GET("v1/service/myservices")
     suspend fun getCategories(
     ): GetCategoriesResponse
+
     @GET("v1/service/category")
     suspend fun getAllCategories(
     ): GetCategoriesResponse
@@ -53,8 +53,10 @@ interface ServiceApi {
     @GET("v1/service/mySaloonsServices")
     suspend fun getServices(
     ): GetServicesResponse
+
     @GET("v1/saloon/service/status")
-    suspend fun getServicesStatus(@Query("serviceId") serviceId: String,
+    suspend fun getServicesStatus(
+        @Query("serviceId") serviceId: String,
     ): GetServiceStatusResponse
 
 
@@ -64,7 +66,7 @@ interface ServiceApi {
         @Part("categoryId") categoryId: String,
         @Part("name") name: String,
         @Part("duration") duration: Int,
-        @Part("price") price: Int
+        @Part("price") price: Int,
     ): AddServiceResponse
 
     @GET("v1/service/{serviceId}")
@@ -74,6 +76,12 @@ interface ServiceApi {
 
 
     @POST("v1/saloon/service")
-    suspend fun addSaloonService( @Body requestData: AddServiceSaloonRequest,
+    suspend fun addSaloonService(
+        @Body requestData: AddServiceSaloonRequest,
     ): AddServiceResponse
+
+    @PUT("v1/service/{serviceId}")
+    suspend fun updateService(
+        @Path("serviceId") serviceId: Int, @Body requestData: UpdateServiceRequest,
+    )
 }

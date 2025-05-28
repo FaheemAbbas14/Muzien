@@ -271,4 +271,6 @@
     <string name="actual_fee">Actual Fee:</string>
     <string name="card_name">Card Holder\'s Name</string>
     <string name="stc_pay">STC Pay</string>
+    <string name="new_salon">New Salon</string>
+    <string name="update_service">Update Service</string>
 </resources>

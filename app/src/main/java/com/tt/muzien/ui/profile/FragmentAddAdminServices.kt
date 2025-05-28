@@ -1,16 +1,19 @@
 package com.tt.muzien.ui.profile
 
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
+import com.tt.muzien.R
 import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.data.repository.HomeRepository
 import com.tt.muzien.databinding.FragmentAddAdminServicesBinding
@@ -111,7 +114,13 @@ class FragmentAddAdminServices :
         super.onResume()
         (activity as HomeActivity?)?.hideTabs()
     }
-
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            (activity as HomeActivity?)?.hideTabs()
+        }
+    }
     override fun onPause() {
         super.onPause()
         (activity as HomeActivity?)?.showTabs()

@@ -83,6 +83,15 @@ class FragmentViewMemberReviews :
         (activity as HomeActivity?)?.changeStatusBarColor(requireActivity().resources.getColor(R.color.light_grey))
         (activity as HomeActivity?)?.hideTabs()
     }
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, true)
+            (activity as HomeActivity?)?.changeStatusBarColor(requireActivity().resources.getColor(R.color.light_grey))
+            (activity as HomeActivity?)?.hideTabs()
+        }
+    }
     override fun getViewModel(): Class<ReviewViewModel> {
         return ReviewViewModel::class.java
     }

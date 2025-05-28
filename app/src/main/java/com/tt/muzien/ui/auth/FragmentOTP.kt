@@ -1,9 +1,12 @@
 package com.tt.muzien.ui.auth
 
+import android.content.Context
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.SpannableString
 import android.text.Spanned
@@ -14,8 +17,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat.getSystemService
 import com.google.gson.Gson
 import com.tt.muzien.R
 import com.tt.muzien.constants.Keys
@@ -56,10 +61,15 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
         binding.llBack.setOnClickListener {
             (activity as AuthActivity?)?.popFragment()
         }
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            binding.edtInput1.requestFocus()
+            val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(binding.edtInput1, InputMethodManager.SHOW_IMPLICIT)
+        }, 200)
         timeInMillis = (getTimeDifference(expiryTime).seconds) * 1000
         timeLeftInMillis = timeInMillis
         setdata()
-        binding.edtInput1.requestFocus()
         binding.llNext.setOnClickListener {
             if (checkValidation()) {
                 var enteredOTP =
@@ -337,7 +347,13 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
         super.onResume()
         (activity as AuthActivity?)?.changeStatusBarColor(R.color.white)
     }
-
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            (activity as AuthActivity?)?.changeStatusBarColor(R.color.white)
+        }
+    }
     private fun loginVerify(data: String) {
         viewModel.verifyLogin.observe(viewLifecycleOwner) {
 

@@ -323,7 +323,13 @@ class FragmentVerifyOTP : BaseFragment<HomeViewModel, FragmentOTPBinding, HomeRe
         super.onResume()
         (activity as HomeActivity?)?.hideTabs()
     }
-
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            (activity as HomeActivity?)?.hideTabs()
+        }
+    }
 
     private fun loginVerify(data: String) {
         viewModel.verifyLogin.observe(viewLifecycleOwner) {

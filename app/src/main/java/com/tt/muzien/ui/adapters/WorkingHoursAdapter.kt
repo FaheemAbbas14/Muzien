@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.WorkingHourData
+import com.tt.muzien.utilities.Helper
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 
 
@@ -53,7 +54,7 @@ class WorkingHoursAdapter(
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         var item: WorkingHourData = itemList[position]
 
-        holder.txtTitle.text = item.title
+        holder.txtTitle.text = Helper.capitalizeFirstWord(item.title)
         holder.txtTiming.text = item.hours
         holder.imgMinus.setOnClickListener {
             listener.onItemClick(position)

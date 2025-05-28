@@ -1,24 +1,17 @@
 package com.tt.muzien.ui.views
 
-
-/**
- * Created by Faheem Abbas on 26/12/2024.
- * Technical Lead(Mobile Apps)
- * faheemabbas60@yahoo.com
- * +923115284424
- */
-
-
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import java.text.SimpleDateFormat
-import java.util.*
 import com.tt.muzien.R
 import com.tt.muzien.ui.adapters.CalendarAdapter
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
+
 
 class CustomCalendar @JvmOverloads constructor(
     context: Context,
@@ -27,7 +20,7 @@ class CustomCalendar @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
     interface OnDateSelectedListener {
-        fun onDateSelected(date: String)
+        fun onDatesSelected(dates: ArrayList<String>)
     }
 
     private var dateSelectedListener: OnDateSelectedListener? = null
@@ -38,9 +31,9 @@ class CustomCalendar @JvmOverloads constructor(
     private lateinit var nextMonth: TextView
 
     private val calendar = Calendar.getInstance()
-
-    // Declare the adapter as a property
     private lateinit var calendarAdapter: CalendarAdapter
+
+    private var isMultiSelect: Boolean = false
 
     init {
         inflate(context, R.layout.custom_calendar, this)
@@ -56,7 +49,7 @@ class CustomCalendar @JvmOverloads constructor(
     }
 
     private fun setupCalendar() {
-        calendarRecyclerView.layoutManager = GridLayoutManager(context, 7) // 7 days in a week
+        calendarRecyclerView.layoutManager = GridLayoutManager(context, 7)
         updateCalendar()
 
         prevMonth.setOnClickListener {
@@ -76,10 +69,8 @@ class CustomCalendar @JvmOverloads constructor(
 
         val daysInMonth = getDaysInMonth()
 
-        // Initialize the adapter
-        calendarAdapter = CalendarAdapter(daysInMonth) { selectedDate ->
-            dateSelectedListener?.onDateSelected(selectedDate)
-            calendarAdapter.updateSelectedDate(selectedDate) // Highlight the selected date
+        calendarAdapter = CalendarAdapter(daysInMonth, isMultiSelect) { selectedDates ->
+            dateSelectedListener?.onDatesSelected(selectedDates)
         }
 
         calendarRecyclerView.adapter = calendarAdapter
@@ -99,7 +90,7 @@ class CustomCalendar @JvmOverloads constructor(
         }
 
         for (day in 1..daysInMonth) {
-            val dayString = String.format("%02d", day) // Format day with leading zero
+            val dayString = String.format("%02d", day)
             val date = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                 .format(calendar.time).replace(Regex("-\\d{2}$"), "-$dayString")
             daysList.add(date)
@@ -108,8 +99,20 @@ class CustomCalendar @JvmOverloads constructor(
         return daysList
     }
 
-    // Public method to set the listener
     fun setOnDateSelectedListener(listener: OnDateSelectedListener) {
         this.dateSelectedListener = listener
+    }
+
+    fun setMultiSelectEnabled(enabled: Boolean) {
+        isMultiSelect = enabled
+        updateCalendar()
+    }
+
+    fun getSelectedDates(): List<String> {
+        return if (::calendarAdapter.isInitialized) calendarAdapter.getSelectedDates() else emptyList()
+    }
+
+    fun clearSelection() {
+        if (::calendarAdapter.isInitialized) calendarAdapter.clearSelections()
     }
 }

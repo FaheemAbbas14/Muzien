@@ -219,7 +219,13 @@ class FragmentSignup : BaseFragment<AuthViewModel, FragmentSignupBinding, AuthRe
         (activity as AuthActivity?)?.setStatusBarIconColor(requireActivity().window, true)
         (activity as AuthActivity?)?.changeStatusBarColor(R.color.white)
     }
-
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            (activity as AuthActivity?)?.setStatusBarIconColor(requireActivity().window, true)
+            (activity as AuthActivity?)?.changeStatusBarColor(R.color.white)
+        }
+    }
     private fun uploadImage() {
         if (checkPermissions()) {
             // showImagePickerDialog()

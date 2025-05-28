@@ -172,7 +172,7 @@
     <string name="open_today">open today</string>
     <string name="_4_5_10_reviews">4.5(10 reviews)</string>
     <string name="_10_00_am_11_00_pm">10:00 AM - 11:00 PM</string>
-    <string name="store_info">Store Info</string>
+    <string name="store_info">Salon Info</string>
     <string name="reviews">Reviews</string>
     <string name="members">Members</string>
     <string name="select_a_date">Select a date</string>
@@ -271,5 +271,7 @@
     <string name="actual_fee">Actual Fee:</string>
     <string name="card_name">Card Holder\'s Name</string>
     <string name="stc_pay">STC Pay</string>
+    <string name="new_salon">New Salon</string>
+    <string name="update_service">Update Service</string>
 
 </resources>

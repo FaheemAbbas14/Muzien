@@ -1,8 +1,8 @@
 package com.tt.muzien.data.repository
 
 import com.tt.muzien.data.network.ServiceApi
-import com.tt.muzien.data.requests.AddSaloonServiceRequest
 import com.tt.muzien.data.requests.AddServiceSaloonRequest
+import com.tt.muzien.data.requests.UpdateServiceRequest
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 
@@ -23,19 +23,26 @@ class ServiceRepository(
         saloonId: RequestBody,
         name: RequestBody,
         duration: RequestBody,
-        price: RequestBody
+        price: RequestBody,
     ) = safeApiCall {
         api.addService(image, categoryId, saloonId, name, duration, price)
     }
 
+    suspend fun updateService(
+        serviceId: Int,
+        request: UpdateServiceRequest,
+    ) = safeApiCall {
+        api.updateService(serviceId, request)
+    }
+
     suspend fun addSaloonService(
-        request: AddServiceSaloonRequest
+        request: AddServiceSaloonRequest,
     ) = safeApiCall {
         api.addSaloonService(request)
     }
 
     suspend fun getCategories(
-        saloonIds: String
+        saloonIds: String,
     ) = safeApiCall {
         api.getCategories(saloonIds)
 
@@ -46,6 +53,7 @@ class ServiceRepository(
         api.getCategories()
 
     }
+
     suspend fun getAllCategories() = safeApiCall {
 
         api.getAllCategories()
@@ -58,24 +66,15 @@ class ServiceRepository(
     }
 
     suspend fun getServicesStatus(
-        serviceId: String
+        serviceId: String,
     ) = safeApiCall {
         api.getServicesStatus(serviceId)
     }
 
     suspend fun getServicesDetails(
-        serviceId: String
+        serviceId: String,
     ) = safeApiCall {
         api.getServicesDetails(serviceId)
     }
 
-    suspend fun updateService(
-        serviceId: String,
-        categoryId: String,
-        name: String,
-        duration: Int,
-        price: Int
-    ) = safeApiCall {
-        api.updateService(serviceId, categoryId, name, duration, price)
-    }
 }

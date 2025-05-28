@@ -1,11 +1,14 @@
 package com.tt.muzien.ui.saloon.tabs
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.annotation.RequiresApi
+import com.tt.muzien.R
 import com.tt.muzien.data.dto.SaloonDto
 import com.tt.muzien.data.network.MemberApi
 import com.tt.muzien.data.network.Resource
@@ -91,7 +94,13 @@ class FragmentAddSaloonMember :
         super.onResume()
         (activity as HomeActivity?)?.hideTabs()
     }
-
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            (activity as HomeActivity?)?.hideTabs()
+        }
+    }
     override fun onPause() {
         super.onPause()
         (activity as HomeActivity?)?.showTabs()
@@ -114,6 +123,7 @@ class FragmentAddSaloonMember :
                                     saloon.SaloonImages,
                                     saloon.name,
                                     if (saloon.status=="open") true else false,
+                                    saloon.status,
                                     saloon.address ?: "",
                                     "${saloon.tRating} (${saloon.numReviews} ${
                                         if (saloon.numReviews.toInt() == 1) "review" else "reviews"

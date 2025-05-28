@@ -155,8 +155,12 @@ class FragmentSaloonInfo :
             holidaysList.clear()
             holidaysMap.clear()
             for (holiday in selectedSaloonDetails?.SaloonHolidays!!) {
-                holidaysMap.put(holiday.startDate, holiday.id)
-                holidaysList.add(holiday.startDate)
+                var startDate=holiday.startDate
+                if (startDate.contains("T")){
+                    startDate=startDate.split("T")[0]
+                }
+                holidaysMap.put(startDate, holiday.id)
+                holidaysList.add(startDate)
             }
             val clickListener = object : OnItemClickListner {
                 override fun onItemClick(pos: Int) {

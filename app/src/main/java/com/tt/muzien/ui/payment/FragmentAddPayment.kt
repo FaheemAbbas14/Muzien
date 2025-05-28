@@ -23,6 +23,7 @@ import com.moyasar.android.sdk.creditcard.presentation.view.fragments.PaymentFra
 import com.moyasar.android.sdk.stcpay.presentation.view.fragments.EnterMobileNumberFragment
 import com.tt.muzien.Application
 import com.tt.muzien.BuildConfig
+import com.tt.muzien.R
 import com.tt.muzien.data.dto.LoggedInInfo
 import com.tt.muzien.data.dto.PayDto
 import com.tt.muzien.data.network.Resource

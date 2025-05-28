@@ -196,15 +196,14 @@ class FragmentBookingFilter :
         }
         binding.customCalendar.setOnDateSelectedListener(object :
             CustomCalendar.OnDateSelectedListener {
-            override fun onDateSelected(date: String) {
-                // Handle the selected date
+            override fun onDatesSelected(selectedDates: ArrayList<String>) {
                 if (isFrom) {
                     // binding.txtFromError.visibility = View.VISIBLE
                     binding.llTo.visibility = View.VISIBLE
-                    fromDate = date
+                    fromDate = selectedDates.get(0)
                     binding.txtFrom.text = fromDate
                 } else {
-                    toDate = date
+                    toDate = selectedDates.get(selectedDates.size-1)
                     binding.txtTo.text = toDate
                 }
                 binding.customCalendar.visibility = View.GONE
@@ -258,7 +257,14 @@ class FragmentBookingFilter :
         (activity as HomeActivity?)?.hideTabs()
         (activity as HomeActivity?)?.setSystemWindow(true)
     }
-
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            (activity as HomeActivity?)?.hideTabs()
+            (activity as HomeActivity?)?.setSystemWindow(true)
+        }
+    }
     override fun onPause() {
         super.onPause()
         (activity as HomeActivity?)?.showTabs()
@@ -282,6 +288,7 @@ class FragmentBookingFilter :
                                     saloon.SaloonImages,
                                     saloon.name,
                                     if (saloon.status == "open") true else false,
+                                    saloon.status,
                                     saloon.address ?: "",
                                     "${saloon.tRating} (${saloon.numReviews} ${
                                         if (saloon.numReviews.toInt() == 1) "review" else "reviews"

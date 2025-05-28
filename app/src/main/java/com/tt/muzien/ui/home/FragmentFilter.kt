@@ -115,21 +115,22 @@ class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRe
         // Set the listener for date selection
         binding.customCalendar.setOnDateSelectedListener(object :
             CustomCalendar.OnDateSelectedListener {
-            override fun onDateSelected(date: String) {
+            override fun onDatesSelected(selectedDates: ArrayList<String>) {
                 // Handle the selected date
                 if (isFrom) {
                     binding.txtFromError.visibility = View.VISIBLE
                     binding.llTo.visibility = View.VISIBLE
                     binding.txtToLabel.visibility = View.VISIBLE
-                    fromDate = date
+                    fromDate = selectedDates.get(0)
                     binding.txtFrom.text = fromDate
                 } else {
-                    toDate = date
+                    toDate = selectedDates.get(selectedDates.size-1)
                     binding.txtTo.text = toDate
                 }
                 binding.customCalendar.visibility = View.GONE
                 checkValidation()
             }
+
         })
 
         // checkValidation()
@@ -179,7 +180,13 @@ class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRe
         super.onResume()
         (activity as HomeActivity?)?.hideTabs()
     }
-
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            (activity as HomeActivity?)?.hideTabs()
+        }
+    }
     override fun onPause() {
         super.onPause()
         (activity as HomeActivity?)?.showTabs()

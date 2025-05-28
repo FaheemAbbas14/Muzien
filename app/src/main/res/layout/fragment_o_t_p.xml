@@ -120,6 +120,8 @@
             android:hint="*"
             android:inputType="number"
             android:maxLength="1"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:textColor="@color/otpblack"
             android:textColorHighlight="@color/otpblack"
             android:textColorHint="#D0D5DD"

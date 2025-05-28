@@ -83,8 +83,8 @@ class SaloonViewModel(
     val addMemberData: LiveData<Resource<AddMemberDataResponse>> get() = _addMemberData
 
 
-    fun getSaloons(page: Int? = null) = viewModelScope.launch {
-        _getSaloon.value = repository.getSaloons(page)
+    fun getSaloons(page: Int? = null,isActive: Boolean? = null,) = viewModelScope.launch {
+        _getSaloon.value = repository.getSaloons(page,isActive)
     }
 
     fun getSaloonsDetails(saloonId: Int? = null) = viewModelScope.launch {

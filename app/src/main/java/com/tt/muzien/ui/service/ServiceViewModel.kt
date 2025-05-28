@@ -7,6 +7,7 @@ import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.SaloonRepository
 import com.tt.muzien.data.repository.ServiceRepository
 import com.tt.muzien.data.requests.AddServiceSaloonRequest
+import com.tt.muzien.data.requests.UpdateServiceRequest
 import com.tt.muzien.data.responses.AddServiceResponse
 import com.tt.muzien.data.responses.GetCategoriesResponse
 import com.tt.muzien.data.responses.GetSaloonResponse
@@ -27,7 +28,7 @@ import okhttp3.RequestBody
  * +923115284424
  */
 class ServiceViewModel(
-    private val repository: ServiceRepository
+    private val repository: ServiceRepository,
 ) : BaseViewModel(repository) {
     private var saloonRepository: SaloonRepository? = null
     fun setSaloonRepo(saloonRepo: SaloonRepository) {
@@ -36,6 +37,9 @@ class ServiceViewModel(
 
     private val _addService: MutableLiveData<Resource<AddServiceResponse>> = SingleEventLiveData()
     val addService: LiveData<Resource<AddServiceResponse>> get() = _addService
+
+    private val _updateService: MutableLiveData<Resource<Unit>> = SingleEventLiveData()
+    val updateService: LiveData<Resource<Unit>> get() = _updateService
 
     private val _getCategories: MutableLiveData<Resource<GetCategoriesResponse>> =
         SingleEventLiveData()
@@ -64,8 +68,8 @@ class ServiceViewModel(
     val addSaloonService: LiveData<Resource<AddServiceResponse>> get() = _addSaloonService
 
 
-    fun getSaloons() = viewModelScope.launch {
-        _getSaloon.value = saloonRepository?.getSaloons()
+    fun getSaloons(isActive: Boolean? = null,) = viewModelScope.launch {
+        _getSaloon.value = saloonRepository?.getSaloons(isActive = isActive)
     }
 
     fun addService(
@@ -74,21 +78,18 @@ class ServiceViewModel(
         saloonId: RequestBody,
         name: RequestBody,
         duration: RequestBody,
-        price: RequestBody
+        price: RequestBody,
     ) = viewModelScope.launch {
         _addService.value =
             repository.addService(image, categoryId, saloonId, name, duration, price)
     }
 
     fun updateService(
-        serviceId: String,
-        categoryId: String,
-        name: String,
-        duration: Int,
-        price: Int
+        serviceId: Int,
+        request: UpdateServiceRequest,
     ) = viewModelScope.launch {
-        _addService.value =
-            repository.updateService(serviceId, categoryId, name, duration, price)
+        _updateService.value =
+            repository.updateService(serviceId, request)
     }
 
 

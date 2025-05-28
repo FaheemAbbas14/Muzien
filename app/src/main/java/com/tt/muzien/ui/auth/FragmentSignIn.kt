@@ -26,6 +26,7 @@ import com.tt.muzien.data.requests.RegisterRequest
 import com.tt.muzien.databinding.FragmentSignInBinding
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
+import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.InputValidator
 
@@ -61,6 +62,8 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
         } else {
             binding.countrySpinner.setCountryForNameCode("SA")
             selectedCountry = binding.countrySpinner.selectedCountryName
+            binding.txtCountryCode.text =
+                Editable.Factory.getInstance().newEditable("+966")
         }
         binding.countrySpinner.setOnCountryChangeListener {
             selectedCountry = binding.countrySpinner.selectedCountryName
@@ -80,7 +83,7 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
 
-
+                binding.txtError.visibility = View.GONE
                 //checkValidation()
 
 
@@ -218,6 +221,12 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
         (activity as AuthActivity?)?.changeStatusBarColor(R.color.white)
     }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            (activity as AuthActivity?)?.changeStatusBarColor(R.color.white)
+        }
+    }
     private fun sendOtpNormal(data: String) {
 
         LoggedInInfo.phoneNumber = data

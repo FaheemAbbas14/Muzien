@@ -286,7 +286,15 @@ class SaloonManagerDashboard :
         (activity as HomeActivity?)?.setSystemWindow(true)
         (activity as HomeActivity?)?.showTabs()
     }
-
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, true)
+            (activity as HomeActivity?)?.setSystemWindow(true)
+            (activity as HomeActivity?)?.showTabs()
+        }
+    }
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onPause() {
         super.onPause()

@@ -138,7 +138,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginEnd="10dp"
-                    android:background="@drawable/rounded_blue_100"
+                    android:background="@drawable/disabled_button"
                     android:clickable="true"
                     android:focusable="true"
                     android:minHeight="50dp"
@@ -157,7 +157,7 @@
                         android:fontFamily="@font/manrope_bold"
                         android:gravity="center"
                         android:text="@string/update"
-                        android:textColor="@color/white"
+                        android:textColor="@color/black_shade2"
                         android:textSize="14sp" />
                 </LinearLayout>
 
@@ -168,7 +168,7 @@
                     android:layout_marginEnd="20dp"
                     android:layout_marginBottom="17dp"
                     android:src="@drawable/grey_edit"
-                    android:visibility="invisible"
+                    android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="@+id/txtItemName"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/txtItemName" />

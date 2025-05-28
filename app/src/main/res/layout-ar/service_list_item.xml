@@ -8,8 +8,8 @@
     android:layout_marginStart="3dp"
     android:background="@color/white"
     app:cardCornerRadius="10dp"
-    app:cardElevation="0dp"
-    app:cardUseCompatPadding="false">
+    app:cardElevation="4dp"
+    app:cardUseCompatPadding="true">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout

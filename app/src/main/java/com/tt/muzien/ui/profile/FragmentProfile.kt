@@ -7,12 +7,14 @@ import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
@@ -131,7 +133,6 @@ class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, Home
         super.onResume()
         (activity as HomeActivity?)?.hideTabs()
     }
-
 
     private fun uploadImage() {
         if (checkPermissions()) {

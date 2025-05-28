@@ -1,12 +1,15 @@
 package com.tt.muzien.ui.saloon.tabs
 
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.setFragmentResult
+import com.tt.muzien.R
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.network.SaloonApi
 import com.tt.muzien.data.repository.SaloonRepository
@@ -95,11 +98,23 @@ class EditSaloonAbout :
 
     override fun onResume() {
         super.onResume()
+        (activity as HomeActivity?)?.setSystemWindow(true)
         (activity as HomeActivity?)?.hideTabs()
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            (activity as HomeActivity?)?.setSystemWindow(true)
+            (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, true)
+            (activity as HomeActivity?)?.hideTabs()
+        }
     }
 
     override fun onPause() {
         super.onPause()
+        (activity as HomeActivity?)?.setSystemWindow(false)
+        (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, false)
         (activity as HomeActivity?)?.showTabs()
     }
 }

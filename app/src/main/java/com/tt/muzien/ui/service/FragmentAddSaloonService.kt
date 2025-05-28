@@ -67,7 +67,14 @@ class FragmentAddSaloonService :
         (activity as HomeActivity?)?.changeStatusBarColor(requireActivity().resources.getColor(R.color.white))
         (activity as HomeActivity?)?.hideTabs()
     }
-
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            (activity as HomeActivity?)?.changeStatusBarColor(requireActivity().resources.getColor(R.color.white))
+            (activity as HomeActivity?)?.hideTabs()
+        }
+    }
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onPause() {
         super.onPause()
@@ -92,6 +99,7 @@ class FragmentAddSaloonService :
                                     saloon.SaloonImages,
                                     saloon.name,
                                     if (saloon.status == "open") true else false,
+                                    saloon.status,
                                     saloon.address ?: "",
                                     "${saloon.tRating} (${saloon.numReviews} ${
                                         if (saloon.numReviews.toInt() == 1) "review" else "reviews"

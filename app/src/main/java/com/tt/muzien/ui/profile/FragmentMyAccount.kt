@@ -1,5 +1,6 @@
 package com.tt.muzien.ui.profile
 
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -7,6 +8,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
+import com.tt.muzien.R
 import com.tt.muzien.data.dto.LoggedInInfo
 import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.data.network.Resource
@@ -114,7 +117,13 @@ class FragmentMyAccount : BaseFragment<HomeViewModel, FragmentMyAccountBinding, 
         super.onResume()
         (activity as HomeActivity?)?.hideTabs()
     }
-
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            (activity as HomeActivity?)?.hideTabs()
+        }
+    }
     override fun onPause() {
         super.onPause()
       //  (activity as HomeActivity?)?.showTabs()

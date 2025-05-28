@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -30,6 +31,7 @@ import com.tt.muzien.ui.adapters.ServiceUpdateListAdopter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
+import com.tt.muzien.ui.saloon.tabs.FragmentAddSaloonServices
 import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.FilterSelection
@@ -52,6 +54,12 @@ class FragmentUpdateService :
             //Appelement.reload=true
             FilterSelection.filterData = null
             (activity as HomeActivity?)?.popFragment()
+        }
+        binding.imgEdit.setOnClickListener {
+            var nextFragment = FragmentAddSaloonServices()
+            nextFragment.service = service
+            nextFragment.category = category
+            (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
         binding.llSave.setOnClickListener {
             if (service?.service != null) {
@@ -82,7 +90,7 @@ class FragmentUpdateService :
                 model: Any,
                 target: com.bumptech.glide.request.target.Target<Drawable>?,
                 dataSource: DataSource,
-                isFirstResource: Boolean
+                isFirstResource: Boolean,
             ): Boolean {
                 Log.d("imageLoaded", "success ${serviceDetailsInfo?.name}")
 
@@ -95,7 +103,7 @@ class FragmentUpdateService :
                 e: GlideException?,
                 model: Any?,
                 target: Target<Drawable>,
-                isFirstResource: Boolean
+                isFirstResource: Boolean,
             ): Boolean {
 //                holder.imgProfilePic.scaleType = ImageView.ScaleType.CENTER_INSIDE
                 Log.d("imageLoaded", "failed ${serviceDetailsInfo?.name}")
@@ -121,15 +129,22 @@ class FragmentUpdateService :
     private fun setSaloonsAdapter() {
 
         adapter = ServiceUpdateListAdopter(salonList) { position, isEnabled ->
-            salonList[position].isEnabled = isEnabled
-            binding.rcySaloons.post {
-                adapter?.notifyItemChanged(position)
-            }
+            binding.llSave.setBackgroundDrawable(resources.getDrawable(R.drawable.rounded_blue_100))
+            binding.txtSave.setTextColor(resources.getColor(R.color.white))
+//            salonList[position].isEnabled = isEnabled
+//            binding.rcySaloons.post {
+//                adapter?.notifyItemChanged(position)
+//            }
 
         }
 
         binding.rcySaloons.layoutManager = LinearLayoutManager(requireActivity())
         binding.rcySaloons.adapter = adapter
+        val dividerItemDecoration = DividerItemDecoration(
+            binding.rcySaloons.context,
+            (binding.rcySaloons.layoutManager as LinearLayoutManager).orientation
+        )
+        binding.rcySaloons.addItemDecoration(dividerItemDecoration)
     }
 
     override fun getViewModel(): Class<ServiceViewModel> {
@@ -138,7 +153,7 @@ class FragmentUpdateService :
 
     override fun getFragmentBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = FragmentUpdateServiceBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
@@ -151,6 +166,21 @@ class FragmentUpdateService :
         (activity as HomeActivity?)?.setSystemWindow(false)
         (activity as HomeActivity?)?.changeStatusBarColor(Color.TRANSPARENT)
         (activity as HomeActivity?)?.hideTabs()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, false)
+            (activity as HomeActivity?)?.setSystemWindow(false)
+            (activity as HomeActivity?)?.changeStatusBarColor(Color.TRANSPARENT)
+            (activity as HomeActivity?)?.hideTabs()
+            if (Appelement.reload) {
+                Appelement.reload = false
+                getServicesDetails(false)
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.M)

@@ -56,7 +56,13 @@ class FragmentBookingDetails :
         super.onResume()
         (activity as HomeActivity?)?.hideTabs()
     }
-
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun onHiddenChanged(hidden: Boolean) {
+        super.onHiddenChanged(hidden)
+        if (!hidden) {
+            (activity as HomeActivity?)?.hideTabs()
+        }
+    }
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onPause() {
         super.onPause()

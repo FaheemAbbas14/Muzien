@@ -8,53 +8,65 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.tt.muzien.R
 
-/**
- * Created by Faheem Abbas on 26/12/2024.
- * Technical Lead(Mobile Apps)
- * faheemabbas60@yahoo.com
- * +923115284424
- */
 class CalendarAdapter(
     private val days: List<String>,
-    private val onDateClick: (String) -> Unit
+    private val isMultiSelect: Boolean,
+    private val onDateClick: (ArrayList<String>) -> Unit
 ) : RecyclerView.Adapter<CalendarAdapter.DayViewHolder>() {
 
-    private var selectedDate: String? = null
+    private val selectedDates = arrayListOf<String>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DayViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_day, parent, false)
-        return DayViewHolder(view, onDateClick)
+            .inflate(R.layout.item_day, parent, false) as TextView
+        return DayViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: DayViewHolder, position: Int) {
-        holder.bind(days[position], days[position] == selectedDate)
+        val day = days[position]
+        holder.bind(day, selectedDates.contains(day))
     }
 
     override fun getItemCount(): Int = days.size
 
     fun updateSelectedDate(date: String) {
-        selectedDate = date
-        notifyDataSetChanged() // Refresh the calendar to highlight the selected date
+        selectedDates.clear()
+        selectedDates.add(date)
+        notifyDataSetChanged()
     }
 
-    class DayViewHolder(itemView: View, private val onDateClick: (String) -> Unit) :
-        RecyclerView.ViewHolder(itemView) {
-        private val dayText: TextView = itemView as TextView
+    fun toggleSelectedDate(date: String) {
+        if (selectedDates.contains(date)) {
+            selectedDates.remove(date)
+        } else {
+            selectedDates.add(date)
+        }
+        notifyDataSetChanged()
+    }
 
-        fun bind(day: String, isSelected: Boolean) {
-            dayText.text = if (day.isNotEmpty()) day.substringAfterLast("-") else ""
+    fun getSelectedDates(): ArrayList<String> = selectedDates
 
-            // Apply styles for selected and non-selected dates
-            if (isSelected) {
-                dayText.setBackgroundResource(R.drawable.circular_blue)
-                dayText.setTextColor(Color.WHITE)
-            }
+    fun clearSelections() {
+        selectedDates.clear()
+        notifyDataSetChanged()
+    }
 
-            // Handle click events
+    inner class DayViewHolder(private val dayText: TextView) : RecyclerView.ViewHolder(dayText) {
+        fun bind(date: String, isSelected: Boolean) {
+            dayText.text = if (date.isNotEmpty()) date.substringAfterLast("-") else ""
+            dayText.setBackgroundResource(
+                if (isSelected) R.drawable.circular_blue else android.R.color.transparent
+            )
+            dayText.setTextColor(if (isSelected) Color.WHITE else Color.BLACK)
+
             dayText.setOnClickListener {
-                if (day.isNotEmpty()) {
-                    onDateClick(day)
+                if (date.isNotEmpty()) {
+                    if (isMultiSelect) {
+                        toggleSelectedDate(date)
+                    } else {
+                        updateSelectedDate(date)
+                    }
+                    onDateClick(getSelectedDates())
                 }
             }
         }

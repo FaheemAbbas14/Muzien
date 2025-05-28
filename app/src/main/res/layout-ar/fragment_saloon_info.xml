@@ -358,8 +358,8 @@
                     android:background="@color/white"
                     android:visibility="visible"
                     app:cardCornerRadius="10dp"
-                    app:cardElevation="0dp"
-                    app:cardUseCompatPadding="false"
+                    app:cardElevation="4dp"
+                    app:cardUseCompatPadding="true"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/txtAddressData"
                     app:layout_constraintTop_toBottomOf="@+id/txtAddressData">

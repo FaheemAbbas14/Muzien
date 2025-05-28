@@ -21,7 +21,7 @@ import com.tt.muzien.data.dto.ServiceSaloon
  */
 class ServiceUpdateListAdopter(
     private val salons: List<ServiceSaloon>,
-    private val onToggleChanged: (position: Int, isEnabled: Boolean) -> Unit
+    private val onToggleChanged: (position: Int, isEnabled: Boolean) -> Unit,
 ) :
     RecyclerView.Adapter<ServiceUpdateListAdopter.MyViewHolder>() {
 
@@ -54,6 +54,7 @@ class ServiceUpdateListAdopter(
         // Set listener AFTER setting checked state
         holder.toggle.setOnCheckedChangeListener { _, isChecked ->
             salon.isEnabled = isChecked
+            onToggleChanged.invoke(position, isChecked)
             if (isChecked) {
                 holder.duration_layout.visibility = View.VISIBLE
                 holder.txtDurationLabel.visibility = View.VISIBLE
@@ -87,7 +88,7 @@ class ServiceUpdateListAdopter(
                 s: CharSequence?,
                 start: Int,
                 count: Int,
-                after: Int
+                after: Int,
             ) {
 
             }
@@ -108,7 +109,7 @@ class ServiceUpdateListAdopter(
                 s: CharSequence?,
                 start: Int,
                 count: Int,
-                after: Int
+                after: Int,
             ) {
 
             }

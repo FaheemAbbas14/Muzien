@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -47,7 +48,8 @@ class SaloonListAdapter(
         val txtLocation: TextView = itemView.findViewById(R.id.txtLocation)
         val txtRating: TextView = itemView.findViewById(R.id.txtRating)
         val txtTiming: TextView = itemView.findViewById(R.id.txtTiming)
-
+        val llTimes: LinearLayout = itemView.findViewById(R.id.llTimes)
+        val cnstMain: ConstraintLayout = itemView.findViewById(R.id.cnstMain)
         init {
             itemView.setOnClickListener(this)
         }
@@ -84,16 +86,32 @@ class SaloonListAdapter(
                     context.theme
                 )
             )
-            holder.txtStatusTexts.text = "open today"
+            holder.txtStatusTexts.text = "Open today"
+            holder.llTimes.visibility=View.VISIBLE
         } else {
-            holder.llStatus.setBackgroundDrawable(
-                ResourcesCompat.getDrawable(
-                    context.resources,
-                    R.drawable.rounded_red,
-                    context.theme
+            if (item.status=="closed") {
+                holder.llStatus.setBackgroundDrawable(
+                    ResourcesCompat.getDrawable(
+                        context.resources,
+                        R.drawable.rounded_red,
+                        context.theme
+                    )
                 )
-            )
-            holder.txtStatusTexts.text = "close today"
+                holder.txtStatusTexts.text = "Close today"
+                holder.llTimes.visibility = View.GONE
+            }
+            else{
+                holder.llStatus.setBackgroundDrawable(
+                    ResourcesCompat.getDrawable(
+                        context.resources,
+                        R.drawable.rounded_red,
+                        context.theme
+                    )
+                )
+                holder.txtStatusTexts.text = "Inactive"
+                holder.llTimes.visibility = View.GONE
+                holder.cnstMain.setBackgroundColor(context.resources.getColor(R.color.overduebg))
+            }
         }
         item.icon?.size?.let {
             if (it > 0) {
