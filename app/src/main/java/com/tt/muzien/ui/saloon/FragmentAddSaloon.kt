@@ -56,6 +56,7 @@ import com.zabihah.ui.ui.interfaces.OnItemClickListner
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import java.util.Locale
 
 
 class FragmentAddSaloon :
@@ -442,10 +443,10 @@ class FragmentAddSaloon :
     private fun setHolidaysAdopter() {
         if (AddSaloonData.holidays.size > 0) {
             binding.txtHolidaysData.visibility = View.GONE
-            binding.rcyHolidays?.visibility = View.VISIBLE
+            binding.rcyHolidays.visibility = View.VISIBLE
         } else {
             binding.txtHolidaysData.visibility = View.VISIBLE
-            binding.rcyHolidays?.visibility = View.GONE
+            binding.rcyHolidays.visibility = View.GONE
         }
         holidaysList.clear()
         for (holiday in AddSaloonData.holidays) {
@@ -458,14 +459,14 @@ class FragmentAddSaloon :
                 holidayListAdapter?.notifyDataSetChanged()
             }
         }
-        binding.rcyHolidays?.layoutManager =
+        binding.rcyHolidays.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
         holidayListAdapter = HolidayListAdapter(
             holidaysList,
             false,
             clickListener
         )
-        binding.rcyHolidays?.adapter = holidayListAdapter
+        binding.rcyHolidays.adapter = holidayListAdapter
 
 
     }
@@ -598,10 +599,17 @@ class FragmentAddSaloon :
         val holidaysParts = mutableMapOf<String, RequestBody>()
         // Convert each user object into separate form-data fields
         holidays.forEachIndexed { index, holiday ->
+            var startTime=holiday.startTime
+            var endTime=holiday.endTime
+            val isArabic = Locale.getDefault().language == "ar"
+            if (isArabic){
+                startTime= TimeHelper.convertArabicDigitsToEnglish(startTime)
+                endTime= TimeHelper.convertArabicDigitsToEnglish(endTime)
+            }
             holidaysParts["SaloonHolidays[$index][startDate]"] =
-                RequestBody.create("text/plain".toMediaTypeOrNull(), holiday.startTime)
+                RequestBody.create("text/plain".toMediaTypeOrNull(), startTime)
             holidaysParts["SaloonHolidays[$index][endDate]"] =
-                RequestBody.create("text/plain".toMediaTypeOrNull(), holiday.endTime)
+                RequestBody.create("text/plain".toMediaTypeOrNull(), endTime)
         }
         val hoursParts = mutableMapOf<String, RequestBody>()
         // Convert each user object into separate form-data fields

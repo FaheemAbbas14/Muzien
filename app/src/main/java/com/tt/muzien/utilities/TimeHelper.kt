@@ -204,8 +204,13 @@ object TimeHelper {
 
     @SuppressLint("NewApi")
     fun convertLocalTimeToUtc(localTimeStr: String, pattern: String? = "HH:mm"): String {
+        var time = localTimeStr
+        val isArabic = Locale.getDefault().language == "ar"
+        if (isArabic) {
+            time = convertArabicDigitsToEnglish(time)
+        }
         // Parse the local time (e.g., "13:45")
-        val localTime = LocalTime.parse(localTimeStr, DateTimeFormatter.ofPattern(pattern))
+        val localTime = LocalTime.parse(time, DateTimeFormatter.ofPattern(pattern))
 
         // Get today's date
         val today = LocalDate.now()
