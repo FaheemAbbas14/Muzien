@@ -1,0 +1,51 @@
+<resources>
+    <string-array name="months">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+    </string-array>
+
+    <string name="name_on_card_label">Name on Card</string>
+    <string name="card_label">Card information</string>
+    <string name="credit_card_label">Card Number</string>
+    <string name="expiration_date_label">Expiry</string>
+    <string name="security_code_label">CVC</string>
+    <string name="card_number_required">Card number is required</string>
+    <string name="invalid_card_number">Invalid card number</string>
+    <string name="unsupported_network">Unsupported Credit Card network</string>
+    <string name="expiry_is_required">Expiry date is required</string>
+    <string name="invalid_expiry">Invalid expiry date</string>
+    <string name="expired_card">Expired card</string>
+    <string name="mobile_number_is_required">Mobile Number is required</string>
+    <string name="name_is_required">Name is required</string>
+    <string name="both_names_required">Both first and last names are required</string>
+    <string name="only_english_alpha">Name may only contain english alphabets</string>
+    <string name="cvc_required">Security code is required</string>
+    <string name="invalid_cvc">Invalid security code</string>
+    <string name="invalid_mobile_number">Invalid Mobile Number</string>
+    <string name="invalid_stc_pay_otp">Invalid OTP</string>
+    <string name="lbl_mobile_number">Mobile Number</string>
+    <string name="lbl_mobile_number_hint">05x xxx xxxx</string>
+    <string name="one_time_password">One-Time Password</string>
+    <string name="lbl_confirm_button">Confirm</string>
+    <string name="lbl_moyasar_button_plain" />
+    <string name="lbl_moyasar_button_pay">Pay</string>
+    <string name="lbl_moyasar_button_buy">Buy</string>
+    <string name="lbl_moyasar_button_book">Book</string>
+    <string name="lbl_moyasar_button_rent">Rent</string>
+    <string name="lbl_moyasar_button_continue">Continue</string>
+    <string name="lbl_moyasar_button_donate">Donate</string>
+    <string name="lbl_moyasar_button_topup">Top Up</string>
+    <string name="lbl_moyasar_button_order">Order</string>
+    <string name="lbl_moyasar_button_support">Support</string>
+
+</resources>

@@ -1,0 +1,5 @@
+<resources>
+    <style name="Theme.LibTheme" parent="Theme.AppCompat.DayNight">
+        <item name="android:background">?android:colorBackground</item>
+    </style>
+</resources>

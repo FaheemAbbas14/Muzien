@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/payment_fragment_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="always"
+        android:theme="@style/Theme.LibTheme"
+        tools:ignore="UselessParent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/moyasar_views_margin_s"
+                android:layout_marginTop="@dimen/moyasar_spacing_medium"
+                android:layout_marginEnd="@dimen/moyasar_views_margin_s"
+                android:layout_marginBottom="@dimen/moyasar_spacing_medium"
+                android:orientation="vertical">
+
+                <com.moyasar.android.sdk.creditcard.presentation.view.customviews.MoyasarInputField
+                    android:id="@+id/et_card_holder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <include
+                    android:id="@+id/view_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    layout="@layout/view_moyasar_custom_credit_card_field"
+                    android:layout_marginTop="@dimen/moyasar_spacing_xx_large"
+                    />
+
+
+                <com.moyasar.android.sdk.core.customviews.button.MoyasarButton
+                    android:id="@+id/payButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/moyasar_spacing_x_large"
+                    android:textAllCaps="false"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/moyasar_font_size_xl"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/circularProgressIndicator"
+                android:layout_width="@dimen/moyasar_view_height_m"
+                android:layout_height="@dimen/moyasar_view_height_m"
+                android:layout_centerInParent="true"
+                android:indeterminate="true" />
+        </RelativeLayout>
+    </ScrollView>
+</FrameLayout>

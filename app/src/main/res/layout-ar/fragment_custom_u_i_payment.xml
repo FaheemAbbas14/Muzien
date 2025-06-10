@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/constMainView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/llBack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/manrope_bold"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:src="@drawable/arabic_back"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/manrope_regular"
+            android:text="@string/back"
+            android:textColor="@color/black"
+            android:textFontWeight="700"
+            android:textSize="16sp"
+            tools:layout_editor_absoluteX="38dp"
+            tools:layout_editor_absoluteY="21dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center"
+            android:paddingEnd="50dp"
+            android:text="@string/add_new_payment"
+            android:textColor="@color/black"
+            android:textFontWeight="700"
+            android:textSize="16sp"
+            tools:layout_editor_absoluteX="38dp"
+            tools:layout_editor_absoluteY="21dp" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="5dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/llCardName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/rounded_white_grey"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="60dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="@+id/llTypes"
+        app:layout_constraintStart_toStartOf="@+id/llTypes"
+        app:layout_constraintTop_toBottomOf="@+id/llTypes">
+
+
+        <!-- Holder Name -->
+        <EditText
+            android:id="@+id/edtCardName"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center|end"
+            android:hint="Card Holder Name"
+            android:imeOptions="actionDone"
+            android:inputType="textCapWords|textPersonName"
+            android:paddingEnd="10dp"
+            android:textColor="@color/colorTextDefault"
+            android:textFontWeight="400"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="8dp"
+            android:visibility="gone"
+            app:srcCompat="@drawable/other_card" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textViewName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="-10dp"
+        android:background="@color/white"
+        android:fontFamily="@font/manrope_regular"
+        android:inputType="textEmailAddress"
+        android:text="@string/card_name"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textFontWeight="500"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toTopOf="@+id/llCardName"
+        app:layout_constraintStart_toStartOf="@+id/llCardName" />
+
+    <LinearLayout
+        android:id="@+id/llCardNumber"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/rounded_white_grey"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="60dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="@+id/llCardName"
+        app:layout_constraintStart_toStartOf="@+id/llCardName"
+        app:layout_constraintTop_toBottomOf="@+id/llCardName">
+
+
+        <EditText
+            android:id="@+id/edtCardNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center|end"
+            android:hint="XXXXXXXXXXXXXXXX"
+            android:inputType="number"
+            android:paddingEnd="10dp"
+            android:textColor="@color/colorTextDefault"
+            android:textFontWeight="400"
+            android:textSize="14sp" />
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="8dp"
+            app:srcCompat="@drawable/other_card" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="-10dp"
+        android:background="@color/white"
+        android:fontFamily="@font/manrope_regular"
+        android:inputType="textEmailAddress"
+        android:text="@string/card_number"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textFontWeight="500"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toTopOf="@+id/llCardNumber"
+        app:layout_constraintStart_toStartOf="@+id/llCardNumber" />
+
+    <LinearLayout
+        android:id="@+id/llExpiryDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="2dp"
+        android:background="@drawable/rounded_white_grey"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="60dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toStartOf="@+id/view"
+        app:layout_constraintStart_toStartOf="@+id/llCardNumber"
+        app:layout_constraintTop_toBottomOf="@+id/llCardNumber">
+
+
+        <!-- Expiry Date -->
+        <EditText
+            android:id="@+id/edtExp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center|end"
+            android:hint="MM/YY"
+            android:inputType="text"
+            android:paddingEnd="10dp"
+            android:textColor="@color/colorTextDefault"
+            android:textFontWeight="400"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/imgCalender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="8dp"
+            android:visibility="gone"
+            app:srcCompat="@drawable/calender_icon" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="-10dp"
+        android:background="@color/white"
+        android:fontFamily="@font/manrope_regular"
+        android:inputType="text"
+        android:text="@string/exp_date"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textFontWeight="500"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toTopOf="@+id/llExpiryDate"
+        app:layout_constraintStart_toStartOf="@+id/llExpiryDate" />
+
+    <LinearLayout
+        android:id="@+id/llCVV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/rounded_white_grey"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="60dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="@+id/llCardNumber"
+        app:layout_constraintStart_toEndOf="@+id/view"
+        app:layout_constraintTop_toBottomOf="@+id/llCardNumber">
+
+
+        <!-- CVV -->
+        <EditText
+            android:id="@+id/edtCVV"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center|end"
+            android:hint="CVV"
+            android:inputType="numberPassword"
+            android:paddingEnd="10dp"
+            android:textColor="@color/colorTextDefault"
+            android:textFontWeight="400"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="8dp"
+            app:srcCompat="@drawable/question_icon" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="-10dp"
+        android:background="@color/white"
+        android:fontFamily="@font/manrope_regular"
+        android:inputType="text"
+        android:text="@string/cvv"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textFontWeight="500"
+        android:textSize="11sp"
+        app:layout_constraintBottom_toTopOf="@+id/llCVV"
+        app:layout_constraintStart_toStartOf="@+id/llCVV" />
+
+    <LinearLayout
+        android:id="@+id/llZipcode"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/rounded_white_grey"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="60dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/llCardNumber"
+        app:layout_constraintStart_toStartOf="@+id/llCardNumber"
+        app:layout_constraintTop_toBottomOf="@+id/llExpiryDate">
+
+
+        <EditText
+            android:id="@+id/edtZipCode"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:fontFamily="@font/manrope_regular"
+            android:gravity="center|left"
+            android:hint="@string/abc"
+            android:inputType="text"
+            android:paddingEnd="10dp"
+            android:textColor="@color/colorTextDefault"
+            android:textFontWeight="400"
+            android:textSize="14sp" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="-10dp"
+        android:background="@color/white"
+        android:fontFamily="@font/manrope_regular"
+        android:inputType="number"
+        android:text="@string/zip_code"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textFontWeight="500"
+        android:textSize="11sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/llZipcode"
+        app:layout_constraintStart_toStartOf="@+id/llZipcode" />
+
+    <ImageView
+        android:id="@+id/imageView13"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/lock_icon"
+        app:layout_constraintStart_toStartOf="@+id/llExpiryDate"
+        app:layout_constraintTop_toBottomOf="@+id/llZipcode" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:fontFamily="@font/manrope_regular"
+        android:text="@string/security_is_important_to_us_your_information_is_private_and_protected"
+        android:textColor="@color/black_shade2"
+        android:textFontWeight="500"
+        android:textSize="11sp"
+        app:layout_constraintEnd_toEndOf="@+id/llCardNumber"
+        app:layout_constraintStart_toEndOf="@+id/imageView13"
+        app:layout_constraintTop_toTopOf="@+id/imageView13" />
+
+    <LinearLayout
+        android:id="@+id/llPayNow"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/rounded_blue_100"
+        android:clickable="true"
+        android:focusable="true"
+        android:minHeight="50dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/txtPay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/manrope_bold"
+            android:gravity="center"
+            android:text="@string/pay_now"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/llTypes"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="20dp"
+        android:orientation="horizontal"
+        android:paddingStart="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llBack">
+        <!-- Card Type Icons -->
+        <ImageView
+            android:id="@+id/img_mada"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/moyasar_spacing_small"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_moyasar_mada"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/img_visa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/moyasar_spacing_small"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_moyasar_visa"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/img_master"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/moyasar_spacing_small"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_moyasar_mastercard"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/img_amex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/moyasar_spacing_small"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_moyasar_amex"
+            android:visibility="visible" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
