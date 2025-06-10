@@ -5,401 +5,425 @@
     android:id="@+id/swipeRefresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/light_grey"
-    android:scrollbars="none">
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:background="@color/light_grey"
+        android:scrollbars="none">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/light_grey"
-            tools:context=".ui.member.FragmentViewMember">
-
+            android:layout_height="wrap_content">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintLayout3"
-                android:layout_width="0dp"
-                android:layout_height="80dp"
-                android:background="@color/colorPrimary"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <ImageView
-                    android:id="@+id/imgBack"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginBottom="15dp"
-                    android:padding="5dp"
-                    android:background="@drawable/circular_white"
-                    android:src="@drawable/blue_right_icon"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <ImageView
-                android:id="@+id/imgProfilePic"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginBottom="-70dp"
-                android:background="@drawable/circular_light_grey"
-                android:padding="8dp"
-                android:src="@drawable/topperformer"
-                app:layout_constraintBottom_toTopOf="@+id/cnstMainView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <LinearLayout
-                android:id="@+id/llStatus"
-                android:layout_width="wrap_content"
-
-                android:minWidth="60dp"
-                android:layout_height="20dp"
-                android:layout_marginTop="70dp"
-                android:background="@drawable/green_70_rounded"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/imgProfilePic">
-
-
-                <TextView
-                    android:id="@+id/txtStatusTexts"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
-
-                    android:textColor="@color/white"
-                    android:textFontWeight="500"
-                    android:textSize="8sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/imgIcon" />
-            </LinearLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cnstMainView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@color/light_grey"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
+                tools:context=".ui.member.FragmentViewMember">
 
-
-                <TextView
-                    android:id="@+id/txtName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="60dp"
-                    android:fontFamily="@font/manrope_regular"
-
-                    android:textColor="@color/textBlack"
-                    android:textFontWeight="700"
-                    android:textSize="22sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/txtCountry"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/manrope_regular"
-
-                    android:textColor="@color/black_shade1"
-                    android:textFontWeight="400"
-                    android:textSize="12sp"
-                    app:layout_constraintEnd_toEndOf="@+id/txtName"
-                    app:layout_constraintStart_toStartOf="@+id/txtName"
-                    app:layout_constraintTop_toBottomOf="@+id/txtName" />
-
-                <TextView
-                    android:id="@+id/txtStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:fontFamily="@font/manrope_regular"
-
-                    android:textColor="@color/black_shade1"
-                    android:textFontWeight="400"
-                    android:textSize="12sp"
-                    android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="@+id/txtCountry"
-                    app:layout_constraintStart_toStartOf="@+id/txtCountry"
-                    app:layout_constraintTop_toBottomOf="@+id/txtCountry" />
-
-                <LinearLayout
-                    android:id="@+id/llBookings"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="32dp"
-                    android:layout_marginEnd="20dp"
-                    android:background="@drawable/white_rounded10"
-                    android:orientation="horizontal"
-                    android:paddingStart="17dp"
-                    android:paddingTop="15dp"
-                    android:paddingEnd="7dp"
-                    android:paddingBottom="15dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/txtStyle">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/manrope_bold"
-                        android:gravity="center|right"
-                        android:text="@string/bookings"
-                        android:textColor="@color/textBlack"
-                        android:textFontWeight="700"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/txtBookingsCount"
-                        android:layout_width="200dp"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/manrope_regular"
-                        android:gravity="center"
-
-                        android:textColor="@color/black_shade1"
-                        android:textFontWeight="400"
-                        android:textSize="12sp" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginEnd="8dp"
-                        android:src="@drawable/arrow_left" />
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/llRatings"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/white_rounded10"
-                    android:orientation="horizontal"
-                    android:paddingStart="17dp"
-                    android:paddingTop="15dp"
-                    android:paddingEnd="7dp"
-                    android:paddingBottom="15dp"
-                    app:layout_constraintEnd_toEndOf="@id/llBookings"
-                    app:layout_constraintStart_toStartOf="@id/llBookings"
-                    app:layout_constraintTop_toBottomOf="@+id/llBookings">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/manrope_bold"
-                        android:gravity="center|right"
-                        android:text="@string/ratings"
-                        android:textColor="@color/textBlack"
-                        android:textFontWeight="700"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/txtRatings"
-                        android:layout_width="200dp"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/manrope_regular"
-                        android:gravity="center"
-
-                        android:textColor="@color/black_shade1"
-                        android:textFontWeight="400"
-                        android:textSize="12sp" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginEnd="8dp"
-                        android:src="@drawable/arrow_left" />
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/llServices"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/white_rounded10"
-                    android:orientation="vertical"
-                    android:paddingStart="17dp"
-                    android:paddingTop="15dp"
-                    android:paddingEnd="7dp"
-                    android:paddingBottom="15dp"
-                    app:layout_constraintEnd_toEndOf="@id/llBookings"
-                    app:layout_constraintStart_toStartOf="@id/llBookings"
-                    app:layout_constraintTop_toBottomOf="@+id/llRatings">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:fontFamily="@font/manrope_bold"
-                        android:gravity="center|right"
-                        android:text="@string/services"
-                        android:textColor="@color/textBlack"
-                        android:textFontWeight="700"
-                        android:textSize="14sp" />
-
-                    <GridView
-                        android:layout_marginTop="10dp"
-                        android:id="@+id/gridView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:numColumns="4"
-                        android:verticalSpacing="10dp"
-                        android:horizontalSpacing="10dp"
-                        android:gravity="center"
-                        android:stretchMode="columnWidth" />
-
-                    <ImageView
-                        android:id="@+id/imgAddService"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-
-                        android:layout_marginTop="10dp"
-                        android:src="@drawable/blue_add" />
-
-                </LinearLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cnstWorkingHours"
+                    android:id="@+id/constraintLayout3"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/white_rounded10"
-                    android:paddingStart="17dp"
-                    android:paddingTop="15dp"
-                    android:paddingEnd="7dp"
-                    android:paddingBottom="15dp"
-                    app:layout_constraintEnd_toEndOf="@id/llBookings"
-                    app:layout_constraintStart_toStartOf="@id/llBookings"
-                    app:layout_constraintTop_toBottomOf="@+id/llServices">
-
-                    <TextView
-                        android:id="@+id/txtWorkingHours"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/manrope_regular"
-                        android:text="@string/work_hours"
-                        android:textColor="@color/black_text"
-                        android:textFontWeight="700"
-                        android:textSize="14sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rcyWorkingHours"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/txtWorkingHours"
-                        app:layout_constraintTop_toBottomOf="@+id/txtWorkingHours" />
+                    android:layout_height="80dp"
+                    android:background="@color/colorPrimary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
-                        android:id="@+id/imgAddWorkingHour"
-                        android:layout_width="0dp"
+                        android:id="@+id/imgBack"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:src="@drawable/blue_add"
-                        app:layout_constraintStart_toStartOf="@+id/rcyWorkingHours"
-                        app:layout_constraintTop_toBottomOf="@+id/rcyWorkingHours" />
+                        android:layout_marginStart="10dp"
+                        android:layout_marginBottom="15dp"
+                        android:padding="10dp"
+                        android:background="@drawable/circular_white"
+                        android:src="@drawable/arrow_right"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+
+
+                <FrameLayout
+                    android:id="@+id/unionContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-40dp"
+                    android:background="@android:color/transparent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout3">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="134dp"
+                        android:adjustViewBounds="true"
+
+                        android:src="@drawable/union" />
+
+                    <!-- Optional: Add content inside the shape -->
+                    <!--
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Inside the bump"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
+                    -->
+
+                </FrameLayout>
+
+                <ImageView
+                    android:id="@+id/imgProfilePic"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginBottom="-100dp"
+                    android:padding="8dp"
+                    android:src="@drawable/topperformer"
+                    app:layout_constraintBottom_toTopOf="@+id/unionContainer"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+                <LinearLayout
+                    android:id="@+id/llStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="70dp"
+                    android:background="@drawable/green_70_rounded"
+                    android:minWidth="60dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/imgProfilePic">
+
+
+                    <TextView
+                        android:id="@+id/txtStatusTexts"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+
+                        android:textColor="@color/white"
+                        android:textFontWeight="500"
+                        android:textSize="8sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/imgIcon" />
+                </LinearLayout>
+
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cnstHolidays"
+                    android:id="@+id/cnstMainView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="@drawable/white_rounded10"
-                    android:paddingStart="17dp"
-                    android:paddingTop="15dp"
-                    android:paddingEnd="7dp"
-                    android:paddingBottom="15dp"
+                    android:visibility="visible"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/cnstWorkingHours"
-                    app:layout_constraintStart_toStartOf="@+id/cnstWorkingHours"
-                    app:layout_constraintTop_toBottomOf="@+id/cnstWorkingHours">
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imgProfilePic">
+
+
                     <TextView
-                        android:id="@+id/txtHoliday"
+                        android:id="@+id/txtName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/manrope_regular"
-                        android:text="@string/holidays"
-                        android:textColor="@color/black_text"
+
+                        android:textColor="@color/textBlack"
                         android:textFontWeight="700"
-                        android:textSize="14sp"
+                        android:textSize="22sp"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
+                    <com.hbb20.CountryCodePicker
+                        android:id="@+id/txtCountry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:textFontWeight="400"
+                        android:textSize="12sp"
+                        app:ccpDialog_textColor="@color/black_shade1"
+                        app:ccp_clickable="false"
+                        app:ccp_defaultNameCode="SA"
+
+                        app:ccp_showFlag="true"
+                        app:ccp_showFullName="true"
+                        app:ccp_showNameCode="false"
+                        app:ccp_showPhoneCode="false"
+                        app:layout_constraintEnd_toEndOf="@+id/txtName"
+                        app:layout_constraintStart_toStartOf="@+id/txtName"
+                        app:layout_constraintTop_toBottomOf="@+id/txtName" />
 
                     <TextView
-                        android:id="@+id/txtHolidaysData"
-                        android:layout_width="0dp"
+                        android:id="@+id/txtStyle"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="5dp"
                         android:fontFamily="@font/manrope_regular"
-                        android:text="@string/no_holiday_added"
-                        android:textColor="@color/black_shade2"
-                        android:textFontWeight="500"
+                        android:text="@string/the_style_zone"
+                        android:textColor="@color/black_shade1"
+                        android:textFontWeight="400"
                         android:textSize="12sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/txtHoliday"
-                        app:layout_constraintTop_toBottomOf="@+id/txtHoliday" />
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rcyHolidays"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/txtHoliday"
-                        app:layout_constraintTop_toBottomOf="@+id/txtHolidaysData" />
+                        android:visibility="visible"
+                        app:layout_constraintEnd_toEndOf="@+id/txtCountry"
+                        app:layout_constraintStart_toStartOf="@+id/txtCountry"
+                        app:layout_constraintTop_toBottomOf="@+id/txtCountry" />
 
-                    <ImageView
-                        android:id="@+id/imgAddHoliday"
+                    <LinearLayout
+                        android:id="@+id/llBookings"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="32dp"
+                        android:layout_marginEnd="20dp"
+                        android:background="@drawable/white_rounded10"
+                        android:orientation="horizontal"
+                        android:paddingStart="17dp"
+                        android:paddingTop="15dp"
+                        android:paddingEnd="7dp"
+                        android:paddingBottom="15dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/txtStyle">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/manrope_bold"
+                            android:gravity="center|left"
+                            android:text="@string/bookings"
+                            android:textColor="@color/textBlack"
+                            android:textFontWeight="700"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/txtBookingsCount"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/manrope_regular"
+                            android:gravity="center"
+
+                            android:textColor="@color/black_shade1"
+                            android:textFontWeight="400"
+                            android:textSize="12sp" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="8dp"
+                            android:src="@drawable/arrow_left" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llRatings"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:src="@drawable/blue_add"
-                        app:layout_constraintStart_toStartOf="@+id/txtHolidaysData"
-                        app:layout_constraintTop_toBottomOf="@+id/txtHolidaysData" />
+                        android:background="@drawable/white_rounded10"
+                        android:orientation="horizontal"
+                        android:paddingStart="17dp"
+                        android:paddingTop="15dp"
+                        android:paddingEnd="7dp"
+                        android:paddingBottom="15dp"
+                        app:layout_constraintEnd_toEndOf="@id/llBookings"
+                        app:layout_constraintStart_toStartOf="@id/llBookings"
+                        app:layout_constraintTop_toBottomOf="@+id/llBookings">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/manrope_bold"
+                            android:gravity="center|left"
+                            android:text="@string/ratings"
+                            android:textColor="@color/textBlack"
+                            android:textFontWeight="700"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/txtRatings"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/manrope_regular"
+                            android:gravity="center"
+
+                            android:textColor="@color/black_shade1"
+                            android:textFontWeight="400"
+                            android:textSize="12sp" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="8dp"
+                            android:src="@drawable/arrow_left" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llServices"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/white_rounded10"
+                        android:orientation="vertical"
+                        android:paddingStart="17dp"
+                        android:paddingTop="15dp"
+                        android:paddingEnd="7dp"
+                        android:paddingBottom="15dp"
+                        app:layout_constraintEnd_toEndOf="@id/llBookings"
+                        app:layout_constraintStart_toStartOf="@id/llBookings"
+                        app:layout_constraintTop_toBottomOf="@+id/llRatings">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/manrope_bold"
+                            android:gravity="center|right"
+                            android:text="@string/services"
+                            android:textColor="@color/textBlack"
+                            android:textFontWeight="700"
+                            android:textSize="14sp" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/gridRecyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            />
+
+                        <ImageView
+                            android:id="@+id/imgAddService"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:layout_marginTop="10dp"
+                            android:src="@drawable/blue_add" />
+
+                    </LinearLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cnstWorkingHours"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/white_rounded10"
+                        android:padding="10dp"
+                        app:layout_constraintEnd_toEndOf="@+id/llBookings"
+                        app:layout_constraintStart_toStartOf="@+id/llBookings"
+                        app:layout_constraintTop_toBottomOf="@+id/llServices">
+
+                        <TextView
+                            android:id="@+id/txtWorkingHours"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/manrope_regular"
+                            android:text="@string/work_hours"
+                            android:textColor="@color/black_text"
+                            android:textFontWeight="700"
+                            android:textSize="14sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rcyWorkingHours"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="@+id/txtWorkingHours"
+                            app:layout_constraintTop_toBottomOf="@+id/txtWorkingHours" />
+
+                        <ImageView
+                            android:id="@+id/imgAddWorkingHour"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:src="@drawable/blue_add"
+                            app:layout_constraintStart_toStartOf="@+id/rcyWorkingHours"
+                            app:layout_constraintTop_toBottomOf="@+id/rcyWorkingHours" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cnstHolidays"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/white_rounded10"
+                        android:padding="10dp"
+                        app:layout_constraintEnd_toEndOf="@+id/cnstWorkingHours"
+                        app:layout_constraintStart_toStartOf="@+id/cnstWorkingHours"
+                        app:layout_constraintTop_toBottomOf="@+id/cnstWorkingHours">
+
+                        <TextView
+                            android:id="@+id/txtHoliday"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/manrope_regular"
+                            android:text="@string/holidays"
+                            android:textColor="@color/black_text"
+                            android:textFontWeight="700"
+                            android:textSize="14sp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+
+                        <TextView
+                            android:id="@+id/txtHolidaysData"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="@font/manrope_regular"
+                            android:text="@string/no_holiday_added"
+                            android:textColor="@color/black_shade2"
+                            android:textFontWeight="500"
+                            android:textSize="12sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="@+id/txtHoliday"
+                            app:layout_constraintTop_toBottomOf="@+id/txtHoliday" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rcyHolidays"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="@+id/txtHoliday"
+                            app:layout_constraintTop_toBottomOf="@+id/txtHolidaysData" />
+
+                        <ImageView
+                            android:id="@+id/imgAddHoliday"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:src="@drawable/blue_add"
+                            app:layout_constraintStart_toStartOf="@+id/txtHoliday"
+                            app:layout_constraintTop_toBottomOf="@+id/rcyHolidays" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <ImageView
                     android:id="@+id/img_menu"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="15dp"
-                    android:layout_marginBottom="8dp"
-                    app:layout_constraintBottom_toTopOf="@+id/txtName"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="90dp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/constraintLayout3"
                     app:srcCompat="@drawable/menu_icon" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </LinearLayout>
-</ScrollView>
+        </LinearLayout>
+    </ScrollView>
 </com.tt.muzien.utilities.CustomSwipeRefreshLayout>

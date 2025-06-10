@@ -13,6 +13,21 @@ data class AddSaloonResponse(
     val data: AddSaloon,
 )
 data class AddSaloon(
-    val saloon: SaloonData,
+    val numReviews: Long,
+    val tRating: Long,
+    val id: Long,
+    val name: String,
+    val description: String,
+    val locationLat: String,
+    val locationLong: String,
+    val phoneNumber: String,
+    val address: String,
+    val ownerId: Long,
+    val isActive: Boolean,
+    val updatedAt: String,
+    val createdAt: String,
+    val certificate: String?,
+    val subscriptionExpiry: String?,
 )
+
 

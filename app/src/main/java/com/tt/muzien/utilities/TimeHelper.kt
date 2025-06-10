@@ -11,7 +11,9 @@ import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -46,7 +48,7 @@ object TimeHelper {
     @RequiresApi(Build.VERSION_CODES.O)
     fun convertISOToDate(
         isoString: String,
-        outputPattern: String
+        outputPattern: String,
     ): String {
         val instant = Instant.parse(isoString) // Parse ISO date
         val date = instant.atOffset(ZoneOffset.UTC).toLocalDateTime() // Convert to LocalDate in UTC
@@ -58,7 +60,7 @@ object TimeHelper {
     fun convertTimeFormat(
         inputTime: String,
         inputPattern: String,
-        outputPattern: String
+        outputPattern: String,
     ): String? {
         return try {
             // Create a SimpleDateFormat object with the input pattern
@@ -185,5 +187,57 @@ object TimeHelper {
             "startOfMonth" to startOfMonth.format(formatter),
             "endOfMonth" to endOfMonth.format(formatter)
         )
+    }
+
+    fun convertArabicDigitsToEnglish(input: String): String {
+        val arabicDigits = arrayOf('٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩')
+        val englishDigits = arrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
+        val builder = StringBuilder()
+
+        for (char in input) {
+            val index = arabicDigits.indexOf(char)
+            builder.append(if (index >= 0) englishDigits[index] else char)
+        }
+
+        return builder.toString()
+    }
+
+    @SuppressLint("NewApi")
+    fun convertLocalTimeToUtc(localTimeStr: String, pattern: String? = "HH:mm"): String {
+        // Parse the local time (e.g., "13:45")
+        val localTime = LocalTime.parse(localTimeStr, DateTimeFormatter.ofPattern(pattern))
+
+        // Get today's date
+        val today = LocalDate.now()
+
+        // Create a LocalDateTime from today's date and the parsed local time
+        val localDateTime = LocalDateTime.of(today, localTime)
+
+        // Assume this is in the system's default timezone
+        val zonedLocal = ZonedDateTime.of(localDateTime, ZoneId.systemDefault())
+
+        // Convert to UTC
+        val utcTime = zonedLocal.withZoneSameInstant(ZoneOffset.UTC)
+
+        // Format just the time part in "HH:mm"
+        return utcTime.format(DateTimeFormatter.ofPattern(pattern))
+    }
+
+    @SuppressLint("NewApi")
+    fun convertUtcToLocalTime(utcTimeStr: String, pattern: String? = "HH:mm:ss"): String {
+        // Parse the time in UTC
+        val utcTime = LocalTime.parse(utcTimeStr, DateTimeFormatter.ofPattern(pattern))
+
+        // Use today's date with the parsed time
+        val utcDateTime = LocalDateTime.of(LocalDate.now(), utcTime)
+
+        // Set the datetime as UTC
+        val utcZoned = ZonedDateTime.of(utcDateTime, ZoneOffset.UTC)
+
+        // Convert to system's local timezone
+        val localZoned = utcZoned.withZoneSameInstant(ZoneId.systemDefault())
+
+        // Format the local time in HH:mm
+        return localZoned.format(DateTimeFormatter.ofPattern(pattern))
     }
 }

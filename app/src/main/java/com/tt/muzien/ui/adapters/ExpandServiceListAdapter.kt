@@ -23,6 +23,7 @@ import com.bumptech.glide.request.target.Target
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.ServiceInfo
 import jp.wasabeef.glide.transformations.RoundedCornersTransformation
+import java.util.Locale
 
 /**
  * Created by Faheem Abbas on 19/12/2024.
@@ -78,13 +79,24 @@ class ExpandServiceListAdapter(
             constraintLayout4.setBackgroundDrawable(context.resources.getDrawable(R.drawable.white_rounded10))
         }
         val servicesCount = view.findViewById<TextView>(R.id.servicesCount)
-        servicesCount.text = getGroupServices(groupPosition).toString()
+        servicesCount.text = "${getGroupServices(groupPosition)} Services"
 
         val groupTitle = view.findViewById<TextView>(R.id.group_title)
         val groupIcon = view.findViewById<ImageView>(R.id.group_icon)
-
+        val isArabic = Locale.getDefault().language == "ar"
         groupTitle.text = getGroup(groupPosition).toString()
-        groupIcon.setImageResource(if (isExpanded) R.drawable.black_up_arrow else R.drawable.black_right_arrow)
+        if (isExpanded){
+            groupIcon.setImageResource(R.drawable.black_up_arrow)
+
+        }
+        else{
+            if (isArabic){
+                groupIcon.setImageResource(R.drawable.arrow_left)
+            }
+            else{
+                groupIcon.setImageResource(R.drawable.arrow_right)
+            }
+        }
 
         return view
     }

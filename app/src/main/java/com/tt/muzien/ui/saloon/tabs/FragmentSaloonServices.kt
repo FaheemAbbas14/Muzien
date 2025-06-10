@@ -175,7 +175,7 @@ class FragmentSaloonServices :
                 else -> {}
             }
         }
-        viewModel.getCategories(selectedSaloon?.id.toString())
+        viewModel.getCategories(selectedSaloon?.id?.toInt() ?: 0)
         if (reload) {
             (activity as HomeActivity?)?.showLoadingIndicator()
         }

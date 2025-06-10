@@ -42,7 +42,7 @@ class ServiceRepository(
     }
 
     suspend fun getCategories(
-        saloonIds: String,
+        saloonIds: Int,
     ) = safeApiCall {
         api.getCategories(saloonIds)
 

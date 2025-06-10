@@ -37,7 +37,6 @@ import com.tt.muzien.ui.adapters.WorkingHoursAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
-import com.tt.muzien.ui.payment.FragmentPayNow
 import com.tt.muzien.ui.saloon.FragmentSearchAddress
 import com.tt.muzien.ui.saloon.SaloonViewModel
 import com.tt.muzien.ui.snackbar
@@ -75,7 +74,7 @@ class FragmentSaloonInfo :
 //        }
         getSaloons()
         binding.txtRenew.setOnClickListener {
-            getPlans()
+            selectDocument()
         }
         binding.txtUploadCertificate.setOnClickListener {
             selectDocument()
@@ -260,7 +259,7 @@ class FragmentSaloonInfo :
         } else {
             binding.imgCertificateIcon.visibility = View.GONE
             binding.txtCertificateName.visibility = View.GONE
-            binding.txtUploadCertificate.visibility = View.VISIBLE
+           // binding.txtUploadCertificate.visibility = View.VISIBLE
             binding.txtUploadedAt.visibility = View.GONE
             binding.txtRenew.visibility = View.VISIBLE
             //   binding.txtRenew.text = requireContext().resources.getString(R.string.add)
@@ -292,7 +291,7 @@ class FragmentSaloonInfo :
                     WorkingHourData(
                         1,
                         "${hour.day}",
-                        "${hour.openingTime} - ${hour.closingTime}"
+                        "${TimeHelper.convertUtcToLocalTime(hour?.openingTime?:"")} - ${TimeHelper.convertUtcToLocalTime(hour?.closingTime?:"")}"
                     )
                 )
 
@@ -522,51 +521,5 @@ class FragmentSaloonInfo :
         }
     }
 
-    private fun getPlans() {
-        viewModel.getPlans.observe(viewLifecycleOwner) {
 
-            when (it) {
-                is Resource.Success -> {
-                    Log.d("response", "success " + it.toString())
-                    (activity as HomeActivity?)?.hideLoadingIndicator()
-                    if (it.value.status != 0) {
-                        for (plan in it.value.data) {
-                            if (plan.name == "saloon-annual" && plan.isActive) {
-                                var nextFragment = FragmentPayNow()
-                                nextFragment.subscriptionId=subscriptionId
-                                var payDto =
-                                    PayDto(
-                                        selectedSaloon?.id ?: 0,
-                                        plan.id.toInt(),
-                                        selectedSaloon?.name ?: "",
-                                        plan.name,
-                                        plan.actualFee.toInt() * 100,
-                                        (plan.actualFee - plan.discountedFee).toInt() * 100,
-                                        plan.discountedFee.toInt() * 100,
-                                        plan.currency,
-                                        plan.durationInDays.toInt()
-                                    )
-                                nextFragment.payDto = payDto
-                                (activity as HomeActivity?)?.loadFragment(nextFragment)
-                            }
-                        }
-                    } else {
-                        requireView().snackbar(it.value.message)
-                    }
-
-                }
-
-                is Resource.Failure -> {
-                    Log.d("response", "failure " + it.toString())
-
-                    (activity as HomeActivity?)?.hideLoadingIndicator()
-                    handleApiError(it)
-                }
-
-                else -> {}
-            }
-        }
-        viewModel.getPlans()
-        (activity as HomeActivity?)?.showLoadingIndicator()
-    }
 }

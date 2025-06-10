@@ -14,6 +14,7 @@ data class MembersData(
     val id: Long,
     val userId: Long,
     val saloonId: Long,
+    val isMember: Boolean,
     val isAdmin: Boolean,
     val isActive: Boolean,
     val todayBookings: String,

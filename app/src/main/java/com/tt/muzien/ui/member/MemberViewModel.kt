@@ -23,6 +23,7 @@ import com.tt.muzien.data.responses.GetSaloonResponse
 import com.tt.muzien.data.responses.GetServiceProviderResponse
 import com.tt.muzien.data.responses.GetServicesResponse
 import com.tt.muzien.data.responses.GetsUsersResponse
+import com.tt.muzien.data.responses.MarkManagerResponse
 import com.tt.muzien.ui.base.BaseViewModel
 import com.tt.muzien.utilities.SingleEventLiveData
 import kotlinx.coroutines.launch
@@ -65,14 +66,18 @@ class MemberViewModel(
     val getMemberDetails: LiveData<Resource<GetMemberDetails>> get() = _getMemberDetails
     private val _sendInvite: MutableLiveData<Resource<AddMemberResponse>> = SingleEventLiveData()
     val sendInvite: LiveData<Resource<AddMemberResponse>> get() = _sendInvite
+    private val _removeInvite: MutableLiveData<Resource<MarkManagerResponse>> = SingleEventLiveData()
+    val removeInvite: LiveData<Resource<MarkManagerResponse>> get() = _removeInvite
 
-    private val _inActiveMember: MutableLiveData<Resource<Unit>> = SingleEventLiveData()
-    val inActiveMember: LiveData<Resource<Unit>> get() = _inActiveMember
-    private val _deleteMember: MutableLiveData<Resource<Unit>> = SingleEventLiveData()
-    val deleteMember: LiveData<Resource<Unit>> get() = _deleteMember
+    private val _inActiveMember: MutableLiveData<Resource<MarkManagerResponse>> = SingleEventLiveData()
+    val inActiveMember: LiveData<Resource<MarkManagerResponse>> get() = _inActiveMember
+    private val _deleteMember: MutableLiveData<Resource<MarkManagerResponse>> = SingleEventLiveData()
+    val deleteMember: LiveData<Resource<MarkManagerResponse>> get() = _deleteMember
 
-    private val _makeManger: MutableLiveData<Resource<Unit>> = SingleEventLiveData()
-    val makeManger: LiveData<Resource<Unit>> get() = _makeManger
+    private val _makeManger: MutableLiveData<Resource<MarkManagerResponse>> = SingleEventLiveData()
+    val makeManger: LiveData<Resource<MarkManagerResponse>> get() = _makeManger
+    private val _removeManger: MutableLiveData<Resource<MarkManagerResponse>> = SingleEventLiveData()
+    val removeManger: LiveData<Resource<MarkManagerResponse>> get() = _removeManger
 
     private val _getCategories: MutableLiveData<Resource<GetCategoriesResponse>> =
         SingleEventLiveData()
@@ -138,12 +143,19 @@ class MemberViewModel(
     fun makeManager(memberId: Int) = viewModelScope.launch {
         _makeManger.value = repository.makeManager(memberId)
     }
-
+    fun removeManager(memberId: Int) = viewModelScope.launch {
+        _removeManger.value = repository.removeManager(memberId)
+    }
+    fun removeInvite(
+        inviteId: Int
+    ) = viewModelScope.launch {
+        _removeInvite.value = repository.removeInvite(inviteId)
+    }
     fun getCategories() = viewModelScope.launch {
         _getCategories.value = serviceRepository?.getCategories()
     }
 
-    fun getCategories(saloonIds: String) = viewModelScope.launch {
+    fun getCategories(saloonIds: Int) = viewModelScope.launch {
         _getSaloonCategories.value = serviceRepository?.getCategories(saloonIds)
     }
 
@@ -166,6 +178,9 @@ class MemberViewModel(
 
     fun removeHoliday(userId: Int, request: Int) = viewModelScope.launch {
         _removeHoliday.value = repository.removeHoliday(userId, request)
+    }
+    fun deleteService(userId: Int, serviceId: Int) = viewModelScope.launch {
+        _removeHoliday.value = repository.deleteService(userId, serviceId)
     }
 
     fun getServiceProvider(isActive: Boolean, isAdmin: Boolean) = viewModelScope.launch {

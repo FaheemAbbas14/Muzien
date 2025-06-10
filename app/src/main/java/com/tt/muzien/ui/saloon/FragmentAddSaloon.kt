@@ -24,17 +24,20 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.AddSaloonData
+import com.tt.muzien.data.dto.PayDto
 import com.tt.muzien.data.dto.WorkingHourData
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.network.SaloonApi
 import com.tt.muzien.data.repository.SaloonRepository
 import com.tt.muzien.data.requests.HolidayData
 import com.tt.muzien.data.requests.WorkHourData
+import com.tt.muzien.data.responses.AddSaloon
+import com.tt.muzien.data.responses.SaloonData
+import com.tt.muzien.data.responses.SaloonInfo
 import com.tt.muzien.databinding.FragmentAddSaloonBinding
 import com.tt.muzien.ui.adapters.HolidayListAdapter
 import com.tt.muzien.ui.adapters.ImagesListAdopter
@@ -42,10 +45,10 @@ import com.tt.muzien.ui.adapters.WorkingHoursAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
+import com.tt.muzien.ui.payment.FragmentPayNow
 import com.tt.muzien.ui.saloon.tabs.FragmentAddHoliday
 import com.tt.muzien.ui.saloon.tabs.FragmentAddWorkingDay
 import com.tt.muzien.ui.snackbar
-import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.Helper
 import com.tt.muzien.utilities.InputValidator
 import com.tt.muzien.utilities.TimeHelper
@@ -73,6 +76,7 @@ class FragmentAddSaloon :
     var fileName: String = ""
     var country: String = ""
     var saloonId: Int = 0
+    var selectedSaloon: AddSaloon? = null
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -95,8 +99,9 @@ class FragmentAddSaloon :
         binding.countrySpinner.setCountryForNameCode("SA")
         binding.countrySpinner.setOnCountryChangeListener {
             country = binding.countrySpinner.selectedCountryName
-            binding.txtCountryCode.text = binding.countrySpinner.selectedCountryCode
-            AddSaloonData.country = binding.countrySpinner.selectedCountryCode
+            val countryCode = binding.countrySpinner.selectedCountryCode
+            binding.txtCountryCode.text = "+$countryCode"
+            AddSaloonData.country = "+$countryCode"
             checkValidation()
         }
 
@@ -470,17 +475,19 @@ class FragmentAddSaloon :
     }
 
     override fun getFragmentBinding(
-        inflater: LayoutInflater, container: ViewGroup?
+        inflater: LayoutInflater, container: ViewGroup?,
     ) = FragmentAddSaloonBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
         SaloonRepository(remoteDataSource.buildApi(SaloonApi::class.java, requireContext()))
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onResume() {
         super.onResume()
         setData()
         (activity as HomeActivity?)?.hideTabs()
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
@@ -489,6 +496,7 @@ class FragmentAddSaloon :
             (activity as HomeActivity?)?.hideTabs()
         }
     }
+
     override fun onPause() {
         super.onPause()
         (activity as HomeActivity?)?.showTabs()
@@ -501,11 +509,13 @@ class FragmentAddSaloon :
                 is Resource.Success -> {
                     Log.d("response", "success " + it.toString())
                     if (it.value.status != 0) {
+                        selectedSaloon=it.value.data
                         AddSaloonData.clear()
                         requireView().snackbar("Saloon added successfully")
-                        (activity as HomeActivity?)?.hideLoadingIndicator()
-                        Appelement.reload=true
-                        (activity as HomeActivity?)?.popFragment()
+                        getPlans()
+//                        (activity as HomeActivity?)?.hideLoadingIndicator()
+//                        Appelement.reload=true
+//                        (activity as HomeActivity?)?.popFragment()
                         //  }
                     } else {
                         requireView().snackbar(it.value.message)
@@ -577,7 +587,13 @@ class FragmentAddSaloon :
         }
         var workHours = ArrayList<WorkHourData>()
         for (day in AddSaloonData.days) {
-            workHours.add(WorkHourData(day, AddSaloonData.startTime, AddSaloonData.endTime))
+            workHours.add(
+                WorkHourData(
+                    day,
+                    TimeHelper.convertLocalTimeToUtc(AddSaloonData.startTime ?: ""),
+                    TimeHelper.convertLocalTimeToUtc(AddSaloonData.endTime ?: "")
+                )
+            )
         }
         val holidaysParts = mutableMapOf<String, RequestBody>()
         // Convert each user object into separate form-data fields
@@ -615,5 +631,52 @@ class FragmentAddSaloon :
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 
+    private fun getPlans() {
+        viewModel.getPlans.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        for (plan in it.value.data) {
+                            if (plan.name == "saloon-annual" && plan.isActive) {
+                                var nextFragment = FragmentPayNow()
+                                nextFragment.subscriptionId = 0
+                                var payDto =
+                                    PayDto(
+                                        selectedSaloon?.id?.toInt() ?: 0,
+                                        plan.id.toInt(),
+                                        selectedSaloon?.name ?: "",
+                                        plan.name,
+                                        plan.actualFee.toInt() * 100,
+                                        (plan.actualFee - plan.discountedFee).toInt() * 100,
+                                        plan.discountedFee.toInt() * 100,
+                                        plan.currency,
+                                        plan.durationInDays.toInt()
+                                    )
+                                nextFragment.payDto = payDto
+                                (activity as HomeActivity?)?.loadFragment(nextFragment)
+                            }
+                        }
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.getPlans()
+        //(activity as HomeActivity?)?.showLoadingIndicator()
+    }
 
 }

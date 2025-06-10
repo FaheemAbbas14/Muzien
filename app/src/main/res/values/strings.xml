@@ -273,5 +273,13 @@
     <string name="stc_pay">STC Pay</string>
     <string name="new_salon">New Salon</string>
     <string name="update_service">Update Service</string>
-
+    <string name="stc_payment">STC Payment</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="otp">OTP</string>
+    <string name="invitation_sent">invitation sent</string>
+    <string name="on_leave">on leave today</string>
+    <string name="working_today">working today</string>
+    <string name="remove_invitation">Remove Invitation</string>
+    <string name="remove_manager">Remove Manager</string>
+    <string name="arabic">Arabic</string>
 </resources>

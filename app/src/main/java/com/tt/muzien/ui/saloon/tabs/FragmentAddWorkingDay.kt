@@ -23,6 +23,7 @@ import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.saloon.SaloonViewModel
 import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.Appelement
+import com.tt.muzien.utilities.TimeHelper
 import java.util.Calendar
 
 
@@ -40,8 +41,8 @@ class FragmentAddWorkingDay :
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
         }
-        if (userId!=0){
-            binding.txtText.text="Add user work hours"
+        if (userId != 0) {
+            binding.txtText.text = "Add user work hours"
         }
         binding.llSave.setOnClickListener {
             if (checkValidation()) {
@@ -189,8 +190,7 @@ class FragmentAddWorkingDay :
         val timePickerDialog = TimePickerDialog(
             context,
             { _, selectedHour, selectedMinute ->
-                val formattedTime = String.format("%02d:%02d", selectedHour, selectedMinute)
-                // val formattedTime = formatTime12Hour(selectedHour, selectedMinute)
+                var formattedTime = String.format("%02d:%02d", selectedHour, selectedMinute)
                 if (isStart) {
                     startTime = formattedTime
                 } else {
@@ -227,7 +227,7 @@ class FragmentAddWorkingDay :
 
     override fun getFragmentBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = FragmentAddWorkingDayBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
@@ -241,6 +241,7 @@ class FragmentAddWorkingDay :
         (activity as HomeActivity?)?.changeStatusBarColor(requireActivity().resources.getColor(R.color.white))
         (activity as HomeActivity?)?.hideTabs()
     }
+
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
@@ -249,9 +250,10 @@ class FragmentAddWorkingDay :
             (activity as HomeActivity?)?.hideTabs()
         }
     }
+
     override fun onPause() {
         super.onPause()
-       // (activity as HomeActivity?)?.showTabs()
+        // (activity as HomeActivity?)?.showTabs()
     }
 
     private fun addWorkHour() {
@@ -262,7 +264,7 @@ class FragmentAddWorkingDay :
                     Log.d("response", "success " + it.toString())
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
-                        Appelement.reload=true
+                        Appelement.reload = true
                         (activity as HomeActivity?)?.popFragment()
                         requireView().snackbar("Working hour added successfully")
 
@@ -283,7 +285,7 @@ class FragmentAddWorkingDay :
         }
         var workingHours = ArrayList<WorkHour>()
         for (day in selectedDays) {
-            workingHours.add(WorkHour(day, startTime, endTime))
+            workingHours.add(WorkHour(day, TimeHelper.convertLocalTimeToUtc(startTime), TimeHelper.convertLocalTimeToUtc(endTime)))
         }
         viewModel.addHour(saloonId, AddWorkingHourRequest(workingHours))
         (activity as HomeActivity?)?.showLoadingIndicator()
@@ -297,7 +299,7 @@ class FragmentAddWorkingDay :
                     Log.d("response", "success " + it.toString())
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
-                        Appelement.reload=true
+                        Appelement.reload = true
                         (activity as HomeActivity?)?.popFragment()
                         requireView().snackbar("Working hour added successfully")
 
@@ -318,7 +320,7 @@ class FragmentAddWorkingDay :
         }
         var workingHours = ArrayList<WorkHour>()
         for (day in selectedDays) {
-            workingHours.add(WorkHour(day, startTime, endTime))
+            workingHours.add(WorkHour(day, TimeHelper.convertLocalTimeToUtc(startTime), TimeHelper.convertLocalTimeToUtc(endTime)))
         }
         viewModel.addMemberWorkingHour(userId, AddWorkingHourRequest(workingHours))
         (activity as HomeActivity?)?.showLoadingIndicator()

@@ -10,6 +10,7 @@ package com.tt.muzien.data.responses
 data class GetServicesResponse(
     val status: Int,
     val data: List<CategoryInfo>,
+    val message: String
 )
 
 data class CategoryInfo(

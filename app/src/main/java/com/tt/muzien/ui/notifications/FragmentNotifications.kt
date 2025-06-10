@@ -104,6 +104,6 @@ class FragmentNotifications :
     }
     override fun onPause() {
         super.onPause()
-       // (activity as HomeActivity?)?.showTabs()
+       (activity as HomeActivity?)?.showTabs()
     }
 }

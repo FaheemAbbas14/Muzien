@@ -20,6 +20,10 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexWrap
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.MemberDto
 import com.tt.muzien.data.dto.WorkingHourData
@@ -38,7 +42,10 @@ import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.saloon.tabs.FragmentAddHoliday
 import com.tt.muzien.ui.saloon.tabs.FragmentAddWorkingDay
 import com.tt.muzien.ui.snackbar
+import com.tt.muzien.utilities.Appelement
+import com.tt.muzien.utilities.TimeHelper
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
+import java.util.Locale
 
 
 class FragmentViewMember :
@@ -53,10 +60,11 @@ class FragmentViewMember :
     private val holidaysMap = HashMap<String, Long>()
     var isFromSaloon = false
     var position: Int = 0
+    val addedServicesMap = HashMap<String, Int>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.swipeRefresh.setOnRefreshListener {
-           // binding.swipeRefresh.isRefreshing = false
+            // binding.swipeRefresh.isRefreshing = false
             //page=1
             getMemberDetails(true)
         }
@@ -99,6 +107,9 @@ class FragmentViewMember :
         binding.imgAddService.setOnClickListener {
             var nextFragment = FragmentAddService()
             nextFragment.userId = member?.userId!!
+            nextFragment.saloonId = memberDetails?.saloon?.id?.toInt()
+            nextFragment.addedServicesList = servicesList
+            nextFragment.addedServicesMap = addedServicesMap
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
         getMemberDetails(false)
@@ -119,30 +130,61 @@ class FragmentViewMember :
         )
 
         // Set click listeners for menu options
-        val invite_salon: TextView = menuView.findViewById(R.id.invite_salon)
-        val invite_user: TextView = menuView.findViewById(R.id.invite_user)
-        val delete_user: TextView = menuView.findViewById(R.id.delete_user)
+        val option1: TextView = menuView.findViewById(R.id.invite_salon)
+        val option2: TextView = menuView.findViewById(R.id.invite_user)
+        val option3: TextView = menuView.findViewById(R.id.delete_user)
+        val option4: TextView = menuView.findViewById(R.id.delete_Invitation)
+        val option5: TextView = menuView.findViewById(R.id.remove_manager)
+        option1.text = "Mark as Manager"
+        option2.text = "Inactivate User"
+        option3.text = "Delete User"
 
-        invite_salon.setOnClickListener {
-            var nextFragment = FragmentInvite()
-            nextFragment.type = "Saloon"
-            nextFragment.memberId = member?.userId ?: 0
-            (activity as HomeActivity?)?.loadFragment(nextFragment)
+        if (memberDetails?.isMember == true) {
+            if (member?.isManger == true) {
+                option5.visibility = View.VISIBLE
+                option1.visibility = View.GONE
+            } else {
+                option1.visibility = View.VISIBLE
+                option5.visibility = View.GONE
+            }
+            //option1.visibility = View.VISIBLE
+            option2.visibility = View.VISIBLE
+            option3.visibility = View.VISIBLE
+            option4.visibility = View.GONE
+        } else {
+            option1.visibility = View.GONE
+            option2.visibility = View.GONE
+            option3.visibility = View.GONE
+            option4.visibility = View.VISIBLE
+        }
+        option1.setOnClickListener {
+            makeManger(memberDetails?.id?.toInt() ?: 0)
             // Handle Option 1 click
             popupWindow.dismiss()
         }
 
-        invite_user.setOnClickListener {
-            inActiveMember()
+        option2.setOnClickListener {
+            inActiveMember(memberDetails?.id?.toInt() ?: 0)
             // Handle Option 2 click
             popupWindow.dismiss()
         }
 
-        delete_user.setOnClickListener {
-            deleteMember()
+        option3.setOnClickListener {
+            deleteMember(memberDetails?.id?.toInt() ?: 0)
             // Handle Option 3 click
             popupWindow.dismiss()
         }
+        option4.setOnClickListener {
+            deleteInvitation(memberDetails?.id?.toInt() ?: 0)
+            // Handle Option 3 click
+            popupWindow.dismiss()
+        }
+        option5.setOnClickListener {
+            removeManager(memberDetails?.id?.toInt() ?: 0)
+            // Handle Option 3 click
+            popupWindow.dismiss()
+        }
+
 
         // Show the PopupWindow below the anchor view
         popupWindow.showAsDropDown(anchor, 0, 10) // Adjust offset as needed
@@ -157,7 +199,7 @@ class FragmentViewMember :
                 model: Any,
                 target: com.bumptech.glide.request.target.Target<Drawable>?,
                 dataSource: DataSource,
-                isFirstResource: Boolean
+                isFirstResource: Boolean,
             ): Boolean {
                 Log.d("imageLoaded", "success ${memberDetails?.fullName}")
 
@@ -170,7 +212,7 @@ class FragmentViewMember :
                 e: GlideException?,
                 model: Any?,
                 target: Target<Drawable>,
-                isFirstResource: Boolean
+                isFirstResource: Boolean,
             ): Boolean {
                 binding.imgProfilePic.scaleType = ImageView.ScaleType.CENTER_INSIDE
                 Log.d("imageLoaded", "failed ${memberDetails?.fullName}")
@@ -188,35 +230,76 @@ class FragmentViewMember :
             .skipMemoryCache(false)  // Cache in memory
             .into(binding.imgProfilePic)
         binding.txtName.text = memberDetails?.fullName
-        binding.txtCountry.text = memberDetails?.nationality
-        binding.txtStyle.text = "Missing style"
+        if (memberDetails != null) {
+            binding.txtCountry.setCountryForNameCode(getCountryIsoCodeByName(memberDetails!!.nationality))
+        }
+        // Disable the CountryCodePicker completely
+        binding.txtCountry.setOnClickListener(null)
+        binding.txtCountry.setCcpClickable(false)
+        binding.txtCountry.setFocusable(false)
+        binding.txtCountry.setEnabled(false)
+
+// Try hiding the arrow imageView manually (fallback if above doesn't work)
+        try {
+            val arrowId = binding.txtCountry.resources.getIdentifier(
+                "imageViewArrow",
+                "id",
+                binding.txtCountry.context.packageName
+            )
+            val arrowView = binding.txtCountry.findViewById<View>(arrowId)
+            arrowView?.visibility = View.GONE
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        //  binding.txtCountry.text = memberDetails?.nationality
+        binding.txtStyle.text = memberDetails?.saloon?.name ?: ""
         binding.txtBookingsCount.text =
             "${memberDetails?.totalBookings} ${if (memberDetails?.totalBookings?.toInt() == 1) "booking" else "bookings"}"
         binding.txtRatings.text = "${memberDetails?.tRating} (${memberDetails?.numReviews} ${
             if (memberDetails?.numReviews?.toInt() == 1) "review" else "reviews"
         })"
-        if (memberDetails?.workingToday == true) {
-            binding.llStatus.setBackgroundDrawable(
-                ResourcesCompat.getDrawable(
-                    requireContext().resources,
-                    R.drawable.green_70_rounded,
-                    requireContext().theme
+        if (memberDetails?.isMember == true) {
+            if (memberDetails?.workingToday == true) {
+                binding.llStatus.setBackgroundDrawable(
+                    ResourcesCompat.getDrawable(
+                        requireContext().resources,
+                        R.drawable.green_70_rounded,
+                        requireContext().theme
+                    )
                 )
-            )
-            binding.txtStatusTexts.text = "working today"
+                binding.txtStatusTexts.text = getString(R.string.working_today)
+            } else {
+                binding.llStatus.setBackgroundDrawable(
+                    ResourcesCompat.getDrawable(
+                        requireContext().resources,
+                        R.drawable.red_70_rounded,
+                        requireContext().theme
+                    )
+                )
+                binding.txtStatusTexts.text = getString(R.string.on_leave)
+            }
         } else {
             binding.llStatus.setBackgroundDrawable(
                 ResourcesCompat.getDrawable(
                     requireContext().resources,
-                    R.drawable.red_70_rounded,
+                    R.drawable.rounded_blue,
                     requireContext().theme
                 )
             )
-            binding.txtStatusTexts.text = "on leave today"
+            binding.txtStatusTexts.text = getString(R.string.invitation_sent)
         }
         setWorkingHourAdopter()
         setServicesAdapter()
         setHolidaysAdopter()
+    }
+
+    fun getCountryIsoCodeByName(countryName: String): String? {
+        val locales = Locale.getISOCountries().map { iso ->
+            val locale = Locale("", iso)
+            iso to locale.displayCountry
+        }
+
+        return locales.firstOrNull { it.second.equals(countryName, ignoreCase = true) }?.first
     }
 
     private fun setHolidaysAdopter() {
@@ -255,8 +338,29 @@ class FragmentViewMember :
     }
 
     private fun setServicesAdapter() {
-        // Set adapter
-        binding.gridView.adapter = ServiceGridviewAdapter(servicesList, requireContext())
+        val clickListener = object : OnItemClickListner {
+            override fun onItemClick(position: Int) {
+                var nextFragment = FragmentAddService()
+                nextFragment.isEdit = true
+                nextFragment.userId = member?.userId!!
+                nextFragment.addedServicesList = servicesList
+                nextFragment.addedServicesMap = addedServicesMap
+                nextFragment.saloonId = memberDetails?.saloon?.id?.toInt()
+                (activity as HomeActivity?)?.loadFragment(nextFragment)
+            }
+        }
+        val adapter = ServiceGridviewAdapter(servicesList, requireContext(), clickListener)
+
+        val flexboxLayoutManager = FlexboxLayoutManager(requireContext()).apply {
+            flexDirection = FlexDirection.ROW  // horizontal flow
+            flexWrap = FlexWrap.WRAP            // wrap to next line
+            justifyContent = JustifyContent.FLEX_START
+        }
+
+        binding.gridRecyclerView.layoutManager = flexboxLayoutManager
+        binding.gridRecyclerView.adapter = adapter
+
+
     }
 
     private fun setWorkingHourAdopter() {
@@ -267,7 +371,11 @@ class FragmentViewMember :
                     WorkingHourData(
                         1,
                         hour?.day ?: "",
-                        "${hour?.openingTime} - ${hour?.closingTime}"
+                        "${TimeHelper.convertUtcToLocalTime(hour?.openingTime ?: "")} - ${
+                            TimeHelper.convertUtcToLocalTime(
+                                hour?.closingTime ?: ""
+                            )
+                        }"
                     )
                 )
 
@@ -298,7 +406,7 @@ class FragmentViewMember :
 
     override fun getFragmentBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = FragmentViewMemberBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
@@ -316,9 +424,16 @@ class FragmentViewMember :
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
+            if (Appelement.reload) {
+                getMemberDetails(true)
+            }
             (activity as HomeActivity?)?.setSystemWindow(true)
             (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, false)
-            (activity as HomeActivity?)?.changeStatusBarColor(requireActivity().resources.getColor(R.color.colorPrimary))
+            (activity as HomeActivity?)?.changeStatusBarColor(
+                requireActivity().resources.getColor(
+                    R.color.colorPrimary
+                )
+            )
             (activity as HomeActivity?)?.hideTabs()
         }
     }
@@ -340,10 +455,12 @@ class FragmentViewMember :
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status == 1) {
                         servicesList.clear()
+                        addedServicesMap.clear()
                         memberDetails = it.value.data
                         Log.d("response", "success " + it.toString())
                         for (service in it.value.data.userServices) {
                             servicesList.add(service!!.service.name)
+                            addedServicesMap.put(service.service.name, service.service.id.toInt())
                         }
                         setData()
                     }
@@ -365,15 +482,20 @@ class FragmentViewMember :
         }
     }
 
-    private fun inActiveMember() {
+    private fun inActiveMember(id: Int) {
         viewModel.inActiveMember.observe(viewLifecycleOwner) {
 
             when (it) {
                 is Resource.Success -> {
                     Log.d("response", "success " + it.toString())
                     (activity as HomeActivity?)?.hideLoadingIndicator()
-                    requireView().snackbar("Member inactive successfully")
-                    (activity as HomeActivity?)?.popFragment()
+                    if (it.value.status != 0) {
+                        requireView().snackbar("Member inactive successfully")
+
+                    } else {
+                        requireView().snackbar(it.value.message)
+
+                    }
                 }
 
                 is Resource.Failure -> {
@@ -386,19 +508,93 @@ class FragmentViewMember :
                 else -> {}
             }
         }
-        viewModel.inActiveMember(member?.id ?: 0)
+        viewModel.inActiveMember(id)
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 
-    private fun deleteMember() {
+    private fun removeManager(id: Int) {
+        viewModel.removeManger.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+
+                        requireView().snackbar("Remove as manager successfully")
+
+                    } else {
+                        requireView().snackbar(it.value.message)
+
+                    }
+                    //  (activity as HomeActivity?)?.popFragment()
+
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.removeManager(id)
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
+    private fun deleteInvitation(id: Int) {
+        viewModel.removeInvite.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        requireView().snackbar("Invitation deleted successfully")
+
+                    } else {
+                        requireView().snackbar(it.value.message)
+
+                    }
+
+                    //  (activity as HomeActivity?)?.popFragment()
+
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.removeInvite(id)
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
+    private fun deleteMember(id: Int) {
         viewModel.deleteMember.observe(viewLifecycleOwner) {
 
             when (it) {
                 is Resource.Success -> {
                     Log.d("response", "success " + it.toString())
                     (activity as HomeActivity?)?.hideLoadingIndicator()
-                    requireView().snackbar("Member inactive successfully")
-                    (activity as HomeActivity?)?.popFragment()
+                    if (it.value.status != 0) {
+                        requireView().snackbar("Member deleted successfully")
+
+                    } else {
+                        requireView().snackbar(it.value.message)
+
+                    }
+
+                    //  (activity as HomeActivity?)?.popFragment()
+
                 }
 
                 is Resource.Failure -> {
@@ -411,9 +607,49 @@ class FragmentViewMember :
                 else -> {}
             }
         }
-        viewModel.deleteMember(member?.id ?: 0)
+        viewModel.deleteMember(id)
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
+
+    private fun makeManger(id: Int) {
+        viewModel.makeManger.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    if (it.value.status != 0) {
+                        Log.d("response", "success " + it.toString())
+                        (activity as HomeActivity?)?.hideLoadingIndicator()
+                        if (it.value.status != 0) {
+                            requireView().snackbar("Member marked manager successfully")
+
+
+                        } else {
+                            requireView().snackbar(it.value.message)
+
+                        }
+                        //  (activity as HomeActivity?)?.popFragment()
+
+                    } else {
+                        (activity as HomeActivity?)?.hideLoadingIndicator()
+                        requireView().snackbar(it.value.message)
+                    }
+
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.makeManager(id)
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
 
     private fun deleteHoliday(holidayId: Int) {
         viewModel.removeHoliday.observe(viewLifecycleOwner) {

@@ -17,7 +17,18 @@
         android:fontFamily="@font/manrope_regular"
         android:textColor="@color/otpblack"
         android:background="?attr/selectableItemBackground" />
-
+    <TextView
+        android:id="@+id/remove_manager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/remove_manager"
+        android:textSize="14sp"
+        android:textFontWeight="500"
+        android:visibility="gone"
+        android:fontFamily="@font/manrope_regular"
+        android:textColor="@color/otpblack"
+        android:background="?attr/selectableItemBackground" />
     <TextView
         android:id="@+id/invite_user"
         android:layout_width="match_parent"
@@ -38,6 +49,18 @@
         android:text="@string/delete_user"
         android:textSize="14sp"
         android:textFontWeight="500"
+        android:fontFamily="@font/manrope_regular"
+        android:textColor="@color/otpblack"
+        android:background="?attr/selectableItemBackground" />
+    <TextView
+        android:id="@+id/delete_Invitation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/remove_invitation"
+        android:textSize="14sp"
+        android:textFontWeight="500"
+        android:visibility="gone"
         android:fontFamily="@font/manrope_regular"
         android:textColor="@color/otpblack"
         android:background="?attr/selectableItemBackground" />

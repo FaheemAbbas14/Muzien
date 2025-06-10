@@ -11,6 +11,6 @@ import com.tt.muzien.data.responses.SaloonWorkHour
  * +923115284424
  */
 data class SaloonDto(
-    val id: Int, val icon: List<SaloonImage?>?=listOf<SaloonImage>(), val name: String, val isOpened: Boolean, val status: String, val location: String, val ratings: String, val timing: List<SaloonWorkHour?>?,
+    val id: Int, val icon: List<SaloonImage?>?=listOf<SaloonImage>(), val name: String, val isOpened: Boolean, val isActive: Boolean, val location: String, val ratings: String, val timing: List<SaloonWorkHour?>?,
     val latitude: Double? =0.0,
     val longitude: Double? =0.0)

@@ -47,7 +47,7 @@ class FragmentAddPayment :
     BaseFragment<SaloonViewModel, FragmentAddPaymentBinding, SaloonRepository>() {
     var expMonth = 0
     var expYear = 0
-    var type = ""
+    var type = "Visa"
     var payDto: PayDto? = null
     var transactionId = ""
 
@@ -71,16 +71,22 @@ class FragmentAddPayment :
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // checkValidation()
         payDto = Appelement.payDto
+        binding.edtCardName.text=Editable.Factory.getInstance().newEditable("Faheem Abbas")
+        binding.edtCardNumber.text=Editable.Factory.getInstance().newEditable("4111114005765430")
+        binding.edtExp.text=Editable.Factory.getInstance().newEditable("11/26")
+        binding.edtCVV.text=Editable.Factory.getInstance().newEditable("1234")
+        checkValidation()
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
         }
         binding.imgVisa.setOnClickListener {
             type = "Visa"
+            checkValidation()
         }
         binding.imgMaster.setOnClickListener {
             type = "Master"
+            checkValidation()
         }
         binding.llPayNow.setOnClickListener {
             makePayment(false)

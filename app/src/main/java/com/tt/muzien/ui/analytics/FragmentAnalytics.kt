@@ -453,6 +453,7 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
                 }
 
             }
+            (activity as HomeActivity?)?.showTabs()
         }
     }
 }

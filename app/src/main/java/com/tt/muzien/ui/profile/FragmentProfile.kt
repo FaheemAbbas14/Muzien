@@ -37,6 +37,7 @@ import com.tt.muzien.utilities.Helper
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import java.util.Locale
 
 
 class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, HomeRepository>() {
@@ -49,6 +50,13 @@ class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, Home
         super.onViewCreated(view, savedInstanceState)
         viewModel.setUserRepo((activity as HomeActivity?)?.getUserRepo()!!)
         setUserData()
+        val isArabic = Locale.getDefault().language == "ar"
+        if (isArabic){
+            binding.txtSelectedLanguage.text=resources.getString(R.string.arabic)
+        }
+        else{
+            binding.txtSelectedLanguage.text=resources.getString(R.string.english)
+        }
         if (LoggedInInfo.user?.role == "super-admin") {
             binding.llSubscribtion.visibility = View.GONE
         } else {

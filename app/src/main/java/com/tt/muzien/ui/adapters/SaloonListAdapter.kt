@@ -50,6 +50,7 @@ class SaloonListAdapter(
         val txtTiming: TextView = itemView.findViewById(R.id.txtTiming)
         val llTimes: LinearLayout = itemView.findViewById(R.id.llTimes)
         val cnstMain: ConstraintLayout = itemView.findViewById(R.id.cnstMain)
+
         init {
             itemView.setOnClickListener(this)
         }
@@ -78,40 +79,43 @@ class SaloonListAdapter(
         holder.txtRating.text = item.ratings
         var timing = TimeHelper.getCurrentDayTiming(item.timing)
         holder.txtTiming.text = timing
-        if (item.isOpened) {
+        if (item.isActive) {
+            if (item.isOpened) {
+                holder.llStatus.setBackgroundDrawable(
+                    ResourcesCompat.getDrawable(
+                        context.resources,
+                        R.drawable.rounded_green,
+                        context.theme
+                    )
+                )
+                holder.txtStatusTexts.text = "open today"
+                holder.llTimes.visibility = View.VISIBLE
+                holder.cnstMain.setBackgroundColor(context.resources.getColor(R.color.white))
+            } else {
+                holder.llStatus.setBackgroundDrawable(
+                    ResourcesCompat.getDrawable(
+                        context.resources,
+                        R.drawable.rounded_red,
+                        context.theme
+                    )
+                )
+                holder.txtStatusTexts.text = "close today"
+                holder.llTimes.visibility = View.GONE
+                holder.cnstMain.setBackgroundColor(context.resources.getColor(R.color.white))
+            }
+        } else {
+
             holder.llStatus.setBackgroundDrawable(
                 ResourcesCompat.getDrawable(
                     context.resources,
-                    R.drawable.rounded_green,
+                    R.drawable.rounded_red,
                     context.theme
                 )
             )
-            holder.txtStatusTexts.text = "Open today"
-            holder.llTimes.visibility=View.VISIBLE
-        } else {
-            if (item.status=="closed") {
-                holder.llStatus.setBackgroundDrawable(
-                    ResourcesCompat.getDrawable(
-                        context.resources,
-                        R.drawable.rounded_red,
-                        context.theme
-                    )
-                )
-                holder.txtStatusTexts.text = "Close today"
-                holder.llTimes.visibility = View.GONE
-            }
-            else{
-                holder.llStatus.setBackgroundDrawable(
-                    ResourcesCompat.getDrawable(
-                        context.resources,
-                        R.drawable.rounded_red,
-                        context.theme
-                    )
-                )
-                holder.txtStatusTexts.text = "Inactive"
-                holder.llTimes.visibility = View.GONE
-                holder.cnstMain.setBackgroundColor(context.resources.getColor(R.color.overduebg))
-            }
+            holder.txtStatusTexts.text = "inactive"
+            holder.llTimes.visibility = View.GONE
+            holder.cnstMain.setBackgroundColor(context.resources.getColor(R.color.overduebg))
+
         }
         item.icon?.size?.let {
             if (it > 0) {
@@ -123,7 +127,7 @@ class SaloonListAdapter(
                         model: Any,
                         target: com.bumptech.glide.request.target.Target<Drawable>?,
                         dataSource: DataSource,
-                        isFirstResource: Boolean
+                        isFirstResource: Boolean,
                     ): Boolean {
                         Log.d("imageLoaded", "success ${item.name}")
 
@@ -136,7 +140,7 @@ class SaloonListAdapter(
                         e: GlideException?,
                         model: Any?,
                         target: Target<Drawable>,
-                        isFirstResource: Boolean
+                        isFirstResource: Boolean,
                     ): Boolean {
                         holder.imgIcon.scaleType = ImageView.ScaleType.CENTER_CROP
                         Log.d("imageLoaded", "failed ${item.name}")

@@ -163,6 +163,7 @@ class FragmentServices :
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
+        (activity as HomeActivity?)?.showTabs()
         if (!hidden) {
            if (Appelement.reload){
                Appelement.reload=false

@@ -99,6 +99,7 @@ class EditSaloonAbout :
     override fun onResume() {
         super.onResume()
         (activity as HomeActivity?)?.setSystemWindow(true)
+        (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, true)
         (activity as HomeActivity?)?.hideTabs()
     }
     @RequiresApi(Build.VERSION_CODES.O)

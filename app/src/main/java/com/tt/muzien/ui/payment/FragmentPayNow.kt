@@ -1,5 +1,7 @@
 package com.tt.muzien.ui.payment
 
+import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -7,14 +9,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
 import com.moyasar.android.sdk.core.customviews.button.MoyasarButtonType
 import com.moyasar.android.sdk.core.data.response.PaymentResponse
 import com.moyasar.android.sdk.core.domain.entities.PaymentResult
 import com.moyasar.android.sdk.creditcard.data.models.CreditCardNetwork
 import com.moyasar.android.sdk.creditcard.data.models.request.PaymentRequest
-import com.moyasar.android.sdk.creditcard.presentation.view.fragments.PaymentFragment
-import com.moyasar.android.sdk.stcpay.presentation.view.fragments.EnterMobileNumberFragment
+import com.moyasar.android.sdkdriver.customui.creditcard.CustomUIPaymentFragment
+import com.moyasar.android.sdkdriver.customui.stcpay.EnterMobileNumberCustomUIFragment
+import com.tt.muzien.Application
 import com.tt.muzien.BuildConfig
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.LoggedInInfo
@@ -32,6 +36,7 @@ import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.Appelement
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.UUID
 
 class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, SaloonRepository>() {
     var payDto: PayDto? = null
@@ -39,6 +44,18 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
     var expMonth = 0
     var expYear = 0
     var subscriptionId: Int? = null
+    var isStcPayment = false
+
+    companion object {
+        fun startPaymentWithMoyasar(
+            context: Context,
+            getResult: ActivityResultLauncher<Intent>,
+        ) {
+            val intent = Intent(context, HomeActivity::class.java)
+            getResult.launch(intent)
+        }
+
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -69,10 +86,12 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
         }
 
         binding.llOtherPayment.setOnClickListener {
+            isStcPayment = false
             (activity as HomeActivity?)?.hideTabs()
             makePayment(false)
         }
         binding.llSTCPay.setOnClickListener {
+            isStcPayment = true
             makePayment(true)
         }
 
@@ -94,26 +113,30 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
 
     override fun onResume() {
         super.onResume()
-        (activity as HomeActivity?)?.invisibleTabs()
+        (activity as HomeActivity?)?.setSystemWindow(true)
         (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, true)
+        (activity as HomeActivity?)?.hideTabs()
     }
 
     override fun onPause() {
         super.onPause()
+        (activity as HomeActivity?)?.setSystemWindow(true)
         (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, false)
-        (activity as HomeActivity?)?.hideTabs()
+        (activity as HomeActivity?)?.showTabs()
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
+            (activity as HomeActivity?)?.setSystemWindow(true)
             (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, true)
-            (activity as HomeActivity?)?.invisibleTabs()
+            (activity as HomeActivity?)?.hideTabs()
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun makePayment(isSTCPayment: Boolean) {
+        val uuid = UUID.randomUUID().toString()
         val paymentRequest = PaymentRequest(
             apiKey = BuildConfig.moyasarKey,
             amount = payDto?.discountedPrice
@@ -122,7 +145,7 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
             description = "${payDto?.saloonName ?: ""} ${payDto?.planName ?: ""}",
             manual = false,
             metadata = mapOf(
-                "order_id" to "order_123",
+                "order_id" to uuid,
                 "customer_id" to Integer.parseInt("${LoggedInInfo.user?.id}"),
                 "customer_name" to "${LoggedInInfo.user?.fullName}",
                 "actual_price" to Integer.parseInt("${payDto?.actualPrice}"),
@@ -141,10 +164,18 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
         )
         if (!isSTCPayment) {
             // Create the payment fragment
+//            val paymentFragment =
+//                PaymentFragment.newInstance(
+//                    requireActivity().application,
+//                    paymentRequest
+//                ) {
+//                    handlePaymentResult(it)
+//                }
             val paymentFragment =
-                PaymentFragment.newInstance(
-                    requireActivity().application,
-                    paymentRequest
+                CustomUIPaymentFragment.newInstance(
+                    requireActivity().application as Application,
+                    paymentRequest,
+                    payDto
                 ) {
                     handlePaymentResult(it)
                 }
@@ -152,7 +183,7 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
         } else {
             // Create the payment fragment
             val enterMobileNumberFragment =
-                EnterMobileNumberFragment.newInstance(
+                EnterMobileNumberCustomUIFragment.newInstance(
                     requireActivity().application,
                     paymentRequest
                 ) {
@@ -172,21 +203,36 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
             }
 
             is PaymentResult.Failed -> {
+                (activity as HomeActivity?)?.hideLoadingIndicator()
                 // Show error
                 val error = result.error
                 // Handle the error (e.g., Toast or dialog)
                 Toast.makeText(requireContext(), "Payment failed with ${error}", Toast.LENGTH_SHORT)
                     .show()
+                if (isStcPayment){
+                    (activity as HomeActivity?)?.popFragment()
+                }
                 (activity as HomeActivity?)?.popFragment()
+                //(activity as HomeActivity?)?.popFragment()
             }
 
             PaymentResult.Canceled -> {
+                (activity as HomeActivity?)?.hideLoadingIndicator()
                 Toast.makeText(requireContext(), "Payment cancelled", Toast.LENGTH_SHORT).show()
                 (activity as HomeActivity?)?.popFragment()
+                (activity as HomeActivity?)?.popFragment()
+                if (isStcPayment){
+                    (activity as HomeActivity?)?.popFragment()
+                }
             }
 
             is PaymentResult.CompletedToken -> {
+                (activity as HomeActivity?)?.hideLoadingIndicator()
                 (activity as HomeActivity?)?.popFragment()
+                (activity as HomeActivity?)?.popFragment()
+                if (isStcPayment){
+                    (activity as HomeActivity?)?.popFragment()
+                }
             }
         }
     }
@@ -195,9 +241,9 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
     private fun handleCompletedPayment(payment: PaymentResponse) {
         when (payment.status) {
             "paid" -> {
-                (activity as HomeActivity?)?.popFragment()
+             //   (activity as HomeActivity?)?.popFragment()
                 transactionId = payment.id ?: ""
-                if (subscriptionId != null) {
+                if (subscriptionId != null && subscriptionId!=0) {
                     updateSubscriptions()
                 } else {
                     addSubscriptions()
@@ -211,11 +257,16 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
             }
 
             "failed" -> {
+                (activity as HomeActivity?)?.hideLoadingIndicator()
                 val errorMessage = payment.source["message"]
                 /* Handle failed payment */
                 Toast.makeText(requireContext(), "Payment failed $errorMessage", Toast.LENGTH_SHORT)
                     .show()
-                (activity as HomeActivity?)?.popFragment()
+//                (activity as HomeActivity?)?.popFragment()
+//                (activity as HomeActivity?)?.popFragment()
+//                if (isStcPayment){
+//                    (activity as HomeActivity?)?.popFragment()
+//                }
             }
 
             else -> { /* Handle other statuses */
@@ -315,6 +366,11 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
             when (it) {
                 is Resource.Success -> {
                     (activity as HomeActivity?)?.popFragment()
+                    (activity as HomeActivity?)?.popFragment()
+                    (activity as HomeActivity?)?.popFragment()
+                    //if (isStcPayment) {
+                        (activity as HomeActivity?)?.popFragment()
+                   // }
                     Log.d("response", "success " + it.toString())
                     Appelement.reload = true
                     (activity as HomeActivity?)?.hideLoadingIndicator()
@@ -365,6 +421,7 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
 
             when (it) {
                 is Resource.Success -> {
+                    (activity as HomeActivity?)?.popFragment()
                     (activity as HomeActivity?)?.popFragment()
                     Log.d("response", "success " + it.toString())
                     Appelement.reload = true

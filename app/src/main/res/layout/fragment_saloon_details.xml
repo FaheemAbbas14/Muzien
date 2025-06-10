@@ -4,7 +4,7 @@
     android:id="@+id/nestedScrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_grey"
+    android:background="@color/white"
     android:fillViewport="true"
     android:fitsSystemWindows="false">
 
@@ -390,7 +390,7 @@
                 android:id="@+id/tab_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="400dp"
+                android:minHeight="600dp"
                 android:background="@color/light_grey"
                 android:nestedScrollingEnabled="false"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -122,7 +122,7 @@ class ServiceProviderDashboard :
             }
         }
 
-        if (LoggedInInfo.user?.status == "None") {
+        if (LoggedInInfo.user?.status == "none") {
             binding.llSendInvite.visibility = View.VISIBLE
             binding.llAcceptInvite.visibility = View.GONE
             binding.llBookings.visibility = View.GONE
@@ -138,7 +138,7 @@ class ServiceProviderDashboard :
         binding.swipeRefresh.setOnRefreshListener {
             // binding.swipeRefresh.isRefreshing = false
             page = 1
-            if (LoggedInInfo.user?.status == "None") {
+            if (LoggedInInfo.user?.status == "none") {
                 binding.llSendInvite.visibility = View.VISIBLE
                 binding.llAcceptInvite.visibility = View.GONE
                 binding.llBookings.visibility = View.GONE
@@ -326,7 +326,7 @@ class ServiceProviderDashboard :
                 is Resource.Success -> {
                     Log.d("response", "success " + it.toString())
                     (activity as HomeActivity?)?.hideLoadingIndicator()
-                    if (it.value.status != 0 && it.value.data.id != null) {
+                    if (it.value.status != 0&& it.value.data!= null && it.value.data.id != null) {
                         inviteId = it.value.data.id.toInt()
                         binding.txtInvitedText.text =
                             "${it.value.data.InvitedBy.fullName} has invited you to join their salon “${it.value.data.Saloon.name}” as a service provider.\n" +
@@ -363,6 +363,9 @@ class ServiceProviderDashboard :
                     Log.d("response", "success " + it.toString())
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
+                        binding.llBookings.visibility = View.VISIBLE
+                        binding.llAcceptInvite.visibility = View.GONE
+                        binding.llSendInvite.visibility = View.GONE
                         saloonId = it.value.data.saloonId.toInt()
                         getAnalytics(false)
                     } else {

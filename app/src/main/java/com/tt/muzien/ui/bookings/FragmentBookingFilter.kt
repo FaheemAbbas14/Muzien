@@ -24,6 +24,7 @@ import com.tt.muzien.ui.views.CustomCalendar
 import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.FilterSelection
 import com.tt.muzien.utilities.TimeHelper
+import java.util.Locale
 
 
 class FragmentBookingFilter :
@@ -197,13 +198,20 @@ class FragmentBookingFilter :
         binding.customCalendar.setOnDateSelectedListener(object :
             CustomCalendar.OnDateSelectedListener {
             override fun onDatesSelected(selectedDates: ArrayList<String>) {
+                val isArabic = Locale.getDefault().language == "ar"
                 if (isFrom) {
                     // binding.txtFromError.visibility = View.VISIBLE
                     binding.llTo.visibility = View.VISIBLE
                     fromDate = selectedDates.get(0)
+                    if (isArabic){
+                        fromDate= TimeHelper.convertArabicDigitsToEnglish(fromDate?:"")
+                    }
                     binding.txtFrom.text = fromDate
                 } else {
                     toDate = selectedDates.get(selectedDates.size-1)
+                    if (isArabic){
+                        toDate= TimeHelper.convertArabicDigitsToEnglish(toDate?:"")
+                    }
                     binding.txtTo.text = toDate
                 }
                 binding.customCalendar.visibility = View.GONE
@@ -288,7 +296,7 @@ class FragmentBookingFilter :
                                     saloon.SaloonImages,
                                     saloon.name,
                                     if (saloon.status == "open") true else false,
-                                    saloon.status,
+                                    saloon.isActive,
                                     saloon.address ?: "",
                                     "${saloon.tRating} (${saloon.numReviews} ${
                                         if (saloon.numReviews.toInt() == 1) "review" else "reviews"

@@ -52,11 +52,12 @@
 
                 <TextView
                     android:id="@+id/txtAbout"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:fontFamily="@font/manrope_regular"
                     android:text=""
+                    android:gravity="right"
                     android:textColor="@color/black_shade2"
                     android:textFontWeight="500"
                     android:textSize="12sp"
@@ -251,7 +252,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:src="@drawable/blue_add"
-                    app:layout_constraintStart_toStartOf="@+id/txtHolidaysData"
+                    app:layout_constraintStart_toStartOf="@+id/txtHoliday"
                     app:layout_constraintTop_toBottomOf="@+id/txtHolidaysData" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 

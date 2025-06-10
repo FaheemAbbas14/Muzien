@@ -47,7 +47,7 @@ interface ServiceApi {
 
     @GET("v1/saloon/service/{saloonId}")
     suspend fun getCategories(
-        @Path("saloonId") saloonId: String,
+        @Path("saloonId") saloonId: Int,
     ): GetServicesResponse
 
     @GET("v1/service/mySaloonsServices")

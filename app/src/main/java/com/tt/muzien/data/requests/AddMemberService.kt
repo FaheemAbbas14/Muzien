@@ -8,4 +8,4 @@ package com.tt.muzien.data.requests
  * faheem.abbas@bajcotechnologies.com
  * +923115284424
  */
-data class AddMemberService(var serviceId: String)
+data class AddMemberService(var services: ArrayList<Int>)

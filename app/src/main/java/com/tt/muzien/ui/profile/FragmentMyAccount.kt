@@ -47,7 +47,8 @@ class FragmentMyAccount : BaseFragment<HomeViewModel, FragmentMyAccountBinding, 
             Editable.Factory.getInstance().newEditable("${LoggedInInfo.user?.fullName}")
         binding.countrySpinner.setOnCountryChangeListener {
             country = binding.countrySpinner.selectedCountryName
-            binding.txtCountryCode.text = binding.countrySpinner.selectedCountryCode
+            val countryCode = binding.countrySpinner.selectedCountryCode
+            binding.txtCountryCode.text ="+$countryCode"
             checkValidation()
         }
         binding.edtPhoneNumber.addTextChangedListener(object : TextWatcher {

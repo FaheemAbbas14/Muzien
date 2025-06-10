@@ -52,6 +52,9 @@ class MemberRepository(
     suspend fun makeManager(memberId: Int) = safeApiCall {
         api.makeManager(memberId)
     }
+    suspend fun removeManager(memberId: Int) = safeApiCall {
+        api.removeManager(memberId)
+    }
 
     suspend fun getLatestInvite() = safeApiCall {
         api.getLatestInvite()
@@ -59,6 +62,9 @@ class MemberRepository(
 
     suspend fun acceptInvite(inviteId: Int) = safeApiCall {
         api.acceptInvite(inviteId)
+    }
+    suspend fun removeInvite(inviteId: Int) = safeApiCall {
+        api.removeInvite(inviteId)
     }
 
     suspend fun addService(userId: Int, request: AddMemberService) = safeApiCall {
@@ -79,6 +85,9 @@ class MemberRepository(
 
     suspend fun removeHoliday(userId: Int, holidayId: Int) = safeApiCall {
         api.removeHoliday(userId, holidayId)
+    }
+    suspend fun deleteService(userId: Int, serviceId: Int) = safeApiCall {
+        api.deleteService(userId, serviceId)
     }
     suspend fun getServiceProvider(isActive: Boolean, isAdmin: Boolean?) = safeApiCall {
         api.getServiceProvider(isActive, isAdmin)

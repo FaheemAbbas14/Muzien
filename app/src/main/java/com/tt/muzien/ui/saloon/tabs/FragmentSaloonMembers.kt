@@ -131,7 +131,8 @@ class FragmentSaloonMembers :
                                     })",
                                     member.Saloon.name,
                                     member.todayBookings,
-                                    member.isAdmin
+                                    member.isAdmin,
+                                    member.isMember
                                 )
                             )
                         }
@@ -212,11 +213,17 @@ class FragmentSaloonMembers :
 
             when (it) {
                 is Resource.Success -> {
-                    Log.d("response", "success " + it.toString())
-                    // (activity as HomeActivity?)?.hideLoadingIndicator()
-                    requireView().snackbar("Member marked manager successfully")
-                    //  (activity as HomeActivity?)?.popFragment()
-                    getMembers()
+                    if (it.value.status != 0){
+                        Log.d("response", "success " + it.toString())
+                        // (activity as HomeActivity?)?.hideLoadingIndicator()
+                        requireView().snackbar("Member marked manager successfully")
+                        //  (activity as HomeActivity?)?.popFragment()
+                        getMembers(false)
+                    }
+                    else{
+                        (activity as HomeActivity?)?.hideLoadingIndicator()
+                        requireView().snackbar(it.value.message)
+                    }
                 }
 
                 is Resource.Failure -> {

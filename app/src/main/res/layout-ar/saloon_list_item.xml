@@ -32,10 +32,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:gravity="right"
             android:fontFamily="@font/manrope_bold"
             android:maxLines="1"
             android:text=""
+            android:gravity="end"
             android:textColor="@color/colorTextDefault"
             android:textSize="14sp"
             android:textFontWeight="700"
@@ -148,6 +148,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/llTimes"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginStart="20dp"

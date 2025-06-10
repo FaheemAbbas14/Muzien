@@ -20,6 +20,7 @@ data class MemberDetails(
     val picture: String?,
     val verified: Boolean,
     val workingToday: Boolean,
+    val isMember: Boolean,
     val role: String,
     val credit: Long,
     val numReviews: Long,

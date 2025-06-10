@@ -119,7 +119,7 @@ interface SaloonApi {
         @Body requestData: AddSubscriptionRequest
     ): AddSubscribtionResponse
 
-    @POST("v1/saloon/{saloonId}/subscription/:{subscriptionId}")
+    @POST("v1/saloon/{saloonId}/subscription/{subscriptionId}")
     suspend fun updateSubscriptions(
         @Path("saloonId") saloonId: Int,
         @Path("subscriptionId") subscriptionId: Int,

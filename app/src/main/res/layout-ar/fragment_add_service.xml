@@ -25,7 +25,7 @@
             android:gravity="center"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:src="@drawable/arabic_back"
+            android:src="@drawable/back_button"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
@@ -88,7 +88,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtLabel" />
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/llAddService"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -105,33 +105,16 @@
         app:layout_constraintStart_toStartOf="@+id/llSave"
         app:layout_constraintTop_toBottomOf="@+id/txtText">
 
-
-        <AutoCompleteTextView
+        <Spinner
             android:id="@+id/edtService"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:fontFamily="@font/manrope_regular"
-            android:gravity="center|right"
-            android:hint="@string/service_name"
-            android:inputType="text"
-            android:paddingEnd="10dp"
-            android:textColor="@color/colorTextDefault"
-            android:textFontWeight="400"
-            android:textSize="14sp" />
-
-        <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="8dp"
-            app:srcCompat="@drawable/ddl_icon" />
+            android:layout_marginTop="5dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    </LinearLayout>
 
     <TextView
         android:id="@+id/txtInputLabel"
@@ -142,14 +125,34 @@
         android:background="@color/white"
         android:fontFamily="@font/manrope_regular"
         android:inputType="textEmailAddress"
-        android:text="@string/select_a_service"
+        android:text="Select Service"
         android:textColor="@color/colorTextLabelDefault"
         android:textFontWeight="500"
         android:textSize="11sp"
         app:layout_constraintBottom_toTopOf="@+id/llAddService"
         app:layout_constraintStart_toStartOf="@+id/llAddService" />
 
-
+    <TextView
+        android:id="@+id/txtSelected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/transparent"
+        android:fontFamily="@font/manrope_bold"
+        android:text="Selected Services"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textFontWeight="700"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/txtText"
+        app:layout_constraintTop_toBottomOf="@+id/llAddService" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/gridRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="@+id/txtText"
+        app:layout_constraintStart_toStartOf="@+id/txtText"
+        app:layout_constraintTop_toBottomOf="@+id/txtSelected" />
     <LinearLayout
         android:id="@+id/llSave"
         android:layout_width="0dp"
@@ -174,7 +177,7 @@
             android:layout_height="match_parent"
             android:fontFamily="@font/manrope_bold"
             android:gravity="center"
-            android:text="@string/save"
+            android:text="Save"
             android:textColor="@color/white"
             android:textSize="14sp" />
     </LinearLayout>

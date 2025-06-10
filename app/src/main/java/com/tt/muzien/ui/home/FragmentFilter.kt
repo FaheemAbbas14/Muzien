@@ -17,6 +17,7 @@ import com.tt.muzien.ui.views.CustomCalendar
 import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.FilterSelection
 import com.tt.muzien.utilities.TimeHelper
+import java.util.Locale
 
 
 class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRepository>() {
@@ -117,14 +118,21 @@ class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRe
             CustomCalendar.OnDateSelectedListener {
             override fun onDatesSelected(selectedDates: ArrayList<String>) {
                 // Handle the selected date
+                val isArabic = Locale.getDefault().language == "ar"
                 if (isFrom) {
                     binding.txtFromError.visibility = View.VISIBLE
                     binding.llTo.visibility = View.VISIBLE
                     binding.txtToLabel.visibility = View.VISIBLE
                     fromDate = selectedDates.get(0)
+                    if (isArabic){
+                        fromDate= TimeHelper.convertArabicDigitsToEnglish(fromDate?:"")
+                    }
                     binding.txtFrom.text = fromDate
                 } else {
                     toDate = selectedDates.get(selectedDates.size-1)
+                    if (isArabic){
+                        toDate= TimeHelper.convertArabicDigitsToEnglish(toDate?:"")
+                    }
                     binding.txtTo.text = toDate
                 }
                 binding.customCalendar.visibility = View.GONE

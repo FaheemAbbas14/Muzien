@@ -266,11 +266,20 @@
     <string name="no_bookings">لايوجد حجوزات</string>
     <string name="john_smith_has_invited_you_to_join_their_salon_the_style_zone_as_a_service_provider_do_you_want_to_accept">جون سميث قام بدعوتك للانضمام الى صالون "ذا ستايل زون" كمزود خدمة. هل ترغب في قبولها؟</string>
     <string name="saloons">الصالونات</string>
-    <string name="google_pay">Google Pay</string>
-    <string name="your_first_subscription">Your first subscription</string>
-    <string name="actual_fee">Actual Fee:</string>
-    <string name="card_name">Card Holder\'s Name</string>
-    <string name="stc_pay">STC Pay</string>
-    <string name="new_salon">New Salon</string>
-    <string name="update_service">Update Service</string>
+    <string name="google_pay">قوقل باي</string>
+    <string name="your_first_subscription">اشتراكك الأول</string>
+    <string name="actual_fee">الرسوم قبل الخصم:</string>
+    <string name="card_name">حامل البطاقة\'اسم</string>
+    <string name="stc_pay">اس تي سي باي</string>
+    <string name="new_salon">صالون جديد</string>
+    <string name="update_service">تحديث الخدمة</string>
+    <string name="stc_payment">مدفوعات اس تي سي</string>
+    <string name="phone_number">رقم الجوال</string>
+    <string name="otp">رمز التحقق</string>
+    <string name="invitation_sent">ارسلت الدعوة</string>
+    <string name="on_leave">لايعمل اليوم</string>
+    <string name="working_today">يعمل اليوم</string>
+    <string name="remove_invitation">Remove Invitation</string>
+    <string name="remove_manager">Remove Manager</string>
+    <string name="arabic">عربي</string>
 </resources>

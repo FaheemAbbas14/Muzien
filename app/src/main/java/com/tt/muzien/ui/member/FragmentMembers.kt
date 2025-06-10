@@ -67,8 +67,12 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
                     makeManger(membersList[position].id)
                 } else if (state == 2) {
                     inActiveMember(membersList[position].id)
-                } else {
+                } else if (state == 3) {
                     deleteMember(membersList[position].id)
+                } else if (state == 4) {
+                    deleteInvitation(membersList[position].id)
+                } else {
+                    removeManager(membersList[position].id)
                 }
             }
         }
@@ -89,7 +93,7 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
 
     override fun getFragmentBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = FragmentMembersBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
@@ -112,14 +116,15 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
                                     member.User.id.toInt(),
                                     member.User.picture,
                                     member.isActive,
-                                    member.User.fullName ?: "Name",
+                                    member.User.fullName ?: "",
                                     "",
                                     "${member.tRating} (${member.numReviews} ${
                                         if (member.numReviews.toInt() == 1) "review" else "reviews"
                                     })",
                                     member.Saloon.name,
                                     member.todayBookings,
-                                    member.isAdmin
+                                    member.isAdmin,
+                                    member.isMember
                                 )
                             )
                         }
@@ -153,8 +158,16 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
                 is Resource.Success -> {
                     Log.d("response", "success " + it.toString())
                     // (activity as HomeActivity?)?.hideLoadingIndicator()
-                    requireView().snackbar("Member inactive successfully")
-                    getMembers(false)
+                    if (it.value.status != 0) {
+                        requireView().snackbar("Member inactive successfully")
+                        getMembers(false)
+
+                    } else {
+                        (activity as HomeActivity?)?.hideLoadingIndicator()
+                        requireView().snackbar(it.value.message)
+
+                    }
+
                 }
 
                 is Resource.Failure -> {
@@ -171,6 +184,74 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 
+    private fun removeManager(id: Int) {
+        viewModel.removeManger.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    // (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+
+                        requireView().snackbar("Remove as manager successfully")
+                        //  (activity as HomeActivity?)?.popFragment()
+                        getMembers(false)
+
+                    } else {
+                        (activity as HomeActivity?)?.hideLoadingIndicator()
+                        requireView().snackbar(it.value.message)
+
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.removeManager(id)
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
+    private fun deleteInvitation(id: Int) {
+        viewModel.removeInvite.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    // (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+
+                        requireView().snackbar("Invite deleted successfully")
+                        //  (activity as HomeActivity?)?.popFragment()
+                        getMembers(false)
+
+                    } else {
+                        (activity as HomeActivity?)?.hideLoadingIndicator()
+                        requireView().snackbar(it.value.message)
+
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.removeInvite(id)
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
     private fun deleteMember(id: Int) {
         viewModel.deleteMember.observe(viewLifecycleOwner) {
 
@@ -178,9 +259,17 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
                 is Resource.Success -> {
                     Log.d("response", "success " + it.toString())
                     // (activity as HomeActivity?)?.hideLoadingIndicator()
-                    requireView().snackbar("Member deleted successfully")
-                    //  (activity as HomeActivity?)?.popFragment()
-                    getMembers(false)
+                    if (it.value.status != 0) {
+
+                        requireView().snackbar("Member deleted successfully")
+                        //  (activity as HomeActivity?)?.popFragment()
+                        getMembers(false)
+
+                    } else {
+                        (activity as HomeActivity?)?.hideLoadingIndicator()
+                        requireView().snackbar(it.value.message)
+
+                    }
                 }
 
                 is Resource.Failure -> {
@@ -202,11 +291,25 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
 
             when (it) {
                 is Resource.Success -> {
-                    Log.d("response", "success " + it.toString())
-                    // (activity as HomeActivity?)?.hideLoadingIndicator()
-                    requireView().snackbar("Member marked manager successfully")
-                    //  (activity as HomeActivity?)?.popFragment()
-                    getMembers(false)
+                    if (it.value.status != 0) {
+                        Log.d("response", "success " + it.toString())
+                        // (activity as HomeActivity?)?.hideLoadingIndicator()
+                        if (it.value.status != 0) {
+
+                            requireView().snackbar("Member marked manager successfully")
+                            //  (activity as HomeActivity?)?.popFragment()
+                            getMembers(false)
+
+                        } else {
+                            (activity as HomeActivity?)?.hideLoadingIndicator()
+                            requireView().snackbar(it.value.message)
+
+                        }
+                    } else {
+                        (activity as HomeActivity?)?.hideLoadingIndicator()
+                        requireView().snackbar(it.value.message)
+                    }
+
                 }
 
                 is Resource.Failure -> {

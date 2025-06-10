@@ -37,7 +37,7 @@ class MembersListAdapter(
     private val context: Context,
     private val listener: OnItemClickListner,
     private val stateChange: OnStateChange,
-    private val fromSaloon: Boolean = false
+    private val fromSaloon: Boolean = false,
 ) :
     RecyclerView.Adapter<MembersListAdapter.MyViewHolder>() {
 
@@ -77,15 +77,15 @@ class MembersListAdapter(
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         var item: MemberDto = itemList[position]
         holder.imgMenu.setOnClickListener {
-            showCustomMenu(holder.imgMenu, stateChange, position)
+            showCustomMenu(holder.imgMenu, stateChange, position, item.isMember,item.isManger)
         }
         if (fromSaloon) {
             holder.llStyle.visibility = View.GONE
         }
         holder.txtName.text = item.name
-        holder.txtBookings.text = "${item.bookings?:0} bookings today"
+        holder.txtBookings.text = "${item.bookings ?: 0} bookings today"
         holder.txtProfesstion.text = item.profession
-        holder.txtProfesstion.visibility=View.GONE
+        holder.txtProfesstion.visibility = View.GONE
         holder.txtRating.text = item.rating
         holder.txtStyle.text = item.style
         if (item.isManger) {
@@ -93,24 +93,35 @@ class MembersListAdapter(
         } else {
             holder.txtManager.visibility = View.GONE
         }
-        if (item.status) {
-            holder.llStatus.setBackgroundDrawable(
-                ResourcesCompat.getDrawable(
-                    context.resources,
-                    R.drawable.green_70_rounded,
-                    context.theme
+        if (item.isMember) {
+            if (item.status) {
+                holder.llStatus.setBackgroundDrawable(
+                    ResourcesCompat.getDrawable(
+                        context.resources,
+                        R.drawable.green_70_rounded,
+                        context.theme
+                    )
                 )
-            )
-            holder.txtStatusTexts.text = "working today"
+                holder.txtStatusTexts.text = context.resources.getString(R.string.working_today)
+            } else {
+                holder.llStatus.setBackgroundDrawable(
+                    ResourcesCompat.getDrawable(
+                        context.resources,
+                        R.drawable.red_70_rounded,
+                        context.theme
+                    )
+                )
+                holder.txtStatusTexts.text = context.resources.getString(R.string.on_leave)
+            }
         } else {
             holder.llStatus.setBackgroundDrawable(
                 ResourcesCompat.getDrawable(
                     context.resources,
-                    R.drawable.red_70_rounded,
+                    R.drawable.rounded_blue,
                     context.theme
                 )
             )
-            holder.txtStatusTexts.text = "on leave today"
+            holder.txtStatusTexts.text = context.resources.getString(R.string.invitation_sent)
         }
         // Implement the RequestListener here
         val iconRequestListener = object : RequestListener<Drawable> {
@@ -120,7 +131,7 @@ class MembersListAdapter(
                 model: Any,
                 target: com.bumptech.glide.request.target.Target<Drawable>?,
                 dataSource: DataSource,
-                isFirstResource: Boolean
+                isFirstResource: Boolean,
             ): Boolean {
                 Log.d("imageLoaded", "success ${item.name}")
 
@@ -133,7 +144,7 @@ class MembersListAdapter(
                 e: GlideException?,
                 model: Any?,
                 target: Target<Drawable>,
-                isFirstResource: Boolean
+                isFirstResource: Boolean,
             ): Boolean {
                 holder.imgProfilePic.scaleType = ImageView.ScaleType.CENTER_INSIDE
                 Log.d("imageLoaded", "failed ${item.name}")
@@ -152,7 +163,13 @@ class MembersListAdapter(
             .into(holder.imgProfilePic)
     }
 
-    private fun showCustomMenu(anchor: View, stateChange: OnStateChange, position: Int) {
+    private fun showCustomMenu(
+        anchor: View,
+        stateChange: OnStateChange,
+        position: Int,
+        isMember: Boolean,
+        isManger: Boolean,
+    ) {
 
         // Inflate the custom menu layout
         val inflater = LayoutInflater.from(context)
@@ -170,9 +187,33 @@ class MembersListAdapter(
         val option1: TextView = menuView.findViewById(R.id.invite_salon)
         val option2: TextView = menuView.findViewById(R.id.invite_user)
         val option3: TextView = menuView.findViewById(R.id.delete_user)
+        val option4: TextView = menuView.findViewById(R.id.delete_Invitation)
+        val option5: TextView = menuView.findViewById(R.id.remove_manager)
         option1.text = "Mark as Manager"
         option2.text = "Inactivate User"
         option3.text = "Delete User"
+        if (isMember) {
+            if (isManger){
+                option5.visibility = View.VISIBLE
+                option1.visibility = View.GONE
+            }
+            else{
+                option1.visibility = View.VISIBLE
+                option5.visibility = View.GONE
+            }
+            //option1.visibility = View.VISIBLE
+            option2.visibility = View.VISIBLE
+            option3.visibility = View.VISIBLE
+            option4.visibility = View.GONE
+        } else {
+            option1.visibility = View.GONE
+            option2.visibility = View.GONE
+            option3.visibility = View.GONE
+            option4.visibility = View.VISIBLE
+        }
+//        option1.text = "Mark as Manager"
+//        option2.text = "Inactivate User"
+//        option3.text = "Delete User"
         option1.setOnClickListener {
             stateChange.onStateChange(position, 1)
             // Handle Option 1 click
@@ -187,6 +228,16 @@ class MembersListAdapter(
 
         option3.setOnClickListener {
             stateChange.onStateChange(position, 3)
+            // Handle Option 3 click
+            popupWindow.dismiss()
+        }
+        option4.setOnClickListener {
+            stateChange.onStateChange(position, 4)
+            // Handle Option 3 click
+            popupWindow.dismiss()
+        }
+        option5.setOnClickListener {
+            stateChange.onStateChange(position, 5)
             // Handle Option 3 click
             popupWindow.dismiss()
         }

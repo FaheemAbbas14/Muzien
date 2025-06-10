@@ -1,8 +1,6 @@
 package com.tt.muzien.ui.home
 
 import android.content.Context
-import android.content.Intent
-import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -48,7 +46,6 @@ import com.tt.muzien.ui.auth.AuthViewModel
 import com.tt.muzien.ui.bookings.FragmentBookings
 import com.tt.muzien.ui.bottomSheets.AddBottomSheet
 import com.tt.muzien.ui.notifications.FragmentNotifications
-import com.tt.muzien.ui.payment.FragmentAddPayment
 import com.tt.muzien.ui.profile.FragmentProfile
 import com.tt.muzien.ui.saloon.FragmentAddSaloon
 import com.tt.muzien.ui.saloon.SaloonViewModel
@@ -156,7 +153,11 @@ class HomeActivity : AppCompatActivity() {
 
         binding.constraintLayout2.post {
             binding.constraintLayout2.setLayerType(View.LAYER_TYPE_SOFTWARE, null) // for shadow
-            binding.constraintLayout2.background = createSvgBackgroundWithSmallShadow(this, binding.constraintLayout2.width, binding.constraintLayout2.height)
+            binding.constraintLayout2.background = createSvgBackgroundWithSmallShadow(
+                this,
+                binding.constraintLayout2.width,
+                binding.constraintLayout2.height
+            )
         }
     }
 
@@ -237,6 +238,7 @@ class HomeActivity : AppCompatActivity() {
         binding.imgadd.visibility = View.GONE
 
     }
+
     fun invisibleTabs() {
         binding.constraintLayout2.visibility = View.GONE
         binding.constraintLayout.visibility = View.INVISIBLE
@@ -392,7 +394,7 @@ class HomeActivity : AppCompatActivity() {
                                 saloon.SaloonImages,
                                 saloon.name,
                                 if (saloon.status == "open") true else false,
-                                saloon.status,
+                                saloon.isActive,
                                 saloon.address ?: "",
                                 "${saloon.tRating} (${saloon.numReviews} ${
                                     if (saloon.numReviews.toInt() == 1) "review" else "reviews"
@@ -420,31 +422,25 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun checkSaloon() {
-        if (assignedSaloon != null) {
-            if (isServiceProvider) {
-                var nextFragment = ServiceProviderDashboard()
-                nextFragment.saloonId = assignedSaloon!!.id.toInt()
-                loadFragment(nextFragment)
-            } else {
-                var nextFragment = SaloonManagerDashboard()
-                nextFragment.selectedSaloon = assignedSaloon
-                loadFragment(nextFragment)
-                binding.constraintLayout2.visibility = View.GONE
-                binding.imgadd.visibility = View.GONE
-            }
+        if (isServiceProvider) {
+            var nextFragment = ServiceProviderDashboard()
+            nextFragment.saloonId = if (assignedSaloon!=null) assignedSaloon!!.id.toInt() else null
+            loadFragment(nextFragment)
         } else {
             var nextFragment = SaloonManagerDashboard()
-            nextFragment.selectedSaloon = assignedSaloon
+            nextFragment.selectedSaloon = if (assignedSaloon!=null) assignedSaloon else null
             loadFragment(nextFragment)
             binding.constraintLayout2.visibility = View.GONE
             binding.imgadd.visibility = View.GONE
         }
+
     }
+
     fun createSvgBackgroundWithSmallShadow(
         context: Context,
         width: Int,
         height: Int,
-        bottomPaddingDp: Float = 1f // 1 dp padding and shadow offset
+        bottomPaddingDp: Float = 1f, // 1 dp padding and shadow offset
     ): Drawable {
         val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
@@ -453,7 +449,12 @@ class HomeActivity : AppCompatActivity() {
             color = Color.WHITE
             style = Paint.Style.FILL
             // Shadow with 1dp vertical offset and a smaller blur radius
-            setShadowLayer(8f, 0f, bottomPaddingDp * context.resources.displayMetrics.density, Color.parseColor("#22000000"))
+            setShadowLayer(
+                8f,
+                0f,
+                bottomPaddingDp * context.resources.displayMetrics.density,
+                Color.parseColor("#22000000")
+            )
         }
 
         val path = Path()
@@ -507,7 +508,6 @@ class HomeActivity : AppCompatActivity() {
         canvas.drawPath(path, paint)
         return BitmapDrawable(context.resources, bitmap)
     }
-
 
 
 }

@@ -113,7 +113,7 @@ class SaloonManagerDashboard :
             when (selectedRadioButton?.id) {
 
                 R.id.rdoBookings -> {
-                    setFrameLayoutHeight(true)
+                    //setFrameLayoutHeight(true)
                     binding.rdoBookings.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoBookings.setTextColor(resources.getColor(R.color.white))
                 }
@@ -125,19 +125,19 @@ class SaloonManagerDashboard :
                 }
 
                 R.id.rdoReviews -> {
-                    setFrameLayoutHeight(true)
+                   // setFrameLayoutHeight(true)
                     binding.rdoReviews.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoReviews.setTextColor(resources.getColor(R.color.white))
                 }
 
                 R.id.rdoServices -> {
-                    setFrameLayoutHeight(true)
+                   // setFrameLayoutHeight(true)
                     binding.rdoServices.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoServices.setTextColor(resources.getColor(R.color.white))
                 }
 
                 R.id.rdoMembers -> {
-                    setFrameLayoutHeight(true)
+                    //setFrameLayoutHeight(true)
                     binding.rdoMembers.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoMembers.setTextColor(resources.getColor(R.color.white))
                 }
@@ -151,7 +151,7 @@ class SaloonManagerDashboard :
             // (activity as HomeActivity?)?.loadFragment(fragment, R.id.tab_container)
 //            childFragmentManager.beginTransaction().replace(R.id.tab_container, fragment).commit()
 //            childFragmentManager.executePendingTransactions()
-            showFragment(nextFragment)
+            showFragment(fragment)
         }
         setData()
     }
@@ -317,4 +317,5 @@ class SaloonManagerDashboard :
             binding.tabContainer.layoutParams = layoutParams
         }
     }
+
 }

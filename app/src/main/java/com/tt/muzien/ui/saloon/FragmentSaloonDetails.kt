@@ -67,7 +67,7 @@ class FragmentSaloonDetails :
         showFragment(nextFragment)
         binding.radioGroup.setOnCheckedChangeListener { group, checkedId ->
             val selectedRadioButton = group.findViewById<RadioButton>(checkedId)
-           // FilterSelection.filterData=null
+            // FilterSelection.filterData=null
             val fragment: Fragment = when (selectedRadioButton?.id) {
                 R.id.rdoAnalytics -> {
                     var nextFragment = FragmentSaloonAnalytics()
@@ -116,7 +116,7 @@ class FragmentSaloonDetails :
             when (selectedRadioButton?.id) {
 
                 R.id.rdoBookings -> {
-                  //  setFrameLayoutHeight(true)
+                    //  setFrameLayoutHeight(true)
                     binding.rdoBookings.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoBookings.setTextColor(resources.getColor(R.color.white))
                 }
@@ -128,19 +128,19 @@ class FragmentSaloonDetails :
                 }
 
                 R.id.rdoReviews -> {
-                   // setFrameLayoutHeight(true)
+                    // setFrameLayoutHeight(true)
                     binding.rdoReviews.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoReviews.setTextColor(resources.getColor(R.color.white))
                 }
 
                 R.id.rdoServices -> {
-                   // setFrameLayoutHeight()
+                    // setFrameLayoutHeight()
                     binding.rdoServices.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoServices.setTextColor(resources.getColor(R.color.white))
                 }
 
                 R.id.rdoMembers -> {
-                  //  setFrameLayoutHeight(true)
+                    //  setFrameLayoutHeight(true)
                     binding.rdoMembers.setBackgroundDrawable(resources.getDrawable(R.drawable.blue_rounded))
                     binding.rdoMembers.setTextColor(resources.getColor(R.color.white))
                 }
@@ -157,6 +157,7 @@ class FragmentSaloonDetails :
         }
         setData()
     }
+
     fun showFragment(fragment: Fragment) {
         val childManager = childFragmentManager
         val transaction = childManager.beginTransaction()
@@ -176,6 +177,7 @@ class FragmentSaloonDetails :
 
         transaction.commit()
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setData() {
         binding.txtItemName.text = selectedSaloon?.name
@@ -183,16 +185,28 @@ class FragmentSaloonDetails :
         binding.txtRating.text = selectedSaloon?.ratings
         var timing = TimeHelper.getCurrentDayTiming(selectedSaloon?.timing)
         binding.txtTiming.text = timing
-        if (selectedSaloon?.isOpened == true) {
-            binding.llStatus.setBackgroundDrawable(
-                ResourcesCompat.getDrawable(
-                    requireContext().resources,
-                    R.drawable.rounded_green,
-                    requireContext().theme
+        if (selectedSaloon?.isActive == true) {
+            if (selectedSaloon?.isOpened == true) {
+                binding.llStatus.setBackgroundDrawable(
+                    ResourcesCompat.getDrawable(
+                        requireContext().resources,
+                        R.drawable.rounded_green,
+                        requireContext().theme
+                    )
                 )
-            )
-            binding.txtStatusTexts.text = "open today"
-            binding.llTimes.visibility=View.VISIBLE
+                binding.txtStatusTexts.text = "open today"
+                binding.llTimes.visibility = View.VISIBLE
+            } else {
+                binding.llStatus.setBackgroundDrawable(
+                    ResourcesCompat.getDrawable(
+                        requireContext().resources,
+                        R.drawable.rounded_red,
+                        requireContext().theme
+                    )
+                )
+                binding.txtStatusTexts.text = "close today"
+                binding.llTimes.visibility = View.GONE
+            }
         } else {
             binding.llStatus.setBackgroundDrawable(
                 ResourcesCompat.getDrawable(
@@ -201,8 +215,8 @@ class FragmentSaloonDetails :
                     requireContext().theme
                 )
             )
-            binding.txtStatusTexts.text = "close today"
-            binding.llTimes.visibility=View.GONE
+            binding.txtStatusTexts.text = "inactive"
+            binding.llTimes.visibility = View.GONE
         }
         setViewPager()
     }
@@ -266,7 +280,7 @@ class FragmentSaloonDetails :
 
     override fun getFragmentBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = FragmentSaloonDetailsBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
@@ -283,6 +297,7 @@ class FragmentSaloonDetails :
         (activity as HomeActivity?)?.changeStatusBarColor(Color.TRANSPARENT)
         (activity as HomeActivity?)?.hideTabs()
     }
+
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
@@ -292,6 +307,7 @@ class FragmentSaloonDetails :
             (activity as HomeActivity?)?.hideTabs()
         }
     }
+
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onPause() {
         super.onPause()

@@ -99,7 +99,7 @@ class FragmentAddSaloonService :
                                     saloon.SaloonImages,
                                     saloon.name,
                                     if (saloon.status == "open") true else false,
-                                    saloon.status,
+                                    saloon.isActive,
                                     saloon.address ?: "",
                                     "${saloon.tRating} (${saloon.numReviews} ${
                                         if (saloon.numReviews.toInt() == 1) "review" else "reviews"
