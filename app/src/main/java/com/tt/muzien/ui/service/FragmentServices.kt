@@ -10,6 +10,7 @@ import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.network.ServiceApi
 import com.tt.muzien.data.repository.ServiceRepository
 import com.tt.muzien.databinding.FragmentServicesBinding
+import com.tt.muzien.enums.EnumTabSelection
 import com.tt.muzien.ui.adapters.ExpandServiceListAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
@@ -38,6 +39,7 @@ class FragmentServices :
         }
         binding.imgFilter.setOnClickListener {
             var nextFragment = FragmentFilter()
+            nextFragment.enumTabSelection= EnumTabSelection.Services
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
         if (FilterSelection.filterData != null) {

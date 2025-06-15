@@ -169,6 +169,7 @@ class FragmentMyAccount : BaseFragment<HomeViewModel, FragmentMyAccountBinding, 
     }
 
     private fun sendOtpNormal(data: String) {
+        LoggedInInfo.phoneNumber = data
         viewModel.sendOtp.observe(viewLifecycleOwner) {
 
             when (it) {
@@ -180,7 +181,7 @@ class FragmentMyAccount : BaseFragment<HomeViewModel, FragmentMyAccountBinding, 
                         LoggedInInfo.userId = it.value.data?.otp?.userId!!
                         var nextFragment = FragmentVerifyOTP()
                         nextFragment.isFromEdit = true
-                        nextFragment.phone = data
+                        nextFragment.phone = LoggedInInfo.phoneNumber?:""
                         (activity as HomeActivity?)?.loadFragment(nextFragment)
                     } else {
                         requireView().snackbar(it.value.message)

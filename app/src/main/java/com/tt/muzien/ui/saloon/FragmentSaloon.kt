@@ -13,6 +13,7 @@ import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.network.SaloonApi
 import com.tt.muzien.data.repository.SaloonRepository
 import com.tt.muzien.databinding.FragmentSaloonBinding
+import com.tt.muzien.enums.EnumTabSelection
 import com.tt.muzien.ui.adapters.SaloonListAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
@@ -30,6 +31,7 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
     private var selection: Int = 0
     private var isLoading: Boolean = false
     private var isActive: Boolean? = null
+    private var status: String? = null
     var saloonListAdapter: SaloonListAdapter? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -42,6 +44,7 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
         }
         binding.imgFilter.setOnClickListener {
             var nextFragment = FragmentFilter()
+            nextFragment.enumTabSelection = EnumTabSelection.Saloon
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
         getSaloons(false)
@@ -111,7 +114,7 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
 
     override fun getFragmentBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = FragmentSaloonBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
@@ -179,7 +182,7 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
                 else -> {}
             }
         }
-        viewModel.getSaloons(page = page, isActive = isActive)
+        viewModel.getSaloons(page = page, isActive = isActive, status)
         if (page == 1) {
             if (!reload) {
                 (activity as HomeActivity?)?.showLoadingIndicator()
@@ -196,10 +199,16 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
                 Appelement.reload = false
                 if (FilterSelection.filterData != null) {
                     if (FilterSelection.filterData!!.status != null && FilterSelection.filterData!!.status != "") {
+                        page=1
                         if (FilterSelection.filterData!!.status == "Active") {
                             isActive = true
-                        } else {
+                            status = null
+                        } else if (FilterSelection.filterData!!.status == "InActive") {
                             isActive = false
+                            status = null
+                        } else {
+                            status = FilterSelection.filterData!!.status
+                            isActive = null
                         }
                         getSaloons(false)
                     }
@@ -211,12 +220,11 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
 
             }
             (activity as HomeActivity?)?.showTabs()
-        }
-        else{
-            if (isActive!=null){
-                isActive=null
+        } else {
+            if (isActive != null) {
+                isActive = null
                 Appelement.reload = true
-                FilterSelection.filterData=null
+                FilterSelection.filterData = null
             }
         }
 

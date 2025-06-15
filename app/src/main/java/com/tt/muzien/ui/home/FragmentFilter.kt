@@ -11,6 +11,7 @@ import com.tt.muzien.data.dto.FilterData
 import com.tt.muzien.data.network.AuthApi
 import com.tt.muzien.data.repository.AuthRepository
 import com.tt.muzien.databinding.FragmentFilterBinding
+import com.tt.muzien.enums.EnumTabSelection
 import com.tt.muzien.ui.auth.AuthViewModel
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.views.CustomCalendar
@@ -28,20 +29,35 @@ class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRe
     var isFromRevenue: Boolean = false
     var status = false
     var selectedStatus: String = ""
+    var enumTabSelection: EnumTabSelection = EnumTabSelection.Analytics
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (status) {
-            binding.selectedOptionText.text = requireContext().getString(R.string.timeperiod)
-            binding.selectedOptionText.text = "Select Status"
+            binding.selectedOptionText.text = getString(R.string.select_status)
             binding.radioGroup.visibility = View.GONE
             binding.radioGroupStatus.visibility = View.VISIBLE
+            if (enumTabSelection == EnumTabSelection.Saloon) {
+                binding.rbopen.visibility = View.VISIBLE
+                binding.rbclosed.visibility = View.VISIBLE
+            } else if (enumTabSelection == EnumTabSelection.Member) {
+                binding.rbInvitationSent.visibility = View.VISIBLE
+                binding.rbOnLeaveToday.visibility = View.VISIBLE
+                binding.rbWorkingToday.visibility = View.VISIBLE
+            } else {
+                binding.rbInvitationSent.visibility = View.GONE
+                binding.rbOnLeaveToday.visibility = View.GONE
+                binding.rbWorkingToday.visibility = View.GONE
+                binding.rbopen.visibility = View.GONE
+                binding.rbclosed.visibility = View.GONE
+            }
         } else {
             binding.selectedOptionText.text = requireContext().getString(R.string.timeperiod)
-            binding.radioGroup.visibility = View.GONE
-            binding.radioGroupStatus.visibility = View.VISIBLE
+            binding.radioGroup.visibility = View.VISIBLE
+            binding.radioGroupStatus.visibility = View.GONE
         }
+
         binding.radioGroupStatus.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.rbActive -> {
@@ -50,6 +66,26 @@ class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRe
 
                 R.id.rbInActive -> {
                     selectedStatus = "InActive"
+
+                }
+                R.id.rbopen -> {
+                    selectedStatus = "open"
+                }
+
+                R.id.rbclosed -> {
+                    selectedStatus = "closed"
+
+                }
+                R.id.rbInvitationSent -> {
+                    selectedStatus = "0"
+                }
+
+                R.id.rbOnLeaveToday -> {
+                    selectedStatus = "2"
+
+                }
+                R.id.rbWorkingToday -> {
+                    selectedStatus = "1"
 
                 }
 
@@ -124,14 +160,14 @@ class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRe
                     binding.llTo.visibility = View.VISIBLE
                     binding.txtToLabel.visibility = View.VISIBLE
                     fromDate = selectedDates.get(0)
-                    if (isArabic){
-                        fromDate= TimeHelper.convertArabicDigitsToEnglish(fromDate?:"")
+                    if (isArabic) {
+                        fromDate = TimeHelper.convertArabicDigitsToEnglish(fromDate ?: "")
                     }
                     binding.txtFrom.text = fromDate
                 } else {
-                    toDate = selectedDates.get(selectedDates.size-1)
-                    if (isArabic){
-                        toDate= TimeHelper.convertArabicDigitsToEnglish(toDate?:"")
+                    toDate = selectedDates.get(selectedDates.size - 1)
+                    if (isArabic) {
+                        toDate = TimeHelper.convertArabicDigitsToEnglish(toDate ?: "")
                     }
                     binding.txtTo.text = toDate
                 }
@@ -175,7 +211,7 @@ class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRe
 
     override fun getFragmentBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = FragmentFilterBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
@@ -188,6 +224,7 @@ class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRe
         super.onResume()
         (activity as HomeActivity?)?.hideTabs()
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
@@ -195,6 +232,7 @@ class FragmentFilter : BaseFragment<AuthViewModel, FragmentFilterBinding, AuthRe
             (activity as HomeActivity?)?.hideTabs()
         }
     }
+
     override fun onPause() {
         super.onPause()
         (activity as HomeActivity?)?.showTabs()

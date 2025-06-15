@@ -38,8 +38,8 @@
             android:fontFamily="@font/manrope_regular"
             android:text="@string/back"
             android:textColor="@color/black"
-            android:textSize="16sp"
             android:textFontWeight="700"
+            android:textSize="16sp"
             tools:layout_editor_absoluteX="38dp"
             tools:layout_editor_absoluteY="21dp" />
 
@@ -52,8 +52,8 @@
             android:paddingEnd="50dp"
             android:text="@string/filter"
             android:textColor="@color/black"
-            android:textSize="16sp"
             android:textFontWeight="700"
+            android:textSize="16sp"
             tools:layout_editor_absoluteX="38dp"
             tools:layout_editor_absoluteY="21dp" />
     </LinearLayout>
@@ -76,17 +76,17 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/manrope_regular"
             android:paddingBottom="8dp"
-            android:textFontWeight="700"
             android:text="@string/timeperiod"
             android:textColor="@color/colorTextLabelDefault"
+            android:textFontWeight="700"
             android:textSize="16sp" />
 
         <RadioGroup
             android:id="@+id/radioGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
 
             <!-- Custom RadioButton for Week -->
@@ -101,8 +101,8 @@
                 android:padding="16dp"
                 android:text="@string/this_week"
                 android:textColor="@color/colorTextLabelDefault"
-                android:textSize="14sp"
-                android:textFontWeight="500"/>
+                android:textFontWeight="500"
+                android:textSize="14sp" />
 
             <!-- Custom RadioButton for Month -->
             <RadioButton
@@ -114,9 +114,9 @@
                 android:fontFamily="@font/manrope_regular"
                 android:gravity="center_vertical"
                 android:padding="16dp"
-                android:textFontWeight="500"
                 android:text="@string/this_month"
                 android:textColor="@color/colorTextLabelDefault"
+                android:textFontWeight="500"
                 android:textSize="14sp" />
 
             <!-- Custom RadioButton for Custom -->
@@ -129,12 +129,13 @@
                 android:fontFamily="@font/manrope_regular"
                 android:gravity="center_vertical"
                 android:padding="16dp"
-                android:textFontWeight="500"
                 android:text="@string/custome_timeperiod"
                 android:textColor="@color/colorTextLabelDefault"
+                android:textFontWeight="500"
                 android:textSize="14sp" />
 
         </RadioGroup>
+
         <RadioGroup
             android:id="@+id/radioGroupStatus"
             android:layout_width="match_parent"
@@ -172,8 +173,77 @@
                 android:textColor="@color/colorTextLabelDefault"
                 android:textFontWeight="500"
                 android:textSize="14sp" />
+            <RadioButton
+                android:id="@+id/rbopen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:drawableRight="@drawable/custom_tick_button"
+                android:fontFamily="@font/manrope_regular"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:visibility="gone"
+                android:text="@string/open"
+                android:textColor="@color/colorTextLabelDefault"
+                android:textFontWeight="500"
+                android:textSize="14sp" />
+            <RadioButton
+                android:id="@+id/rbclosed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:drawableRight="@drawable/custom_tick_button"
+                android:fontFamily="@font/manrope_regular"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:text="@string/closed"
+                android:visibility="gone"
+                android:textColor="@color/colorTextLabelDefault"
+                android:textFontWeight="500"
+                android:textSize="14sp" />
 
-
+            <RadioButton
+                android:id="@+id/rbInvitationSent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:drawableRight="@drawable/custom_tick_button"
+                android:fontFamily="@font/manrope_regular"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:visibility="gone"
+                android:text="@string/invitation_sent"
+                android:textColor="@color/colorTextLabelDefault"
+                android:textFontWeight="500"
+                android:textSize="14sp" />
+            <RadioButton
+                android:id="@+id/rbWorkingToday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:drawableRight="@drawable/custom_tick_button"
+                android:fontFamily="@font/manrope_regular"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:visibility="gone"
+                android:text="@string/working_today"
+                android:textColor="@color/colorTextLabelDefault"
+                android:textFontWeight="500"
+                android:textSize="14sp" />
+            <RadioButton
+                android:id="@+id/rbOnLeaveToday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:drawableRight="@drawable/custom_tick_button"
+                android:fontFamily="@font/manrope_regular"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:visibility="gone"
+                android:text="@string/on_leave_today"
+                android:textColor="@color/colorTextLabelDefault"
+                android:textFontWeight="500"
+                android:textSize="14sp" />
 
         </RadioGroup>
 
@@ -186,8 +256,8 @@
             android:fontFamily="@font/manrope_regular"
             android:text="@string/select_a_option"
             android:textColor="@color/red_text"
-            android:textSize="11sp"
             android:textFontWeight="500"
+            android:textSize="11sp"
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="@+id/llFrom"
             app:layout_constraintTop_toBottomOf="@+id/llFrom" />
@@ -239,8 +309,8 @@
         android:fontFamily="@font/manrope_regular"
         android:text="@string/from"
         android:textColor="@color/colorTextLabelDefault"
-        android:textSize="11sp"
         android:textFontWeight="500"
+        android:textSize="11sp"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/llFrom"
         app:layout_constraintStart_toStartOf="@+id/llFrom" />
@@ -305,8 +375,8 @@
         android:fontFamily="@font/manrope_regular"
         android:text="@string/to"
         android:textColor="@color/colorTextLabelDefault"
-        android:textSize="11sp"
         android:textFontWeight="500"
+        android:textSize="11sp"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/llTo"
         app:layout_constraintStart_toStartOf="@+id/llTo" />

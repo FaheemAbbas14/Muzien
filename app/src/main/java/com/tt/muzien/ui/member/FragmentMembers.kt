@@ -12,6 +12,7 @@ import com.tt.muzien.data.network.MemberApi
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.MemberRepository
 import com.tt.muzien.databinding.FragmentMembersBinding
+import com.tt.muzien.enums.EnumTabSelection
 import com.tt.muzien.interfaces.OnStateChange
 import com.tt.muzien.ui.adapters.MembersListAdapter
 import com.tt.muzien.ui.base.BaseFragment
@@ -26,6 +27,7 @@ import com.zabihah.ui.ui.interfaces.OnItemClickListner
 class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, MemberRepository>() {
     private val membersList = arrayListOf<MemberDto>()
     private var isActive: Boolean? = null
+    private var status: String? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setSaloonRepo((activity as HomeActivity?)?.getSaloonRepo()!!)
@@ -38,6 +40,7 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
         binding.imgFilter.setOnClickListener {
             var nextFragment = FragmentFilter()
             nextFragment.status = true
+            nextFragment.enumTabSelection= EnumTabSelection.Member
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
         getMembers(false)
@@ -335,8 +338,13 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
                     if (FilterSelection.filterData!!.status != null && FilterSelection.filterData!!.status != "") {
                         if (FilterSelection.filterData!!.status == "Active") {
                             isActive = true
-                        } else {
+                            status = null
+                        } else if (FilterSelection.filterData!!.status == "InActive") {
                             isActive = false
+                            status = null
+                        } else {
+                            status = FilterSelection.filterData!!.status
+                            isActive = null
                         }
                         getMembers(false)
                     }

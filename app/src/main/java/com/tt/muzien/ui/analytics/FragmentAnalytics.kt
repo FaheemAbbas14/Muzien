@@ -23,6 +23,7 @@ import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.HomeRepository
 import com.tt.muzien.databinding.FragmentAnalyticsBinding
+import com.tt.muzien.enums.EnumTabSelection
 import com.tt.muzien.ui.adapters.PerformerListAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
@@ -79,6 +80,7 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
         binding.imgBookingFilter.setOnClickListener {
             isRevenueFilter = false
             var nextFragment = FragmentFilter()
+            nextFragment.enumTabSelection= EnumTabSelection.Analytics
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
         binding.imgRevenueFilter.setOnClickListener {
@@ -294,7 +296,7 @@ class FragmentAnalytics : BaseFragment<HomeViewModel, FragmentAnalyticsBinding, 
                                     PersonDto(
                                         performer.picture,
                                         performer.fullName ?: "",
-                                        "Hair Stylist",
+                                        "",
                                         "${performer.totalBookings} Bookings",
                                         "SAR ${5 * 1}"
                                     )

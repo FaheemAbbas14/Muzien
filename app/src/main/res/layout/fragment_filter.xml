@@ -173,8 +173,77 @@
                 android:textColor="@color/colorTextLabelDefault"
                 android:textFontWeight="500"
                 android:textSize="14sp" />
+            <RadioButton
+                android:id="@+id/rbopen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:drawableRight="@drawable/custom_tick_button"
+                android:fontFamily="@font/manrope_regular"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:visibility="gone"
+                android:text="@string/open"
+                android:textColor="@color/colorTextLabelDefault"
+                android:textFontWeight="500"
+                android:textSize="14sp" />
+            <RadioButton
+                android:id="@+id/rbclosed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:drawableRight="@drawable/custom_tick_button"
+                android:fontFamily="@font/manrope_regular"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:text="@string/closed"
+                android:visibility="gone"
+                android:textColor="@color/colorTextLabelDefault"
+                android:textFontWeight="500"
+                android:textSize="14sp" />
 
-
+            <RadioButton
+                android:id="@+id/rbInvitationSent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:drawableRight="@drawable/custom_tick_button"
+                android:fontFamily="@font/manrope_regular"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:visibility="gone"
+                android:text="@string/invitation_sent"
+                android:textColor="@color/colorTextLabelDefault"
+                android:textFontWeight="500"
+                android:textSize="14sp" />
+            <RadioButton
+                android:id="@+id/rbWorkingToday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:drawableRight="@drawable/custom_tick_button"
+                android:fontFamily="@font/manrope_regular"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:visibility="gone"
+                android:text="@string/working_today"
+                android:textColor="@color/colorTextLabelDefault"
+                android:textFontWeight="500"
+                android:textSize="14sp" />
+            <RadioButton
+                android:id="@+id/rbOnLeaveToday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:drawableRight="@drawable/custom_tick_button"
+                android:fontFamily="@font/manrope_regular"
+                android:gravity="center_vertical"
+                android:padding="16dp"
+                android:visibility="gone"
+                android:text="@string/on_leave_today"
+                android:textColor="@color/colorTextLabelDefault"
+                android:textFontWeight="500"
+                android:textSize="14sp" />
 
         </RadioGroup>
 

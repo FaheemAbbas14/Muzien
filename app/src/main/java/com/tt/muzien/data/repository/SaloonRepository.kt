@@ -21,8 +21,9 @@ class SaloonRepository(
     suspend fun getSaloons(
         page: Int? = null,
         isActive: Boolean? = null,
+        status: String? = null,
     ) = safeApiCall {
-        api.getSaloons(page,isActive)
+        api.getSaloons(page,isActive,status)
     }
 
     suspend fun getSaloonsDetail(

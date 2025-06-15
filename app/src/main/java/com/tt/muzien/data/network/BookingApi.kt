@@ -46,5 +46,18 @@ interface BookingApi {
     suspend fun updateBooking(
         @Path("bookingId") bookingId: String, @Body requestData: UpdateBookingRequest,
     )
-
+    @GET("v1/analytics/bookings/daily")
+    suspend fun getDailyBookings(
+        @Query("saloonIds") saloonIds: String? = null,
+        @Query("serviceProviderIds") serviceProviderIds: String? = null,
+        @Query("startDate") startDate: String? = null,
+        @Query("endDate") endDate: String? = null
+    ): GetBookingResponse
+    @GET("v1/analytics/bookings/monthly")
+    suspend fun getMonthlyBookings(
+        @Query("saloonIds") saloonIds: String? = null,
+        @Query("serviceProviderIds") serviceProviderIds: String? = null,
+        @Query("startDate") startDate: String? = null,
+        @Query("endDate") endDate: String? = null
+    ): GetBookingResponse
 }

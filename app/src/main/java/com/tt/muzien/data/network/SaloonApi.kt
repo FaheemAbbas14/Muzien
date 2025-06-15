@@ -39,6 +39,7 @@ interface SaloonApi {
     suspend fun getSaloons(
         @Query("page") page: Int?,
         @Query("isActive") isActive: Boolean?=null,
+        @Query("status") status: String?=null,
     ): GetSaloonResponse
 
     @GET("v1/saloon/{saloonId}")
