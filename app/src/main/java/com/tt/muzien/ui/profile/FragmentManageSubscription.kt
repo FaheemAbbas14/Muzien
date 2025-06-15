@@ -108,7 +108,7 @@ class FragmentManageSubscription :
                         subscriptiopnsList.clear()
                         for (subscription in it.value.data.items) {
                             subscriptiopnsList.add(
-                                SubscriptionData(subscription.id.toString(), subscription.Saloon.name, subscription.startDate, subscription.validTill)
+                                SubscriptionData(subscription.id.toString(), subscription.Saloon.name, subscription.startDate, subscription.validTill,subscription.isExpired,subscription.daysRemaining.toInt())
                             )
                         }
 

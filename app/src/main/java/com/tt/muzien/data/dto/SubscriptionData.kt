@@ -11,5 +11,7 @@ data class SubscriptionData(
     var id: String,
     var name: String,
     var startDate: String,
-    var endData: String
+    var endData: String,
+    var isExpired:Boolean,
+    var daysRemaining:Int,
 )

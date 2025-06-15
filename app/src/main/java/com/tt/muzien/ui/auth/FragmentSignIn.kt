@@ -26,7 +26,6 @@ import com.tt.muzien.data.requests.RegisterRequest
 import com.tt.muzien.databinding.FragmentSignInBinding
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
-import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.InputValidator
 
@@ -43,7 +42,7 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
         binding.llLogin.setOnClickListener {
             if (checkValidation()) {
                 var phone =
-                    binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString()
+                    binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString().replace(" ", "")
                 if (isFromSignup) {
                     register(phone)
                 } else {
@@ -59,36 +58,71 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
                 Editable.Factory.getInstance().newEditable(phoneNumber)
             binding.countrySpinner.setCountryForPhoneCode(Integer.parseInt(countryCode))
             selectedCountry = binding.countrySpinner.selectedCountryName
+            binding.edtPhoneNumber.hint =
+                Editable.Factory.getInstance()
+                    .newEditable(InputValidator.getPhoneNumberPlaceholder(binding.countrySpinner.selectedCountryNameCode))
+
+
         } else {
             binding.countrySpinner.setCountryForNameCode("SA")
             selectedCountry = binding.countrySpinner.selectedCountryName
             binding.txtCountryCode.text =
                 Editable.Factory.getInstance().newEditable("+966")
+            binding.edtPhoneNumber.hint =
+                Editable.Factory.getInstance()
+                    .newEditable(InputValidator.getPhoneNumberPlaceholder(binding.countrySpinner.selectedCountryNameCode))
+
         }
         binding.countrySpinner.setOnCountryChangeListener {
             selectedCountry = binding.countrySpinner.selectedCountryName
             val countryCode = binding.countrySpinner.selectedCountryCode
             binding.txtCountryCode.text =
                 Editable.Factory.getInstance().newEditable("+$countryCode")
+            binding.edtPhoneNumber.hint =
+                Editable.Factory.getInstance()
+                    .newEditable(InputValidator.getPhoneNumberPlaceholder(binding.countrySpinner.selectedCountryNameCode))
         }
         binding.edtPhoneNumber.addTextChangedListener(object : TextWatcher {
             var length_before = 0
+            private var isFormatting: Boolean = false
+            private var lastText: String = ""
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 length_before = s.length
             }
 
             override fun afterTextChanged(s: Editable) {
+                if (isFormatting || s == null) return
 
+                isFormatting = true
+
+                val digits = s.toString().replace(" ", "")
+                val formatted = StringBuilder()
+
+                for (i in digits.indices) {
+                    formatted.append(digits[i])
+                    if ((i == 2 || i == 5) && i != digits.length - 1) {
+                        formatted.append(" ")
+                    }
+                }
+
+                if (formatted.toString() != s.toString()) {
+                    binding.edtPhoneNumber.setText(formatted.toString())
+                    binding.edtPhoneNumber.setSelection(formatted.length)
+                }
+
+                isFormatting = false
             }
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
 
-                binding.txtError.visibility = View.GONE
+
                 //checkValidation()
 
 
             }
         })
+
+
         requireActivity().onBackPressedDispatcher.addCallback(
             this,
             object : OnBackPressedCallback(true) {
@@ -107,8 +141,7 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
         var isValid = false
 
         if (binding.edtPhoneNumber.text.isNotEmpty() && InputValidator.isValidPhoneNumber(
-                selectedCountry,
-                binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString()
+                selectedCountry, binding.edtPhoneNumber.text.toString().replace(" ", "")
             )
         ) {
             isValid = true
@@ -125,20 +158,18 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun setdata() {
-        var text = "Don’t have any account? Sign up"
-        var start = 24
+        var text =resources.getString(R.string.don_t_have_any_account_sign_up)
+
         if (isFromSignup) {
-            start = 24
-            text = "Already have an account? Sign in"
-            binding.txtAction.text = "Verify Your Number"
-            binding.txtLabel.text = "Sign up"
-            binding.txtText.text = "We will use your phone number to\n" +
-                    "register and log into the app."
+            text = getString(R.string.already_have_an_account_sign_in)
+            binding.txtAction.text = resources.getString(R.string.verify_your_number)
+            binding.txtLabel.text = getString(R.string.sign_up)
+            binding.txtText.text = getString(R.string.we_will_use_your_phone_number_to)
 
         } else {
-            binding.txtAction.text = "Login"
-            binding.txtLabel.text = "Login"
-            binding.txtText.text = "Enter your phone number to login"
+            binding.txtAction.text = resources.getString(R.string.login)
+            binding.txtLabel.text = resources.getString(R.string.login)
+            binding.txtText.text = resources.getString(R.string.enter_your_phone_number_to_login)
         }
         var spannableString = SpannableString(text)
 
@@ -150,29 +181,28 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
             }
         }
 
-        spannableString.setSpan(clickableSpan, start, start + 7, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        spannableString.setSpan(clickableSpan, text.length-8, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         spannableString.setSpan(
             ForegroundColorSpan(requireActivity().getColor(R.color.colorPrimary)),
-            start, start + 7,
+            text.length-8, text.length,
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
         )
 
         binding.txtType.text = spannableString
         binding.txtType.movementMethod = android.text.method.LinkMovementMethod.getInstance()
 
-        var privacyText = "By continuing you agree to our\n" +
-                "T&C and Privacy Policy"
+        var privacyText = getString(R.string.by_continuing_you_agree_to_our_t_c_and_privacy_policy)
         spannableString = SpannableString(privacyText)
 
         // Make "here" clickable and change its color
         val tcSpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                Toast.makeText(requireContext(), "TC", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.tc), Toast.LENGTH_SHORT).show()
             }
         }
         val privacySpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                Toast.makeText(requireContext(), "Privacy", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.privacy), Toast.LENGTH_SHORT).show()
 
             }
         }
@@ -200,7 +230,7 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
 
     override fun getFragmentBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = FragmentSignInBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
@@ -227,6 +257,7 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
             (activity as AuthActivity?)?.changeStatusBarColor(R.color.white)
         }
     }
+
     private fun sendOtpNormal(data: String) {
 
         LoggedInInfo.phoneNumber = data
@@ -240,7 +271,7 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
                         LoggedInInfo.userId = it.value.data?.otp?.userId!!
                         var nextFragment = FragmentOTP()
                         nextFragment.isFromSignup = isFromSignup
-                        nextFragment.phone = data
+                        nextFragment.phone = LoggedInInfo.phoneNumber?:""
                         nextFragment.expiryTime = it.value.data.otp.expiryDate
                         (activity as AuthActivity?)?.loadFragment(nextFragment)
                     } else {
@@ -276,7 +307,7 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
                         LoggedInInfo.userId = it.value.data.otp.userId
                         var nextFragment = FragmentOTP()
                         nextFragment.isFromSignup = isFromSignup
-                        nextFragment.phone = data
+                        nextFragment.phone = LoggedInInfo.phoneNumber?:""
                         nextFragment.expiryTime = it.value.data.otp.expiryDate
                         (activity as AuthActivity?)?.loadFragment(nextFragment)
                     } else {

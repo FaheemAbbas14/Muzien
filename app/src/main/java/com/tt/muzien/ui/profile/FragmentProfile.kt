@@ -7,14 +7,12 @@ import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
@@ -51,14 +49,23 @@ class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, Home
         viewModel.setUserRepo((activity as HomeActivity?)?.getUserRepo()!!)
         setUserData()
         val isArabic = Locale.getDefault().language == "ar"
-        if (isArabic){
-            binding.txtSelectedLanguage.text=resources.getString(R.string.arabic)
-        }
-        else{
-            binding.txtSelectedLanguage.text=resources.getString(R.string.english)
+        if (isArabic) {
+            binding.txtSelectedLanguage.text = resources.getString(R.string.arabic)
+        } else {
+            binding.txtSelectedLanguage.text = resources.getString(R.string.english)
         }
         if (LoggedInInfo.user?.role == "super-admin") {
             binding.llSubscribtion.visibility = View.GONE
+        } else if (LoggedInInfo.user?.role == "service-provider") {
+            binding.llSubscribtion.visibility = View.GONE
+            if (LoggedInInfo.user?.status == "member") {
+                binding.llServices.visibility = View.VISIBLE
+                binding.llHolidays.visibility = View.VISIBLE
+            }
+            else{
+                binding.llServices.visibility = View.GONE
+                binding.llHolidays.visibility = View.GONE
+            }
         } else {
             binding.llServices.visibility = View.GONE
             binding.llHolidays.visibility = View.GONE
@@ -128,7 +135,7 @@ class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, Home
 
     override fun getFragmentBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = FragmentProfileBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
@@ -298,6 +305,7 @@ class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, Home
         viewModel.logout()
         // (activity as HomeActivity?)?.showLoadingIndicator()
     }
+
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {

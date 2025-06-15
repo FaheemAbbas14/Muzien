@@ -99,7 +99,7 @@
             android:background="@android:color/transparent"
             android:fontFamily="@font/manrope_regular"
             android:gravity="center|end"
-            android:hint="051 xxx xxxx"
+            android:hint="@string/_051_xxx_xxxx"
             android:imeOptions="actionDone"
             android:inputType="textCapWords|textPersonName"
             android:paddingEnd="10dp"

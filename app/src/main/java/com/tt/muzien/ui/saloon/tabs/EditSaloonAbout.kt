@@ -33,7 +33,7 @@ class EditSaloonAbout :
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
         }
-        binding.edtAbout.text = Editable.Factory.getInstance().newEditable("+$about")
+        binding.edtAbout.text = Editable.Factory.getInstance().newEditable("$about")
         binding.llSave.setOnClickListener {
             if (binding.edtAbout.text.toString() != "") {
                 updateSaloon()

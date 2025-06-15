@@ -136,7 +136,7 @@
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="@+id/llOTP"
         app:layout_constraintStart_toStartOf="@+id/llOTP"
-        app:layout_constraintTop_toBottomOf="@+id/llOTP">
+        app:layout_constraintTop_toBottomOf="@+id/txtError">
 
         <TextView
             android:id="@+id/txtAction"

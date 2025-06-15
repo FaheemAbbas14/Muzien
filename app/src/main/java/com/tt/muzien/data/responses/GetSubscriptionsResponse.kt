@@ -27,6 +27,7 @@ data class Subscription(
     val validTill: String,
     val isExpired: Boolean,
     val Saloon: Saloon,
+    val daysRemaining: Long,
 )
 
 

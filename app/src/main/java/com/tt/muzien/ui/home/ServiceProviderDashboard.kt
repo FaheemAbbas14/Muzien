@@ -127,7 +127,7 @@ class ServiceProviderDashboard :
             binding.llAcceptInvite.visibility = View.GONE
             binding.llBookings.visibility = View.GONE
         } else if (LoggedInInfo.user?.status == "invited") {
-            getLatestInvite()
+            getLatestInvite(true)
         } else {
             binding.llBookings.visibility = View.VISIBLE
             binding.llAcceptInvite.visibility = View.GONE
@@ -136,14 +136,14 @@ class ServiceProviderDashboard :
         }
 
         binding.swipeRefresh.setOnRefreshListener {
-            // binding.swipeRefresh.isRefreshing = false
             page = 1
             if (LoggedInInfo.user?.status == "none") {
                 binding.llSendInvite.visibility = View.VISIBLE
                 binding.llAcceptInvite.visibility = View.GONE
                 binding.llBookings.visibility = View.GONE
+                getLatestInvite(false)
             } else if (LoggedInInfo.user?.status == "invited") {
-                getLatestInvite()
+                getLatestInvite(false)
             } else {
                 binding.llBookings.visibility = View.VISIBLE
                 binding.llAcceptInvite.visibility = View.GONE
@@ -319,12 +319,13 @@ class ServiceProviderDashboard :
         return days
     }
 
-    private fun getLatestInvite() {
+    private fun getLatestInvite(reload:Boolean) {
         viewModel.getLatestInvite.observe(viewLifecycleOwner) {
 
             when (it) {
                 is Resource.Success -> {
                     Log.d("response", "success " + it.toString())
+                    binding.swipeRefresh.isRefreshing = false
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0&& it.value.data!= null && it.value.data.id != null) {
                         inviteId = it.value.data.id.toInt()
@@ -336,12 +337,13 @@ class ServiceProviderDashboard :
                         binding.llSendInvite.visibility = View.GONE
                         binding.llBookings.visibility = View.GONE
                     } else {
-                        requireView().snackbar(it.value.message)
+                       // requireView().snackbar(it.value.message)
                     }
                 }
 
                 is Resource.Failure -> {
                     Log.d("response", "failure " + it.toString())
+                    binding.swipeRefresh.isRefreshing = false
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     handleApiError(it)
                 }
@@ -351,7 +353,9 @@ class ServiceProviderDashboard :
         }
         viewModel.getLatestInvite(
         )
-        (activity as HomeActivity?)?.showLoadingIndicator()
+        if (!reload) {
+            (activity as HomeActivity?)?.showLoadingIndicator()
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -367,6 +371,7 @@ class ServiceProviderDashboard :
                         binding.llAcceptInvite.visibility = View.GONE
                         binding.llSendInvite.visibility = View.GONE
                         saloonId = it.value.data.saloonId.toInt()
+                        LoggedInInfo.user?.status = "member"
                         getAnalytics(false)
                     } else {
                         requireView().snackbar(it.value.message)

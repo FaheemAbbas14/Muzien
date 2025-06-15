@@ -67,16 +67,20 @@ class SubscriptionListAdapter(
         holder.txtStartDate.text = item.startDate
         holder.txtEndDate.text = item.endData
         var days = getDaysBetweenDates(item.startDate, item.endData, "yyyy-MM-dd")
-        if (days <= 10) {
+        if (item.isExpired) {
             holder.txtDays.setTextColor(context.getColor(R.color.red_text))
             holder.txtOverdue.setTextColor(context.getColor(R.color.red_text))
             holder.txtReneiw.visibility = View.VISIBLE
             holder.mainLayout.setBackgroundColor(context.getColor(R.color.overduebg))
         }
+        else{
+            holder.txtOverdue.text= context.getString(R.string.days_remaining)
+
+        }
         holder.txtOverdue.setOnClickListener {
             listener.onItemClick(position)
         }
-        holder.txtDays.text = "$days"
+        holder.txtDays.text = "${item.daysRemaining}"
 
     }
 

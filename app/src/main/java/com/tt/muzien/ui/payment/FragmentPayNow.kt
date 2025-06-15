@@ -62,6 +62,7 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
         super.onViewCreated(view, savedInstanceState)
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
+           // (activity as HomeActivity?)?.popFragment()
         }
         payDto?.discount?.let {
             if (it > 0) {

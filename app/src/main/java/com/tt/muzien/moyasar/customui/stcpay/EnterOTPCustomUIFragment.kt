@@ -28,6 +28,7 @@ class EnterOTPCustomUIFragment : Fragment() {
         initView()
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
+            (activity as HomeActivity?)?.popFragment()
         }
         return binding.root
     }

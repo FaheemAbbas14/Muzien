@@ -171,7 +171,11 @@ class HomeActivity : AppCompatActivity() {
         binding.imgProfilePic.setOnClickListener {
             loadFragment(FragmentProfile())
         }
-        binding.txtUserName.text = "Welcome ${LoggedInInfo.user?.fullName}"
+        val firstName = LoggedInInfo.user?.fullName
+            ?.split(" ")
+            ?.firstOrNull()
+            ?: ""
+        binding.txtUserName.text = "Welcome ${firstName}"
         binding.txtRole.text = "${LoggedInInfo.user?.role}"
         Glide.with(binding.imgProfilePic)
             .load(LoggedInInfo.user?.picture)

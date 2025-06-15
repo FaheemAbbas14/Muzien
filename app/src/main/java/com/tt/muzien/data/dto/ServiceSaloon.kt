@@ -11,7 +11,7 @@ data class ServiceSaloon(
     val saloonId: String,
     val serviceId: String,
     val name: String,
-    val address: String,
+    val address: String?="",
     var duration: String,
     val currency: String,
     var price: String,

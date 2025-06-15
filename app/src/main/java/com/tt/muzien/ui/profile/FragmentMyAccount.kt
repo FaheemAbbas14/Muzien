@@ -40,6 +40,8 @@ class FragmentMyAccount : BaseFragment<HomeViewModel, FragmentMyAccountBinding, 
             binding.edtPhoneNumber.text =
                 Editable.Factory.getInstance().newEditable(phoneNumber)
             binding.countrySpinner.setCountryForPhoneCode(Integer.parseInt(countryCode))
+            binding.edtPhoneNumber.hint =
+                Editable.Factory.getInstance().newEditable(InputValidator.getPhoneNumberPlaceholder(binding.countrySpinner.selectedCountryNameCode))
         }
         binding.edtEmail.text =
             Editable.Factory.getInstance().newEditable("${LoggedInInfo.user?.email}")
@@ -49,16 +51,40 @@ class FragmentMyAccount : BaseFragment<HomeViewModel, FragmentMyAccountBinding, 
             country = binding.countrySpinner.selectedCountryName
             val countryCode = binding.countrySpinner.selectedCountryCode
             binding.txtCountryCode.text ="+$countryCode"
+            binding.edtPhoneNumber.hint =
+                Editable.Factory.getInstance().newEditable(InputValidator.getPhoneNumberPlaceholder(binding.countrySpinner.selectedCountryNameCode))
+
             checkValidation()
         }
         binding.edtPhoneNumber.addTextChangedListener(object : TextWatcher {
             var length_before = 0
+            private var isFormatting: Boolean = false
+            private var lastText: String = ""
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 length_before = s.length
             }
 
             override fun afterTextChanged(s: Editable) {
+                if (isFormatting || s == null) return
 
+                isFormatting = true
+
+                val digits = s.toString().replace(" ", "")
+                val formatted = StringBuilder()
+
+                for (i in digits.indices) {
+                    formatted.append(digits[i])
+                    if ((i == 2 || i == 5) && i != digits.length - 1) {
+                        formatted.append(" ")
+                    }
+                }
+
+                if (formatted.toString() != s.toString()) {
+                    binding.edtPhoneNumber.setText(formatted.toString())
+                    binding.edtPhoneNumber.setSelection(formatted.length)
+                }
+
+                isFormatting = false
             }
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -72,7 +98,7 @@ class FragmentMyAccount : BaseFragment<HomeViewModel, FragmentMyAccountBinding, 
         binding.txtUpdate.setOnClickListener {
             if (checkValidation()) {
                 var phone =
-                    binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString()
+                    binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString().replace(" ", "")
 
                 sendOtpNormal(phone)
 
@@ -84,9 +110,8 @@ class FragmentMyAccount : BaseFragment<HomeViewModel, FragmentMyAccountBinding, 
         var isValid = false
 
         if (binding.edtPhoneNumber.text.isNotEmpty() && InputValidator.isValidPhoneNumber(
-                country,
-                binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString()
-            ) && LoggedInInfo.user?.phoneNumber != binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString()
+                country, binding.edtPhoneNumber.text.toString().replace(" ", "")
+            ) && LoggedInInfo.user?.phoneNumber != binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString().replace(" ", "")
         ) {
             isValid = true
         }

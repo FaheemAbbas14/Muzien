@@ -132,7 +132,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="10dp"
             android:fontFamily="@font/manrope_regular"
-            android:text="@string/saloon"
+            android:text="@string/saloons"
             android:textColor="@color/colorTextLabelDefault"
             android:textFontWeight="700"
             android:textSize="16sp"

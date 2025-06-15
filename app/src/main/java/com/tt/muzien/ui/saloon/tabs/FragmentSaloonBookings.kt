@@ -7,8 +7,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tt.muzien.R
@@ -16,6 +18,7 @@ import com.tt.muzien.data.SaloonBookingData
 import com.tt.muzien.data.dto.BookingsCountData
 import com.tt.muzien.data.dto.CalendarDay
 import com.tt.muzien.data.dto.FilterData
+import com.tt.muzien.data.dto.LoggedInInfo
 import com.tt.muzien.data.dto.SaloonDto
 import com.tt.muzien.data.network.BookingApi
 import com.tt.muzien.data.network.Resource
@@ -65,6 +68,11 @@ class FragmentSaloonBookings :
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (LoggedInInfo.user?.role == "salon-manager") {
+            binding.switchContainer.visibility = View.VISIBLE
+        } else {
+            binding.switchContainer.visibility = View.GONE
+        }
         if (FilterSelection.filterData == null) {
             val currentDate = LocalDate.now()
             val formattedDate = currentDate.format(DateTimeFormatter.ISO_DATE)
@@ -119,9 +127,27 @@ class FragmentSaloonBookings :
                 (activity as HomeActivity?)?.loadFragment(nextFragment)
             }
         }
+        binding.allBookings.setOnClickListener {
+            selectTab(binding.allBookings, binding.myBookings)
+            bookingServiceProviderId = null
+            getCalendarbar(false)
+        }
 
+        binding.myBookings.setOnClickListener {
+            selectTab(binding.myBookings, binding.allBookings)
+            bookingServiceProviderId = LoggedInInfo.user?.id.toString()
+            getCalendarbar(false)
+        }
         getCalendarbar(false)
 
+    }
+
+    fun selectTab(selected: TextView, unselected: TextView) {
+        selected.setBackgroundResource(R.drawable.bg_selected_tab)
+        selected.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+
+        unselected.setBackgroundResource(R.drawable.bg_unselected_tab)
+        unselected.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
     }
 
     private fun setMargins(show: Boolean) {
@@ -227,7 +253,7 @@ class FragmentSaloonBookings :
 
     override fun getFragmentBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = FragmentSaloonBookingsBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =

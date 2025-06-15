@@ -282,4 +282,11 @@
     <string name="remove_invitation">Remove Invitation</string>
     <string name="remove_manager">Remove Manager</string>
     <string name="arabic">عربي</string>
+    <string name="days_remaining">الأيام المتبقية</string>
+    <string name="all_bookings">كل الحجوزات</string>
+    <string name="my_bookings">حجوزاتي</string>
+    <string name="sign_up">التسجيل</string>
+    <string name="we_will_use_your_phone_number_to">سنستخدم رقم جوالك\nلتسجيلك وتمكينك من الدخول للتطبيق.</string>
+    <string name="already_have_an_account_sign_in">لديك حساب بالفعل؟سجل الدخول</string>
+
 </resources>

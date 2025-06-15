@@ -12,6 +12,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.OpenableColumns
+import android.text.Editable
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ClickableSpan
@@ -103,6 +104,9 @@ class FragmentAddSaloon :
             val countryCode = binding.countrySpinner.selectedCountryCode
             binding.txtCountryCode.text = "+$countryCode"
             AddSaloonData.country = "+$countryCode"
+            binding.edtPhoneNumber.hint =
+                Editable.Factory.getInstance().newEditable(InputValidator.getPhoneNumberPlaceholder(binding.countrySpinner.selectedCountryNameCode))
+
             checkValidation()
         }
 
@@ -161,10 +165,9 @@ class FragmentAddSaloon :
     private fun checkValidation(): Boolean {
         var isValid = false
         var phone =
-            binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString()
+            binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString().replace(" ", "")
         if (AddSaloonData.addressLng != 0.0 && AddSaloonData.addressLat != 0.0 && binding.edtName.text.toString() != "" && binding.edtDescription.text.toString() != "" && phone != "" && InputValidator.isValidPhoneNumber(
-                country,
-                binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString()
+                country, binding.edtPhoneNumber.text.toString().replace(" ", "")
             )
         ) {
             isValid = true
@@ -409,6 +412,9 @@ class FragmentAddSaloon :
     private fun setCountryCode() {
         if (AddSaloonData.country != null) {
             binding.countrySpinner.setCountryForPhoneCode(Integer.parseInt(AddSaloonData.country))
+            binding.edtPhoneNumber.hint =
+                Editable.Factory.getInstance().newEditable(InputValidator.getPhoneNumberPlaceholder(binding.countrySpinner.selectedCountryNameCode))
+
         }
     }
 
@@ -563,7 +569,7 @@ class FragmentAddSaloon :
                 )
         }
         var phone =
-            binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString()
+            binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString().replace(" ", "")
 
         // Create text-based request bodies
         val name =

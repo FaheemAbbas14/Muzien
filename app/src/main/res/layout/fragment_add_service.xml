@@ -125,7 +125,7 @@
         android:background="@color/white"
         android:fontFamily="@font/manrope_regular"
         android:inputType="textEmailAddress"
-        android:text="Select Service"
+        android:text="@string/select_service"
         android:textColor="@color/colorTextLabelDefault"
         android:textFontWeight="500"
         android:textSize="11sp"
@@ -139,7 +139,7 @@
         android:layout_marginTop="10dp"
         android:background="@android:color/transparent"
         android:fontFamily="@font/manrope_bold"
-        android:text="Selected Services"
+        android:text="@string/selected_services"
         android:textColor="@color/colorTextLabelDefault"
         android:textFontWeight="700"
         android:textSize="16sp"
@@ -177,7 +177,7 @@
             android:layout_height="match_parent"
             android:fontFamily="@font/manrope_bold"
             android:gravity="center"
-            android:text="Save"
+            android:text="@string/save"
             android:textColor="@color/white"
             android:textSize="14sp" />
     </LinearLayout>

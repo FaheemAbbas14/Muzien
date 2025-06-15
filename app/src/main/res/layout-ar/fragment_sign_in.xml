@@ -112,6 +112,8 @@
             android:fontFamily="@font/manrope_regular"
             android:gravity="center|right"
             android:hint=""
+            android:layoutDirection="rtl"
+            android:textDirection="rtl"
             android:inputType="phone"
             android:paddingEnd="10dp"
             android:textColor="@color/colorTextDefault"

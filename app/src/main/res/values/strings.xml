@@ -11,7 +11,7 @@
     <string name="home">Home</string>
     <string name="bookings">Bookings</string>
     <string name="add_new">Add New</string>
-    <string name="saloon">Saloon</string>
+    <string name="saloon">Salon</string>
     <string name="member">Member</string>
     <string name="service">Service</string>
     <string name="service_added_n_successfully">Service Added\n Successfully</string>
@@ -265,7 +265,7 @@
     <string name="accept_invitation">Accept Invitation</string>
     <string name="no_bookings">No Bookings</string>
     <string name="john_smith_has_invited_you_to_join_their_salon_the_style_zone_as_a_service_provider_do_you_want_to_accept">John Smith has invited you to join their salon “The Style Zone” as a service provider. Do you want to accept?</string>
-    <string name="saloons">Saloons</string>
+    <string name="saloons">Salons</string>
     <string name="google_pay">Google Pay</string>
     <string name="your_first_subscription">Your first subscription</string>
     <string name="actual_fee">Actual Fee:</string>
@@ -282,4 +282,18 @@
     <string name="remove_invitation">Remove Invitation</string>
     <string name="remove_manager">Remove Manager</string>
     <string name="arabic">Arabic</string>
+    <string name="days_remaining">Days Remaining</string>
+    <string name="all_bookings">All Bookings</string>
+    <string name="my_bookings">My Bookings</string>
+    <string name="sign_up">Sign up</string>
+    <string name="we_will_use_your_phone_number_to">We will use your phone number to\nregister and log into the app.</string>
+    <string name="already_have_an_account_sign_in">Already have an account? Sign in</string>
+    <string name="by_continuing_you_agree_to_our_t_c_and_privacy_policy"><![CDATA[By continuing you agree to our\nT&C and Privacy Policy]]></string>
+    <string name="tc">TC</string>
+    <string name="privacy">Privacy</string>
+    <string name="card_holder_name">Card Holder Name</string>
+    <string name="xxxxxxxxxxxxxxxx">XXXXXXXXXXXXXXXX</string>
+    <string name="mm_yy">MM/YY</string>
+    <string name="select_service">Select Service</string>
+    <string name="_051_xxx_xxxx">051 xxx xxxx</string>
 </resources>

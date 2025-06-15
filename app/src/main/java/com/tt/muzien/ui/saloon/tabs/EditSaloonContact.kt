@@ -40,7 +40,7 @@ class EditSaloonContact :
         binding.llSave.setOnClickListener {
             if (checkValidation()) {
                 var phone =
-                    binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString()
+                    binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString().replace(" ", "")
                 updateSaloon(phone)
             }
         }
@@ -51,20 +51,47 @@ class EditSaloonContact :
             Editable.Factory.getInstance().newEditable(phoneNumber)
         binding.countrySpinner.setCountryForPhoneCode(Integer.parseInt(countryCode))
         selectedCountry = binding.countrySpinner.selectedCountryName
+        binding.edtPhoneNumber.hint =
+            Editable.Factory.getInstance().newEditable(InputValidator.getPhoneNumberPlaceholder(binding.countrySpinner.selectedCountryNameCode))
+
         binding.countrySpinner.setOnCountryChangeListener {
             selectedCountry = binding.countrySpinner.selectedCountryName
             val countryCode = binding.countrySpinner.selectedCountryCode
             binding.txtCountryCode.text =
                 Editable.Factory.getInstance().newEditable("+$countryCode")
+            binding.edtPhoneNumber.hint =
+                Editable.Factory.getInstance().newEditable(InputValidator.getPhoneNumberPlaceholder(binding.countrySpinner.selectedCountryNameCode))
+
         }
         binding.edtPhoneNumber.addTextChangedListener(object : TextWatcher {
             var length_before = 0
+            private var isFormatting: Boolean = false
+            private var lastText: String = ""
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 length_before = s.length
             }
 
             override fun afterTextChanged(s: Editable) {
+                if (isFormatting || s == null) return
 
+                isFormatting = true
+
+                val digits = s.toString().replace(" ", "")
+                val formatted = StringBuilder()
+
+                for (i in digits.indices) {
+                    formatted.append(digits[i])
+                    if ((i == 2 || i == 5) && i != digits.length - 1) {
+                        formatted.append(" ")
+                    }
+                }
+
+                if (formatted.toString() != s.toString()) {
+                    binding.edtPhoneNumber.setText(formatted.toString())
+                    binding.edtPhoneNumber.setSelection(formatted.length)
+                }
+
+                isFormatting = false
             }
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
@@ -121,8 +148,7 @@ class EditSaloonContact :
         var isValid = false
 
         if (binding.edtPhoneNumber.text.isNotEmpty() && InputValidator.isValidPhoneNumber(
-                selectedCountry,
-                binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString()
+                selectedCountry, binding.edtPhoneNumber.text.toString().replace(" ", "")
             )
         ) {
             isValid = true
