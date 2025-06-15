@@ -7,4 +7,4 @@ package com.tt.muzien.data.requests
  * faheemabbas60@yahoo.com
  * +923115284424
  */
-data class UpdateUser(val fullName: String?,val email: String?,val nationality: String?,val role: String?)
+data class UpdateUser(val fullName: String?,val email: String?,val nationality: String?=null,val role: String?=null)

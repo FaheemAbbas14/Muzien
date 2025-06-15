@@ -300,4 +300,5 @@
     <string name="closed">closed</string>
     <string name="open">open</string>
     <string name="select_status">Select Status</string>
+    <string name="profile_updated">Profile Updated</string>
 </resources>

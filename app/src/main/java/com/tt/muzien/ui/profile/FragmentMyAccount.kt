@@ -8,6 +8,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.LoggedInInfo
@@ -15,12 +17,14 @@ import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.HomeRepository
 import com.tt.muzien.data.requests.LoginRequest
+import com.tt.muzien.data.requests.UpdateUser
 import com.tt.muzien.databinding.FragmentMyAccountBinding
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.home.HomeViewModel
 import com.tt.muzien.ui.snackbar
+import com.tt.muzien.utilities.Helper.closeKeyboard
 import com.tt.muzien.utilities.InputValidator
 
 
@@ -41,7 +45,8 @@ class FragmentMyAccount : BaseFragment<HomeViewModel, FragmentMyAccountBinding, 
                 Editable.Factory.getInstance().newEditable(phoneNumber)
             binding.countrySpinner.setCountryForPhoneCode(Integer.parseInt(countryCode))
             binding.edtPhoneNumber.hint =
-                Editable.Factory.getInstance().newEditable(InputValidator.getPhoneNumberPlaceholder(binding.countrySpinner.selectedCountryNameCode))
+                Editable.Factory.getInstance()
+                    .newEditable(InputValidator.getPhoneNumberPlaceholder(binding.countrySpinner.selectedCountryNameCode))
         }
         binding.edtEmail.text =
             Editable.Factory.getInstance().newEditable("${LoggedInInfo.user?.email}")
@@ -50,11 +55,44 @@ class FragmentMyAccount : BaseFragment<HomeViewModel, FragmentMyAccountBinding, 
         binding.countrySpinner.setOnCountryChangeListener {
             country = binding.countrySpinner.selectedCountryName
             val countryCode = binding.countrySpinner.selectedCountryCode
-            binding.txtCountryCode.text ="+$countryCode"
+            binding.txtCountryCode.text = "+$countryCode"
             binding.edtPhoneNumber.hint =
-                Editable.Factory.getInstance().newEditable(InputValidator.getPhoneNumberPlaceholder(binding.countrySpinner.selectedCountryNameCode))
+                Editable.Factory.getInstance()
+                    .newEditable(InputValidator.getPhoneNumberPlaceholder(binding.countrySpinner.selectedCountryNameCode))
 
             checkValidation()
+        }
+        binding.edtName.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                val inputText = v.text.toString().trim()
+
+                if (inputText.isNotEmpty() && inputText != LoggedInInfo.user?.fullName) {
+                    // callSearchApi(inputText)  // Replace with your API function
+                    updateProfile(inputText, LoggedInInfo.user?.email?:"")
+                }
+                // ✅ Hide keyboard
+                closeKeyboard(requireContext())
+                true  // consume action
+            } else {
+                false
+            }
+        }
+        binding.edtEmail.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                val inputText = v.text.toString().trim()
+
+                if (inputText.isNotEmpty() && inputText != LoggedInInfo.user?.email && InputValidator.isValidEmail(
+                        inputText
+                    )
+                ) {
+                    updateProfile(LoggedInInfo.user?.fullName?:"", inputText)
+                }
+                // ✅ Hide keyboard
+                closeKeyboard(requireContext())
+                true  // consume action
+            } else {
+                false
+            }
         }
         binding.edtPhoneNumber.addTextChangedListener(object : TextWatcher {
             var length_before = 0
@@ -98,7 +136,8 @@ class FragmentMyAccount : BaseFragment<HomeViewModel, FragmentMyAccountBinding, 
         binding.txtUpdate.setOnClickListener {
             if (checkValidation()) {
                 var phone =
-                    binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString().replace(" ", "")
+                    binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString()
+                        .replace(" ", "")
 
                 sendOtpNormal(phone)
 
@@ -111,7 +150,8 @@ class FragmentMyAccount : BaseFragment<HomeViewModel, FragmentMyAccountBinding, 
 
         if (binding.edtPhoneNumber.text.isNotEmpty() && InputValidator.isValidPhoneNumber(
                 country, binding.edtPhoneNumber.text.toString().replace(" ", "")
-            ) && LoggedInInfo.user?.phoneNumber != binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString().replace(" ", "")
+            ) && LoggedInInfo.user?.phoneNumber != binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString()
+                .replace(" ", "")
         ) {
             isValid = true
         }
@@ -130,7 +170,7 @@ class FragmentMyAccount : BaseFragment<HomeViewModel, FragmentMyAccountBinding, 
 
     override fun getFragmentBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = FragmentMyAccountBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
@@ -143,6 +183,7 @@ class FragmentMyAccount : BaseFragment<HomeViewModel, FragmentMyAccountBinding, 
         super.onResume()
         (activity as HomeActivity?)?.hideTabs()
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
@@ -150,9 +191,10 @@ class FragmentMyAccount : BaseFragment<HomeViewModel, FragmentMyAccountBinding, 
             (activity as HomeActivity?)?.hideTabs()
         }
     }
+
     override fun onPause() {
         super.onPause()
-      //  (activity as HomeActivity?)?.showTabs()
+        //  (activity as HomeActivity?)?.showTabs()
     }
 
     fun splitString(input: String): Pair<String, String> {
@@ -181,7 +223,7 @@ class FragmentMyAccount : BaseFragment<HomeViewModel, FragmentMyAccountBinding, 
                         LoggedInInfo.userId = it.value.data?.otp?.userId!!
                         var nextFragment = FragmentVerifyOTP()
                         nextFragment.isFromEdit = true
-                        nextFragment.phone = LoggedInInfo.phoneNumber?:""
+                        nextFragment.phone = LoggedInInfo.phoneNumber ?: ""
                         (activity as HomeActivity?)?.loadFragment(nextFragment)
                     } else {
                         requireView().snackbar(it.value.message)
@@ -203,4 +245,35 @@ class FragmentMyAccount : BaseFragment<HomeViewModel, FragmentMyAccountBinding, 
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 
+    private fun updateProfile(name: String, email: String) {
+        viewModel.updateUser.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.profile_updated), Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        var request = UpdateUser(name, email)
+        viewModel.updateUser(request)
+        (activity as HomeActivity?)?.showLoadingIndicator()
+    }
 }

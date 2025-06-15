@@ -7,12 +7,14 @@ import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.HomeRepository
 import com.tt.muzien.data.repository.UserRepository
 import com.tt.muzien.data.requests.LoginRequest
+import com.tt.muzien.data.requests.UpdateUser
 import com.tt.muzien.data.requests.VerifyOTPRequest
 import com.tt.muzien.data.responses.GetAnalyticsResponse
 import com.tt.muzien.data.responses.GetBookingResponse
 import com.tt.muzien.data.responses.GetRevenueResponse
 import com.tt.muzien.data.responses.LoginResponse
 import com.tt.muzien.data.responses.MyResponse
+import com.tt.muzien.data.responses.UpdateUserResponse
 import com.tt.muzien.data.responses.VerifyLoginResponse
 import com.tt.muzien.ui.base.BaseViewModel
 import com.tt.muzien.utilities.SingleEventLiveData
@@ -42,6 +44,8 @@ class HomeViewModel(
 
     private val _my: MutableLiveData<Resource<MyResponse>> = SingleEventLiveData()
     val my: LiveData<Resource<MyResponse>> get() = _my
+    private val _updateUser: MutableLiveData<Resource<UpdateUserResponse>> = SingleEventLiveData()
+    val updateUser: LiveData<Resource<UpdateUserResponse>> get() = _updateUser
 
     private val _logout: MutableLiveData<Resource<LoginResponse>> = SingleEventLiveData()
     val logout: LiveData<Resource<LoginResponse>> get() = _logout
@@ -78,6 +82,9 @@ class HomeViewModel(
 
     fun my(request: Long) = viewModelScope.launch {
         _my.value = userRepository?.my(request)
+    }
+    fun updateUser( request: UpdateUser) = viewModelScope.launch {
+        _updateUser.value = userRepository?.updateUser(request)
     }
 
     fun logout() = viewModelScope.launch {
