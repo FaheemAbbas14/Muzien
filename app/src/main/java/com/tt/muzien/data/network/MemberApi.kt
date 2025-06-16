@@ -28,7 +28,7 @@ import retrofit2.http.Query
  */
 interface MemberApi {
     @GET("v1/members/mySaloonsMembers")
-    suspend fun getMembers( @Query("isActive") isActive: Boolean? = null
+    suspend fun getMembers( @Query("isActive") isActive: Boolean? = null, @Query("status") status: Int? = null
     ): GetMembersResponse
 
     @GET("v1/members/{memberId}")

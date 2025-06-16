@@ -113,8 +113,8 @@ class MemberViewModel(
         _getSaloon.value = saloonRepository?.getSaloons()
     }
 
-    fun getMembers(  isActive: Boolean?=null) = viewModelScope.launch {
-        _getMembers.value = repository.getMembers(isActive)
+    fun getMembers(  isActive: Boolean?=null,status: Int?=null) = viewModelScope.launch {
+        _getMembers.value = repository.getMembers(isActive,status)
     }
 
     fun getMemberDetails(memberId: Int) = viewModelScope.launch {

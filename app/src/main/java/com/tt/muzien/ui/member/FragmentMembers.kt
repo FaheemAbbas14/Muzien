@@ -40,7 +40,7 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
         binding.imgFilter.setOnClickListener {
             var nextFragment = FragmentFilter()
             nextFragment.status = true
-            nextFragment.enumTabSelection= EnumTabSelection.Member
+            nextFragment.enumTabSelection = EnumTabSelection.Member
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
         getMembers(false)
@@ -148,7 +148,7 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
                 else -> {}
             }
         }
-        viewModel.getMembers(isActive)
+        viewModel.getMembers(isActive, if (status != null) status!!.toInt() else null)
         if (!reload) {
             (activity as HomeActivity?)?.showLoadingIndicator()
         }

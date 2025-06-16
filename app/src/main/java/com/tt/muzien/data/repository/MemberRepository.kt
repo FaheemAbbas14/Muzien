@@ -17,9 +17,9 @@ class MemberRepository(
     private val api: MemberApi,
 ) : BaseRepository() {
 
-    suspend fun getMembers(  isActive: Boolean?=null
+    suspend fun getMembers(  isActive: Boolean?=null,status: Int?=null
     ) = safeApiCall {
-        api.getMembers(isActive)
+        api.getMembers(isActive,status)
     }
 
     suspend fun getMemberDetails(
