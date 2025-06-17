@@ -101,7 +101,7 @@ class PerformerListAdapter(
             .load(item.profilePicUrl)
             .listener(iconRequestListener)
             .circleCrop()
-            .placeholder(R.drawable.topperformer)
+            .placeholder(R.drawable.profile_icon)
             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)  // Cache both original & transformed image
             .skipMemoryCache(false)  // Cache in memory
             .into(holder.imgProfilePic)

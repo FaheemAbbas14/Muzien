@@ -185,7 +185,7 @@ class SaloonBookingAdapter(
             }
             Glide.with(holder.imgProfilePic)
                 .load(item.imageUrl)
-                .placeholder(R.drawable.topperformer)
+                .placeholder(R.drawable.profile_icon)
                 .circleCrop()
                 .listener(iconRequestListener)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)  // Cache both original & transformed image
@@ -199,7 +199,7 @@ class SaloonBookingAdapter(
                 holder.txtRatings.text = "${item.reviewDetails.rating}"
                 Glide.with(holder.imgItemIcon)
                     .load(item.reviewDetails.reviewer.picture)
-                    .placeholder(R.drawable.topperformer)
+                    .placeholder(R.drawable.profile_icon)
                     .circleCrop()
                     .listener(iconRequestListener)
                     .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)  // Cache both original & transformed image

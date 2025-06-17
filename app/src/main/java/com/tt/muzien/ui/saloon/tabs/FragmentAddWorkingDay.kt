@@ -35,6 +35,7 @@ class FragmentAddWorkingDay :
     var isEdit = false
     var saloonId: Int = 0
     var userId: Int = 0
+    var systemWindow: Boolean = false
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setMemberRepo((activity as HomeActivity?)?.getMemberRepo()!!)
@@ -237,6 +238,9 @@ class FragmentAddWorkingDay :
 
     override fun onResume() {
         super.onResume()
+        if (systemWindow) {
+            (activity as HomeActivity?)?.setSystemWindow(true)
+        }
         (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, true)
         (activity as HomeActivity?)?.changeStatusBarColor(requireActivity().resources.getColor(R.color.white))
         (activity as HomeActivity?)?.hideTabs()
@@ -245,6 +249,9 @@ class FragmentAddWorkingDay :
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
+            if (systemWindow) {
+                (activity as HomeActivity?)?.setSystemWindow(true)
+            }
             (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, true)
             (activity as HomeActivity?)?.changeStatusBarColor(requireActivity().resources.getColor(R.color.white))
             (activity as HomeActivity?)?.hideTabs()
@@ -253,6 +260,7 @@ class FragmentAddWorkingDay :
 
     override fun onPause() {
         super.onPause()
+        (activity as HomeActivity?)?.setSystemWindow(false)
         // (activity as HomeActivity?)?.showTabs()
     }
 
@@ -285,7 +293,13 @@ class FragmentAddWorkingDay :
         }
         var workingHours = ArrayList<WorkHour>()
         for (day in selectedDays) {
-            workingHours.add(WorkHour(day, TimeHelper.convertLocalTimeToUtc(startTime), TimeHelper.convertLocalTimeToUtc(endTime)))
+            workingHours.add(
+                WorkHour(
+                    day,
+                    TimeHelper.convertLocalTimeToUtc(startTime),
+                    TimeHelper.convertLocalTimeToUtc(endTime)
+                )
+            )
         }
         viewModel.addHour(saloonId, AddWorkingHourRequest(workingHours))
         (activity as HomeActivity?)?.showLoadingIndicator()
@@ -320,7 +334,13 @@ class FragmentAddWorkingDay :
         }
         var workingHours = ArrayList<WorkHour>()
         for (day in selectedDays) {
-            workingHours.add(WorkHour(day, TimeHelper.convertLocalTimeToUtc(startTime), TimeHelper.convertLocalTimeToUtc(endTime)))
+            workingHours.add(
+                WorkHour(
+                    day,
+                    TimeHelper.convertLocalTimeToUtc(startTime),
+                    TimeHelper.convertLocalTimeToUtc(endTime)
+                )
+            )
         }
         viewModel.addMemberWorkingHour(userId, AddWorkingHourRequest(workingHours))
         (activity as HomeActivity?)?.showLoadingIndicator()

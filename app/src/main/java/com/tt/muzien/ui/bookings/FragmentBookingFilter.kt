@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter
 import androidx.annotation.RequiresApi
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.FilterData
+import com.tt.muzien.data.dto.LoggedInInfo
 import com.tt.muzien.data.dto.SaloonDto
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.network.SaloonApi
@@ -52,7 +53,7 @@ class FragmentBookingFilter :
         if (!showSaloon) {
             binding.llMainSaloon.visibility = View.GONE
         }
-        if (!showServiceProvider) {
+        if (!showServiceProvider || LoggedInInfo.user?.role == "salon-manager") {
             binding.llMainServiceProvider.visibility = View.GONE
         }
         getSaloons()

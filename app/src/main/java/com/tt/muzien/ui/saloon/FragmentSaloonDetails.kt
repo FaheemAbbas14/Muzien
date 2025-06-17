@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
@@ -185,8 +186,14 @@ class FragmentSaloonDetails :
         binding.txtRating.text = selectedSaloon?.ratings
         var timing = TimeHelper.getCurrentDayTiming(selectedSaloon?.timing)
         binding.txtTiming.text = timing
-        if (selectedSaloon?.isActive == true) {
-            if (selectedSaloon?.isOpened == true) {
+        updateStatus(selectedSaloon?.isActive!!, selectedSaloon?.isOpened!!)
+        setViewPager()
+    }
+
+    fun updateStatus(isActive: Boolean, isOpened: Boolean) {
+        Toast.makeText(requireContext(), "status updated", Toast.LENGTH_SHORT).show()
+        if (isActive == true) {
+            if (isOpened == true) {
                 binding.llStatus.setBackgroundDrawable(
                     ResourcesCompat.getDrawable(
                         requireContext().resources,
@@ -218,7 +225,6 @@ class FragmentSaloonDetails :
             binding.txtStatusTexts.text = "inactive"
             binding.llTimes.visibility = View.GONE
         }
-        setViewPager()
     }
 
     private fun setViewPager() {

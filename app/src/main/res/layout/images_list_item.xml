@@ -7,8 +7,8 @@
 
     <ImageView
         android:id="@+id/imgPhoto"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_marginEnd="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,8 +20,10 @@
         android:id="@+id/imgDelete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
+        android:paddingTop="5dp"
+        android:paddingEnd="5dp"
+        android:paddingStart="10dp"
+        android:paddingBottom="10dp"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="@+id/imgPhoto"
         app:layout_constraintTop_toTopOf="parent"

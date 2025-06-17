@@ -15,6 +15,7 @@ import android.provider.OpenableColumns
 import android.text.Editable
 import android.text.SpannableString
 import android.text.Spanned
+import android.text.TextWatcher
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.util.Log
@@ -62,7 +63,7 @@ import java.util.Locale
 
 class FragmentAddSaloon :
     BaseFragment<SaloonViewModel, FragmentAddSaloonBinding, SaloonRepository>() {
-    private val workingHourList = arrayListOf<WorkingHourData>()
+    private var workingHourList = arrayListOf<WorkingHourData>()
     private val holidaysList = arrayListOf<String>()
     private var workingHoursAdopter: WorkingHoursAdapter? = null
     private var holidayListAdapter: HolidayListAdapter? = null
@@ -109,6 +110,45 @@ class FragmentAddSaloon :
 
             checkValidation()
         }
+        binding.edtPhoneNumber.addTextChangedListener(object : TextWatcher {
+            var length_before = 0
+            private var isFormatting: Boolean = false
+            private var lastText: String = ""
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
+                length_before = s.length
+            }
+
+            override fun afterTextChanged(s: Editable) {
+                if (isFormatting || s == null) return
+
+                isFormatting = true
+
+                val digits = s.toString().replace(" ", "")
+                val formatted = StringBuilder()
+
+                for (i in digits.indices) {
+                    formatted.append(digits[i])
+                    if ((i == 2 || i == 5) && i != digits.length - 1) {
+                        formatted.append(" ")
+                    }
+                }
+
+                if (formatted.toString() != s.toString()) {
+                    binding.edtPhoneNumber.setText(formatted.toString())
+                    binding.edtPhoneNumber.setSelection(formatted.length)
+                }
+
+                isFormatting = false
+            }
+
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+
+
+                //checkValidation()
+
+
+            }
+        })
 
         binding.imgPhoto.setOnClickListener {
             isCertificate = false
@@ -428,6 +468,7 @@ class FragmentAddSaloon :
                     "${AddSaloonData.startTime} - ${AddSaloonData.endTime}"
                 )
             )
+            workingHourList= Helper.sortWorkingHoursByWeekday(workingHourList)
         }
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(position: Int) {
@@ -499,6 +540,7 @@ class FragmentAddSaloon :
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
+            (activity as HomeActivity?)?.setSystemWindow(true)
             setData()
             (activity as HomeActivity?)?.hideTabs()
         }

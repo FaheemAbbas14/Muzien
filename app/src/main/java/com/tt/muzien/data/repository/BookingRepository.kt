@@ -19,31 +19,33 @@ class BookingRepository(
         startDate: String? = null,
         endDate: String? = null,
         status: String? = null,
-        page: String? = null
+        page: String? = null,
     ) = safeApiCall {
-        api.getBookings(saloonIds,serviceProviderId, startDate, endDate, status, page)
+        api.getBookings(saloonIds, serviceProviderId, startDate, endDate, status, page)
     }
+
     suspend fun getDailyBookings(
         saloonIds: String? = null,
         serviceProviderId: String? = null,
         startDate: String? = null,
-        endDate: String? = null
+        endDate: String? = null,
     ) = safeApiCall {
-        api.getDailyBookings(saloonIds,serviceProviderId, startDate, endDate)
+        api.getDailyBookings(saloonIds, serviceProviderId, startDate, endDate)
     }
+
     suspend fun getMonthlyBookings(
         saloonIds: String? = null,
         serviceProviderId: String? = null,
         startDate: String? = null,
-        endDate: String? = null
+        endDate: String? = null,
     ) = safeApiCall {
-        api.getMonthlyBookings(saloonIds,serviceProviderId, startDate, endDate)
+        api.getMonthlyBookings(saloonIds, serviceProviderId, startDate, endDate)
     }
 
     suspend fun getCalendarbar(
         saloonIds: String? = null,
         startDate: String? = null,
-        endDate: String? = null
+        endDate: String? = null,
     ) = safeApiCall {
         api.getCalendarbar(saloonIds, startDate, endDate)
     }
@@ -51,16 +53,22 @@ class BookingRepository(
     suspend fun getAnalytics(
         saloonIds: String? = null,
         startDate: String? = null,
-        endDate: String? = null
+        endDate: String? = null,
     ) = safeApiCall {
         api.getAnalytics(saloonIds, startDate, endDate)
     }
 
     suspend fun updateBooking(
         bookingId: String,
-        requestData: UpdateBookingRequest
+        requestData: UpdateBookingRequest,
     ) = safeApiCall {
         api.updateBooking(bookingId, requestData)
+    }
+
+    suspend fun getBookingDetails(
+        bookingId: String,
+    ) = safeApiCall {
+        api.getBookingDetails(bookingId)
     }
 
 }

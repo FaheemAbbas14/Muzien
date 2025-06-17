@@ -42,7 +42,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
     <LinearLayout
         android:id="@+id/switchContainer"
         android:layout_width="0dp"
@@ -51,11 +50,9 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
-        android:background="@drawable/bg_segmented_container"
         android:clipToOutline="true"
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="2dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/customCalendarView">
@@ -65,7 +62,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/bg_selected_tab"
+            android:background="@drawable/all_booking_selected"
             android:gravity="center"
             android:text="@string/all_bookings"
             android:textColor="@color/white"
@@ -82,7 +79,6 @@
             android:textColor="@color/colorPrimary"
             android:textStyle="bold" />
     </LinearLayout>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/llNoDta"
         android:layout_width="match_parent"
@@ -145,12 +141,10 @@
         android:id="@+id/cnstData"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/switchContainer">
-
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcyBookings"
@@ -161,7 +155,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

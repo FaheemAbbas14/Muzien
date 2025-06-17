@@ -28,6 +28,7 @@ class FragmentAddHoliday :
     var isEdit = false
     var saloonId: Int = 0
     var userId: Int = 0
+    var systemWindow: Boolean = false
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setMemberRepo((activity as HomeActivity?)?.getMemberRepo()!!)
@@ -85,6 +86,9 @@ class FragmentAddHoliday :
 
     override fun onResume() {
         super.onResume()
+        if (systemWindow) {
+            (activity as HomeActivity?)?.setSystemWindow(true)
+        }
         (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, true)
         (activity as HomeActivity?)?.changeStatusBarColor(requireActivity().resources.getColor(R.color.white))
         (activity as HomeActivity?)?.hideTabs()
@@ -93,6 +97,9 @@ class FragmentAddHoliday :
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
+            if (systemWindow) {
+                (activity as HomeActivity?)?.setSystemWindow(true)
+            }
             (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, true)
             (activity as HomeActivity?)?.changeStatusBarColor(requireActivity().resources.getColor(R.color.white))
             (activity as HomeActivity?)?.hideTabs()
@@ -101,6 +108,7 @@ class FragmentAddHoliday :
 
     override fun onPause() {
         super.onPause()
+        (activity as HomeActivity?)?.setSystemWindow(false)
         // (activity as HomeActivity?)?.showTabs()
     }
 

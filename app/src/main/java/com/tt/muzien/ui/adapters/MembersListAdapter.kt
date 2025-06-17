@@ -156,7 +156,7 @@ class MembersListAdapter(
         Glide.with(holder.imgProfilePic)
             .load(item.profilePic)
             .circleCrop()
-            .placeholder(R.drawable.topperformer)
+            .placeholder(R.drawable.profile_icon)
             .listener(iconRequestListener)
             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)  // Cache both original & transformed image
             .skipMemoryCache(false)  // Cache in memory

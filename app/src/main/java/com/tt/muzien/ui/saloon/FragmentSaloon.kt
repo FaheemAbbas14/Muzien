@@ -44,6 +44,7 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
         }
         binding.imgFilter.setOnClickListener {
             var nextFragment = FragmentFilter()
+            nextFragment.status = true
             nextFragment.enumTabSelection = EnumTabSelection.Saloon
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }

@@ -43,6 +43,7 @@ import com.tt.muzien.ui.saloon.tabs.FragmentAddHoliday
 import com.tt.muzien.ui.saloon.tabs.FragmentAddWorkingDay
 import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.Appelement
+import com.tt.muzien.utilities.Helper
 import com.tt.muzien.utilities.TimeHelper
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 import java.util.Locale
@@ -51,7 +52,7 @@ import java.util.Locale
 class FragmentViewMember :
     BaseFragment<MemberViewModel, FragmentViewMemberBinding, MemberRepository>() {
     var member: MemberDto? = null
-    private val workingHourList = arrayListOf<WorkingHourData>()
+    private var workingHourList = arrayListOf<WorkingHourData>()
     private val servicesList = arrayListOf<String>()
     private var workingHoursAdopter: WorkingHoursAdapter? = null
     var memberDetails: MemberDetails? = null
@@ -224,7 +225,7 @@ class FragmentViewMember :
         Glide.with(binding.imgProfilePic)
             .load(memberDetails?.picture)
             .circleCrop()
-            .placeholder(R.drawable.topperformer)
+            .placeholder(R.drawable.profile_icon)
             .listener(iconRequestListener)
             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)  // Cache both original & transformed image
             .skipMemoryCache(false)  // Cache in memory
@@ -378,7 +379,7 @@ class FragmentViewMember :
                         }"
                     )
                 )
-
+                workingHourList= Helper.sortWorkingHoursByWeekday(workingHourList)
             }
         }
         val clickListener = object : OnItemClickListner {

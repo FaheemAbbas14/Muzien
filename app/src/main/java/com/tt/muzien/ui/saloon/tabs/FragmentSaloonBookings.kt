@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -31,6 +30,7 @@ import com.tt.muzien.interfaces.IbookingCancel
 import com.tt.muzien.ui.adapters.SaloonBookingAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.bookings.BookingViewModel
+import com.tt.muzien.ui.bookings.FragmentBookingDetails
 import com.tt.muzien.ui.bookings.FragmentBookingFilter
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
@@ -128,13 +128,13 @@ class FragmentSaloonBookings :
             }
         }
         binding.allBookings.setOnClickListener {
-            selectTab(binding.allBookings, binding.myBookings)
+            selectTab(true)
             bookingServiceProviderId = null
             getCalendarbar(false)
         }
 
         binding.myBookings.setOnClickListener {
-            selectTab(binding.myBookings, binding.allBookings)
+            selectTab(false)
             bookingServiceProviderId = LoggedInInfo.user?.id.toString()
             getCalendarbar(false)
         }
@@ -142,12 +142,35 @@ class FragmentSaloonBookings :
 
     }
 
-    fun selectTab(selected: TextView, unselected: TextView) {
-        selected.setBackgroundResource(R.drawable.bg_selected_tab)
-        selected.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+    fun selectTab(isAllBooking: Boolean) {
+        if (isAllBooking) {
+            binding.allBookings.setBackgroundResource(R.drawable.all_booking_selected)
+            binding.allBookings.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.white
+                )
+            )
+            binding.myBookings.setBackgroundResource(R.drawable.bg_unselected_tab)
+            binding.myBookings.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.colorPrimary
+                )
+            )
+        } else {
+            binding.myBookings.setBackgroundResource(R.drawable.bg_selected_tab)
+            binding.myBookings.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+            binding.allBookings.setBackgroundResource(R.drawable.all_booking_unselected)
+            binding.allBookings.setTextColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.colorPrimary
+                )
+            )
+        }
 
-        unselected.setBackgroundResource(R.drawable.bg_unselected_tab)
-        unselected.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorPrimary))
+
     }
 
     private fun setMargins(show: Boolean) {
@@ -183,9 +206,11 @@ class FragmentSaloonBookings :
         }
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(position: Int) {
-//                var nextFragment = FragmentSaloonDetails()
-//                nextFragment.selectedSaloon=saloonsBookingList[position]
-//                (activity as HomeActivity?)?.loadFragment(nextFragment)
+                if (LoggedInInfo.user?.role == "service-provider" || bookingServiceProviderId != null) {
+                    var nextFragment = FragmentBookingDetails()
+                    nextFragment.bookingDto = saloonsBookingList[position]
+                    (activity as HomeActivity?)?.loadFragment(nextFragment)
+                }
 
             }
         }

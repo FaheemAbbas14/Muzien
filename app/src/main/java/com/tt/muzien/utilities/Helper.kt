@@ -9,6 +9,7 @@ import android.provider.OpenableColumns
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
+import com.tt.muzien.data.dto.WorkingHourData
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -26,9 +27,10 @@ import kotlin.math.sqrt
  * +923115284424
  */
 object Helper {
-    fun dpToPx(context: Context,dpValue: Int): Int {
+    fun dpToPx(context: Context, dpValue: Int): Int {
         return (dpValue * context.resources.displayMetrics.density).toInt()
     }
+
     fun getFileFromUri(context: Context, uri: Uri): File? {
         val contentResolver: ContentResolver = context.contentResolver
         val fileName = "temp_image_${System.currentTimeMillis()}.jpg" // Change extension as needed
@@ -46,6 +48,7 @@ object Helper {
             null
         }
     }
+
     fun getFileExtension(context: Context, uri: Uri): String? {
         var extension: String? = null
 
@@ -61,15 +64,18 @@ object Helper {
 
         return extension
     }
+
     fun Fragment.closeKeyboard(context: Context) {
         val view = requireActivity().currentFocus ?: View(requireContext())
         val inputMethodManager =
             context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
+
     fun capitalizeFirstWord(variable: String): String {
         return variable.replaceFirstChar { it.uppercase() }
     }
+
     fun haversine(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
         val R = 6371e3 // Earth radius in meters
 
@@ -83,6 +89,7 @@ object Helper {
 
         return R * c
     }
+
     fun Context.fixedFontScaleResources(): Resources {
         val res = this.resources
         val config = Configuration(res.configuration)
@@ -91,5 +98,14 @@ object Helper {
             res.updateConfiguration(config, res.displayMetrics)
         }
         return res
+    }
+
+    fun sortWorkingHoursByWeekday(workingHours: ArrayList<WorkingHourData>): ArrayList<WorkingHourData> {
+        val dayOrder = listOf(
+            "monday", "tuesday", "wednesday", "thursday",
+            "friday", "saturday", "sunday"
+        )
+
+        return ArrayList(workingHours.sortedBy { dayOrder.indexOf(it.title) })
     }
 }

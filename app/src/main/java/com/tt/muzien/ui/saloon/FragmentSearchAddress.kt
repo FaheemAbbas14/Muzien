@@ -6,6 +6,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -19,11 +20,13 @@ import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.ListView
 import android.widget.PopupWindow
 import androidx.annotation.RequiresApi
@@ -306,6 +309,15 @@ class FragmentSearchAddress :
     }
 
     private fun setAddressAutoComplete() {
+        val displayMetrics = Resources.getSystem().displayMetrics
+        val screenWidth = displayMetrics.widthPixels
+
+        val marginDp = 35
+        val marginPx = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP, marginDp.toFloat(), resources.displayMetrics
+        ).toInt()
+
+        val popupWidth = screenWidth - (marginPx * 2)
         val popupWindow = PopupWindow(requireContext())
         val suggestionList = mutableListOf<String>() // To store the suggestions
         val adapter = ArrayAdapter(requireContext(), R.layout.places_list_item, suggestionList)
@@ -315,7 +327,7 @@ class FragmentSearchAddress :
         popupWindow.contentView = listView
         popupWindow.isFocusable = false
         popupWindow.isOutsideTouchable = true
-        popupWindow.width = ViewGroup.LayoutParams.MATCH_PARENT
+        popupWindow.width = popupWidth
         popupWindow.height = ViewGroup.LayoutParams.WRAP_CONTENT
         listView.setOnItemClickListener { _, _, position, _ ->
             closeKeyboard(requireActivity())

@@ -38,6 +38,7 @@ import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.payment.FragmentPayNow
+import com.tt.muzien.ui.saloon.FragmentSaloonDetails
 import com.tt.muzien.ui.saloon.FragmentSearchAddress
 import com.tt.muzien.ui.saloon.SaloonViewModel
 import com.tt.muzien.ui.snackbar
@@ -54,13 +55,13 @@ class FragmentSaloonInfo :
     BaseFragment<SaloonViewModel, FragmentSaloonInfoBinding, SaloonRepository>(),
     OnMapReadyCallback {
     private lateinit var map: GoogleMap
-    private val workingHourrList = arrayListOf<WorkingHourData>()
+    private var workingHourList = arrayListOf<WorkingHourData>()
     private var workingHoursAdopter: WorkingHoursAdapter? = null
     private val holidaysList = arrayListOf<String>()
     private var holidayListAdapter: HolidayListAdapter? = null
     private var isExpanded = false
     var selectedSaloon: SaloonDto? = null
-    var subscriptionId:Int? = null
+    var subscriptionId: Int? = null
     var selectedSaloonDetails: SaloonDetailsInfo? = null
     var position: Int = 0
     private var certificate_uri: Uri? = null
@@ -82,6 +83,7 @@ class FragmentSaloonInfo :
         }
         binding.imgAddHoliday.setOnClickListener {
             var nextFragment = FragmentAddHoliday()
+            nextFragment.systemWindow = true
             nextFragment.isEdit = true
             nextFragment.saloonId = selectedSaloonDetails?.id?.toInt()!!
             (activity as HomeActivity?)?.loadFragment(nextFragment)
@@ -89,6 +91,7 @@ class FragmentSaloonInfo :
         binding.imgAddWorkingHour.setOnClickListener {
             var nextFragment = FragmentAddWorkingDay()
             nextFragment.isEdit = true
+            nextFragment.systemWindow = true
             nextFragment.saloonId = selectedSaloonDetails?.id?.toInt()!!
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
@@ -155,9 +158,9 @@ class FragmentSaloonInfo :
             holidaysList.clear()
             holidaysMap.clear()
             for (holiday in selectedSaloonDetails?.SaloonHolidays!!) {
-                var startDate=holiday.startDate
-                if (startDate.contains("T")){
-                    startDate=startDate.split("T")[0]
+                var startDate = holiday.startDate
+                if (startDate.contains("T")) {
+                    startDate = startDate.split("T")[0]
                 }
                 holidaysMap.put(startDate, holiday.id)
                 holidaysList.add(startDate)
@@ -260,7 +263,7 @@ class FragmentSaloonInfo :
         } else {
             binding.imgCertificateIcon.visibility = View.GONE
             binding.txtCertificateName.visibility = View.GONE
-           // binding.txtUploadCertificate.visibility = View.VISIBLE
+            // binding.txtUploadCertificate.visibility = View.VISIBLE
             binding.txtUploadedAt.visibility = View.GONE
             binding.txtRenew.visibility = View.VISIBLE
             //   binding.txtRenew.text = requireContext().resources.getString(R.string.add)
@@ -285,29 +288,34 @@ class FragmentSaloonInfo :
     }
 
     private fun setWorkingHourAdopter() {
-        workingHourrList.clear()
+        workingHourList.clear()
         if (selectedSaloonDetails?.SaloonWorkHours != null) {
             for (hour in selectedSaloonDetails?.SaloonWorkHours!!) {
-                workingHourrList.add(
+                workingHourList.add(
                     WorkingHourData(
                         1,
                         "${hour.day}",
-                        "${TimeHelper.convertUtcToLocalTime(hour?.openingTime?:"")} - ${TimeHelper.convertUtcToLocalTime(hour?.closingTime?:"")}"
+                        "${TimeHelper.convertUtcToLocalTime(hour?.openingTime ?: "")} - ${
+                            TimeHelper.convertUtcToLocalTime(
+                                hour?.closingTime ?: ""
+                            )
+                        }"
                     )
                 )
 
             }
+            workingHourList = Helper.sortWorkingHoursByWeekday(workingHourList)
         }
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(pos: Int) {
                 position = pos
-                deleteWorkingHour(workingHourrList[pos].title)
+                deleteWorkingHour(workingHourList[pos].title)
             }
         }
         binding.rcyWorkingHours.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
         workingHoursAdopter = WorkingHoursAdapter(
-            workingHourrList,
+            workingHourList,
             requireContext(),
             clickListener
         )
@@ -343,6 +351,9 @@ class FragmentSaloonInfo :
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
                         selectedSaloonDetails = it.value.data
+                        val fragmentB =
+                            requireActivity().supportFragmentManager.findFragmentById(R.id.fragment_container) as? FragmentSaloonDetails
+                        fragmentB?.updateStatus(it.value.data.isActive, true)
                         setData()
                     } else {
                         requireView().snackbar(it.value.message)
@@ -400,8 +411,9 @@ class FragmentSaloonInfo :
                     Log.d("response", "success " + it.toString())
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
-                        workingHourrList.removeAt(position)
+                        workingHourList.removeAt(position)
                         workingHoursAdopter?.notifyDataSetChanged()
+                       getSaloons()
                     } else {
                         requireView().snackbar(it.value.message)
                     }
@@ -533,7 +545,7 @@ class FragmentSaloonInfo :
                         for (plan in it.value.data) {
                             if (plan.name == "saloon-annual" && plan.isActive) {
                                 var nextFragment = FragmentPayNow()
-                                nextFragment.subscriptionId=subscriptionId
+                                nextFragment.subscriptionId = subscriptionId
                                 var payDto =
                                     PayDto(
                                         selectedSaloon?.id ?: 0,

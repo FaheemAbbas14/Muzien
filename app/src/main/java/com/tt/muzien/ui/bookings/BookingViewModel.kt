@@ -10,6 +10,7 @@ import com.tt.muzien.data.requests.UpdateBookingRequest
 import com.tt.muzien.data.responses.AcceptInviteResponse
 import com.tt.muzien.data.responses.CalenderBookingResponse
 import com.tt.muzien.data.responses.GetAnalyticsResponse
+import com.tt.muzien.data.responses.GetBookingDetailsResponse
 import com.tt.muzien.data.responses.GetBookingResponse
 import com.tt.muzien.data.responses.GetLatestInvite
 import com.tt.muzien.ui.base.BaseViewModel
@@ -43,6 +44,10 @@ class BookingViewModel(
     val getLatestInvite: LiveData<Resource<GetLatestInvite>> get() = _getLatestInvite
     private val _updateBooking: MutableLiveData<Resource<Unit>> = SingleEventLiveData()
     val updateBooking: LiveData<Resource<Unit>> get() = _updateBooking
+
+    private val _bookingDetails: MutableLiveData<Resource<GetBookingDetailsResponse>> = SingleEventLiveData()
+    val bookingDetails: LiveData<Resource<GetBookingDetailsResponse>> get() = _bookingDetails
+
     private val _acceptInvite: MutableLiveData<Resource<AcceptInviteResponse>> =
         SingleEventLiveData()
     val acceptInvite: LiveData<Resource<AcceptInviteResponse>> get() = _acceptInvite
@@ -106,5 +111,10 @@ class BookingViewModel(
         requestData: UpdateBookingRequest
     ) = viewModelScope.launch {
         _updateBooking.value = repository.updateBooking(bookingId, requestData)
+    }
+    fun getBookingDetails(
+        bookingId: String
+    ) = viewModelScope.launch {
+        _bookingDetails.value = repository.getBookingDetails(bookingId)
     }
 }

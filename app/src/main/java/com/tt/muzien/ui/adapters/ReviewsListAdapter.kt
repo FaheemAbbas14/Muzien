@@ -56,7 +56,7 @@ class ReviewsListAdapter(
         holder.txtRatings.text = item.rating
         Glide.with(holder.imgItemIcon)
             .load(item.icon)
-            .placeholder(R.drawable.topperformer)
+            .placeholder(R.drawable.profile_icon)
             .transform(CircleCrop())
             .override(100, 100)
             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)  // Cache both original & transformed image
