@@ -16,6 +16,7 @@ data class GetCategoriesResponse(
 data class Category(
     val id: Int,
     val name: String,
+    val nameAr: String,
     val image: String,
     val services: List<Service?>,
 )

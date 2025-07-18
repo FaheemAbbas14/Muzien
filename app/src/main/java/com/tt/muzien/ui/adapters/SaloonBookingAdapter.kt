@@ -28,6 +28,7 @@ import com.tt.muzien.R
 import com.tt.muzien.data.SaloonBookingData
 import com.tt.muzien.interfaces.IBookingStatusUpdate
 import com.tt.muzien.interfaces.IbookingCancel
+import com.tt.muzien.utilities.TimeHelper
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 
 
@@ -80,7 +81,9 @@ class SaloonBookingAdapter(
         val llMainView: ConstraintLayout = itemView.findViewById(R.id.llMainView)
         val txtCancel: TextView = itemView.findViewById(R.id.txtCancel)
         val imgBarCode: ImageView = itemView.findViewById(R.id.imgBarCode)
-
+        val llDateTime: LinearLayout = itemView.findViewById(R.id.llDateTime)
+        val llDateTime2: LinearLayout = itemView.findViewById(R.id.llDateTime2)
+        val txtDateTime2: TextView = itemView.findViewById(R.id.txtDateTime2)
         init {
             itemView.setOnClickListener(this)
         }
@@ -116,9 +119,11 @@ class SaloonBookingAdapter(
                 holder.llCancel.visibility = View.GONE
                 holder.llPending.visibility = View.GONE
             } else if (item.status == "cancelled" && item.cancelledBy != null) {
+                holder.llDateTime.visibility=View.GONE
                 holder.llReview.visibility = View.GONE
                 holder.llPending.visibility = View.GONE
                 holder.llCancel.visibility = View.VISIBLE
+                holder.llDateTime2.visibility = View.VISIBLE
             } else if (item.status == "pending-approval") {
                 holder.llReview.visibility = View.GONE
                 holder.llCancel.visibility = View.GONE
@@ -129,16 +134,24 @@ class SaloonBookingAdapter(
                 holder.llPending.visibility = View.GONE
                 holder.mainCard.setBackgroundDrawable(context.resources.getDrawable(R.drawable.rounded_overdue))
             }
+            if (item.service==""){
+
+                holder.txtService.text = "--"
+            }
+            else{
+
+                holder.txtService.text = item.service
+            }
 //            if (isFromMain) {
 //                holder.llMainView.visibility = View.VISIBLE
 //            }
-            holder.txtDateTime.text = "${item.date} - ${item.time} - ${item.duration} mins"
+            holder.txtDateTime.text = "${item.date} - ${item.time} - ${TimeHelper.getDisplayTime(item.duration)}"
+            holder.txtDateTime2.text = "${item.date} - ${item.time} - ${TimeHelper.getDisplayTime(item.duration)}"
             holder.txtName.text = item.name
             holder.txtStyle.text = item.style
             holder.txtUserName.text = item.personName
-            holder.txtService.text = item.service
             holder.txtCancelBy.text = "Cancelled by ${item.cancelledBy}"
-            holder.txtReason.text = item.cancelledReason
+            holder.txtReason.text = "${item.cancelledReason}\n\n ${item.date}"
             if (item.status == "unpaid" || item.status == "overdue") {
                 holder.llMainView.visibility = View.VISIBLE
             } else {
@@ -176,7 +189,7 @@ class SaloonBookingAdapter(
                     target: Target<Drawable>,
                     isFirstResource: Boolean
                 ): Boolean {
-                    holder.imgProfilePic.scaleType = ImageView.ScaleType.CENTER_CROP
+                    holder.imgProfilePic.scaleType = ImageView.ScaleType.CENTER_INSIDE
                     Log.d("imageLoaded", "failed ${item.name}")
                     return false
                 }
@@ -185,7 +198,7 @@ class SaloonBookingAdapter(
             }
             Glide.with(holder.imgProfilePic)
                 .load(item.imageUrl)
-                .placeholder(R.drawable.profile_icon)
+                .placeholder(R.drawable.topperformer)
                 .circleCrop()
                 .listener(iconRequestListener)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)  // Cache both original & transformed image
@@ -199,7 +212,7 @@ class SaloonBookingAdapter(
                 holder.txtRatings.text = "${item.reviewDetails.rating}"
                 Glide.with(holder.imgItemIcon)
                     .load(item.reviewDetails.reviewer.picture)
-                    .placeholder(R.drawable.profile_icon)
+                    .placeholder(R.drawable.topperformer)
                     .circleCrop()
                     .listener(iconRequestListener)
                     .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)  // Cache both original & transformed image

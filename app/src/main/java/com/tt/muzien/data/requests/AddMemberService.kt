@@ -1,5 +1,7 @@
 package com.tt.muzien.data.requests
 
+import com.google.android.gms.measurement.internal.zzny
+
 
 /**
  * Created by Faheem Abbas on 24/04/2025.
@@ -8,4 +10,4 @@ package com.tt.muzien.data.requests
  * faheem.abbas@bajcotechnologies.com
  * +923115284424
  */
-data class AddMemberService(var services: ArrayList<Int>)
+data class AddMemberService(var services: ArrayList<Int>?= null,var serviceId: String?=null)

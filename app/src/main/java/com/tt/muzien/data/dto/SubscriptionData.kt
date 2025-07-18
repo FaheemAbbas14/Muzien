@@ -14,4 +14,6 @@ data class SubscriptionData(
     var endData: String,
     var isExpired:Boolean,
     var daysRemaining:Int,
+    var saloonId: Long,
+    var saloonName: String,
 )

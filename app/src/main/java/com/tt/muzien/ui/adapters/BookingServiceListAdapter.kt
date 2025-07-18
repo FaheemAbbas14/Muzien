@@ -1,6 +1,7 @@
 package com.tt.muzien.ui.adapters
 
 import android.content.Context
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,6 +56,7 @@ class BookingServiceListAdapter(
         var item: BookingServiceDto = itemList[position]
         if (position == itemList.size - 1) {
             holder.divider.visibility = View.GONE
+            holder.txtName.setTypeface(holder.txtName.typeface, Typeface.BOLD)
         }
         holder.txtName.text = item.name
         holder.txtAmount.text = item.amount

@@ -11,7 +11,9 @@ import com.tt.muzien.data.responses.GetLatestInvite
 import com.tt.muzien.data.responses.GetMemberDetails
 import com.tt.muzien.data.responses.GetMembersResponse
 import com.tt.muzien.data.responses.GetServiceProviderResponse
+import com.tt.muzien.data.responses.GetUserHolidaysResponse
 import com.tt.muzien.data.responses.MarkManagerResponse
+import com.tt.muzien.data.responses.UserServicesResponse
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -28,7 +30,8 @@ import retrofit2.http.Query
  */
 interface MemberApi {
     @GET("v1/members/mySaloonsMembers")
-    suspend fun getMembers( @Query("isActive") isActive: Boolean? = null, @Query("status") status: Int? = null
+    suspend fun getMembers(
+        @Query("isActive") isActive: Boolean? = null, @Query("status") status: Int? = null,
     ): GetMembersResponse
 
     @GET("v1/members/{memberId}")
@@ -38,12 +41,14 @@ interface MemberApi {
 
     @GET("v1/members/list")
     suspend fun getMembers(
-        @Query("saloonIds") saloonIds: String, @Query("isActive") isActive: Boolean? = null,
+        @Query("saloonIds") saloonIds: String,
+        @Query("isActive") isActive: Boolean? = null,
+        @Query("status") status: Int? = null,
     ): GetMembersResponse
 
     @POST("v1/members/invite")
     suspend fun sendInvite(
-        @Body requestData: AddMemberRequest
+        @Body requestData: AddMemberRequest,
     ): AddMemberResponse
 
     @POST("v1/members/{memberId}/inactivate")
@@ -71,28 +76,36 @@ interface MemberApi {
     ): AcceptInviteResponse
 
     @POST("v1/user/service/{userId}/add")
-    suspend fun addService(
-        @Path("userId") userId: Int, @Body requestData: AddMemberService
+    suspend fun addServices(
+        @Path("userId") userId: Int, @Body requestData: AddMemberService,
     ): AddMemberDataResponse
-
+    @POST("v1/user/service/{userId}")
+    suspend fun addService(
+        @Path("userId") userId: Int, @Body requestData: AddMemberService,
+    ): AddMemberDataResponse
     @POST("v1/user/{userId}/holiday")
     suspend fun addHoliday(
-        @Path("userId") userId: Int, @Body requestData: AddHolidayRequest
+        @Path("userId") userId: Int, @Body requestData: AddHolidayRequest,
     ): AddMemberDataResponse
+
+    @GET("v1/user/{userId}/holiday")
+    suspend fun getUserHolidays(
+        @Path("userId") userId: Int,
+    ):GetUserHolidaysResponse
 
     @POST("v1/user/{userId}/hours")
     suspend fun addWorkingHour(
-        @Path("userId") userId: Int, @Body requestData: AddWorkingHourRequest
+        @Path("userId") userId: Int, @Body requestData: AddWorkingHourRequest,
     ): AddMemberDataResponse
 
     @DELETE("v1/user/{userId}/hours/{day}")
     suspend fun removeWorkingHour(
-        @Path("userId") userId: Int, @Path("day") day: String
+        @Path("userId") userId: Int, @Path("day") day: String,
     ): AddMemberDataResponse
 
     @DELETE("v1/user/{userId}/holiday/{holidayId}")
     suspend fun removeHoliday(
-        @Path("userId") userId: Int, @Path("holidayId") holidayId: Int
+        @Path("userId") userId: Int, @Path("holidayId") holidayId: Int,
     ): AddMemberDataResponse
 
     @GET("v1/members/my-saloom-members-summery")
@@ -109,8 +122,14 @@ interface MemberApi {
     suspend fun removeInvite(
         @Path("inviteId") inviteId: Int,
     ): MarkManagerResponse
+
     @DELETE("v1/user/service/{userId}/{serviceId}")
     suspend fun deleteService(
-        @Path("userId") userId: Int, @Path("serviceId") serviceId: Int
+        @Path("userId") userId: Int, @Path("serviceId") serviceId: Int,
     ): AddMemberDataResponse
+
+    @GET("v1/user/service/{userId}")
+    suspend fun getUserServices(
+        @Path("userId") userId: Int,
+    ):UserServicesResponse
 }

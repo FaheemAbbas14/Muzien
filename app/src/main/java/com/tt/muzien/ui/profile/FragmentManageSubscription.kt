@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.tt.muzien.R
+import com.tt.muzien.data.dto.PayDto
 import com.tt.muzien.data.dto.SubscriptionData
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.network.SaloonApi
@@ -18,6 +18,7 @@ import com.tt.muzien.ui.adapters.SubscriptionListAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
+import com.tt.muzien.ui.payment.FragmentPayNow
 import com.tt.muzien.ui.saloon.SaloonViewModel
 import com.tt.muzien.ui.snackbar
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
@@ -26,6 +27,7 @@ import com.zabihah.ui.ui.interfaces.OnItemClickListner
 class FragmentManageSubscription :
     BaseFragment<SaloonViewModel, FragmentManageSubscriptionBinding, SaloonRepository>() {
     private val subscriptiopnsList = arrayListOf<SubscriptionData>()
+    var clickedPosition = 0
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.llBack.setOnClickListener {
@@ -33,28 +35,25 @@ class FragmentManageSubscription :
         }
         getSaloonsSubscriptions(false)
         binding.swipeRefresh.setOnRefreshListener {
-           // binding.swipeRefresh.isRefreshing = false
+            // binding.swipeRefresh.isRefreshing = false
             // page=1
             getSaloonsSubscriptions(true)
         }
     }
 
     private fun setSubscriptionAdopter() {
-        if (subscriptiopnsList.size>0){
-            binding.cnstData.visibility=View.VISIBLE
-            binding.llNoDta.visibility=View.GONE
-        }
-        else{
-            binding.cnstData.visibility=View.GONE
-            binding.llNoDta.visibility=View.VISIBLE
+        if (subscriptiopnsList.size > 0) {
+            binding.cnstData.visibility = View.VISIBLE
+            binding.llNoDta.visibility = View.GONE
+        } else {
+            binding.cnstData.visibility = View.GONE
+            binding.llNoDta.visibility = View.VISIBLE
         }
 
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(position: Int) {
-//                var nextFragment = FragmentPlaceDetails()
-//                nextFragment.itemId = featuredItemsList[position].id
-//                nextFragment.placeType = EnumItemListType.Featured
-//                (activity as DashboardActivity?)?.loadFragment(nextFragment)
+                clickedPosition = position
+                getPlans()
 
             }
         }
@@ -68,13 +67,61 @@ class FragmentManageSubscription :
             )
     }
 
+    private fun getPlans() {
+        viewModel.getPlans.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        for (plan in it.value.data) {
+                            if (plan.name == "saloon-annual" && plan.isActive) {
+                                var nextFragment = FragmentPayNow()
+                                nextFragment.subscriptionId = 0
+                                var payDto =
+                                    PayDto(
+                                        subscriptiopnsList[clickedPosition].saloonId.toInt() ?: 0,
+                                        plan.id.toInt(),
+                                        subscriptiopnsList[clickedPosition].saloonName,
+                                        plan.name,
+                                        plan.actualFee.toInt() ,
+                                        (plan.actualFee - plan.discountedFee).toInt() ,
+                                        plan.discountedFee.toInt() ,
+                                        plan.currency,
+                                        plan.durationInDays.toInt()
+                                    )
+                                nextFragment.payDto = payDto
+                                (activity as HomeActivity?)?.loadFragment(nextFragment)
+                            }
+                        }
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.getPlans()
+        //(activity as HomeActivity?)?.showLoadingIndicator()
+    }
+
     override fun getViewModel(): Class<SaloonViewModel> {
         return SaloonViewModel::class.java
     }
 
     override fun getFragmentBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = FragmentManageSubscriptionBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
@@ -84,6 +131,7 @@ class FragmentManageSubscription :
         super.onResume()
         (activity as HomeActivity?)?.hideTabs()
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
@@ -91,6 +139,7 @@ class FragmentManageSubscription :
             (activity as HomeActivity?)?.hideTabs()
         }
     }
+
     override fun onPause() {
         super.onPause()
         (activity as HomeActivity?)?.showTabs()
@@ -108,12 +157,21 @@ class FragmentManageSubscription :
                         subscriptiopnsList.clear()
                         for (subscription in it.value.data.items) {
                             subscriptiopnsList.add(
-                                SubscriptionData(subscription.id.toString(), subscription.Saloon.name, subscription.startDate, subscription.validTill,subscription.isExpired,subscription.daysRemaining.toInt())
+                                SubscriptionData(
+                                    subscription.id.toString(),
+                                    subscription.Saloon.name,
+                                    subscription.startDate,
+                                    subscription.validTill,
+                                    subscription.isExpired,
+                                    subscription.daysRemaining.toInt(),
+                                    subscription.Saloon.id,
+                                    subscription.Saloon.name
+                                )
                             )
                         }
 
                         setSubscriptionAdopter()
-                       // requireView().snackbar("Subscription added successfully")
+                        // requireView().snackbar("Subscription added successfully")
                     } else {
                         requireView().snackbar(it.value.message)
                     }

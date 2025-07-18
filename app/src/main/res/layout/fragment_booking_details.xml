@@ -2,19 +2,19 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:fitsSystemWindows="false"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false">
 
     <LinearLayout
         android:id="@+id/llBack"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
+        android:background="@color/white"
         android:orientation="horizontal"
+        android:paddingTop="10dp"
         android:visibility="visible"
         android:weightSum="1"
-        android:background="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -22,9 +22,9 @@
             android:id="@+id/imgBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
             android:fontFamily="@font/manrope_bold"
             android:gravity="center"
-            android:layout_marginStart="15dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:src="@drawable/back_button"
@@ -65,6 +65,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="20dp"
+        android:layout_marginBottom="40dp"
         android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -87,6 +88,7 @@
                     android:layout_height="110dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/rounded_blue_10"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -107,15 +109,28 @@
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
+                <TextView
+                    android:id="@+id/divider3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="7dp"
+                    android:layout_marginStart="7dp"
+                    android:layout_marginTop="-9dp"
+                    android:background="@drawable/blue_dotted"
+                    app:layout_constraintEnd_toEndOf="@+id/cnstServices"
+                    app:layout_constraintStart_toStartOf="@+id/cnstServices"
+                    app:layout_constraintTop_toBottomOf="@+id/cnstBookingInfo" />
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cnstServices"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:padding="10dp"
+                    android:layout_marginTop="-7dp"
                     android:background="@drawable/white_rounded10"
+                    android:padding="10dp"
                     app:layout_constraintEnd_toEndOf="@+id/cnstBookingInfo"
                     app:layout_constraintStart_toStartOf="@+id/cnstBookingInfo"
-                    app:layout_constraintTop_toBottomOf="@+id/cnstBookingInfo">
+                    app:layout_constraintTop_toBottomOf="@+id/divider3">
 
 
                     <TextView
@@ -251,21 +266,23 @@
                 <TextView
                     android:id="@+id/divider"
                     android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_marginTop="2dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="7dp"
+                    android:layout_marginStart="7dp"
+                    android:layout_marginTop="-7dp"
                     android:background="@drawable/blue_dotted"
                     android:text=""
                     app:layout_constraintEnd_toEndOf="@+id/cnstServices"
                     app:layout_constraintStart_toStartOf="@+id/cnstServices"
                     app:layout_constraintTop_toBottomOf="@+id/cnstServices" />
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cnstServiceProvider"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="-7dp"
                     android:background="@drawable/white_rounded10"
                     android:padding="10dp"
-                    android:layout_marginTop="2dp"
                     app:layout_constraintEnd_toEndOf="@+id/cnstServices"
                     app:layout_constraintStart_toStartOf="@+id/cnstServices"
                     app:layout_constraintTop_toBottomOf="@+id/divider">
@@ -334,9 +351,23 @@
                         app:layout_constraintStart_toStartOf="@+id/imgServiceProviderPic"
                         app:layout_constraintTop_toBottomOf="@+id/imgServiceProviderPic">
 
+                        <TextView
+                            android:id="@+id/txtSaloonDetails"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:fontFamily="@font/manrope_regular"
+                            android:text="Saloon Details"
+                            android:textColor="@color/colorTextLabelDefault"
+                            android:textFontWeight="700"
+                            android:textSize="16sp"
+                            app:layout_constraintStart_toStartOf="@+id/imgServiceProviderPic"
+                            app:layout_constraintTop_toTopOf="parent" />
+
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
+                            android:layout_marginTop="12dp"
                             android:orientation="horizontal"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -393,24 +424,27 @@
                     </LinearLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
                 <TextView
                     android:id="@+id/divider2"
                     android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_marginTop="2dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="7dp"
+                    android:layout_marginStart="7dp"
+                    android:layout_marginTop="-7dp"
                     android:background="@drawable/blue_dotted"
                     android:text=""
                     app:layout_constraintEnd_toEndOf="@+id/cnstServices"
                     app:layout_constraintStart_toStartOf="@+id/cnstServices"
                     app:layout_constraintTop_toBottomOf="@+id/cnstServiceProvider" />
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="-7dp"
                     android:layout_marginBottom="20dp"
-                    android:paddingBottom="20dp"
-                    android:layout_marginTop="2dp"
                     android:background="@drawable/white_rounded10"
+                    android:paddingBottom="20dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@+id/cnstServiceProvider"
                     app:layout_constraintStart_toStartOf="@+id/cnstServiceProvider"

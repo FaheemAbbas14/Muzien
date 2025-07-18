@@ -11,9 +11,9 @@ import com.tt.muzien.data.responses.ServiceInfo
  */
 data class ServiceInfo(
     val id: Int,
-    val icon: String,
-    val name: String,
-    val duration: String,
-    val rate: String,
+    val icon: String?=null,
+    val name: String?=null,
+    val duration: String?=null,
+    val rate: String?=null,
     val service: ServiceInfo?=null
 )

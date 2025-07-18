@@ -16,12 +16,14 @@ import com.tt.muzien.databinding.FragmentSaloonBinding
 import com.tt.muzien.enums.EnumTabSelection
 import com.tt.muzien.ui.adapters.SaloonListAdapter
 import com.tt.muzien.ui.base.BaseFragment
+import com.tt.muzien.ui.bookings.FragmentBookingFilter
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.FragmentFilter
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.FilterSelection
+import com.tt.muzien.utilities.Helper
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 
 class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, SaloonRepository>() {
@@ -31,10 +33,13 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
     private var selection: Int = 0
     private var isLoading: Boolean = false
     private var isActive: Boolean? = null
+    private var filterApplied: Boolean = false
     private var status: String? = null
+    private var tag: String? = null
     var saloonListAdapter: SaloonListAdapter? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        tag=resources.getString(R.string.saloons)
         getSaloons(false)
         binding.swipeRefresh.recyclerView = binding.rcySaloons
         binding.swipeRefresh.setOnRefreshListener {
@@ -43,10 +48,22 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
             getSaloons(true)
         }
         binding.imgFilter.setOnClickListener {
-            var nextFragment = FragmentFilter()
-            nextFragment.status = true
-            nextFragment.enumTabSelection = EnumTabSelection.Saloon
-            (activity as HomeActivity?)?.loadFragment(nextFragment)
+            if (filterApplied) {
+                binding.imgFilter.setImageResource(
+                    R.drawable.filter_icon
+                )
+                tag=resources.getString(R.string.saloons)
+                status = null
+                page=1
+                getSaloons(false)
+                filterApplied=false
+            } else {
+
+                var nextFragment = FragmentFilter()
+                nextFragment.status = true
+                nextFragment.enumTabSelection = EnumTabSelection.Saloon
+                (activity as HomeActivity?)?.loadFragment(nextFragment)
+            }
         }
         getSaloons(false)
     }
@@ -59,7 +76,10 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
             binding.rcySaloons.visibility = View.GONE
             binding.llNoDta.visibility = View.VISIBLE
         }
-        binding.txtHeading.text = "${resources.getString(R.string.saloons)}(${saloonsList.size})"
+            binding.txtHeading.text =
+                "$tag(${saloonsList.size})"
+
+
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(position: Int) {
                 var nextFragment = FragmentSaloonDetails()
@@ -201,13 +221,20 @@ class FragmentSaloon : BaseFragment<SaloonViewModel, FragmentSaloonBinding, Salo
                 if (FilterSelection.filterData != null) {
                     if (FilterSelection.filterData!!.status != null && FilterSelection.filterData!!.status != "") {
                         page=1
+                        binding.imgFilter.setImageResource(
+                            R.drawable.blue_cancel
+                        )
+                        filterApplied=true
                         if (FilterSelection.filterData!!.status == "Active") {
+                            tag="Active saloons"
                             isActive = true
                             status = null
                         } else if (FilterSelection.filterData!!.status == "InActive") {
+                            tag="Inactive saloons"
                             isActive = false
                             status = null
                         } else {
+                            tag="${Helper.capitalizeFirstWord(FilterSelection.filterData!!.status!!)} saloons"
                             status = FilterSelection.filterData!!.status
                             isActive = null
                         }

@@ -28,4 +28,5 @@ data class UserData(
     val createdAt: String,
     val updatedAt: String,
     var status: String?="",
+    var saloonId: Int?=0,
 )

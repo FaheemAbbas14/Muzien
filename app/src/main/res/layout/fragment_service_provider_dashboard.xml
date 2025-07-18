@@ -1,213 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.tt.muzien.utilities.CustomSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipeRefresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/llSendInvite"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="150dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/send_invite_icon" />
+        android:layout_height="match_parent">
 
 
-        <TextView
-            android:id="@+id/txtLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:background="@android:color/transparent"
-            android:fontFamily="@font/manrope_bold"
-            android:text="@string/need_an_invite"
-            android:textColor="@color/colorTextLabelDefault"
-            android:textFontWeight="700"
-            android:textSize="22sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView3" />
-
-        <TextView
-            android:id="@+id/txtText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="50dp"
-            android:fontFamily="@font/manrope_regular"
-            android:gravity="center"
-            android:text="@string/lorem_ipsum_is_simply_dummy_text_of_the_printing_and_typesetting_industry_lorem_ipsum_has_been_the_industry_s_standard_dummy_text_n_n12_12_2023"
-            android:textColor="@color/colorTextLabelDefault"
-            android:textFontWeight="400"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtLabel" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/llAcceptInvite"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="150dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/invited_icon" />
-
-
-        <TextView
-            android:id="@+id/txtInvitedLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:background="@android:color/transparent"
-            android:fontFamily="@font/manrope_bold"
-            android:text="@string/you_are_invited"
-            android:textColor="@color/colorTextLabelDefault"
-            android:textFontWeight="700"
-            android:textSize="22sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView4" />
-
-        <TextView
-            android:id="@+id/txtInvitedText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="50dp"
-            android:fontFamily="@font/manrope_regular"
-            android:gravity="center"
-            android:text=""
-            android:textColor="@color/colorTextLabelDefault"
-            android:textFontWeight="400"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtInvitedLabel" />
-
-
-        <LinearLayout
-            android:id="@+id/llAccept"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="28dp"
-            android:background="@drawable/rounded_blue_100"
-            android:clickable="true"
-            android:focusable="true"
-            android:minHeight="50dp"
-            android:orientation="horizontal"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="10dp"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtInvitedText">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fontFamily="@font/manrope_bold"
-                android:gravity="center"
-                android:text="@string/accept_invitation"
-                android:textColor="@color/white"
-                android:textSize="14sp" />
-        </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/llBookings"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/light_grey"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-
-        <ImageView
-            android:id="@+id/imgBookingFilter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:src="@drawable/filter_icon"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-
-        <TextView
-            android:id="@+id/txtBookingStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:fontFamily="@font/manrope_regular"
-            android:text=""
-            android:textColor="@color/colorTextLabelDefault"
-            android:textFontWeight="700"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="@+id/imgBookingFilter"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imgBookingFilter" />
-
-
-        <com.tt.muzien.ui.views.HorizontalCalendarView
-            android:id="@+id/customCalendarView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:src="@drawable/blue_left_arrow"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/llNoBookings"
+            android:id="@+id/llSendInvite"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/customCalendarView"
-            app:layout_constraintStart_toStartOf="@+id/customCalendarView"
-            app:layout_constraintTop_toBottomOf="@+id/customCalendarView">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/imageView5"
+                android:id="@+id/imageView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="150dp"
@@ -215,26 +29,26 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/no_booking_icon" />
+                app:srcCompat="@drawable/send_invite_icon" />
 
 
             <TextView
-                android:id="@+id/txtBookingLabel"
+                android:id="@+id/txtLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/manrope_bold"
-                android:text="@string/no_bookings"
+                android:text="@string/need_an_invite"
                 android:textColor="@color/colorTextLabelDefault"
                 android:textFontWeight="700"
                 android:textSize="22sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+                app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
             <TextView
-                android:id="@+id/txtBookingText"
+                android:id="@+id/txtText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
@@ -248,193 +62,413 @@
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtBookingLabel" />
+                app:layout_constraintTop_toBottomOf="@+id/txtLabel" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cnstBookings"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="20dp"
-            android:background="@drawable/white_rounded10"
-            android:minHeight="50dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/customCalendarView"
-            app:layout_constraintStart_toStartOf="@+id/customCalendarView"
-            app:layout_constraintTop_toBottomOf="@+id/customCalendarView">
 
-            <TextView
-                android:id="@+id/textView8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:fontFamily="@font/manrope_regular"
-                android:text="@string/bookings"
-                android:textColor="@color/colorTextLabelDefault"
-                android:textFontWeight="700"
-                android:textSize="14sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/llAcceptInvite"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
 
             <ImageView
+                android:id="@+id/imageView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="20dp"
-                android:src="@drawable/booking_icon"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <LinearLayout
-                android:id="@+id/linearLayout4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                android:minHeight="40dp"
-                android:orientation="horizontal"
-                android:weightSum="9"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView8">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="2.5"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/manrope_regular"
-                        android:gravity="center|left"
-                        android:text="@string/scheduled"
-                        android:textColor="@color/blue_text"
-                        android:textFontWeight="500"
-                        android:textSize="11sp" />
-
-                    <TextView
-                        android:id="@+id/txtScheduled"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/manrope_regular"
-                        android:gravity="center|left"
-                        android:text="@string/_30"
-                        android:textColor="@color/blue_text"
-                        android:textFontWeight="700"
-                        android:textSize="22sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="2.5"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/manrope_regular"
-                        android:gravity="center|left"
-                        android:text="@string/overdue"
-                        android:textColor="@color/red_text"
-                        android:textFontWeight="500"
-                        android:textSize="11sp" />
-
-                    <TextView
-                        android:id="@+id/txtOverdue"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/manrope_regular"
-                        android:gravity="center|left"
-                        android:text="@string/_30"
-                        android:textColor="@color/red_text"
-                        android:textFontWeight="700"
-                        android:textSize="22sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="2.5"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/manrope_regular"
-                        android:gravity="center|left"
-                        android:text="@string/completed"
-                        android:textColor="@color/green_text"
-                        android:textFontWeight="500"
-                        android:textSize="11sp" />
-
-                    <TextView
-                        android:id="@+id/txtCompleted"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/manrope_regular"
-                        android:gravity="center|left"
-                        android:text="@string/_30"
-                        android:textColor="@color/green_text"
-                        android:textFontWeight="700"
-                        android:textSize="22sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="2.5"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/manrope_regular"
-                        android:gravity="center|left"
-                        android:text="@string/cancelled"
-                        android:textColor="@color/black_shade2"
-                        android:textFontWeight="500"
-                        android:textSize="11sp" />
-
-                    <TextView
-                        android:id="@+id/txtCancelled"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/manrope_regular"
-                        android:gravity="center|left"
-                        android:text="@string/_30"
-                        android:textColor="@color/black_shade2"
-                        android:textFontWeight="700"
-                        android:textSize="22sp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rcyBookings"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginTop="10dp"
-                android:visibility="visible"
-                android:background="@color/light_grey"
+                android:layout_marginBottom="150dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/invited_icon" />
+
+
+            <TextView
+                android:id="@+id/txtInvitedLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@android:color/transparent"
+                android:fontFamily="@font/manrope_bold"
+                android:text="@string/you_are_invited"
+                android:textColor="@color/colorTextLabelDefault"
+                android:textFontWeight="700"
+                android:textSize="22sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+
+            <TextView
+                android:id="@+id/txtInvitedText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="50dp"
+                android:fontFamily="@font/manrope_regular"
+                android:gravity="center"
+                android:text=""
+                android:textColor="@color/colorTextLabelDefault"
+                android:textFontWeight="400"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtInvitedLabel" />
+
+
+            <LinearLayout
+                android:id="@+id/llAccept"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="28dp"
+                android:background="@drawable/rounded_blue_100"
+                android:clickable="true"
+                android:focusable="true"
+                android:minHeight="50dp"
+                android:orientation="horizontal"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="10dp"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtInvitedText">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/manrope_bold"
+                    android:gravity="center"
+                    android:text="@string/accept_invitation"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/light_grey"
+            android:fillViewport="true"
+            android:fitsSystemWindows="false"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/llBookings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/light_grey">
 
 
+                    <ImageView
+                        android:id="@+id/imgBookingFilter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:src="@drawable/filter_icon"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <TextView
+                        android:id="@+id/txtBookingStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/manrope_regular"
+                        android:text=""
+
+                        android:layout_marginStart="20dp"
+                        android:textColor="@color/colorTextLabelDefault"
+                        android:textFontWeight="700"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/imgBookingFilter"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/imgBookingFilter" />
+
+
+                    <com.tt.muzien.ui.views.HorizontalCalendarView
+                        android:id="@+id/customCalendarView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/blue_left_arrow"
+                        android:visibility="visible"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cnstBookings"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:minHeight="50dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/imgBookingFilter">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/cnstBookingAnalytics"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="20dp"
+                            android:background="@drawable/white_rounded10"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <TextView
+                                android:id="@+id/textView8"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:layout_marginTop="10dp"
+                                android:fontFamily="@font/manrope_regular"
+                                android:text="@string/bookings"
+                                android:textColor="@color/colorTextLabelDefault"
+                                android:textFontWeight="700"
+                                android:textSize="14sp"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginEnd="20dp"
+                                android:src="@drawable/booking_icon"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <LinearLayout
+                                android:id="@+id/linearLayout4"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="15dp"
+                                android:layout_marginTop="14dp"
+                                android:layout_marginEnd="10dp"
+                                android:paddingBottom="10dp"
+                                android:minHeight="40dp"
+                                android:orientation="horizontal"
+                                android:weightSum="9"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/textView8">
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="2.5"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/manrope_regular"
+                                        android:gravity="center|left"
+                                        android:text="@string/scheduled"
+                                        android:textColor="@color/blue_text"
+                                        android:textFontWeight="500"
+                                        android:textSize="11sp" />
+
+                                    <TextView
+                                        android:id="@+id/txtScheduled"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/manrope_regular"
+                                        android:gravity="center|left"
+                                        android:text="@string/_30"
+                                        android:textColor="@color/blue_text"
+                                        android:textFontWeight="700"
+                                        android:textSize="22sp" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="2.5"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/manrope_regular"
+                                        android:gravity="center|left"
+                                        android:text="@string/overdue"
+                                        android:textColor="@color/red_text"
+                                        android:textFontWeight="500"
+                                        android:textSize="11sp" />
+
+                                    <TextView
+                                        android:id="@+id/txtOverdue"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/manrope_regular"
+                                        android:gravity="center|left"
+                                        android:text="@string/_30"
+                                        android:textColor="@color/red_text"
+                                        android:textFontWeight="700"
+                                        android:textSize="22sp" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="2.5"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/manrope_regular"
+                                        android:gravity="center|left"
+                                        android:text="@string/completed"
+                                        android:textColor="@color/green_text"
+                                        android:textFontWeight="500"
+                                        android:textSize="11sp" />
+
+                                    <TextView
+                                        android:id="@+id/txtCompleted"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/manrope_regular"
+                                        android:gravity="center|left"
+                                        android:text="@string/_30"
+                                        android:textColor="@color/green_text"
+                                        android:textFontWeight="700"
+                                        android:textSize="22sp" />
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="2.5"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/manrope_regular"
+                                        android:gravity="center|left"
+                                        android:text="@string/cancelled"
+                                        android:textColor="@color/black_shade2"
+                                        android:textFontWeight="500"
+                                        android:textSize="11sp" />
+
+                                    <TextView
+                                        android:id="@+id/txtCancelled"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:fontFamily="@font/manrope_regular"
+                                        android:gravity="center|left"
+                                        android:text="@string/_30"
+                                        android:textColor="@color/black_shade2"
+                                        android:textFontWeight="700"
+                                        android:textSize="22sp" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/llNoBookings"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="20dp"
+                            android:minHeight="500dp"
+                            android:visibility="gone"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/cnstBookingAnalytics">
+
+                            <ImageView
+                                android:id="@+id/imageView5"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="150dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:srcCompat="@drawable/no_booking_icon" />
+
+
+                            <TextView
+                                android:id="@+id/txtBookingLabel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="15dp"
+                                android:background="@android:color/transparent"
+                                android:fontFamily="@font/manrope_bold"
+                                android:text="@string/no_bookings"
+                                android:textColor="@color/colorTextLabelDefault"
+                                android:textFontWeight="700"
+                                android:textSize="22sp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+
+                            <TextView
+                                android:id="@+id/txtBookingText"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="50dp"
+                                android:layout_marginTop="10dp"
+                                android:layout_marginEnd="50dp"
+                                android:fontFamily="@font/manrope_regular"
+                                android:gravity="center"
+                                android:text="@string/lorem_ipsum_is_simply_dummy_text_of_the_printing_and_typesetting_industry_lorem_ipsum_has_been_the_industry_s_standard_dummy_text_n_n12_12_2023"
+                                android:textColor="@color/colorTextLabelDefault"
+                                android:textFontWeight="400"
+                                android:textSize="14sp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/txtBookingLabel" />
+
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rcyBookings"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="15dp"
+
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="15dp"
+                            android:background="@color/light_grey"
+                            android:nestedScrollingEnabled="false"
+                            android:paddingBottom="50dp"
+                            android:visibility="visible"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/cnstBookingAnalytics" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
 </com.tt.muzien.utilities.CustomSwipeRefreshLayout>

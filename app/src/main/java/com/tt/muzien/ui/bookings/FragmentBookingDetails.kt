@@ -48,7 +48,10 @@ class FragmentBookingDetails :
             FilterSelection.filterData = null
             (activity as HomeActivity?)?.popFragment()
         }
-        binding.cnstBookingInfo.setOnClickListener {
+//        binding.cnstBookingInfo.setOnClickListener {
+//            showPopupDialog()
+//        }
+        binding.imgBarcode.setOnClickListener {
             showPopupDialog()
         }
         getBookingDetails()
@@ -118,17 +121,18 @@ class FragmentBookingDetails :
     }
 
     private fun setData() {
-        binding.txtBookingId.text=getBookingDetailsResponse?.id.toString()
+        binding.txtBookingId.text = "Booking # ${getBookingDetailsResponse?.id}"
         setCustomerData()
         setServiceProvider()
         setBookingServicesAdopter()
     }
 
     private fun setServiceProvider() {
-        binding.txtServiceProviderName.text=getBookingDetailsResponse?.serviceProvider?.fullName
-        binding.txtServiceProviderCountry.text=getBookingDetailsResponse?.serviceProvider?.nationality
-        binding.txtStyle.text=getBookingDetailsResponse?.saloon?.name
-        binding.txtAddress.text=getBookingDetailsResponse?.saloon?.address
+        binding.txtServiceProviderName.text = getBookingDetailsResponse?.serviceProvider?.fullName
+        binding.txtServiceProviderCountry.text =
+            getBookingDetailsResponse?.serviceProvider?.nationality
+        binding.txtStyle.text = getBookingDetailsResponse?.saloon?.name
+        binding.txtAddress.text = getBookingDetailsResponse?.saloon?.address
         // Implement the RequestListener here
         val iconRequestListener = object : RequestListener<Drawable> {
 
@@ -162,7 +166,7 @@ class FragmentBookingDetails :
         Glide.with(binding.imgServiceProviderPic)
             .load(getBookingDetailsResponse?.serviceProvider?.picture)
             .circleCrop()
-            .placeholder(R.drawable.profile_icon)
+            .placeholder(R.drawable.topperformer)
             .listener(iconRequestListener)
             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)  // Cache both original & transformed image
             .skipMemoryCache(false)  // Cache in memory
@@ -170,9 +174,10 @@ class FragmentBookingDetails :
     }
 
     private fun setCustomerData() {
-        binding.txtName.text=getBookingDetailsResponse?.customer?.fullName
-        binding.txtPhone.text=getBookingDetailsResponse?.customer?.phoneNumber
-        binding.txtTiming.text="${getBookingDetailsResponse?.date}-${getBookingDetailsResponse?.time}-${getBookingDetailsResponse?.duration} mins"
+        binding.txtName.text = getBookingDetailsResponse?.customer?.fullName
+        binding.txtPhone.text = getBookingDetailsResponse?.customer?.phoneNumber
+        binding.txtTiming.text =
+            "${getBookingDetailsResponse?.date}-${getBookingDetailsResponse?.time}-${getBookingDetailsResponse?.duration} mins"
         // Implement the RequestListener here
         val iconRequestListener = object : RequestListener<Drawable> {
 
@@ -206,7 +211,7 @@ class FragmentBookingDetails :
         Glide.with(binding.imgProfilePic)
             .load(getBookingDetailsResponse?.customer?.picture)
             .circleCrop()
-            .placeholder(R.drawable.profile_icon)
+            .placeholder(R.drawable.topperformer)
             .listener(iconRequestListener)
             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)  // Cache both original & transformed image
             .skipMemoryCache(false)  // Cache in memory
@@ -216,7 +221,11 @@ class FragmentBookingDetails :
     private fun setBookingServicesAdopter() {
         if (getBookingDetailsResponse != null && getBookingDetailsResponse!!.bookingServices != null) {
             bookingServices.clear()
+            var totalServicesDuration = 0
+            var totalServicesamount = 0
             for (service in getBookingDetailsResponse!!.bookingServices) {
+                totalServicesDuration += service.serviceDetails.duration.toInt()
+                totalServicesamount += service.serviceDetails.price.toInt()
                 bookingServices.add(
                     BookingServiceDto(
                         service.serviceDetails.name,
@@ -226,11 +235,20 @@ class FragmentBookingDetails :
                 )
 
             }
+            if (totalServicesamount > 0) {
+                bookingServices.add(
+                    BookingServiceDto(
+                        "Total",
+                        "${totalServicesDuration} mins",
+                        "SAR${totalServicesamount}"
+                    )
+                )
+            }
         }
 
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(position: Int) {
-                showPopupDialog()
+                //    showPopupDialog()
 
             }
         }
@@ -285,6 +303,7 @@ class FragmentBookingDetails :
         // Show the dialog
         dialog.show()
     }
+
     private fun updateBooking(bookingId: String, reason: String, status: String) {
 
         viewModel.updateBooking.observe(viewLifecycleOwner) {

@@ -12,7 +12,6 @@ data class GetSubscriptionsResponse(
     val message: String,
     val data: SubscriptionData,
 )
-
 data class SubscriptionData(
     val items: List<Subscription>,
     val page: Long,
@@ -26,8 +25,13 @@ data class Subscription(
     val startDate: String,
     val validTill: String,
     val isExpired: Boolean,
-    val Saloon: Saloon,
+    val Saloon: SubscriptionSaloon,
     val daysRemaining: Long,
+)
+
+data class SubscriptionSaloon(
+    val id: Long,
+    val name: String,
 )
 
 

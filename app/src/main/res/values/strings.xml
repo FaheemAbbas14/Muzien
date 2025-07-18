@@ -181,7 +181,7 @@
     <string name="_30_services">30 services</string>
     <string name="saturday">Saturday</string>
     <string name="highbrow_beauty_bar">Highbrow Beauty Bar</string>
-    <string name="renew">RENEW</string>
+    <string name="renew">Renew</string>
     <string name="upload">Upload</string>
     <string name="subscribed_on">Subscribed On</string>
     <string name="_12_12_2023">12/12/2023</string>
@@ -276,9 +276,9 @@
     <string name="stc_payment">STC Payment</string>
     <string name="phone_number">Phone Number</string>
     <string name="otp">OTP</string>
-    <string name="invitation_sent">invitation sent</string>
-    <string name="on_leave">on leave today</string>
-    <string name="working_today">working today</string>
+    <string name="invitation_sent">Invitation sent</string>
+    <string name="on_leave">On leave today</string>
+    <string name="working_today">Working today</string>
     <string name="remove_invitation">Remove Invitation</string>
     <string name="remove_manager">Remove Manager</string>
     <string name="arabic">Arabic</string>
@@ -297,10 +297,11 @@
     <string name="select_service">Select Service</string>
     <string name="_051_xxx_xxxx">051 xxx xxxx</string>
     <string name="on_leave_today">On Leave Today</string>
-    <string name="closed">closed</string>
-    <string name="open">open</string>
+    <string name="closed">Closed</string>
+    <string name="open">Opened</string>
     <string name="select_status">Select Status</string>
     <string name="profile_updated">Profile Updated</string>
     <string name="write_the_name_of_your_saloon">Write the name of your Saloon</string>
     <string name="write_about_your_saloon">Write about your Saloon.</string>
+    <string name="closing_time_must_be_after_opening_time">Closing Time must be after Opening Time</string>
 </resources>

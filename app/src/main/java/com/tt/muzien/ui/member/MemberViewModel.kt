@@ -22,8 +22,10 @@ import com.tt.muzien.data.responses.GetMembersResponse
 import com.tt.muzien.data.responses.GetSaloonResponse
 import com.tt.muzien.data.responses.GetServiceProviderResponse
 import com.tt.muzien.data.responses.GetServicesResponse
+import com.tt.muzien.data.responses.GetUserHolidaysResponse
 import com.tt.muzien.data.responses.GetsUsersResponse
 import com.tt.muzien.data.responses.MarkManagerResponse
+import com.tt.muzien.data.responses.UserServicesResponse
 import com.tt.muzien.ui.base.BaseViewModel
 import com.tt.muzien.utilities.SingleEventLiveData
 import kotlinx.coroutines.launch
@@ -36,7 +38,7 @@ import kotlinx.coroutines.launch
  * +923115284424
  */
 class MemberViewModel(
-    private val repository: MemberRepository
+    private val repository: MemberRepository,
 ) : BaseViewModel(repository) {
     private var saloonRepository: SaloonRepository? = null
     private var userRepository: UserRepository? = null
@@ -66,17 +68,21 @@ class MemberViewModel(
     val getMemberDetails: LiveData<Resource<GetMemberDetails>> get() = _getMemberDetails
     private val _sendInvite: MutableLiveData<Resource<AddMemberResponse>> = SingleEventLiveData()
     val sendInvite: LiveData<Resource<AddMemberResponse>> get() = _sendInvite
-    private val _removeInvite: MutableLiveData<Resource<MarkManagerResponse>> = SingleEventLiveData()
+    private val _removeInvite: MutableLiveData<Resource<MarkManagerResponse>> =
+        SingleEventLiveData()
     val removeInvite: LiveData<Resource<MarkManagerResponse>> get() = _removeInvite
 
-    private val _inActiveMember: MutableLiveData<Resource<MarkManagerResponse>> = SingleEventLiveData()
+    private val _inActiveMember: MutableLiveData<Resource<MarkManagerResponse>> =
+        SingleEventLiveData()
     val inActiveMember: LiveData<Resource<MarkManagerResponse>> get() = _inActiveMember
-    private val _deleteMember: MutableLiveData<Resource<MarkManagerResponse>> = SingleEventLiveData()
+    private val _deleteMember: MutableLiveData<Resource<MarkManagerResponse>> =
+        SingleEventLiveData()
     val deleteMember: LiveData<Resource<MarkManagerResponse>> get() = _deleteMember
 
     private val _makeManger: MutableLiveData<Resource<MarkManagerResponse>> = SingleEventLiveData()
     val makeManger: LiveData<Resource<MarkManagerResponse>> get() = _makeManger
-    private val _removeManger: MutableLiveData<Resource<MarkManagerResponse>> = SingleEventLiveData()
+    private val _removeManger: MutableLiveData<Resource<MarkManagerResponse>> =
+        SingleEventLiveData()
     val removeManger: LiveData<Resource<MarkManagerResponse>> get() = _removeManger
 
     private val _getCategories: MutableLiveData<Resource<GetCategoriesResponse>> =
@@ -89,10 +95,16 @@ class MemberViewModel(
     private val _addMemberData: MutableLiveData<Resource<AddMemberDataResponse>> =
         SingleEventLiveData()
     val addMemberData: LiveData<Resource<AddMemberDataResponse>> get() = _addMemberData
-
-    private val _removeHoliday: MutableLiveData<Resource<AddMemberDataResponse>> =
+    private val _getUserHolidays: MutableLiveData<Resource<GetUserHolidaysResponse>> =
         SingleEventLiveData()
-    val removeHoliday: LiveData<Resource<AddMemberDataResponse>> get() = _removeHoliday
+    val getUserHolidays: LiveData<Resource<GetUserHolidaysResponse>> get() = _getUserHolidays
+
+    private val _getUserServices: MutableLiveData<Resource<UserServicesResponse>> =
+        SingleEventLiveData()
+    val getUserServices: LiveData<Resource<UserServicesResponse>> get() = _getUserServices
+    private val _remove: MutableLiveData<Resource<AddMemberDataResponse>> =
+        SingleEventLiveData()
+    val remove: LiveData<Resource<AddMemberDataResponse>> get() = _remove
 
     private val _addSaloonService: MutableLiveData<Resource<AddServiceResponse>> =
         SingleEventLiveData()
@@ -113,8 +125,8 @@ class MemberViewModel(
         _getSaloon.value = saloonRepository?.getSaloons()
     }
 
-    fun getMembers(  isActive: Boolean?=null,status: Int?=null) = viewModelScope.launch {
-        _getMembers.value = repository.getMembers(isActive,status)
+    fun getMembers(isActive: Boolean? = null, status: Int? = null) = viewModelScope.launch {
+        _getMembers.value = repository.getMembers(isActive, status)
     }
 
     fun getMemberDetails(memberId: Int) = viewModelScope.launch {
@@ -123,9 +135,10 @@ class MemberViewModel(
 
     fun getMembers(
         saloonId: String,
-        isActive: Boolean? = null
+        isActive: Boolean? = null,
+        status: Int? = null,
     ) = viewModelScope.launch {
-        _getMembers.value = repository.getMembers(saloonId, isActive)
+        _getMembers.value = repository.getMembers(saloonId, isActive, status)
     }
 
     fun sendInvite(request: AddMemberRequest) = viewModelScope.launch {
@@ -143,18 +156,23 @@ class MemberViewModel(
     fun makeManager(memberId: Int) = viewModelScope.launch {
         _makeManger.value = repository.makeManager(memberId)
     }
+
     fun removeManager(memberId: Int) = viewModelScope.launch {
         _removeManger.value = repository.removeManager(memberId)
     }
+
     fun removeInvite(
-        inviteId: Int
+        inviteId: Int,
     ) = viewModelScope.launch {
         _removeInvite.value = repository.removeInvite(inviteId)
     }
+
     fun getCategories() = viewModelScope.launch {
         _getCategories.value = serviceRepository?.getCategories()
     }
-
+    fun getAllCategories() = viewModelScope.launch {
+        _getCategories.value = serviceRepository?.getAllCategories()
+    }
     fun getCategories(saloonIds: Int) = viewModelScope.launch {
         _getSaloonCategories.value = serviceRepository?.getCategories(saloonIds)
     }
@@ -168,6 +186,12 @@ class MemberViewModel(
         _addMemberData.value = repository.addHoliday(userId, request)
     }
 
+    fun getUserHolidays(userId: Int) = viewModelScope.launch {
+        _getUserHolidays.value = repository.getUserHolidays(userId)
+    }
+    fun getUserServices(userId: Int) = viewModelScope.launch {
+        _getUserServices.value = repository.getUserServices(userId)
+    }
     fun addWorkingHour(userId: Int, request: AddWorkingHourRequest) = viewModelScope.launch {
         _addMemberData.value = repository.addWorkingHour(userId, request)
     }
@@ -177,10 +201,11 @@ class MemberViewModel(
     }
 
     fun removeHoliday(userId: Int, request: Int) = viewModelScope.launch {
-        _removeHoliday.value = repository.removeHoliday(userId, request)
+        _remove.value = repository.removeHoliday(userId, request)
     }
+
     fun deleteService(userId: Int, serviceId: Int) = viewModelScope.launch {
-        _removeHoliday.value = repository.deleteService(userId, serviceId)
+        _remove.value = repository.deleteService(userId, serviceId)
     }
 
     fun getServiceProvider(isActive: Boolean, isAdmin: Boolean) = viewModelScope.launch {

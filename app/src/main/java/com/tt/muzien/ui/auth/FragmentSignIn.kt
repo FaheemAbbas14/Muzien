@@ -42,7 +42,8 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
         binding.llLogin.setOnClickListener {
             if (checkValidation()) {
                 var phone =
-                    binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString().replace(" ", "")
+                    binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString()
+                        .replace(" ", "")
                 if (isFromSignup) {
                     register(phone)
                 } else {
@@ -74,13 +75,18 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
 
         }
         binding.countrySpinner.setOnCountryChangeListener {
-            selectedCountry = binding.countrySpinner.selectedCountryName
-            val countryCode = binding.countrySpinner.selectedCountryCode
-            binding.txtCountryCode.text =
-                Editable.Factory.getInstance().newEditable("+$countryCode")
-            binding.edtPhoneNumber.hint =
-                Editable.Factory.getInstance()
-                    .newEditable(InputValidator.getPhoneNumberPlaceholder(binding.countrySpinner.selectedCountryNameCode))
+            if (selectedCountry != binding.countrySpinner.selectedCountryName) {
+                selectedCountry = binding.countrySpinner.selectedCountryName
+                val countryCode = binding.countrySpinner.selectedCountryCode
+                binding.txtCountryCode.text =
+                    Editable.Factory.getInstance().newEditable("+$countryCode")
+                binding.edtPhoneNumber.text = Editable.Factory.getInstance()
+                    .newEditable("")
+
+                binding.edtPhoneNumber.hint =
+                    Editable.Factory.getInstance()
+                        .newEditable(InputValidator.getPhoneNumberPlaceholder(binding.countrySpinner.selectedCountryNameCode))
+            }
         }
         binding.edtPhoneNumber.addTextChangedListener(object : TextWatcher {
             var length_before = 0
@@ -158,7 +164,7 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
 
     @RequiresApi(Build.VERSION_CODES.M)
     private fun setdata() {
-        var text =resources.getString(R.string.don_t_have_any_account_sign_up)
+        var text = resources.getString(R.string.don_t_have_any_account_sign_up)
 
         if (isFromSignup) {
             text = getString(R.string.already_have_an_account_sign_in)
@@ -181,10 +187,15 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
             }
         }
 
-        spannableString.setSpan(clickableSpan, text.length-8, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        spannableString.setSpan(
+            clickableSpan,
+            text.length - 8,
+            text.length,
+            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
         spannableString.setSpan(
             ForegroundColorSpan(requireActivity().getColor(R.color.colorPrimary)),
-            text.length-8, text.length,
+            text.length - 8, text.length,
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
         )
 
@@ -202,7 +213,8 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
         }
         val privacySpan = object : ClickableSpan() {
             override fun onClick(widget: View) {
-                Toast.makeText(requireContext(), getString(R.string.privacy), Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.privacy), Toast.LENGTH_SHORT)
+                    .show()
 
             }
         }
@@ -271,7 +283,7 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
                         LoggedInInfo.userId = it.value.data?.otp?.userId!!
                         var nextFragment = FragmentOTP()
                         nextFragment.isFromSignup = isFromSignup
-                        nextFragment.phone = LoggedInInfo.phoneNumber?:""
+                        nextFragment.phone = LoggedInInfo.phoneNumber ?: ""
                         nextFragment.expiryTime = it.value.data.otp.expiryDate
                         (activity as AuthActivity?)?.loadFragment(nextFragment)
                     } else {
@@ -307,7 +319,7 @@ class FragmentSignIn : BaseFragment<AuthViewModel, FragmentSignInBinding, AuthRe
                         LoggedInInfo.userId = it.value.data.otp.userId
                         var nextFragment = FragmentOTP()
                         nextFragment.isFromSignup = isFromSignup
-                        nextFragment.phone = LoggedInInfo.phoneNumber?:""
+                        nextFragment.phone = LoggedInInfo.phoneNumber ?: ""
                         nextFragment.expiryTime = it.value.data.otp.expiryDate
                         (activity as AuthActivity?)?.loadFragment(nextFragment)
                     } else {

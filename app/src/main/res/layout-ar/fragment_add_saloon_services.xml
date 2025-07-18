@@ -259,24 +259,24 @@
                     app:layout_constraintTop_toBottomOf="@+id/llServiceName">
 
 
-                    <EditText
-                        android:id="@+id/edtDuration"
+
+                    <Spinner
+                        android:id="@+id/spinnerDuration"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:layout_marginLeft="5dp"
                         android:layout_weight="1"
                         android:background="@android:color/transparent"
-                        android:fontFamily="@font/manrope_regular"
-                        android:gravity="center|right"
-                        android:hint="@string/_45_mins"
-                        android:inputType="text"
+                        android:popupBackground="@android:color/white"
                         android:paddingEnd="10dp"
-                        android:textColor="@color/colorTextDefault"
-                        android:textFontWeight="400"
-                        android:textSize="14sp" />
+                        android:textAlignment="viewStart"
+                        android:gravity="center|right"
+                        android:textDirection="locale"
+                        android:spinnerMode="dropdown" />
 
                     <ImageView
+                        android:id="@+id/ddlDuration"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"

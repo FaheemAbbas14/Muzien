@@ -128,13 +128,10 @@ class FragmentUpdateService :
 
     private fun setSaloonsAdapter() {
 
-        adapter = ServiceUpdateListAdopter(salonList) { position, isEnabled ->
+        adapter = ServiceUpdateListAdopter(salonList,requireContext()) { position, isEnabled ->
             binding.llSave.setBackgroundDrawable(resources.getDrawable(R.drawable.rounded_blue_100))
             binding.txtSave.setTextColor(resources.getColor(R.color.white))
-//            salonList[position].isEnabled = isEnabled
-//            binding.rcySaloons.post {
-//                adapter?.notifyItemChanged(position)
-//            }
+
 
         }
 
@@ -246,7 +243,7 @@ class FragmentUpdateService :
                                             saloon.address,
                                             if (saloon.duration > 0) saloon.duration.toString() else serviceDetailsInfo?.duration.toString(),
                                             "SAR",
-                                            (saloon.price / 100).toString(),
+                                            if(saloon.price>0) (saloon.price / 100).toString() else (serviceDetailsInfo?.price!! / 100).toString(),
                                             saloon.serviceEnabled
                                         )
                                     )
@@ -260,7 +257,7 @@ class FragmentUpdateService :
                                         saloon.address,
                                         if (saloon.duration > 0) saloon.duration.toString() else serviceDetailsInfo?.duration.toString(),
                                         "SAR",
-                                        (saloon.price / 100).toString(),
+                                        if(saloon.price>0) (saloon.price / 100).toString() else (serviceDetailsInfo?.price!! / 100).toString(),
                                         saloon.serviceEnabled
                                     )
                                 )
@@ -295,7 +292,7 @@ class FragmentUpdateService :
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
                         Appelement.reload = true
-                        if (service?.service != null) {
+                        if (service != null) {
 
                             (activity as HomeActivity?)?.popFragment()
                             requireView().snackbar("Service updated successfully")

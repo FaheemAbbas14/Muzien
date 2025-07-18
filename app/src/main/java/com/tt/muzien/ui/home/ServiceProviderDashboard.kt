@@ -28,6 +28,7 @@ import com.tt.muzien.interfaces.IbookingCancel
 import com.tt.muzien.ui.adapters.SaloonBookingAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.bookings.BookingViewModel
+import com.tt.muzien.ui.bookings.FragmentBookingDetails
 import com.tt.muzien.ui.bookings.FragmentBookingFilter
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.snackbar
@@ -69,6 +70,11 @@ class ServiceProviderDashboard :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setMemberRepo((activity as HomeActivity?)?.getMemberRepo()!!)
+        LoggedInInfo.user?.saloonId=saloonId
+        val layoutParams =
+            binding.cnstBookings.layoutParams as ViewGroup.MarginLayoutParams
+        layoutParams.topMargin = Helper.dpToPx(binding.cnstBookings.context, 100)
+        binding.cnstBookings.layoutParams = layoutParams
         //  LoggedInInfo.user?.status = "Invited"
         if (FilterSelection.filterData == null) {
             val currentDate = LocalDate.now()
@@ -105,19 +111,26 @@ class ServiceProviderDashboard :
         }
 
         binding.imgBookingFilter.setOnClickListener {
-            if (bookingStatus != null) {
+            if (( bookingStatus != null && bookingStatus != "") || (bookingDuration!=null && bookingDuration!="")) {
                 binding.imgBookingFilter.setImageResource(
                     R.drawable.filter_icon
                 )
                 binding.customCalendarView.visibility = View.VISIBLE
+                val layoutParams =
+                    binding.cnstBookings.layoutParams as ViewGroup.MarginLayoutParams
+                layoutParams.topMargin = Helper.dpToPx(binding.cnstBookings.context, 100)
+                binding.cnstBookings.layoutParams = layoutParams
                 binding.txtBookingStatus.visibility = View.GONE
                 bookingStatus = null
-                FilterSelection.filterData!!.bookingStatus = bookingStatus
+                bookingDuration=null
+                FilterSelection.filterData!!.bookingStatus = null
                 setMargins(false)
                 getAnalytics(false)
             } else {
                 var nextFragment = FragmentBookingFilter()
                 nextFragment.showSaloon = false
+                nextFragment.showServiceProvider=false
+                nextFragment.showPendingApproval=true
                 (activity as HomeActivity?)?.loadFragment(nextFragment)
             }
         }
@@ -125,11 +138,11 @@ class ServiceProviderDashboard :
         if (LoggedInInfo.user?.status == "none") {
             binding.llSendInvite.visibility = View.VISIBLE
             binding.llAcceptInvite.visibility = View.GONE
-            binding.llBookings.visibility = View.GONE
+            binding.nestedScrollView.visibility = View.GONE
         } else if (LoggedInInfo.user?.status == "invited") {
             getLatestInvite(true)
         } else {
-            binding.llBookings.visibility = View.VISIBLE
+            binding.nestedScrollView.visibility = View.VISIBLE
             binding.llAcceptInvite.visibility = View.GONE
             binding.llSendInvite.visibility = View.GONE
             getAnalytics(false)
@@ -140,12 +153,12 @@ class ServiceProviderDashboard :
             if (LoggedInInfo.user?.status == "none") {
                 binding.llSendInvite.visibility = View.VISIBLE
                 binding.llAcceptInvite.visibility = View.GONE
-                binding.llBookings.visibility = View.GONE
+                binding.nestedScrollView.visibility = View.GONE
                 getLatestInvite(false)
             } else if (LoggedInInfo.user?.status == "invited") {
                 getLatestInvite(false)
             } else {
-                binding.llBookings.visibility = View.VISIBLE
+                binding.nestedScrollView.visibility = View.VISIBLE
                 binding.llAcceptInvite.visibility = View.GONE
                 binding.llSendInvite.visibility = View.GONE
                 getAnalytics(true)
@@ -175,27 +188,28 @@ class ServiceProviderDashboard :
     }
 
     private fun setBookingsAdopter() {
+        binding.nestedScrollView.visibility = View.VISIBLE
         binding.txtScheduled.text = "$scheduleBookings"
         binding.txtOverdue.text = "$overdueBookings"
         binding.txtCompleted.text = "$completedBookings"
         binding.txtCancelled.text = "$cancledBookings"
         binding.customCalendarView.setDays(generateDaysWithEvents())
         if (saloonsBookingList.isNotEmpty()) {
-            binding.cnstBookings.visibility = View.VISIBLE
+            binding.rcyBookings.visibility = View.VISIBLE
             binding.llNoBookings.visibility = View.GONE
             binding.llAcceptInvite.visibility = View.GONE
             binding.llSendInvite.visibility = View.GONE
         } else {
             binding.llAcceptInvite.visibility = View.GONE
             binding.llSendInvite.visibility = View.GONE
-            binding.cnstBookings.visibility = View.GONE
+            binding.rcyBookings.visibility = View.GONE
             binding.llNoBookings.visibility = View.VISIBLE
         }
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(position: Int) {
-//                var nextFragment = FragmentSaloonDetails()
-//                nextFragment.selectedSaloon=saloonsBookingList[position]
-//                (activity as HomeActivity?)?.loadFragment(nextFragment)
+                var nextFragment = FragmentBookingDetails()
+                nextFragment.bookingDto = saloonsBookingList[position]
+                (activity as HomeActivity?)?.loadFragment(nextFragment)
 
             }
         }
@@ -219,7 +233,7 @@ class ServiceProviderDashboard :
             ibookingCancel,
             iBookingStatusUpdate,
             bookingStatus,
-            true
+            true, true
         )
         binding.rcyBookings.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
@@ -263,7 +277,7 @@ class ServiceProviderDashboard :
 
     override fun getFragmentBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = FragmentServiceProviderDashboardBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
@@ -319,7 +333,7 @@ class ServiceProviderDashboard :
         return days
     }
 
-    private fun getLatestInvite(reload:Boolean) {
+    private fun getLatestInvite(reload: Boolean) {
         viewModel.getLatestInvite.observe(viewLifecycleOwner) {
 
             when (it) {
@@ -327,7 +341,7 @@ class ServiceProviderDashboard :
                     Log.d("response", "success " + it.toString())
                     binding.swipeRefresh.isRefreshing = false
                     (activity as HomeActivity?)?.hideLoadingIndicator()
-                    if (it.value.status != 0&& it.value.data!= null && it.value.data.id != null) {
+                    if (it.value.status != 0 && it.value.data != null && it.value.data.id != null) {
                         inviteId = it.value.data.id.toInt()
                         binding.txtInvitedText.text =
                             "${it.value.data.InvitedBy.fullName} has invited you to join their salon “${it.value.data.Saloon.name}” as a service provider.\n" +
@@ -335,9 +349,9 @@ class ServiceProviderDashboard :
                                     "Do you want to accept?"
                         binding.llAcceptInvite.visibility = View.VISIBLE
                         binding.llSendInvite.visibility = View.GONE
-                        binding.llBookings.visibility = View.GONE
+                        binding.nestedScrollView.visibility = View.GONE
                     } else {
-                       // requireView().snackbar(it.value.message)
+                        // requireView().snackbar(it.value.message)
                     }
                 }
 
@@ -367,7 +381,7 @@ class ServiceProviderDashboard :
                     Log.d("response", "success " + it.toString())
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
-                        binding.llBookings.visibility = View.VISIBLE
+                        binding.nestedScrollView.visibility = View.VISIBLE
                         binding.llAcceptInvite.visibility = View.GONE
                         binding.llSendInvite.visibility = View.GONE
                         saloonId = it.value.data.saloonId.toInt()
@@ -608,6 +622,10 @@ class ServiceProviderDashboard :
                         fromDate = FilterSelection.filterData!!.from
                         toDate = FilterSelection.filterData!!.to
                     }
+                    else{
+                        fromDate=null
+                        toDate=null
+                    }
                     if (FilterSelection.filterData!!.saloonId != null) {
                         bookingSaloonId = FilterSelection.filterData!!.saloonId.toString()
                     } else {
@@ -624,20 +642,41 @@ class ServiceProviderDashboard :
                         bookingDuration = FilterSelection.filterData!!.selection.toString()
                         if (bookingDuration == "Custom") {
                             //  binding.txtMonth.text = "$fromDate To ${toDate}"
+                            bookingDuration="\n$fromDate To ${toDate}"
                         } else {
                             // binding.txtMonth.text = bookingDuration
                         }
 
                     }
-                    if (bookingStatus != null && bookingStatus != "") {
+                    val layoutParams =
+                        binding.cnstBookings.layoutParams as ViewGroup.MarginLayoutParams
+                    layoutParams.topMargin = Helper.dpToPx(binding.cnstBookings.context, 20)
+                    binding.cnstBookings.layoutParams = layoutParams
+                    if (( bookingStatus != null && bookingStatus != "") || (bookingDuration!=null && bookingDuration!="")) {
                         page = 1
                         binding.imgBookingFilter.setImageResource(
                             R.drawable.blue_cancel
                         )
-                        binding.txtBookingStatus.setText("${Helper.capitalizeFirstWord(bookingStatus!!)} Bookings")
-                        binding.customCalendarView.visibility = View.GONE
-                        setMargins(true)
+                        binding.txtBookingStatus.visibility = View.VISIBLE
+                        if (bookingDuration!="" && bookingStatus!="" && bookingStatus!=null && bookingDuration!=null){
+                            binding.txtBookingStatus.setText("${Helper.capitalizeFirstWord(bookingStatus!!)} Bookings/${bookingDuration}")
+                        }
+                        else if (bookingStatus!=""&& bookingStatus!=null){
+                            binding.txtBookingStatus.setText("${Helper.capitalizeFirstWord(bookingStatus!!)} Bookings")
 
+                        }
+                        else{
+                            binding.txtBookingStatus.setText("${bookingDuration}")
+                        }
+                         binding.customCalendarView.visibility = View.GONE
+
+                       // setMargins(true)
+
+                    }
+                    else{
+                        if (bookingDuration!=""&& bookingDuration!=null){
+                            binding.txtBookingStatus.setText("${bookingDuration}")
+                        }
                     }
                     adopter?.setBookingStatus(bookingStatus)
                     adopter?.notifyDataSetChanged()

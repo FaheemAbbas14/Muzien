@@ -325,6 +325,7 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -338,6 +339,23 @@
         android:textSize="11sp"
         app:layout_constraintBottom_toTopOf="@+id/llClose"
         app:layout_constraintStart_toStartOf="@+id/llClose" />
+
+    <TextView
+        android:id="@+id/txtError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/white"
+        android:visibility="gone"
+        android:fontFamily="@font/manrope_regular"
+        android:inputType="textEmailAddress"
+        android:text="@string/closing_time_must_be_after_opening_time"
+        android:textColor="@color/red_text"
+        android:textFontWeight="500"
+        android:textSize="11sp"
+        app:layout_constraintStart_toStartOf="@+id/llClose"
+        app:layout_constraintTop_toBottomOf="@+id/llClose" />
     <LinearLayout
         android:id="@+id/llSave"
         android:layout_width="0dp"

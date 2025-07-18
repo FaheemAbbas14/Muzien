@@ -13,6 +13,7 @@ import com.tt.muzien.data.network.MemberApi
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.MemberRepository
 import com.tt.muzien.databinding.FragmentSaloonMembersBinding
+import com.tt.muzien.enums.EnumTabSelection
 import com.tt.muzien.interfaces.OnStateChange
 import com.tt.muzien.ui.adapters.MembersListAdapter
 import com.tt.muzien.ui.base.BaseFragment
@@ -35,18 +36,35 @@ class FragmentSaloonMembers :
     private var bookingDuration: String = ""
     var selectedSaloon: SaloonDto? = null
     private var isActive: Boolean? = null
+    private var status: String? = null
+    private var tag: String? = null
+    private var filterApplied: Boolean = false
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        tag=resources.getString(R.string.members)
         getMembers()
         binding.imgFilter.setOnClickListener {
-            var nextFragment = FragmentFilter()
-            nextFragment.status = true
-            (activity as HomeActivity?)?.loadFragment(nextFragment)
+            if (filterApplied) {
+                binding.imgFilter.setImageResource(
+                    R.drawable.filter_icon
+                )
+                tag=resources.getString(R.string.members)
+                status = null
+                getMembers(false)
+                filterApplied=false
+            } else {
+
+                var nextFragment = FragmentFilter()
+                nextFragment.status = true
+                nextFragment.enumTabSelection = EnumTabSelection.Member
+                (activity as HomeActivity?)?.loadFragment(nextFragment)
+            }
+
         }
         binding.llAdd.setOnClickListener {
             var nextFragment = FragmentAddSaloonMember()
             nextFragment.saloonId = selectedSaloon?.id!!
-            (activity as HomeActivity?)?.loadFragment(nextFragment)
+            (activity as HomeActivity?)?.loadFragment(nextFragment,true)
         }
 
 //        binding.swipeRefresh.setOnRefreshListener {
@@ -64,7 +82,8 @@ class FragmentSaloonMembers :
             binding.cnstData.visibility = View.GONE
             binding.llNoDta.visibility = View.VISIBLE
         }
-        binding.txtHeading.text = "${resources.getString(R.string.members)}(${membersList.size})"
+        binding.txtHeading.text =
+            "$tag(${membersList.size})"
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(position: Int) {
                 var nextFragment = FragmentViewMember()
@@ -152,7 +171,7 @@ class FragmentSaloonMembers :
                 else -> {}
             }
         }
-        viewModel.getMembers(selectedSaloon?.id.toString(), isActive)
+        viewModel.getMembers(selectedSaloon?.id.toString(), isActive, if (status != null) status!!.toInt() else null)
         if (reload == false) {
             (activity as HomeActivity?)?.showLoadingIndicator()
         }
@@ -248,16 +267,33 @@ class FragmentSaloonMembers :
                 if (FilterSelection.filterData != null) {
                     if (FilterSelection.filterData!!.status != null && FilterSelection.filterData!!.status != "") {
                         if (FilterSelection.filterData!!.status == "Active") {
+                            tag="Active members"
                             isActive = true
-                        } else {
+                            status = null
+                        } else if (FilterSelection.filterData!!.status == "InActive") {
+                            tag="Inactive members"
                             isActive = false
+                            status = null
+                        } else {
+                            status = FilterSelection.filterData!!.status
+                            if (status=="0"){
+                                tag=resources.getString(R.string.invitation_sent)
+                            }
+                            else if (status=="1"){
+                                tag=resources.getString(R.string.working_today)
+                            }
+                            else if (status=="2"){
+                                tag=resources.getString(R.string.on_leave_today)
+                            }
+
+                            isActive = null
                         }
-                        getMembers()
+                        getMembers(false)
                     }
 
 
                 } else {
-                    getMembers(true)
+                    getMembers(false)
                 }
 
             }

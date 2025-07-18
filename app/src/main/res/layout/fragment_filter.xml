@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:fitsSystemWindows="false"
+    android:paddingBottom="50dp"
     tools:context=".ui.home.FragmentFilter">
 
     <LinearLayout
@@ -158,7 +160,11 @@
                 android:textColor="@color/colorTextLabelDefault"
                 android:textFontWeight="500"
                 android:textSize="14sp" />
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="10dp"
+                android:background="@color/light_grey_border" />
             <!-- Custom RadioButton for Month -->
             <RadioButton
                 android:id="@+id/rbInActive"
@@ -173,6 +179,11 @@
                 android:textColor="@color/colorTextLabelDefault"
                 android:textFontWeight="500"
                 android:textSize="14sp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="10dp"
+                android:background="@color/light_grey_border" />
             <RadioButton
                 android:id="@+id/rbopen"
                 android:layout_width="match_parent"
@@ -187,6 +198,11 @@
                 android:textColor="@color/colorTextLabelDefault"
                 android:textFontWeight="500"
                 android:textSize="14sp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="10dp"
+                android:background="@color/light_grey_border" />
             <RadioButton
                 android:id="@+id/rbclosed"
                 android:layout_width="match_parent"
@@ -216,6 +232,11 @@
                 android:textColor="@color/colorTextLabelDefault"
                 android:textFontWeight="500"
                 android:textSize="14sp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="10dp"
+                android:background="@color/light_grey_border" />
             <RadioButton
                 android:id="@+id/rbWorkingToday"
                 android:layout_width="match_parent"
@@ -230,6 +251,11 @@
                 android:textColor="@color/colorTextLabelDefault"
                 android:textFontWeight="500"
                 android:textSize="14sp" />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="10dp"
+                android:background="@color/light_grey_border" />
             <RadioButton
                 android:id="@+id/rbOnLeaveToday"
                 android:layout_width="match_parent"

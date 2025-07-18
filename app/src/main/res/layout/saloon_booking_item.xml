@@ -6,9 +6,8 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     app:cardCornerRadius="10dp"
-    app:cardElevation="4dp"
-    app:cardUseCompatPadding="true"
-    app:layout_goneMarginTop="10dp">
+    android:layout_margin="7dp"
+    app:cardElevation="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -49,11 +48,12 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_centerInParent="true"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:src="@drawable/topperformer"
             app:civ_border_color="@color/white"
             app:civ_border_width="3dp"
-            app:layout_constraintStart_toStartOf="@+id/llDateTime"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/llDateTime" />
 
         <TextView
@@ -68,9 +68,10 @@
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@+id/imgProfilePic"
             app:layout_constraintStart_toEndOf="@+id/imgProfilePic"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/imgProfilePic" />
 
         <LinearLayout
+            android:id="@+id/llMainServices"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
@@ -141,6 +142,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/llStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginTop="8dp"
@@ -168,6 +170,35 @@
                     android:textFontWeight="400"
                     android:textSize="12sp" />
             </LinearLayout>
+            <LinearLayout
+                android:id="@+id/llDateTime2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:layout_width="12dp"
+                    android:layout_height="16dp"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/clock_icon" />
+
+                <TextView
+                    android:id="@+id/txtDateTime2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center|left"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/manrope_regular"
+                    android:paddingStart="5dp"
+                    android:text="@string/_12_04_2024_10_00_am_1_5_hr"
+                    android:textColor="@color/colorTextLabelDefault"
+                    android:textFontWeight="400"
+                    android:textSize="12sp" />
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/llCancel"
@@ -176,7 +207,7 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="10dp"
-                android:background="@drawable/rounded_grey"
+                android:background="@drawable/rounded_grey_10"
                 android:orientation="vertical"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"

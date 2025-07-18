@@ -22,8 +22,6 @@ import java.time.temporal.ChronoUnit
 import java.time.temporal.TemporalAdjusters
 import java.util.Locale
 import java.util.TimeZone
-import kotlin.takeIf
-import kotlin.text.isNotEmpty
 
 
 /**
@@ -33,6 +31,13 @@ import kotlin.text.isNotEmpty
  * +923115284424
  */
 object TimeHelper {
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getFormatedDateISO(isoDate: String): String {
+        val zonedDateTime = ZonedDateTime.parse(isoDate)
+        val formatted = zonedDateTime.toLocalDate().toString() // "2025-06-17"
+        return formatted
+    }
+
     fun getHourFormat(context: Context): String {
         // Check if the device is using 24-hour format
         val is24HourFormat = DateFormat.is24HourFormat(context)
@@ -244,5 +249,26 @@ object TimeHelper {
 
         // Format the local time in HH:mm
         return localZoned.format(DateTimeFormatter.ofPattern(pattern))
+    }
+
+    fun getDisplayTime(mins: Long): String {
+        val hours = mins / 60.0
+        if (hours >= 2) {
+            return "$hours hrs"
+        } else {
+            return "$hours hr"
+
+        }
+        return ""
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun convertTo12Hours(time: String): String {
+        val inputFormatter = DateTimeFormatter.ofPattern("HH:mm")
+        val outputFormatter = DateTimeFormatter.ofPattern("hh:mm a")
+
+        val time = LocalTime.parse(time, inputFormatter)
+        val converted = time.format(outputFormatter)
+        return converted
     }
 }

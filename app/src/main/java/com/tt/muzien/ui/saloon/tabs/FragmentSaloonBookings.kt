@@ -73,6 +73,18 @@ class FragmentSaloonBookings :
         } else {
             binding.switchContainer.visibility = View.GONE
         }
+        if (LoggedInInfo.user?.role == "salon-manager") {
+            val layoutParams =
+                binding.switchContainer.layoutParams as ViewGroup.MarginLayoutParams
+            layoutParams.topMargin = Helper.dpToPx(binding.switchContainer.context, 100)
+            binding.switchContainer.layoutParams = layoutParams
+        }
+        else{
+            val layoutParams =
+                binding.cnstData.layoutParams as ViewGroup.MarginLayoutParams
+            layoutParams.topMargin = Helper.dpToPx(binding.cnstData.context, 100)
+            binding.cnstData.layoutParams = layoutParams
+        }
         if (FilterSelection.filterData == null) {
             val currentDate = LocalDate.now()
             val formattedDate = currentDate.format(DateTimeFormatter.ISO_DATE)
@@ -111,14 +123,27 @@ class FragmentSaloonBookings :
         }
         //binding.customCalendarView.setDays(generateDaysWithEvents())
         binding.imgBookingFilter.setOnClickListener {
-            if (bookingStatus != null) {
+            if (( bookingStatus != null && bookingStatus != "") || (bookingDuration!=null && bookingDuration!="")) {
                 binding.imgBookingFilter.setImageResource(
                     R.drawable.filter_icon
                 )
+                if (LoggedInInfo.user?.role == "salon-manager") {
+                    val layoutParams =
+                        binding.switchContainer.layoutParams as ViewGroup.MarginLayoutParams
+                    layoutParams.topMargin = Helper.dpToPx(binding.switchContainer.context, 100)
+                    binding.switchContainer.layoutParams = layoutParams
+                }
+                else{
+                    val layoutParams =
+                        binding.cnstData.layoutParams as ViewGroup.MarginLayoutParams
+                    layoutParams.topMargin = Helper.dpToPx(binding.cnstData.context, 100)
+                    binding.cnstData.layoutParams = layoutParams
+                }
                 binding.customCalendarView.visibility = View.VISIBLE
                 binding.txtBookingStatus.visibility = View.GONE
                 bookingStatus = null
-                FilterSelection.filterData!!.bookingStatus = bookingStatus
+                bookingDuration=null
+                FilterSelection.filterData!!.bookingStatus = null
                 setMargins(false)
                 getCalendarbar(false)
             } else {
@@ -494,6 +519,8 @@ class FragmentSaloonBookings :
                         toDate = FilterSelection.filterData!!.to
                     } else {
                         isFromSelection = true
+                        fromDate=null
+                        toDate=null
                     }
                     if (FilterSelection.filterData!!.saloonId != null) {
                         bookingSaloonId = FilterSelection.filterData!!.saloonId.toString()
@@ -510,21 +537,48 @@ class FragmentSaloonBookings :
                         isFromSelection = true
                         bookingDuration = FilterSelection.filterData!!.selection.toString()
                         if (bookingDuration == "Custom") {
+                            bookingDuration="\n$fromDate To ${toDate}"
                             //  binding.txtMonth.text = "$fromDate To ${toDate}"
                         } else {
                             // binding.txtMonth.text = bookingDuration
                         }
 
                     }
-                    if (bookingStatus != null && bookingStatus != "") {
+                    if (LoggedInInfo.user?.role == "salon-manager") {
+                        val layoutParams =
+                            binding.switchContainer.layoutParams as ViewGroup.MarginLayoutParams
+                        layoutParams.topMargin = Helper.dpToPx(binding.switchContainer.context, 20)
+                        binding.switchContainer.layoutParams = layoutParams
+                    }
+                    else{
+                        val layoutParams =
+                            binding.cnstData.layoutParams as ViewGroup.MarginLayoutParams
+                        layoutParams.topMargin = Helper.dpToPx(binding.cnstData.context, 0)
+                        binding.cnstData.layoutParams = layoutParams
+                    }
+                    if (( bookingStatus != null && bookingStatus != "") || (bookingDuration!=null && bookingDuration!="")) {
                         page = 1
                         binding.imgBookingFilter.setImageResource(
                             R.drawable.blue_cancel
                         )
-                        binding.txtBookingStatus.setText("${Helper.capitalizeFirstWord(bookingStatus!!)} Bookings")
+                        binding.txtBookingStatus.visibility = View.VISIBLE
+                        if (bookingDuration!="" && bookingStatus!="" && bookingStatus!=null && bookingDuration!=null){
+                            binding.txtBookingStatus.setText("${Helper.capitalizeFirstWord(bookingStatus!!)} Bookings/${bookingDuration}")
+                        }
+                        else if (bookingStatus!=""&& bookingStatus!=null){
+                            binding.txtBookingStatus.setText("${Helper.capitalizeFirstWord(bookingStatus!!)} Bookings")
+
+                        }
+                        else{
+                            binding.txtBookingStatus.setText("${bookingDuration}")
+                        }
                         binding.customCalendarView.visibility = View.GONE
                         setMargins(true)
 
+                    }else{
+                        if (bookingDuration!=""&& bookingDuration!=null){
+                            binding.txtBookingStatus.setText("${bookingDuration}")
+                        }
                     }
                     adopter?.setBookingStatus(bookingStatus)
                     adopter?.notifyDataSetChanged()

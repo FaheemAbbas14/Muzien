@@ -284,6 +284,7 @@ class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, Home
                     Log.d("response", "success " + it.toString())
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
+                        LoggedInInfo.phoneNumber=""
                         userPreferences.putString(Keys.Access_Token, "")
                         requireActivity().startNewActivity(AuthActivity::class.java)
                         requireActivity().finish()

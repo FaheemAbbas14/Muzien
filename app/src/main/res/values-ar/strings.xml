@@ -288,5 +288,19 @@
     <string name="sign_up">التسجيل</string>
     <string name="we_will_use_your_phone_number_to">سنستخدم رقم جوالك\nلتسجيلك وتمكينك من الدخول للتطبيق.</string>
     <string name="already_have_an_account_sign_in">لديك حساب بالفعل؟سجل الدخول</string>
-
+    <string name="by_continuing_you_agree_to_our_t_c_and_privacy_policy"><![CDATA[باستمراك في التطبيق فانك توافق على سياسات الخصوصية والشروط والاحكام الخاصة بالتطبيق]]></string>
+    <string name="tc">الشروط والاحكام</string>
+    <string name="privacy">الخصوصية</string>
+    <string name="card_holder_name">اسم حامل البطاقة</string>
+    <string name="xxxxxxxxxxxxxxxx">XXXXXXXXXXXXXXXX</string>
+    <string name="mm_yy">MM/YY</string>
+    <string name="select_service">اختر خدمة</string>
+    <string name="_051_xxx_xxxx">051 xxx xxxx</string>
+    <string name="on_leave_today">اجازة اليوم</string>
+    <string name="closed">مغلق</string>
+    <string name="open">مفتوح</string>
+    <string name="select_status">اختر الحالة</string>
+    <string name="profile_updated">تم تحديث البروفايل</string>
+    <string name="write_the_name_of_your_saloon">اكتب اسم صالونك</string>
+    <string name="write_about_your_saloon">اكتب حول صالونك.</string>
 </resources>

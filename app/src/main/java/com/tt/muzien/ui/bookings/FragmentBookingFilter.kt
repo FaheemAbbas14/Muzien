@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.ArrayAdapter
 import androidx.annotation.RequiresApi
 import com.tt.muzien.R
@@ -41,6 +42,7 @@ class FragmentBookingFilter :
     var serviceProviderId: Int? = null
     var showSaloon: Boolean = true
     var showServiceProvider: Boolean = true
+    var showPendingApproval: Boolean = true
     private val saloonsList = arrayListOf<String>()
     private val saloonMap = HashMap<String, SaloonDto>()
     private val serviceProviderList = arrayListOf<String>()
@@ -52,6 +54,10 @@ class FragmentBookingFilter :
         viewModel.setMemberRepo((activity as HomeActivity?)?.getMemberRepo()!!)
         if (!showSaloon) {
             binding.llMainSaloon.visibility = View.GONE
+        }
+        if (!showPendingApproval) {
+            binding.rbPending.visibility = View.GONE
+            binding.dividerPending.visibility = View.GONE
         }
         if (!showServiceProvider || LoggedInInfo.user?.role == "salon-manager") {
             binding.llMainServiceProvider.visibility = View.GONE
@@ -120,6 +126,14 @@ class FragmentBookingFilter :
         }
         binding.radioGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
+                R.id.rbAll -> {
+                    selection = "All"
+                    fromDate=null
+                    toDate=null
+                    binding.llFrom.visibility = View.GONE
+                    binding.llTo.visibility = View.GONE
+                    binding.customCalendar.visibility = View.GONE
+                }
                 R.id.rbWeek -> {
                     selection = "Week"
                     val dates = TimeHelper.getWeekAndMonthDates()
@@ -128,6 +142,7 @@ class FragmentBookingFilter :
                     checkValidation()
                     binding.llFrom.visibility = View.GONE
                     binding.llTo.visibility = View.GONE
+                    binding.customCalendar.visibility = View.GONE
                 }
 
                 R.id.rbMonth -> {
@@ -265,6 +280,8 @@ class FragmentBookingFilter :
         super.onResume()
         (activity as HomeActivity?)?.hideTabs()
         (activity as HomeActivity?)?.setSystemWindow(true)
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+
     }
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onHiddenChanged(hidden: Boolean) {
@@ -272,12 +289,16 @@ class FragmentBookingFilter :
         if (!hidden) {
             (activity as HomeActivity?)?.hideTabs()
             (activity as HomeActivity?)?.setSystemWindow(true)
+            requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+
         }
     }
     override fun onPause() {
         super.onPause()
         (activity as HomeActivity?)?.showTabs()
         (activity as HomeActivity?)?.setSystemWindow(true)
+        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
+
     }
 
     private fun getSaloons() {

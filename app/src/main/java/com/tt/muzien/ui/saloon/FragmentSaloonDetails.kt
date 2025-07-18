@@ -191,7 +191,7 @@ class FragmentSaloonDetails :
     }
 
     fun updateStatus(isActive: Boolean, isOpened: Boolean) {
-        Toast.makeText(requireContext(), "status updated", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(requireContext(), "status updated", Toast.LENGTH_SHORT).show()
         if (isActive == true) {
             if (isOpened == true) {
                 binding.llStatus.setBackgroundDrawable(

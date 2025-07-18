@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:fitsSystemWindows="true"
+    android:fitsSystemWindows="false"
+    android:paddingBottom="50dp"
     tools:context=".ui.home.FragmentFilter">
 
     <LinearLayout
@@ -118,6 +119,7 @@
                             android:textSize="14sp" />
                         <!-- Divider -->
                         <View
+                            android:id="@+id/dividerPending"
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
                             android:layout_marginStart="10dp"
@@ -433,6 +435,7 @@
                     android:layout_marginEnd="15dp"
                     android:layout_marginBottom="10dp"
                     android:calendarViewShown="true"
+                    android:nestedScrollingEnabled="false"
                     android:spinnersShown="true"
                     android:visibility="gone" />
 

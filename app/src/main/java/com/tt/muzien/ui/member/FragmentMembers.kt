@@ -27,21 +27,35 @@ import com.zabihah.ui.ui.interfaces.OnItemClickListner
 class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, MemberRepository>() {
     private val membersList = arrayListOf<MemberDto>()
     private var isActive: Boolean? = null
+    private var filterApplied: Boolean = false
     private var status: String? = null
+    private var tag: String? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setSaloonRepo((activity as HomeActivity?)?.getSaloonRepo()!!)
         binding.swipeRefresh.recyclerView = binding.rcyMembers
+        tag=resources.getString(R.string.members)
         binding.swipeRefresh.setOnRefreshListener {
             // binding.swipeRefresh.isRefreshing = false
             // page=1
             getMembers(true)
         }
         binding.imgFilter.setOnClickListener {
-            var nextFragment = FragmentFilter()
-            nextFragment.status = true
-            nextFragment.enumTabSelection = EnumTabSelection.Member
-            (activity as HomeActivity?)?.loadFragment(nextFragment)
+            if (filterApplied) {
+                binding.imgFilter.setImageResource(
+                    R.drawable.filter_icon
+                )
+                tag=resources.getString(R.string.members)
+                status = null
+                getMembers(false)
+                filterApplied=false
+            } else {
+
+                var nextFragment = FragmentFilter()
+                nextFragment.status = true
+                nextFragment.enumTabSelection = EnumTabSelection.Member
+                (activity as HomeActivity?)?.loadFragment(nextFragment)
+            }
         }
         getMembers(false)
     }
@@ -54,7 +68,8 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
             binding.rcyMembers.visibility = View.GONE
             binding.llNoDta.visibility = View.VISIBLE
         }
-        binding.txtHeading.text = "${resources.getString(R.string.members)}(${membersList.size})"
+        binding.txtHeading.text =
+            "$tag(${membersList.size})"
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(position: Int) {
                 var nextFragment = FragmentViewMember()
@@ -337,13 +352,25 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
                 if (FilterSelection.filterData != null) {
                     if (FilterSelection.filterData!!.status != null && FilterSelection.filterData!!.status != "") {
                         if (FilterSelection.filterData!!.status == "Active") {
+                            tag="Active members"
                             isActive = true
                             status = null
                         } else if (FilterSelection.filterData!!.status == "InActive") {
+                            tag="Inactive members"
                             isActive = false
                             status = null
                         } else {
                             status = FilterSelection.filterData!!.status
+                            if (status=="0"){
+                                tag=resources.getString(R.string.invitation_sent)
+                            }
+                           else if (status=="1"){
+                                tag=resources.getString(R.string.working_today)
+                            }
+                            else if (status=="2"){
+                                tag=resources.getString(R.string.on_leave_today)
+                            }
+
                             isActive = null
                         }
                         getMembers(false)

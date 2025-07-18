@@ -44,6 +44,7 @@ import com.tt.muzien.utilities.Helper
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import java.util.Locale
 
 
 class FragmentAddSaloonServices :
@@ -62,20 +63,43 @@ class FragmentAddSaloonServices :
     private val saloonMap = HashMap<String, SaloonDto>()
     var service: ServiceInfo? = null
     var saveAdd = false
+    var duration = "0 mins"
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setSaloonRepo((activity as HomeActivity?)?.getSaloonRepo()!!)
+        val durations = listOf("15 mins", "30 mins", "45 mins", "60 mins", "75 mins", "90 mins", "105 mins", "120 mins")
+        val adapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, durations)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerDuration.adapter = adapter
+        binding.spinnerDuration.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long,
+                ) {
+                    duration = durations[position]
+                    // Toast.makeText(requireContext(), "Selected: $duration", Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>) {}
+            }
+        binding.ddlDuration.setOnClickListener {
+            binding.spinnerDuration.performClick()
+        }
         if (saloonId == 0) {
             binding.llSaveAdd.visibility = View.GONE
             binding.llSave.setBackgroundDrawable(resources.getDrawable(R.drawable.rounded_blue_100))
             binding.txtSave.setTextColor(resources.getColor(R.color.white))
         }
         if (service != null) {
-            binding.txtLabel.text= getString(R.string.update_service)
+            binding.txtLabel.text = getString(R.string.update_service)
             binding.imgPhoto.visibility = View.GONE
             binding.edtServiceName.text = Editable.Factory.getInstance().newEditable(service?.name)
-            binding.edtDuration.text =
-                Editable.Factory.getInstance().newEditable("${service?.service?.duration}")
+            var index = durations.indexOf("${service?.service?.duration} mins")
+            binding.spinnerDuration.setSelection(index)
             binding.edtPrice.text = Editable.Factory.getInstance()
                 .newEditable("${(service?.service?.price ?: 0) / 100}")
         }
@@ -323,12 +347,13 @@ class FragmentAddSaloonServices :
                     if (it.value.status != 0) {
                         servicesMap.clear()
                         services.clear()
+                        val isArabic = Locale.getDefault().language == "ar"
                         for (category in it.value.data) {
                             if (categoryId == null) {
                                 categoryId = category?.id
                             }
-                            servicesMap.put(category!!.name, category.id)
-                            services.add(category.name)
+                            servicesMap.put(if (isArabic)category!!.nameAr else category!!.name, category.id)
+                            services.add(if (isArabic) category.nameAr else category.name)
                         }
                     }
                     setData()
@@ -400,11 +425,11 @@ class FragmentAddSaloonServices :
         }
         var adjustedPrice = Integer.parseInt(binding.edtPrice.text.toString()) * 100
         viewModel.updateService(
-            service?.id?:0,
+            service?.id ?: 0,
             UpdateServiceRequest(
                 categoryId ?: 0,
                 binding.edtServiceName.text.toString(),
-                Integer.parseInt(binding.edtDuration.text.toString()),
+                Integer.parseInt(duration.replace(" mins", "")),
                 adjustedPrice
             )
         )
@@ -481,7 +506,7 @@ class FragmentAddSaloonServices :
         )
         val duration = RequestBody.create(
             "text/plain".toMediaTypeOrNull(),
-            binding.edtDuration.text.toString()
+            duration.replace(" mins", "")
         )
         val price =
             RequestBody.create("text/plain".toMediaTypeOrNull(), "$adjustedPrice")
@@ -565,8 +590,8 @@ class FragmentAddSaloonServices :
                             binding.edtServiceName.text =
                                 Editable.Factory.getInstance().newEditable("")
                             binding.edtPrice.text = Editable.Factory.getInstance().newEditable("")
-                            binding.edtDuration.text =
-                                Editable.Factory.getInstance().newEditable("")
+//                            binding.edtDuration.text =
+//                                Editable.Factory.getInstance().newEditable("")
                             binding.edtSaloon.text = Editable.Factory.getInstance().newEditable("")
                             requireView().snackbar("Service added successfully")
                         } else {
@@ -596,7 +621,7 @@ class FragmentAddSaloonServices :
                 saloonId.toString(),
                 serviceId.toString(),
                 true.toString(),
-                binding.edtDuration.text.toString().toInt(),
+                duration.replace(" mins", "").toInt(),
                 binding.edtPrice.text.toString().toInt() * 100
             )
         )

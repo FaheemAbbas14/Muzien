@@ -26,6 +26,7 @@ import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.Appelement
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
+import java.util.Locale
 
 
 class FragmentAddService :
@@ -142,6 +143,8 @@ class FragmentAddService :
                     if (it.value.status != 0) {
                         servicesList.clear()
                         servicesList.add(0, "Select Service")
+
+                        val isArabic = Locale.getDefault().language == "ar"
                         for (categories in it.value.data) {
                             for (service in categories?.services!!) {
                                 if (!servicesList.contains(service?.name)) {
@@ -228,14 +231,14 @@ class FragmentAddService :
 
         }
         viewModel.addService(
-            userId, AddMemberService(selectedServicesFinal)
+            userId, AddMemberService(services = selectedServicesFinal)
         )
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 
     private fun deleteService(position: Int) {
         selectedPosition = position
-        viewModel.removeHoliday.observe(viewLifecycleOwner) {
+        viewModel.remove.observe(viewLifecycleOwner) {
 
             when (it) {
                 is Resource.Success -> {

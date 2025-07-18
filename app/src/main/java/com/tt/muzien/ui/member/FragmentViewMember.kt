@@ -225,7 +225,7 @@ class FragmentViewMember :
         Glide.with(binding.imgProfilePic)
             .load(memberDetails?.picture)
             .circleCrop()
-            .placeholder(R.drawable.profile_icon)
+            .placeholder(R.drawable.topperformer)
             .listener(iconRequestListener)
             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)  // Cache both original & transformed image
             .skipMemoryCache(false)  // Cache in memory
@@ -653,7 +653,7 @@ class FragmentViewMember :
 
 
     private fun deleteHoliday(holidayId: Int) {
-        viewModel.removeHoliday.observe(viewLifecycleOwner) {
+        viewModel.remove.observe(viewLifecycleOwner) {
 
             when (it) {
                 is Resource.Success -> {

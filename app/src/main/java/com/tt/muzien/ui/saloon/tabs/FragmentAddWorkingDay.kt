@@ -2,12 +2,14 @@ package com.tt.muzien.ui.saloon.tabs
 
 import android.app.TimePickerDialog
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.setFragmentResult
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.AddSaloonData
@@ -24,6 +26,8 @@ import com.tt.muzien.ui.saloon.SaloonViewModel
 import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.TimeHelper
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
 
@@ -36,6 +40,7 @@ class FragmentAddWorkingDay :
     var saloonId: Int = 0
     var userId: Int = 0
     var systemWindow: Boolean = false
+    var validTimes: Boolean = false
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setMemberRepo((activity as HomeActivity?)?.getMemberRepo()!!)
@@ -46,7 +51,7 @@ class FragmentAddWorkingDay :
             binding.txtText.text = "Add user work hours"
         }
         binding.llSave.setOnClickListener {
-            if (checkValidation()) {
+            if (checkValidation(true)) {
                 if (userId != 0) {
                     addMemberWorkHour()
 
@@ -183,6 +188,7 @@ class FragmentAddWorkingDay :
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     fun showTimePicker(context: Context, textView: TextView, isStart: Boolean) {
         val calendar = Calendar.getInstance()
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
@@ -192,13 +198,28 @@ class FragmentAddWorkingDay :
             context,
             { _, selectedHour, selectedMinute ->
                 var formattedTime = String.format("%02d:%02d", selectedHour, selectedMinute)
+
                 if (isStart) {
                     startTime = formattedTime
                 } else {
                     endTime = formattedTime
                 }
-                textView.text = formattedTime // Set time in TextView
+                textView.text = TimeHelper.convertTo12Hours(formattedTime)
+                if (startTime != "" && endTime != "") {
+                    val inputFormatter = DateTimeFormatter.ofPattern("HH:mm")
+                    val startTime = LocalTime.parse(startTime, inputFormatter)
+                    val endTime = LocalTime.parse(endTime, inputFormatter)
 
+                    if (startTime < endTime) {
+                        validTimes = true
+                        binding.txtError.visibility = View.GONE
+                        println("Start time is before end time")
+                    } else {
+                        validTimes = false
+                        binding.txtError.visibility = View.VISIBLE
+                        println("Start time is after or equal to end time")
+                    }
+                }
             },
             hour,
             minute,
@@ -214,10 +235,18 @@ class FragmentAddWorkingDay :
         return String.format("%02d:%02d %s", hour12, minute, amPm)
     }
 
-    private fun checkValidation(): Boolean {
+    private fun checkValidation(show: Boolean = false): Boolean {
         var isValid = false
-        if (startTime != "" && endTime != "" && selectedDays.size > 0) {
+        if (startTime != "" && endTime != "" && selectedDays.size > 0 && validTimes) {
             isValid = true
+        }
+        if (startTime != "" && endTime == "" && show) {
+            binding.txtError.visibility = View.VISIBLE
+            binding.txtError.text = "Closing Time is required"
+        }
+        if (startTime == "" && endTime != "" && show) {
+            binding.txtError.visibility = View.VISIBLE
+            binding.txtError.text = "Opening Time is required"
         }
         return isValid
     }

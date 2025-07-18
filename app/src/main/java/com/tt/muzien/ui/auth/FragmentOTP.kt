@@ -339,7 +339,7 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onPause() {
         super.onPause()
-        (activity as AuthActivity?)?.changeStatusBarColor(R.color.colorPrimary)
+       // (activity as AuthActivity?)?.changeStatusBarColor(R.color.colorPrimary)
     }
 
     @RequiresApi(Build.VERSION_CODES.M)

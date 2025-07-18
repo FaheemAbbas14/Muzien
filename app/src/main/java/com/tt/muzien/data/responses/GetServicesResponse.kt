@@ -16,6 +16,7 @@ data class GetServicesResponse(
 data class CategoryInfo(
     val id: Long,
     val name: String,
+    val nameAr: String,
     val image: String,
     val services: List<ServiceInfo>,
 )

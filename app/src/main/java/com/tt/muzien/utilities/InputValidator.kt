@@ -53,21 +53,22 @@ object InputValidator {
     }
     fun getPhoneNumberPlaceholder(countryCode: String): String {
 
-        // Get the instance of Google's PhoneNumberUtil
-        val phoneNumberUtil = PhoneNumberUtil.getInstance()
-
-        // Get an example phone number for the country
-        val exampleNumber = phoneNumberUtil.getExampleNumberForType(
-            countryCode,
-            PhoneNumberUtil.PhoneNumberType.MOBILE
-        )
-
-        // Format the example number
-        val placeholder = if (exampleNumber != null) {
-            phoneNumberUtil.format(exampleNumber, PhoneNumberUtil.PhoneNumberFormat.NATIONAL)
-        } else {
-            "" // Fallback if example number is not available
-        }
-        return placeholder
+//        // Get the instance of Google's PhoneNumberUtil
+//        val phoneNumberUtil = PhoneNumberUtil.getInstance()
+//
+//        // Get an example phone number for the country
+//        val exampleNumber = phoneNumberUtil.getExampleNumberForType(
+//            countryCode,
+//            PhoneNumberUtil.PhoneNumberType.MOBILE
+//        )
+//
+//        // Format the example number
+//        val placeholder = if (exampleNumber != null) {
+//            phoneNumberUtil.format(exampleNumber, PhoneNumberUtil.PhoneNumberFormat.NATIONAL)
+//        } else {
+//            "" // Fallback if example number is not available
+//        }
+        var placholder="000 000 0000"
+        return placholder
     }
 }

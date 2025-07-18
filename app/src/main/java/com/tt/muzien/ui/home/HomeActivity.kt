@@ -80,7 +80,7 @@ class HomeActivity : AppCompatActivity() {
         setSystemWindow(true)
         setStatusBarIconColor(window, true)
         customLoadingIndicator = CustomLoadingIndicator(this, Color.WHITE)
-        setUserData()
+
         // Default fragment
         if (LoggedInInfo.user?.role == "salon-manager") {
             isServiceProvider = false
@@ -150,7 +150,7 @@ class HomeActivity : AppCompatActivity() {
                 insets
             }
         }
-
+        setUserData()
         binding.constraintLayout2.post {
             binding.constraintLayout2.setLayerType(View.LAYER_TYPE_SOFTWARE, null) // for shadow
             binding.constraintLayout2.background = createSvgBackgroundWithSmallShadow(
@@ -166,10 +166,10 @@ class HomeActivity : AppCompatActivity() {
             loadFragment(FragmentNotifications())
         }
         binding.imgProfile.setOnClickListener {
-            loadFragment(FragmentProfile())
+            loadFragment(FragmentProfile(),true)
         }
         binding.imgProfilePic.setOnClickListener {
-            loadFragment(FragmentProfile())
+            loadFragment(FragmentProfile(),true)
         }
         val firstName = LoggedInInfo.user?.fullName
             ?.split(" ")
@@ -177,6 +177,9 @@ class HomeActivity : AppCompatActivity() {
             ?: ""
         binding.txtUserName.text = "Welcome ${firstName}"
         binding.txtRole.text = "${LoggedInInfo.user?.role}"
+        if (isServiceProvider) {
+            binding.txtRole.text = "${LoggedInInfo.user?.nationality}"
+        }
         Glide.with(binding.imgProfilePic)
             .load(LoggedInInfo.user?.picture)
             .circleCrop()
@@ -209,16 +212,22 @@ class HomeActivity : AppCompatActivity() {
         customLoadingIndicator.dismiss()
     }
 
-    fun loadFragment(newFragment: Fragment) {
-        FragmentNavigator().loadFragment(newFragment, supportFragmentManager)
+    fun loadFragment(newFragment: Fragment, usedVerticallyAnimation: Boolean = false) {
+        FragmentNavigator().loadFragment(
+            newFragment,
+            supportFragmentManager,
+            R.id.fragment_container,
+            usedVerticallyAnimation
+        )
     }
 
     fun loadFragment(
         fragment: Fragment,
         container: Int,
+        usedVerticallyAnimation: Boolean = false,
     ) {
         FragmentNavigator()
-            .loadFragment(fragment, supportFragmentManager, container)
+            .loadFragment(fragment, supportFragmentManager, container,usedVerticallyAnimation)
     }
 
     fun showTopBar() {
@@ -428,11 +437,12 @@ class HomeActivity : AppCompatActivity() {
     private fun checkSaloon() {
         if (isServiceProvider) {
             var nextFragment = ServiceProviderDashboard()
-            nextFragment.saloonId = if (assignedSaloon!=null) assignedSaloon!!.id.toInt() else null
+            nextFragment.saloonId =
+                if (assignedSaloon != null) assignedSaloon!!.id.toInt() else null
             loadFragment(nextFragment)
         } else {
             var nextFragment = SaloonManagerDashboard()
-            nextFragment.selectedSaloon = if (assignedSaloon!=null) assignedSaloon else null
+            nextFragment.selectedSaloon = if (assignedSaloon != null) assignedSaloon else null
             loadFragment(nextFragment)
             binding.constraintLayout2.visibility = View.GONE
             binding.imgadd.visibility = View.GONE

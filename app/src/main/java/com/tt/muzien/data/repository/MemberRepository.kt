@@ -30,9 +30,9 @@ class MemberRepository(
 
     suspend fun getMembers(
         saloonId: String,
-        isActive: Boolean?=null
+        isActive: Boolean?=null,status: Int?=null
     ) = safeApiCall {
-        api.getMembers(saloonId,isActive)
+        api.getMembers(saloonId,isActive,status)
     }
 
     suspend fun sendInvite(
@@ -68,13 +68,23 @@ class MemberRepository(
     }
 
     suspend fun addService(userId: Int, request: AddMemberService) = safeApiCall {
-        api.addService(userId, request)
+        if (request.services!=null) {
+            api.addServices(userId, request)
+        }
+        else{
+            api.addService(userId, request)
+        }
     }
 
     suspend fun addHoliday(userId: Int, request: AddHolidayRequest) = safeApiCall {
         api.addHoliday(userId, request)
     }
-
+    suspend fun getUserHolidays(userId: Int) = safeApiCall {
+        api.getUserHolidays(userId)
+    }
+    suspend fun getUserServices(userId: Int) = safeApiCall {
+        api.getUserServices(userId)
+    }
     suspend fun addWorkingHour(userId: Int, request: AddWorkingHourRequest) = safeApiCall {
         api.addWorkingHour(userId, request)
     }

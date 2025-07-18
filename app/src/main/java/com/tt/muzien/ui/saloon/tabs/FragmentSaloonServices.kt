@@ -20,6 +20,7 @@ import com.tt.muzien.ui.service.FragmentUpdateService
 import com.tt.muzien.ui.service.ServiceViewModel
 import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.Helper
+import java.util.Locale
 
 
 class FragmentSaloonServices :
@@ -38,7 +39,7 @@ class FragmentSaloonServices :
         binding.llAdd.setOnClickListener {
             var nextFragment = FragmentAddSaloonServices()
             nextFragment.saloonId = saloonId
-            (activity as HomeActivity?)?.loadFragment(nextFragment)
+            (activity as HomeActivity?)?.loadFragment(nextFragment,true)
         }
     }
 
@@ -121,7 +122,7 @@ class FragmentSaloonServices :
 
     override fun getFragmentBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = FragmentSaloonServicesBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
@@ -139,9 +140,10 @@ class FragmentSaloonServices :
                         groupServices.clear()
                         groupTitles.clear()
                         totalServices = 0
+                        val isArabic = Locale.getDefault().language == "ar"
                         for (category in it.value.data) {
                             if (category.services.size > 0) {
-                                groupTitles.add(category.name)
+                                groupTitles.add(if (isArabic)category.nameAr else category.name)
                                 groupServices.add("${category.services.size}")
                                 val servicesList = arrayListOf<ServiceInfo>()
                                 for (service in category.services) {
@@ -149,7 +151,7 @@ class FragmentSaloonServices :
                                         ServiceInfo(
                                             service.id.toInt(),
                                             service.image,
-                                            service.name!!,
+                                            service.name,
                                             "Duration: ${service.duration} ${
                                                 if (service.duration.toInt() == 1) "min" else "mins"
                                             }",
@@ -158,10 +160,11 @@ class FragmentSaloonServices :
                                     )
                                 }
                                 totalServices += servicesList.size
-                                servicesMap.put(category.name, servicesList)
+                                servicesMap.put(if (isArabic)category.nameAr else category.name, servicesList)
                             }
                         }
                     }
+                    groupTitles.sort()
                     setServicesAdopter()
                 }
 
@@ -184,8 +187,8 @@ class FragmentSaloonServices :
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         if (!hidden) {
-            if (Appelement.reload){
-                Appelement.reload=false
+            if (Appelement.reload) {
+                Appelement.reload = false
                 getCategories(true)
             }
         }

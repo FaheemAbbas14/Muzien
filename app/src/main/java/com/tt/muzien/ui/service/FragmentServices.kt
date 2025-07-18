@@ -18,11 +18,12 @@ import com.tt.muzien.ui.home.FragmentFilter
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.FilterSelection
+import java.util.Locale
 
 
 class FragmentServices :
     BaseFragment<ServiceViewModel, FragmentServicesBinding, ServiceRepository>() {
-    private val servicesMap = HashMap<String, List<ServiceInfo>>()
+    private var servicesMap = HashMap<String, List<ServiceInfo>>()
     private var fromDate: String = ""
     private var toDate: String = ""
     private var bookingDuration: String = ""
@@ -39,7 +40,7 @@ class FragmentServices :
         }
         binding.imgFilter.setOnClickListener {
             var nextFragment = FragmentFilter()
-            nextFragment.enumTabSelection= EnumTabSelection.Services
+            nextFragment.enumTabSelection = EnumTabSelection.Services
             (activity as HomeActivity?)?.loadFragment(nextFragment)
         }
         if (FilterSelection.filterData != null) {
@@ -101,13 +102,13 @@ class FragmentServices :
 
     override fun getFragmentBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = FragmentServicesBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
         ServiceRepository(remoteDataSource.buildApi(ServiceApi::class.java, requireContext()))
 
-    private fun getCategories(reload: Boolean?=false) {
+    private fun getCategories(reload: Boolean? = false) {
         viewModel.getServices.observe(viewLifecycleOwner) {
 
             when (it) {
@@ -120,8 +121,9 @@ class FragmentServices :
                         groupServices.clear()
                         groupTitles.clear()
                         totalServices = 0
+                        val isArabic = Locale.getDefault().language == "ar"
                         for (category in it.value.data) {
-                            groupTitles.add(category.name)
+                            groupTitles.add(if (isArabic)category.nameAr else category.name)
                             groupServices.add("${category.services.size}")
                             val servicesList = arrayListOf<ServiceInfo>()
                             for (service in category.services) {
@@ -139,10 +141,17 @@ class FragmentServices :
                                 )
                             }
                             totalServices += servicesList.size
-                            servicesMap.put(category.name, servicesList)
+                            servicesMap.put(if (isArabic)category.nameAr else category.name, servicesList)
 
                         }
                     }
+                    groupTitles.sort()
+                    // Sort by key
+                    val sorted = servicesMap.toSortedMap()
+
+// Override original map with sorted entries
+                    servicesMap.clear()
+                    servicesMap.putAll(sorted)
                     setServicesAdopter()
                 }
 
@@ -167,10 +176,10 @@ class FragmentServices :
         super.onHiddenChanged(hidden)
         (activity as HomeActivity?)?.showTabs()
         if (!hidden) {
-           if (Appelement.reload){
-               Appelement.reload=false
-               getCategories(false)
-           }
+            if (Appelement.reload) {
+                Appelement.reload = false
+                getCategories(false)
+            }
         }
     }
 }

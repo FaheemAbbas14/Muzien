@@ -61,6 +61,10 @@ class FragmentBookings :
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val layoutParams =
+            binding.cnstData.layoutParams as ViewGroup.MarginLayoutParams
+        layoutParams.topMargin = Helper.dpToPx(binding.cnstData.context, 100)
+        binding.cnstData.layoutParams = layoutParams
         if (FilterSelection.filterData == null) {
             val currentDate = LocalDate.now()
             val formattedDate = currentDate.format(DateTimeFormatter.ISO_DATE)
@@ -98,16 +102,19 @@ class FragmentBookings :
         }
 
         binding.imgBookingFilter.setOnClickListener {
-            if (bookingStatus != null) {
-                bookingStatus = ""
+            if (( bookingStatus != null && bookingStatus != "") || (bookingDuration!=null && bookingDuration!="")) {
                 binding.imgBookingFilter.setImageResource(
                     R.drawable.filter_icon
                 )
+                binding.cnstData.layoutParams as ViewGroup.MarginLayoutParams
+                layoutParams.topMargin = Helper.dpToPx(binding.cnstData.context, 100)
+                binding.cnstData.layoutParams = layoutParams
                 binding.customCalendarView.visibility = View.VISIBLE
                 binding.txtBookingStatus.visibility = View.GONE
                 bookingStatus = null
-                FilterSelection.filterData!!.bookingStatus = bookingStatus
-                setMargins(false)
+                bookingDuration = null
+                FilterSelection.filterData!!.bookingStatus = null
+               // setMargins(false)
                 getCalendarbar(false)
             } else {
                 var nextFragment = FragmentBookingFilter()
@@ -227,7 +234,7 @@ class FragmentBookings :
 
     override fun getFragmentBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = FragmentBookingsBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
@@ -450,6 +457,8 @@ class FragmentBookings :
                         toDate = FilterSelection.filterData!!.to
                     } else {
                         isFromSelection = true
+                        fromDate=null
+                        toDate=null
                     }
                     if (FilterSelection.filterData!!.saloonId != null) {
                         bookingSaloonId = FilterSelection.filterData!!.saloonId.toString()
@@ -466,20 +475,45 @@ class FragmentBookings :
                         isFromSelection = true
                         bookingDuration = FilterSelection.filterData!!.selection.toString()
                         if (bookingDuration == "Custom") {
+                            bookingDuration="\n$fromDate To ${toDate}"
                             //  binding.txtMonth.text = "$fromDate To ${toDate}"
                         } else {
                             // binding.txtMonth.text = bookingDuration
                         }
 
                     }
-                    if (bookingStatus != null && bookingStatus != "") {
+                    binding.txtBookingStatus.visibility = View.VISIBLE
+                    val layoutParams =
+                        binding.cnstData.layoutParams as ViewGroup.MarginLayoutParams
+                    layoutParams.topMargin = Helper.dpToPx(binding.cnstData.context, 20)
+                    binding.cnstData.layoutParams = layoutParams
+                    if (( bookingStatus != null && bookingStatus != "") || (bookingDuration!=null && bookingDuration!="")) {
                         page = 1
                         binding.imgBookingFilter.setImageResource(
                             R.drawable.blue_cancel
                         )
-                        binding.txtBookingStatus.setText("${Helper.capitalizeFirstWord(bookingStatus!!)} Bookings")
+                        if (bookingDuration != "" && bookingStatus != "" && bookingStatus != null && bookingDuration != null) {
+                            binding.txtBookingStatus.setText(
+                                "${
+                                    Helper.capitalizeFirstWord(
+                                        bookingStatus!!
+                                    )
+                                } Bookings/${bookingDuration}"
+                            )
+                        } else if (bookingStatus != "" && bookingStatus != null) {
+                            binding.txtBookingStatus.setText(
+                                "${
+                                    Helper.capitalizeFirstWord(
+                                        bookingStatus!!
+                                    )
+                                } Bookings"
+                            )
+
+                        } else {
+                            binding.txtBookingStatus.setText("${bookingDuration}")
+                        }
                         binding.customCalendarView.visibility = View.GONE
-                        setMargins(true)
+                       // setMargins(true)
 
                     }
                     adopter?.setBookingStatus(bookingStatus)

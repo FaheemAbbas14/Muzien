@@ -86,27 +86,27 @@ class FragmentSaloonInfo :
             nextFragment.systemWindow = true
             nextFragment.isEdit = true
             nextFragment.saloonId = selectedSaloonDetails?.id?.toInt()!!
-            (activity as HomeActivity?)?.loadFragment(nextFragment)
+            (activity as HomeActivity?)?.loadFragment(nextFragment,true)
         }
         binding.imgAddWorkingHour.setOnClickListener {
             var nextFragment = FragmentAddWorkingDay()
             nextFragment.isEdit = true
             nextFragment.systemWindow = true
             nextFragment.saloonId = selectedSaloonDetails?.id?.toInt()!!
-            (activity as HomeActivity?)?.loadFragment(nextFragment)
+            (activity as HomeActivity?)?.loadFragment(nextFragment,true)
         }
         binding.imgEditAbout.setOnClickListener {
             var nextFragment = EditSaloonAbout()
             nextFragment.about = selectedSaloonDetails?.description ?: ""
             nextFragment.saloonId = selectedSaloonDetails?.id?.toInt()!!
             nextFragment.phone = selectedSaloonDetails!!.phoneNumber
-            (activity as HomeActivity?)?.loadFragment(nextFragment)
+            (activity as HomeActivity?)?.loadFragment(nextFragment,true)
         }
         binding.imgEditContact.setOnClickListener {
             var nextFragment = EditSaloonContact()
             nextFragment.phone = selectedSaloonDetails?.phoneNumber ?: ""
             nextFragment.saloonId = selectedSaloonDetails?.id?.toInt()!!
-            (activity as HomeActivity?)?.loadFragment(nextFragment)
+            (activity as HomeActivity?)?.loadFragment(nextFragment,true)
         }
         binding.imgEditAddress.setOnClickListener {
             var nextFragment = FragmentSearchAddress()
@@ -115,7 +115,7 @@ class FragmentSaloonInfo :
             nextFragment.selectedAddress = selectedSaloonDetails?.address ?: ""
             nextFragment.latitude = selectedSaloonDetails?.locationLat?.toDouble()!!
             nextFragment.longitude = selectedSaloonDetails?.locationLong?.toDouble()!!
-            (activity as HomeActivity?)?.loadFragment(nextFragment)
+            (activity as HomeActivity?)?.loadFragment(nextFragment,true)
         }
         // Initialize the SupportMapFragment and request the map.
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
