@@ -16,6 +16,8 @@ import android.location.Location
 import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
@@ -26,7 +28,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.FrameLayout
 import android.widget.ListView
 import android.widget.PopupWindow
 import androidx.annotation.RequiresApi
@@ -84,6 +85,7 @@ class FragmentSearchAddress :
     var selectedAddress: String = ""
     var latitude: Double = 0.0
     var longitude: Double = 0.0
+    var placeId: String = ""
     var isEdit = false
     var saloonId: Int = 0
     var isUserTyping = true
@@ -179,8 +181,8 @@ class FragmentSearchAddress :
             mMap.setOnMyLocationButtonClickListener(this)
             checkGPSAndProceed()
         } else {
-            ActivityCompat.requestPermissions(
-                requireActivity(),
+
+            requestPermissions(
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 LOCATION_PERMISSION_REQUEST_CODE
             )
@@ -225,7 +227,10 @@ class FragmentSearchAddress :
             fusedLocationClient.lastLocation
                 .addOnSuccessListener { location: Location? ->
                     location?.let {
-                        Log.d("currentLocation","latitude ${location.latitude} longitude ${location.longitude}")
+                        Log.d(
+                            "currentLocation",
+                            "latitude ${location.latitude} longitude ${location.longitude}"
+                        )
                         lastSelectedAddress = LatLng(location.latitude, location.longitude)
                         setAddress(LatLng(location.latitude, location.longitude))
 
@@ -239,7 +244,7 @@ class FragmentSearchAddress :
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
-        grantResults: IntArray
+        grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
@@ -336,6 +341,7 @@ class FragmentSearchAddress :
                 selectedAddress = placeDetails.address
                 latitude = placeDetails.latLng.latitude
                 longitude = placeDetails.latLng.longitude
+                placeId=placeIds[position]
                 updateMarkerLocation(placeDetails.latLng.latitude, placeDetails.latLng.longitude)
                 setAddressData()
             }
@@ -348,7 +354,7 @@ class FragmentSearchAddress :
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if (isUserTyping) { // Only fetch suggestions if the user is typing
                     val query = s.toString()
-                    if (query.isNotEmpty()) {
+                    if (query.isNotEmpty() && !placeIds.contains(placeId)) {
                         fetchPlaces(query) { places ->
 
                             suggestionList.clear()
@@ -366,6 +372,7 @@ class FragmentSearchAddress :
                             }
                         }
                     } else {
+                        placeId=""
                         suggestionList.clear()
                         adapter.notifyDataSetChanged()
                         popupWindow.dismiss()
@@ -464,7 +471,7 @@ class FragmentSearchAddress :
 
     override fun getFragmentBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = FragmentSearchAddressBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
@@ -478,6 +485,7 @@ class FragmentSearchAddress :
         (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, true)
         (activity as HomeActivity?)?.hideTabs()
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
@@ -487,6 +495,7 @@ class FragmentSearchAddress :
             (activity as HomeActivity?)?.hideTabs()
         }
     }
+
     private fun updateSaloon() {
         viewModel.addSaloon.observe(viewLifecycleOwner) {
 
@@ -500,7 +509,7 @@ class FragmentSearchAddress :
 //                        } else {
                         requireView().snackbar("Saloon updated successfully")
                         (activity as HomeActivity?)?.hideLoadingIndicator()
-                        Appelement.reload=true
+                        Appelement.reload = true
                         (activity as HomeActivity?)?.popFragment()
                         //  }
                     } else {
@@ -534,7 +543,7 @@ class FragmentSearchAddress :
     private fun onCameraMove() {
         if (mMap != null) {
             val target = mMap.cameraPosition.target
-            if (marker!=null) {
+            if (marker != null) {
                 marker!!.position = target
             }
             job?.cancel()
@@ -566,7 +575,10 @@ class FragmentSearchAddress :
     private fun setAddress(addressLatLng: LatLng) {
         try {
 
-            Log.d("currentLocation","selected latitude ${addressLatLng.latitude} longitude ${addressLatLng.longitude}")
+            Log.d(
+                "currentLocation",
+                "selected latitude ${addressLatLng.latitude} longitude ${addressLatLng.longitude}"
+            )
             var address =
                 getAddressFromLatLng(
                     addressLatLng,

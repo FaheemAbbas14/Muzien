@@ -12,73 +12,66 @@ import java.util.Locale
  * faheem.abbas@bajcotechnologies.com
  * +923115284424
  */
+
 class FragmentNavigator {
+
     fun loadFragment(
         newFragment: Fragment,
         fragmentManager: FragmentManager,
-        container: Int? = R.id.fragment_container,
-        usedVerticallyAnimation: Boolean = false,
+        container: Int = R.id.fragment_container,
+        usedVerticalAnimation: Boolean = false,
     ) {
         val transaction = fragmentManager.beginTransaction()
-        if (!usedVerticallyAnimation) {
+        val tag = newFragment::class.java.simpleName
+
+        if (!usedVerticalAnimation) {
             val isArabic = Locale.getDefault().language == "ar"
             if (isArabic) {
+                // Right-to-left animations
                 transaction.setCustomAnimations(
-                    R.anim.fragment_out,
-                    R.anim.fragment_out,
-                    R.anim.fragment_enter,
-                    R.anim.fragment_enter
+                    R.anim.fragment_enter_rtl,
+                    R.anim.fragment_exit_rtl,
+                    R.anim.fragment_pop_enter_rtl,
+                    R.anim.fragment_pop_exit_rtl
                 )
             } else {
-                // Set custom animations  left to right
+                // Left-to-right animations
                 transaction.setCustomAnimations(
                     R.anim.fragment_enter,
-                    R.anim.fragment_enter,
-                    R.anim.fragment_out,
-                    R.anim.fragment_out
+                    R.anim.fragment_exit,
+                    R.anim.fragment_pop_enter,
+                    R.anim.fragment_pop_exit
                 )
             }
         } else {
-            // Set custom animations  bottom to top
+            // Bottom-to-top animations
             transaction.setCustomAnimations(
                 R.anim.fragment_enter_bottom,
-                R.anim.fragment_enter_bottom,
-                R.anim.fragment_out_bottom,
-                R.anim.fragment_out_bottom
+                R.anim.fragment_exit_bottom,
+                R.anim.fragment_pop_enter_bottom,
+                R.anim.fragment_pop_exit_bottom
             )
         }
-        // Optional: Hide the currently visible fragment
-        fragmentManager.fragments
-            .filter { it.isVisible }
-            .forEach { transaction.hide(it) }
 
-        val tag = newFragment::class.java.simpleName
-        transaction.add(container!!, newFragment, tag)
-        transaction.addToBackStack(tag)
+        // Check if fragment already exists
+        val existingFragment = fragmentManager.findFragmentByTag(tag)
+        if (existingFragment != null) {
+            // Show existing instead of adding new
+            fragmentManager.fragments.filter { it.isVisible }.forEach { transaction.hide(it) }
+            transaction.show(existingFragment)
+        } else {
+            // Hide current and add new
+            fragmentManager.fragments.filter { it.isVisible }.forEach { transaction.hide(it) }
+            transaction.add(container, newFragment, tag)
+            transaction.addToBackStack(tag)
+        }
+
         transaction.commit()
     }
 
-    fun popFragment(supportFragmentManager: FragmentManager) {
-        try {
-            val transaction = supportFragmentManager.beginTransaction()
-
-            // Set custom animations  left to right
-            // transaction.setCustomAnimations(R.anim.fragment_enter, R.anim.fragment_out)
-            // Set custom animations  bottom to top
-            transaction.setCustomAnimations(
-                R.anim.fragment_enter_bottom,
-                R.anim.fragment_out_bottom
-            )
-
-// Pop the fragment from the back stack
-            supportFragmentManager.popBackStackImmediate()
-
-// Commit the transaction
-            transaction.commit()
-        } catch (e: Exception) {
-            e.printStackTrace()
+    fun popFragment(fragmentManager: FragmentManager) {
+        if (fragmentManager.backStackEntryCount > 0) {
+            fragmentManager.popBackStack()
         }
     }
-
-
 }

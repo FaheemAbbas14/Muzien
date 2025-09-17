@@ -26,9 +26,11 @@ import com.tt.muzien.ui.saloon.SaloonViewModel
 import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.TimeHelper
+import com.tt.muzien.utilities.TimeHelper.convertArabicDigitsToEnglish
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
+import java.util.Locale
 
 
 class FragmentAddWorkingDay :
@@ -198,11 +200,18 @@ class FragmentAddWorkingDay :
             context,
             { _, selectedHour, selectedMinute ->
                 var formattedTime = String.format("%02d:%02d", selectedHour, selectedMinute)
-
+                val isArabic = Locale.getDefault().language == "ar"
                 if (isStart) {
                     startTime = formattedTime
+                    if (isArabic) {
+                        startTime = convertArabicDigitsToEnglish(startTime ?: "")
+                    }
+
                 } else {
                     endTime = formattedTime
+                    if (isArabic) {
+                        endTime = convertArabicDigitsToEnglish(endTime ?: "")
+                    }
                 }
                 textView.text = TimeHelper.convertTo12Hours(formattedTime)
                 if (startTime != "" && endTime != "") {

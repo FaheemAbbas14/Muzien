@@ -200,6 +200,7 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
     private fun handlePaymentResult(result: PaymentResult) {
         when (result) {
             is PaymentResult.Completed -> {
+                Log.d("MuzienPayment","Payment success ${result.payment}")
                 handleCompletedPayment(result.payment)
             }
 
@@ -207,6 +208,7 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
                 (activity as HomeActivity?)?.hideLoadingIndicator()
                 // Show error
                 val error = result.error
+                Log.d("MuzienPayment","Payment failed with ${error}")
                 // Handle the error (e.g., Toast or dialog)
                 Toast.makeText(requireContext(), "Payment failed with ${error}", Toast.LENGTH_SHORT)
                     .show()
@@ -218,6 +220,7 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
             }
 
             PaymentResult.Canceled -> {
+                Log.d("MuzienPayment","Payment cancelled")
                 (activity as HomeActivity?)?.hideLoadingIndicator()
                 Toast.makeText(requireContext(), "Payment cancelled", Toast.LENGTH_SHORT).show()
                 (activity as HomeActivity?)?.popFragment()
@@ -366,20 +369,22 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
 
             when (it) {
                 is Resource.Success -> {
-                    (activity as HomeActivity?)?.popFragment()
-                    (activity as HomeActivity?)?.popFragment()
-                    (activity as HomeActivity?)?.popFragment()
-                    //if (isStcPayment) {
-                        (activity as HomeActivity?)?.popFragment()
-                   // }
+
                     Log.d("response", "success " + it.toString())
                     Appelement.reload = true
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
-                        requireView().snackbar("Subscription added successfully")
+                        Toast.makeText(requireContext(), "Subscription added successfully", Toast.LENGTH_SHORT).show()
                     } else {
-                        requireView().snackbar(it.value.message)
+                        Toast.makeText(requireContext(), it.value.message, Toast.LENGTH_SHORT).show()
+
                     }
+                    (activity as HomeActivity?)?.popFragment()
+                    (activity as HomeActivity?)?.popFragment()
+                    (activity as HomeActivity?)?.popFragment()
+                    //if (isStcPayment) {
+                    (activity as HomeActivity?)?.popFragment()
+                    // }
                 }
 
                 is Resource.Failure -> {
@@ -398,7 +403,7 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
             payDto?.saloonId ?: 0,
             AddSubscriptionRequest(
                 transactionId,
-                (payDto?.discountedPrice ?: 0) / 100 ?: 0,
+                payDto?.discountedPrice?:0,
                 startDate,
                 endDate,
                 payDto?.planId ?: 0

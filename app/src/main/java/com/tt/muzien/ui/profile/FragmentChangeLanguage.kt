@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -33,6 +34,14 @@ class FragmentChangeLanguage() : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val spinnerLanguage: Spinner = view.findViewById(R.id.spinnerLanguage)
+        ArrayAdapter.createFromResource(
+            requireContext(),
+            R.array.language_options,
+            R.layout.spinner_item // custom layout
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinnerLanguage.adapter = adapter
+        }
         val btnConfirm: Button = view.findViewById(R.id.btnConfirm)
         // Set up button actions
         btnConfirm.setOnClickListener {

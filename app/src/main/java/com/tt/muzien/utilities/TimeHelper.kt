@@ -263,11 +263,16 @@ object TimeHelper {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun convertTo12Hours(time: String): String {
+    fun convertTo12Hours(timeStr: String): String {
+        var timeFinal = timeStr
+        val isArabic = Locale.getDefault().language == "ar"
+        if (isArabic) {
+            timeFinal = convertArabicDigitsToEnglish(timeFinal ?: "")
+        }
         val inputFormatter = DateTimeFormatter.ofPattern("HH:mm")
         val outputFormatter = DateTimeFormatter.ofPattern("hh:mm a")
 
-        val time = LocalTime.parse(time, inputFormatter)
+        val time = LocalTime.parse(timeFinal, inputFormatter)
         val converted = time.format(outputFormatter)
         return converted
     }
