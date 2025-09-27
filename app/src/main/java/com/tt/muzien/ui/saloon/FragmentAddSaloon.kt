@@ -23,6 +23,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -38,8 +39,6 @@ import com.tt.muzien.data.repository.SaloonRepository
 import com.tt.muzien.data.requests.HolidayData
 import com.tt.muzien.data.requests.WorkHourData
 import com.tt.muzien.data.responses.AddSaloon
-import com.tt.muzien.data.responses.SaloonData
-import com.tt.muzien.data.responses.SaloonInfo
 import com.tt.muzien.databinding.FragmentAddSaloonBinding
 import com.tt.muzien.ui.adapters.HolidayListAdapter
 import com.tt.muzien.ui.adapters.ImagesListAdopter
@@ -80,6 +79,14 @@ class FragmentAddSaloon :
     var country: String = ""
     var saloonId: Int = 0
     var selectedSaloon: AddSaloon? = null
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                openGallery()
+            } else {
+                // Permission denied
+            }
+        }
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -106,7 +113,8 @@ class FragmentAddSaloon :
             binding.txtCountryCode.text = "+$countryCode"
             AddSaloonData.country = "+$countryCode"
             binding.edtPhoneNumber.hint =
-                Editable.Factory.getInstance().newEditable(InputValidator.getPhoneNumberPlaceholder(binding.countrySpinner.selectedCountryNameCode))
+                Editable.Factory.getInstance()
+                    .newEditable(InputValidator.getPhoneNumberPlaceholder(binding.countrySpinner.selectedCountryNameCode))
 
             checkValidation()
         }
@@ -205,7 +213,8 @@ class FragmentAddSaloon :
     private fun checkValidation(): Boolean {
         var isValid = false
         var phone =
-            binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString().replace(" ", "")
+            binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString()
+                .replace(" ", "")
         if (AddSaloonData.addressLng != 0.0 && AddSaloonData.addressLat != 0.0 && binding.edtName.text.toString() != "" && binding.edtDescription.text.toString() != "" && phone != "" && InputValidator.isValidPhoneNumber(
                 country, binding.edtPhoneNumber.text.toString().replace(" ", "")
             )
@@ -216,10 +225,13 @@ class FragmentAddSaloon :
     }
 
     private fun uploadImage() {
-        if (checkPermissions()) {
-            // showImagePickerDialog()
-            openGallery()
-        }
+
+// Usage
+        requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+//        if (checkPermissions()) {
+//            // showImagePickerDialog()
+//            openGallery()
+//        }
     }
 
     private fun showImagePickerDialog() {
@@ -453,7 +465,8 @@ class FragmentAddSaloon :
         if (AddSaloonData.country != null) {
             binding.countrySpinner.setCountryForPhoneCode(Integer.parseInt(AddSaloonData.country))
             binding.edtPhoneNumber.hint =
-                Editable.Factory.getInstance().newEditable(InputValidator.getPhoneNumberPlaceholder(binding.countrySpinner.selectedCountryNameCode))
+                Editable.Factory.getInstance()
+                    .newEditable(InputValidator.getPhoneNumberPlaceholder(binding.countrySpinner.selectedCountryNameCode))
 
         }
     }
@@ -468,7 +481,7 @@ class FragmentAddSaloon :
                     "${AddSaloonData.startTime} - ${AddSaloonData.endTime}"
                 )
             )
-            workingHourList= Helper.sortWorkingHoursByWeekday(workingHourList)
+            workingHourList = Helper.sortWorkingHoursByWeekday(workingHourList)
         }
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(position: Int) {
@@ -558,7 +571,7 @@ class FragmentAddSaloon :
                 is Resource.Success -> {
                     Log.d("response", "success " + it.toString())
                     if (it.value.status != 0) {
-                        selectedSaloon=it.value.data
+                        selectedSaloon = it.value.data
                         AddSaloonData.clear()
                         requireView().snackbar("Saloon added successfully")
                         getPlans()
@@ -611,7 +624,8 @@ class FragmentAddSaloon :
                 )
         }
         var phone =
-            binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString().replace(" ", "")
+            binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString()
+                .replace(" ", "")
 
         // Create text-based request bodies
         val name =
@@ -647,12 +661,12 @@ class FragmentAddSaloon :
         val holidaysParts = mutableMapOf<String, RequestBody>()
         // Convert each user object into separate form-data fields
         holidays.forEachIndexed { index, holiday ->
-            var startTime=holiday.startTime
-            var endTime=holiday.endTime
+            var startTime = holiday.startTime
+            var endTime = holiday.endTime
             val isArabic = Locale.getDefault().language == "ar"
-            if (isArabic){
-                startTime= TimeHelper.convertArabicDigitsToEnglish(startTime)
-                endTime= TimeHelper.convertArabicDigitsToEnglish(endTime)
+            if (isArabic) {
+                startTime = TimeHelper.convertArabicDigitsToEnglish(startTime)
+                endTime = TimeHelper.convertArabicDigitsToEnglish(endTime)
             }
             holidaysParts["SaloonHolidays[$index][startDate]"] =
                 RequestBody.create("text/plain".toMediaTypeOrNull(), startTime)
@@ -705,9 +719,9 @@ class FragmentAddSaloon :
                                         plan.id.toInt(),
                                         selectedSaloon?.name ?: "",
                                         plan.name,
-                                        plan.actualFee.toInt() ,
-                                        (plan.actualFee - plan.discountedFee).toInt() ,
-                                        plan.discountedFee.toInt() ,
+                                        plan.actualFee.toInt(),
+                                        (plan.actualFee - plan.discountedFee).toInt(),
+                                        plan.discountedFee.toInt(),
                                         plan.currency,
                                         plan.durationInDays.toInt()
                                     )

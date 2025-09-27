@@ -11,6 +11,7 @@ import com.tt.muzien.R
 import com.tt.muzien.data.dto.WorkingHourData
 import com.tt.muzien.utilities.Helper
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
+import java.util.Locale
 
 
 /**
@@ -25,6 +26,7 @@ class WorkingHoursAdapter(
     private val listener: OnItemClickListner,
 ) :
     RecyclerView.Adapter<WorkingHoursAdapter.MyViewHolder>() {
+    var DaysHasmap = HashMap<String, String>()
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
@@ -47,7 +49,13 @@ class WorkingHoursAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         var itemView = LayoutInflater.from(parent.context)
             .inflate(R.layout.working_hour_item, parent, false)
-
+        DaysHasmap.put("Monday", "الاثنين")
+        DaysHasmap.put("Tuesday", "الثلاثاء")
+        DaysHasmap.put("Wednesday", "الأربعاء")
+        DaysHasmap.put("Thursday", "الخميس")
+        DaysHasmap.put("Friday", "الجمعة")
+        DaysHasmap.put("Saturday", "السبت")
+        DaysHasmap.put("Sunday", "الأحد")
         return MyViewHolder(itemView)
     }
 
@@ -55,6 +63,9 @@ class WorkingHoursAdapter(
         var item: WorkingHourData = itemList[position]
 
         holder.txtTitle.text = Helper.capitalizeFirstWord(item.title)
+        if (Locale.getDefault().language == "ar") {
+            holder.txtTitle.text = DaysHasmap[Helper.capitalizeFirstWord(item.title)]
+        }
         holder.txtTiming.text = item.hours
         holder.imgMinus.setOnClickListener {
             listener.onItemClick(position)

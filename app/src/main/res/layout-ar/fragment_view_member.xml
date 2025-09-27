@@ -145,6 +145,7 @@
                         android:layout_height="0dp"
                         android:textFontWeight="400"
                         android:textSize="12sp"
+                        app:ccp_defaultLanguage="ARABIC"
                         app:ccpDialog_textColor="@color/black_shade1"
                         app:ccp_clickable="false"
                         app:ccp_defaultNameCode="SA"

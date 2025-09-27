@@ -76,7 +76,7 @@
     <string name="service_name">اسم الخدمة</string>
     <string name="_45_mins">45 دقيقة</string>
     <string name="duration">المدة</string>
-    <string name="sar">SAR</string>
+    <string name="sar">ريال</string>
     <string name="_20">20</string>
     <string name="price">السعر</string>
     <string name="save_amp_add_new"><![CDATA[حفظ واضافة جديد]]></string>
@@ -303,4 +303,6 @@
     <string name="profile_updated">تم تحديث البروفايل</string>
     <string name="write_the_name_of_your_saloon">اكتب اسم صالونك</string>
     <string name="write_about_your_saloon">اكتب حول صالونك.</string>
+    <string name="closing_time_must_be_after_opening_time">يجب أن يكون وقت الإغلاق بعد وقت الافتتاح</string>
+    <string name="didn_t_receive_code_resend">لم تستلم الرمز؟ أعد الإرسال </string>
 </resources>

@@ -119,7 +119,21 @@ class ServiceUpdateListAdopter(
             holder.txtPriceLabel.visibility = View.GONE
         }
 
+        // ✅ Fix: Ensure EditText scrolls into view when focused
+        holder.edtPrice.setOnFocusChangeListener { view, hasFocus ->
+            if (hasFocus) {
+                // Find the NestedScrollView parent
+                var parentView = holder.itemView.parent
+                while (parentView != null && parentView !is androidx.core.widget.NestedScrollView) {
+                    parentView = (parentView as? View)?.parent
+                }
 
+                val nestedScrollView = parentView as? androidx.core.widget.NestedScrollView
+                nestedScrollView?.post {
+                    nestedScrollView.smoothScrollTo(0, holder.itemView.top + holder.edtPrice.top)
+                }
+            }
+        }
         holder.edtPrice.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(
                 s: CharSequence?,

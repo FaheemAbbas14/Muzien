@@ -65,7 +65,6 @@ class FragmentNavigator {
             transaction.add(container, newFragment, tag)
             transaction.addToBackStack(tag)
         }
-
         transaction.commit()
     }
 

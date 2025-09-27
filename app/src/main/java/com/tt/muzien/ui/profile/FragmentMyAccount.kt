@@ -246,6 +246,8 @@ class FragmentMyAccount : BaseFragment<HomeViewModel, FragmentMyAccountBinding, 
     }
 
     private fun updateProfile(name: String, email: String) {
+        LoggedInInfo.user?.fullName=name
+        LoggedInInfo.user?.email=email
         viewModel.updateUser.observe(viewLifecycleOwner) {
 
             when (it) {

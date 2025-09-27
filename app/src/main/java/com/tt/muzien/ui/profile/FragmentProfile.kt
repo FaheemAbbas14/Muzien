@@ -13,6 +13,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
@@ -43,6 +44,14 @@ class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, Home
     private val REQUEST_GALLERY = 2
     private val REQUEST_PERMISSIONS = 3
     private var image_uri: Uri? = null
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                showImagePickerDialog()
+            } else {
+                // Permission denied
+            }
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -150,9 +159,7 @@ class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, Home
     }
 
     private fun uploadImage() {
-        if (checkPermissions()) {
-            showImagePickerDialog()
-        }
+        requestPermissionLauncher.launch(Manifest.permission.CAMERA)
     }
 
     private fun showImagePickerDialog() {
@@ -311,6 +318,7 @@ class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, Home
         super.onHiddenChanged(hidden)
         if (!hidden) {
             (activity as HomeActivity?)?.hideTabs()
+            setUserData()
         }
     }
 }

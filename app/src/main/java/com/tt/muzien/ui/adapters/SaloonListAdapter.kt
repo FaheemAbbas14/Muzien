@@ -88,7 +88,7 @@ class SaloonListAdapter(
                         context.theme
                     )
                 )
-                holder.txtStatusTexts.text = "open today"
+                holder.txtStatusTexts.text = context.resources.getString(R.string.open)
                 holder.llTimes.visibility = View.VISIBLE
                 holder.cnstMain.setBackgroundColor(context.resources.getColor(R.color.white))
             } else {
@@ -99,7 +99,7 @@ class SaloonListAdapter(
                         context.theme
                     )
                 )
-                holder.txtStatusTexts.text = "close today"
+                holder.txtStatusTexts.text = context.resources.getString(R.string.closed)
                 holder.llTimes.visibility = View.GONE
                 holder.cnstMain.setBackgroundColor(context.resources.getColor(R.color.white))
             }
@@ -112,7 +112,7 @@ class SaloonListAdapter(
                     context.theme
                 )
             )
-            holder.txtStatusTexts.text = "inactive"
+            holder.txtStatusTexts.text = context.resources.getString(R.string.inactive)
             holder.llTimes.visibility = View.GONE
             holder.cnstMain.setBackgroundColor(context.resources.getColor(R.color.overduebg))
 

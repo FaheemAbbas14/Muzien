@@ -73,7 +73,9 @@ class FragmentAddAdminServices :
 
             }
         })
-        getServices()
+        if (LoggedInInfo.user != null && LoggedInInfo.user?.saloonId != null) {
+            getServices()
+        }
     }
 
     private fun setServicesListAdaptor() {
@@ -160,7 +162,7 @@ class FragmentAddAdminServices :
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
                         userServices.clear()
-                       // ServicesMap.clear()
+                        // ServicesMap.clear()
                         for (service in it.value.data) {
                             if (!userServices.contains(service.service.name)) {
                                 userServices.add(service.service.name)
@@ -260,7 +262,8 @@ class FragmentAddAdminServices :
 
         //}
         viewModel.addService(
-            LoggedInInfo.user?.id?.toInt()!!, AddMemberService(serviceId = ServicesMap[selectedService].toString() ?: "0")
+            LoggedInInfo.user?.id?.toInt()!!,
+            AddMemberService(serviceId = ServicesMap[selectedService].toString() ?: "0")
         )
         (activity as HomeActivity?)?.showLoadingIndicator()
     }

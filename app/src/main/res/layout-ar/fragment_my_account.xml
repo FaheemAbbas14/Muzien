@@ -91,9 +91,29 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 app:ccp_showFlag="true"
+                app:ccp_defaultLanguage="ARABIC"
                 app:ccp_showFullName="false"
                 app:ccp_showNameCode="false"
                 app:ccp_showPhoneCode="false" />
+
+            <EditText
+                android:id="@+id/edtPhoneNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:fontFamily="@font/manrope_regular"
+                android:hint="000 000 0000"
+                android:gravity="center|left"
+                android:paddingTop="5dp"
+                android:paddingStart="5dp"
+                android:inputType="phone"
+                android:layoutDirection="ltr"
+                android:minWidth="20dp"
+                android:textColor="@color/colorTextDefault"
+                android:textDirection="ltr"
+                android:textFontWeight="600"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/txtCountryCode"
@@ -105,23 +125,6 @@
                 android:gravity="center"
                 android:hint="@string/_966"
                 android:inputType="phone"
-                android:textColor="@color/colorTextDefault"
-                android:textFontWeight="600"
-                android:textSize="16sp" />
-
-            <EditText
-                android:id="@+id/edtPhoneNumber"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginLeft="5dp"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:fontFamily="@font/manrope_regular"
-                android:gravity="center|right"
-                android:hint=""
-                android:inputType="phone"
-                android:paddingEnd="10dp"
                 android:textColor="@color/colorTextDefault"
                 android:textFontWeight="600"
                 android:textSize="16sp" />

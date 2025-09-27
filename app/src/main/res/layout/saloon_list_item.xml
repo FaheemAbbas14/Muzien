@@ -38,6 +38,7 @@
             android:textColor="@color/colorTextDefault"
             android:textSize="14sp"
             android:textFontWeight="700"
+            android:gravity="center|left"
             app:layout_constraintEnd_toStartOf="@+id/llStatus"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imgIcon" />

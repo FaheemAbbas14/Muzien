@@ -19,6 +19,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -54,6 +55,15 @@ class FragmentSignup : BaseFragment<AuthViewModel, FragmentSignupBinding, AuthRe
     private val REQUEST_PERMISSIONS = 3
     private var image_uri: Uri? = null
     var closeApp: Boolean = false
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                openGallery()
+            } else {
+                // Permission denied
+            }
+        }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         (activity as AuthActivity?)?.changeBackground(Color.WHITE)
@@ -227,10 +237,7 @@ class FragmentSignup : BaseFragment<AuthViewModel, FragmentSignupBinding, AuthRe
         }
     }
     private fun uploadImage() {
-        if (checkPermissions()) {
-            // showImagePickerDialog()
-            openGallery()
-        }
+        requestPermissionLauncher.launch(Manifest.permission.CAMERA)
     }
 
     private fun showImagePickerDialog() {

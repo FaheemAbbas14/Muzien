@@ -20,6 +20,7 @@ import android.view.Window
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -64,6 +65,15 @@ class FragmentAddSaloonServices :
     var service: ServiceInfo? = null
     var saveAdd = false
     var duration = "0 mins"
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                openGallery()
+            } else {
+                // Permission denied
+            }
+        }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setSaloonRepo((activity as HomeActivity?)?.getSaloonRepo()!!)
@@ -165,6 +175,7 @@ class FragmentAddSaloonServices :
             var nextFragment = FragmentUpdateService()
             nextFragment.service = service
             nextFragment.category = category
+            nextFragment.isFromAdd=true
             nextFragment.saloonId = saloonId.toString()
             (activity as HomeActivity?)?.loadFragment(nextFragment)
             // Add your logic here (e.g., enable the service)
@@ -243,10 +254,7 @@ class FragmentAddSaloonServices :
     }
 
     private fun uploadImage() {
-        if (checkPermissions()) {
-            // showImagePickerDialog()
-            openGallery()
-        }
+        requestPermissionLauncher.launch(Manifest.permission.CAMERA)
     }
 
     private fun showImagePickerDialog() {
@@ -462,6 +470,7 @@ class FragmentAddSaloonServices :
                                 var nextFragment = FragmentUpdateService()
                                 nextFragment.service = service
                                 nextFragment.category = category
+                                nextFragment.isFromAdd=true
                                 nextFragment.saloonId = saloonId.toString()
                                 (activity as HomeActivity?)?.loadFragment(nextFragment)
                             }

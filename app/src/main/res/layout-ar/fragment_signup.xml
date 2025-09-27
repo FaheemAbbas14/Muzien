@@ -293,6 +293,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|left"
                     app:ccp_showFlag="true"
+                    app:ccp_defaultLanguage="ARABIC"
                     app:ccp_showFullName="true"
                     app:ccp_showNameCode="false"
                     app:ccp_showPhoneCode="false"

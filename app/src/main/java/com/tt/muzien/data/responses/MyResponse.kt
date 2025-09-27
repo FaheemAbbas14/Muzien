@@ -15,8 +15,8 @@ data class MyResponse(
 
 data class UserData(
     val id: Long,
-    val fullName: String,
-    val email: String,
+    var fullName: String,
+    var email: String,
     val phoneNumber: String,
     val nationality: String,
     val picture: String,

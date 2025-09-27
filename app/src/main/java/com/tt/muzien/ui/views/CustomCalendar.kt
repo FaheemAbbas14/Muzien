@@ -16,7 +16,7 @@ import java.util.Locale
 class CustomCalendar @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = 0
+    defStyleAttr: Int = 0,
 ) : LinearLayout(context, attrs, defStyleAttr) {
 
     interface OnDateSelectedListener {
@@ -78,7 +78,11 @@ class CustomCalendar @JvmOverloads constructor(
 
     private fun getDaysInMonth(): List<String> {
         val daysList = mutableListOf<String>()
-        val daysOfWeek = listOf("SAT", "SUN", "MON", "TUE", "WED", "THU", "FRI")
+        var daysOfWeek = listOf("SAT", "SUN", "MON", "TUE", "WED", "THU", "FRI")
+        if (Locale.getDefault().language == "ar") {
+            daysOfWeek =
+                listOf("السبت", "الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة")
+        }
         daysList.addAll(daysOfWeek)
 
         calendar.set(Calendar.DAY_OF_MONTH, 1)

@@ -30,10 +30,13 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
     private var filterApplied: Boolean = false
     private var status: String? = null
     private var tag: String? = null
+    var rolesMap = HashMap<String, String>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setSaloonRepo((activity as HomeActivity?)?.getSaloonRepo()!!)
         binding.swipeRefresh.recyclerView = binding.rcyMembers
+        rolesMap.put("salon-manager","Manager")
+        rolesMap.put("service-provider","Service Provider")
         tag=resources.getString(R.string.members)
         binding.swipeRefresh.setOnRefreshListener {
             // binding.swipeRefresh.isRefreshing = false
@@ -135,7 +138,7 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
                                     member.User.picture,
                                     member.isActive,
                                     member.User.fullName ?: "",
-                                    "",
+                                    rolesMap[member.User.role]!!,
                                     "${member.tRating} (${member.numReviews} ${
                                         if (member.numReviews.toInt() == 1) "review" else "reviews"
                                     })",

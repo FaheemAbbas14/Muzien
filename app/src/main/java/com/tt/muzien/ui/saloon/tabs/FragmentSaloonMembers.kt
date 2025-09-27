@@ -39,8 +39,11 @@ class FragmentSaloonMembers :
     private var status: String? = null
     private var tag: String? = null
     private var filterApplied: Boolean = false
+    var rolesMap = HashMap<String, String>()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        rolesMap.put("salon-manager","Manager")
+        rolesMap.put("service-provider","Service Provider")
         tag=resources.getString(R.string.members)
         getMembers()
         binding.imgFilter.setOnClickListener {
@@ -144,7 +147,7 @@ class FragmentSaloonMembers :
                                     member.User.picture ?: "",
                                     member.isActive,
                                     member.User.fullName ?: "Name",
-                                    "",
+                                    rolesMap[member.User.role]!!,
                                     "${member.tRating} (${member.numReviews} ${
                                         if (member.numReviews.toInt() == 1) "review" else "reviews"
                                     })",

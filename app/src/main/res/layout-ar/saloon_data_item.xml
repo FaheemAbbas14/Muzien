@@ -16,7 +16,7 @@
         android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:gravity="right"
+        android:gravity="center|right"
         app:layout_constraintEnd_toStartOf="@+id/salon_toggle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -28,7 +28,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:thumb="@drawable/custom_switch_thumb"
-        app:layout_constraintBottom_toBottomOf="@id/salon_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/salon_name"
         app:switchMinWidth="56dp"
@@ -58,7 +57,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:gravity="right"
             android:fontFamily="@font/manrope_regular"
             android:text="@string/rd_2121_alamal_dist_12643_riyadh_sa"
             android:textColor="@color/black_shade2"
@@ -73,6 +71,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:minHeight="50dp"
         android:background="@drawable/rounded_white_grey"
         android:orientation="horizontal"
         android:padding="8dp"
@@ -92,7 +91,7 @@
             android:popupBackground="@android:color/white"
             android:paddingEnd="10dp"
             android:textAlignment="viewStart"
-            android:gravity="center|right"
+            android:gravity="center|left"
             android:textDirection="locale"
             android:spinnerMode="dropdown" />
 
@@ -155,9 +154,9 @@
 
         <EditText
             android:id="@+id/edtPrice"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
+            android:layout_gravity="center|right"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:fontFamily="@font/manrope_regular"

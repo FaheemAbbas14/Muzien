@@ -49,6 +49,7 @@ import com.zabihah.ui.ui.interfaces.OnItemClickListner
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import java.time.LocalDate
 
 
 class FragmentSaloonInfo :
@@ -74,6 +75,7 @@ class FragmentSaloonInfo :
 //           // page=1
 //          getSaloons()
 //        }
+        binding.txtRenew.visibility = View.GONE
         getSaloons()
         binding.txtRenew.setOnClickListener {
             getPlans()
@@ -86,27 +88,27 @@ class FragmentSaloonInfo :
             nextFragment.systemWindow = true
             nextFragment.isEdit = true
             nextFragment.saloonId = selectedSaloonDetails?.id?.toInt()!!
-            (activity as HomeActivity?)?.loadFragment(nextFragment,true)
+            (activity as HomeActivity?)?.loadFragment(nextFragment, true)
         }
         binding.imgAddWorkingHour.setOnClickListener {
             var nextFragment = FragmentAddWorkingDay()
             nextFragment.isEdit = true
             nextFragment.systemWindow = true
             nextFragment.saloonId = selectedSaloonDetails?.id?.toInt()!!
-            (activity as HomeActivity?)?.loadFragment(nextFragment,true)
+            (activity as HomeActivity?)?.loadFragment(nextFragment, true)
         }
         binding.imgEditAbout.setOnClickListener {
             var nextFragment = EditSaloonAbout()
             nextFragment.about = selectedSaloonDetails?.description ?: ""
             nextFragment.saloonId = selectedSaloonDetails?.id?.toInt()!!
             nextFragment.phone = selectedSaloonDetails!!.phoneNumber
-            (activity as HomeActivity?)?.loadFragment(nextFragment,true)
+            (activity as HomeActivity?)?.loadFragment(nextFragment, true)
         }
         binding.imgEditContact.setOnClickListener {
             var nextFragment = EditSaloonContact()
             nextFragment.phone = selectedSaloonDetails?.phoneNumber ?: ""
             nextFragment.saloonId = selectedSaloonDetails?.id?.toInt()!!
-            (activity as HomeActivity?)?.loadFragment(nextFragment,true)
+            (activity as HomeActivity?)?.loadFragment(nextFragment, true)
         }
         binding.imgEditAddress.setOnClickListener {
             var nextFragment = FragmentSearchAddress()
@@ -115,7 +117,7 @@ class FragmentSaloonInfo :
             nextFragment.selectedAddress = selectedSaloonDetails?.address ?: ""
             nextFragment.latitude = selectedSaloonDetails?.locationLat?.toDouble()!!
             nextFragment.longitude = selectedSaloonDetails?.locationLong?.toDouble()!!
-            (activity as HomeActivity?)?.loadFragment(nextFragment,true)
+            (activity as HomeActivity?)?.loadFragment(nextFragment, true)
         }
         // Initialize the SupportMapFragment and request the map.
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
@@ -243,6 +245,14 @@ class FragmentSaloonInfo :
         setAboutData()
         setWorkingHourAdopter()
         setHolidaysAdopter()
+        if (selectedSaloonDetails!!.subscriptionExpiry != null) {
+            if (isDatePassed(selectedSaloonDetails!!.subscriptionExpiry)) {
+                binding.txtRenew.visibility = View.VISIBLE
+            }
+        }
+        else{
+            binding.txtRenew.visibility = View.VISIBLE
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -252,7 +262,7 @@ class FragmentSaloonInfo :
             binding.txtCertificateName.visibility = View.VISIBLE
             binding.txtUploadCertificate.visibility = View.GONE
             binding.txtUploadedAt.visibility = View.VISIBLE
-            binding.txtRenew.visibility = View.VISIBLE
+           // binding.txtRenew.visibility = View.VISIBLE
             binding.txtRenew.text = requireContext().resources.getString(R.string.renew)
             binding.txtUploadedAt.text =
                 TimeHelper.convertISOToDate(selectedSaloonDetails!!.createdAt, "yyyy-MM-dd HH:mm")
@@ -265,16 +275,24 @@ class FragmentSaloonInfo :
             binding.txtCertificateName.visibility = View.GONE
             // binding.txtUploadCertificate.visibility = View.VISIBLE
             binding.txtUploadedAt.visibility = View.GONE
-            binding.txtRenew.visibility = View.VISIBLE
+           // binding.txtRenew.visibility = View.VISIBLE
             //   binding.txtRenew.text = requireContext().resources.getString(R.string.add)
         }
         if (selectedSaloonDetails!!.subscriptionExpiry != null) {
             binding.txtCertificateExpiry.visibility = View.VISIBLE
             binding.txtCertificateExpiry.text =
                 "${resources.getString(R.string.subscription_expiry_date_12_12_25)} ${selectedSaloonDetails!!.subscriptionExpiry}"
+
         } else {
             binding.txtCertificateExpiry.visibility = View.GONE
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun isDatePassed(date: String): Boolean {
+        val today = LocalDate.now()                 // current date
+        val target = LocalDate.parse(date)  // your given date
+        return today.isAfter(target)                // true if current date > target
     }
 
     private fun setAddressData() {
@@ -413,7 +431,7 @@ class FragmentSaloonInfo :
                     if (it.value.status != 0) {
                         workingHourList.removeAt(position)
                         workingHoursAdopter?.notifyDataSetChanged()
-                       getSaloons()
+                        getSaloons()
                     } else {
                         requireView().snackbar(it.value.message)
                     }

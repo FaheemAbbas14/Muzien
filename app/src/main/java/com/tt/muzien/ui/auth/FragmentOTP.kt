@@ -260,11 +260,12 @@ class FragmentOTP : BaseFragment<AuthViewModel, FragmentOTPBinding, AuthReposito
         try {
 
 
-            var text = "Didn’t receive code? Resend ${
+            var text = getString(
+                R.string.didn_t_receive_code_resend,
                 if (timeFormatted != "") "in $timeFormatted" else {
                     ""
                 }
-            }"
+            )
             var spannableString = SpannableString(text)
 
             var start = 21

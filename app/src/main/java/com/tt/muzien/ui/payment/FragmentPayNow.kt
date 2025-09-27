@@ -79,9 +79,9 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
 
         }
         binding.txtTotalFee.text =
-            "${resources.getString(R.string.total_fee)}\n${(payDto?.discountedPrice ?: 0) / 100} ${payDto?.currency}"
+            "$${(payDto?.discountedPrice ?: 0) / 100} ${payDto?.currency}"
         binding.txtActualFee.text =
-            "${resources.getString(R.string.actual_fee)}\n${(payDto?.actualPrice ?: 0) / 100} ${payDto?.currency}"
+            "${(payDto?.actualPrice ?: 0) / 100} ${payDto?.currency}"
         binding.llPayNow.setOnClickListener {
 
         }

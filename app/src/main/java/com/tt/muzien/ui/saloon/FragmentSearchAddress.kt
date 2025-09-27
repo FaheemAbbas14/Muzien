@@ -352,36 +352,49 @@ class FragmentSearchAddress :
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (isUserTyping) { // Only fetch suggestions if the user is typing
-                    val query = s.toString()
-                    if (query.isNotEmpty() && !placeIds.contains(placeId)) {
-                        fetchPlaces(query) { places ->
+                val query = s?.toString()?.trim().orEmpty()
 
-                            suggestionList.clear()
-                            placeIds.clear()
-                            for (prediction in places) {
-                                placeIds.add(prediction.placeId)
-                                suggestionList.add(prediction.getPrimaryText(null).toString())
-                            }
+                when {
+                    // Case 1: typing (characters added)
+                    count > before -> {
+                        if (query.isNotEmpty() && !placeIds.contains(placeId)) {
+                            fetchPlaces(query) { places ->
+                                suggestionList.clear()
+                                placeIds.clear()
+                                for (prediction in places) {
+                                    placeIds.add(prediction.placeId)
+                                    suggestionList.add(prediction.getPrimaryText(null).toString())
+                                }
+                                adapter.notifyDataSetChanged()
 
-                            adapter.notifyDataSetChanged()
-
-                            // Show dropdown below EditText
-                            if (!popupWindow.isShowing) {
-                                popupWindow.showAsDropDown(binding.llSearch)
+                                if (!popupWindow.isShowing) {
+                                    popupWindow.showAsDropDown(binding.llSearch)
+                                }
                             }
                         }
-                    } else {
-                        placeId=""
-                        suggestionList.clear()
-                        adapter.notifyDataSetChanged()
-                        popupWindow.dismiss()
+                    }
+
+                    // Case 2: deleting (backspace pressed)
+                    before > count -> {
+                        if (query.isEmpty()) {
+                            // When all cleared
+                            placeId = ""
+                            suggestionList.clear()
+                            adapter.notifyDataSetChanged()
+                            popupWindow.dismiss()
+                        } else {
+                            // When deleting but not empty: clear old suggestions but don't call API
+                            suggestionList.clear()
+                            adapter.notifyDataSetChanged()
+                            popupWindow.dismiss()
+                        }
                     }
                 }
             }
 
             override fun afterTextChanged(s: Editable?) {}
         })
+
     }
 
     fun fetchPlaces(query: String, callback: (List<AutocompletePrediction>) -> Unit) {

@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.annotation.RequiresApi
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -43,6 +44,7 @@ class MembersListAdapter(
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
+        val mainLayout: ConstraintLayout = itemView.findViewById(R.id.mainLayout)
         val imgProfilePic: ImageView = itemView.findViewById(R.id.imgProfilePic)
         val txtName: TextView = itemView.findViewById(R.id.txtName)
         val llStatus: LinearLayout = itemView.findViewById(R.id.llStatus)
@@ -82,10 +84,11 @@ class MembersListAdapter(
         if (fromSaloon) {
             holder.llStyle.visibility = View.GONE
         }
+
         holder.txtName.text = item.name
         holder.txtBookings.text = "${item.bookings ?: 0} bookings today"
         holder.txtProfesstion.text = item.profession
-        holder.txtProfesstion.visibility = View.GONE
+       // holder.txtProfesstion.visibility = View.GONE
         holder.txtRating.text = item.rating
         holder.txtStyle.text = item.style
         if (item.isManger) {
@@ -122,6 +125,7 @@ class MembersListAdapter(
                 )
             )
             holder.txtStatusTexts.text = context.resources.getString(R.string.invitation_sent)
+            holder.mainLayout.alpha = 0.5f
         }
         // Implement the RequestListener here
         val iconRequestListener = object : RequestListener<Drawable> {

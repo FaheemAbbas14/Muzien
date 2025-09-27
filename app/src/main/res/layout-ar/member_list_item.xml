@@ -10,6 +10,7 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mainLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -175,7 +176,7 @@
                     android:fontFamily="@font/manrope_regular"
                     android:paddingStart="5dp"
                     android:text="@string/_4_bookings_today"
-                    android:textColor="@color/colorTextLabelDefault"
+                    android:textColor="@color/red_text"
                     android:textFontWeight="400"
                     android:textSize="12sp" />
             </LinearLayout>

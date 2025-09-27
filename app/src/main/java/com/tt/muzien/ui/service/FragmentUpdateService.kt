@@ -35,7 +35,6 @@ import com.tt.muzien.ui.saloon.tabs.FragmentAddSaloonServices
 import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.FilterSelection
-import kotlin.collections.arrayListOf
 
 
 class FragmentUpdateService :
@@ -43,6 +42,7 @@ class FragmentUpdateService :
     var service: ServiceInfo? = null
     var category: String? = null
     var saloonId: String? = "0"
+    var isFromAdd = false
     private val salonList = arrayListOf<ServiceSaloon>()
     var adapter: ServiceUpdateListAdopter? = null
     var serviceDetailsInfo: ServiceDetailsInfo? = null
@@ -128,7 +128,7 @@ class FragmentUpdateService :
 
     private fun setSaloonsAdapter() {
 
-        adapter = ServiceUpdateListAdopter(salonList,requireContext()) { position, isEnabled ->
+        adapter = ServiceUpdateListAdopter(salonList, requireContext()) { position, isEnabled ->
             binding.llSave.setBackgroundDrawable(resources.getDrawable(R.drawable.rounded_blue_100))
             binding.txtSave.setTextColor(resources.getColor(R.color.white))
 
@@ -141,6 +141,7 @@ class FragmentUpdateService :
             binding.rcySaloons.context,
             (binding.rcySaloons.layoutManager as LinearLayoutManager).orientation
         )
+
         binding.rcySaloons.addItemDecoration(dividerItemDecoration)
     }
 
@@ -243,7 +244,7 @@ class FragmentUpdateService :
                                             saloon.address,
                                             if (saloon.duration > 0) saloon.duration.toString() else serviceDetailsInfo?.duration.toString(),
                                             "SAR",
-                                            if(saloon.price>0) (saloon.price / 100).toString() else (serviceDetailsInfo?.price!! / 100).toString(),
+                                            if (saloon.price > 0) (saloon.price / 100).toString() else (serviceDetailsInfo?.price!! / 100).toString(),
                                             saloon.serviceEnabled
                                         )
                                     )
@@ -257,7 +258,7 @@ class FragmentUpdateService :
                                         saloon.address,
                                         if (saloon.duration > 0) saloon.duration.toString() else serviceDetailsInfo?.duration.toString(),
                                         "SAR",
-                                        if(saloon.price>0) (saloon.price / 100).toString() else (serviceDetailsInfo?.price!! / 100).toString(),
+                                        if (saloon.price > 0) (saloon.price / 100).toString() else (serviceDetailsInfo?.price!! / 100).toString(),
                                         saloon.serviceEnabled
                                     )
                                 )
@@ -293,10 +294,13 @@ class FragmentUpdateService :
                     if (it.value.status != 0) {
                         Appelement.reload = true
                         if (service != null) {
-
+                            if (isFromAdd) {
+                                (activity as HomeActivity?)?.popFragment()
+                            }
                             (activity as HomeActivity?)?.popFragment()
                             requireView().snackbar("Service updated successfully")
                         } else {
+                            (activity as HomeActivity?)?.popFragment()
                             (activity as HomeActivity?)?.popFragment()
                             (activity as HomeActivity?)?.popFragment()
                             requireView().snackbar("Service enabled successfully")

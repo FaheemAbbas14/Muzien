@@ -37,10 +37,10 @@ class FragmentOnBoarding :
             } else {
                 PreferenceManager.getInstance(requireContext())
                     .putBoolean(Keys.Tutorial_Shown, true)
-                (activity as AuthActivity?)?.popFragment()
-                (activity as AuthActivity?)?.popFragment()
-                (activity as AuthActivity?)?.popFragment()
-                (activity as AuthActivity?)?.popFragment()
+//                (activity as AuthActivity?)?.popFragment()
+//                (activity as AuthActivity?)?.popFragment()
+//                (activity as AuthActivity?)?.popFragment()
+//                (activity as AuthActivity?)?.popFragment()
                 (activity as AuthActivity?)?.loadFragment(FragmentSignIn())
             }
         }

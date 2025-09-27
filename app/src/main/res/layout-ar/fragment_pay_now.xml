@@ -110,7 +110,7 @@
             android:layout_marginEnd="30dp"
             android:fontFamily="@font/manrope_regular"
             android:gravity="center"
-            android:text=""
+            android:text="200 SAR"
             android:textColor="@color/green_text"
             android:textFontWeight="600"
             android:textSize="28sp" />
@@ -127,7 +127,7 @@
             android:textSize="14sp" />
     </LinearLayout>
     <TextView
-        android:id="@+id/txtActualFee"
+        android:id="@+id/txtActualFeeLabel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -136,20 +136,48 @@
         android:textColor="@color/colorTextLabelDefault"
         android:textFontWeight="700"
         android:textSize="16sp"
+        android:text="@string/actual_fee"
         app:layout_constraintStart_toStartOf="@+id/llDiscount"
+        app:layout_constraintTop_toBottomOf="@+id/llDiscount" />
+    <TextView
+        android:id="@+id/txtActualFee"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/manrope_regular"
+        android:gravity="center"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textFontWeight="700"
+        android:textSize="16sp"
+        android:text=""
+        app:layout_constraintStart_toStartOf="@+id/llDiscount"
+        app:layout_constraintTop_toBottomOf="@+id/txtActualFeeLabel" />
+    <TextView
+        android:id="@+id/txtTotalFeeLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/manrope_regular"
+        android:gravity="center"
+        android:text="@string/total_fee"
+        android:textColor="@color/colorTextLabelDefault"
+        android:textFontWeight="700"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/llDiscount"
         app:layout_constraintTop_toBottomOf="@+id/llDiscount" />
     <TextView
         android:id="@+id/txtTotalFee"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:fontFamily="@font/manrope_regular"
         android:gravity="center"
+        android:text=""
         android:textColor="@color/colorTextLabelDefault"
         android:textFontWeight="700"
         android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@+id/txtText"
-        app:layout_constraintTop_toBottomOf="@+id/llDiscount" />
+        app:layout_constraintEnd_toEndOf="@+id/llDiscount"
+        app:layout_constraintTop_toBottomOf="@+id/txtTotalFeeLabel" />
 
     <LinearLayout
         android:id="@+id/llGooglePay"

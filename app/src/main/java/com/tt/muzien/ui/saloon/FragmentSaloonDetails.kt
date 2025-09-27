@@ -201,7 +201,7 @@ class FragmentSaloonDetails :
                         requireContext().theme
                     )
                 )
-                binding.txtStatusTexts.text = "open today"
+                binding.txtStatusTexts.text = resources.getString(R.string.open)
                 binding.llTimes.visibility = View.VISIBLE
             } else {
                 binding.llStatus.setBackgroundDrawable(
@@ -211,7 +211,7 @@ class FragmentSaloonDetails :
                         requireContext().theme
                     )
                 )
-                binding.txtStatusTexts.text = "close today"
+                binding.txtStatusTexts.text = resources.getString(R.string.closed)
                 binding.llTimes.visibility = View.GONE
             }
         } else {
@@ -222,7 +222,7 @@ class FragmentSaloonDetails :
                     requireContext().theme
                 )
             )
-            binding.txtStatusTexts.text = "inactive"
+            binding.txtStatusTexts.text = resources.getString(R.string.inactive)
             binding.llTimes.visibility = View.GONE
         }
     }

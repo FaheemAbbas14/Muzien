@@ -62,6 +62,10 @@ class FragmentBookingFilter :
         if (!showServiceProvider || LoggedInInfo.user?.role == "salon-manager") {
             binding.llMainServiceProvider.visibility = View.GONE
         }
+        if (LoggedInInfo.user?.role == "service-provider") {
+            binding.rbPending.visibility = View.GONE
+            binding.dividerPending.visibility = View.GONE
+        }
         getSaloons()
         binding.radioBookingStatus.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
@@ -128,12 +132,13 @@ class FragmentBookingFilter :
             when (checkedId) {
                 R.id.rbAll -> {
                     selection = "All"
-                    fromDate=null
-                    toDate=null
+                    fromDate = null
+                    toDate = null
                     binding.llFrom.visibility = View.GONE
                     binding.llTo.visibility = View.GONE
                     binding.customCalendar.visibility = View.GONE
                 }
+
                 R.id.rbWeek -> {
                     selection = "Week"
                     val dates = TimeHelper.getWeekAndMonthDates()
@@ -219,14 +224,14 @@ class FragmentBookingFilter :
                     // binding.txtFromError.visibility = View.VISIBLE
                     binding.llTo.visibility = View.VISIBLE
                     fromDate = selectedDates.get(0)
-                    if (isArabic){
-                        fromDate= TimeHelper.convertArabicDigitsToEnglish(fromDate?:"")
+                    if (isArabic) {
+                        fromDate = TimeHelper.convertArabicDigitsToEnglish(fromDate ?: "")
                     }
                     binding.txtFrom.text = fromDate
                 } else {
-                    toDate = selectedDates.get(selectedDates.size-1)
-                    if (isArabic){
-                        toDate= TimeHelper.convertArabicDigitsToEnglish(toDate?:"")
+                    toDate = selectedDates.get(selectedDates.size - 1)
+                    if (isArabic) {
+                        toDate = TimeHelper.convertArabicDigitsToEnglish(toDate ?: "")
                     }
                     binding.txtTo.text = toDate
                 }
@@ -268,7 +273,7 @@ class FragmentBookingFilter :
 
     override fun getFragmentBinding(
         inflater: LayoutInflater,
-        container: ViewGroup?
+        container: ViewGroup?,
     ) = FragmentBookingFilterBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
@@ -283,6 +288,7 @@ class FragmentBookingFilter :
         requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
 
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
@@ -293,6 +299,7 @@ class FragmentBookingFilter :
 
         }
     }
+
     override fun onPause() {
         super.onPause()
         (activity as HomeActivity?)?.showTabs()
