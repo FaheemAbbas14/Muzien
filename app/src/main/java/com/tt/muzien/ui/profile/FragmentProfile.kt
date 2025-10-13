@@ -127,7 +127,16 @@ class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, Home
 
     fun setUserData() {
         binding.txtName.text = "${LoggedInInfo.user?.fullName}"
-        binding.txtProfession.text = "${LoggedInInfo.user?.role}"
+        if (LoggedInInfo.user?.role == "salon-manager") {
+            binding.txtProfession.text = "Manager"
+        }
+        else  if (LoggedInInfo.user?.role == "service-provider") {
+            binding.txtProfession.text = "Service Provider"
+        }
+        else{
+            binding.txtProfession.text = "Owner"
+        }
+       // binding.txtProfession.text = "${LoggedInInfo.user?.role}"
         Glide.with(binding.imgProfilePic)
             .load(LoggedInInfo.user?.picture)
             .circleCrop()

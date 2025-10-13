@@ -17,6 +17,7 @@ import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.network.SaloonApi
 import com.tt.muzien.data.repository.SaloonRepository
 import com.tt.muzien.databinding.FragmentBookingFilterBinding
+import com.tt.muzien.ui.adapters.ServiceSpinnerAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
@@ -402,9 +403,7 @@ class FragmentBookingFilter :
 
     private fun setSaloonAdopter() {
         // Adapter to link the list with AutoCompleteTextView
-        val adapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, saloonsList)
-
+        val adapter = ServiceSpinnerAdapter(requireContext(), saloonsList, false)
         // Set adapter to AutoCompleteTextView
         binding.edtSaloon.setAdapter(adapter)
 
@@ -414,12 +413,7 @@ class FragmentBookingFilter :
 
     private fun setServiceProviderAdopter() {
         // Adapter to link the list with AutoCompleteTextView
-        val adapter =
-            ArrayAdapter(
-                requireContext(),
-                android.R.layout.simple_dropdown_item_1line,
-                serviceProviderList
-            )
+        val adapter = ServiceSpinnerAdapter(requireContext(), serviceProviderList,false)
 
         // Set adapter to AutoCompleteTextView
         binding.edtProvider.setAdapter(adapter)

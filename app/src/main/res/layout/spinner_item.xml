@@ -7,5 +7,5 @@
     android:textSize="16sp"
     android:ellipsize="end"
     android:singleLine="true"
-    android:gravity="center_vertical|start"
+    android:gravity="center_vertical|left"
     android:textColor="@android:color/black"/>

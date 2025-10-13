@@ -61,12 +61,20 @@ class NotificationListAdapter(
 
         holder.txtHeading.text = item.heading
         holder.txtDescription.text = item.description
-        if (item.type == EnumNotificationType.Category) {
+        if (item.enumType == EnumNotificationType.Category) {
             holder.imgNext.visibility = View.VISIBLE
             holder.divider.visibility = View.VISIBLE
+            var icon=R.drawable.salon_icon
+            if (item.type.contains("invite")){
+                icon=R.drawable.invites_icon
+            }
+            else if (item.type.contains("booking")){
+                icon=R.drawable.booking_reminder
+            }
+
             Glide.with(holder.imgProfilePic)
-                .load(item.icon)
-                .placeholder(R.drawable.salon_icon)
+                .load(icon)
+                .placeholder(icon)
                 .into(holder.imgProfilePic)
 
         } else {
@@ -75,7 +83,7 @@ class NotificationListAdapter(
             Glide.with(holder.imgProfilePic)
                 .load(item.profileUrl)
                 .circleCrop()
-                .placeholder(R.drawable.topperformer)
+                .placeholder(R.drawable.user_placeholder)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)  // Cache both original & transformed image
                 .skipMemoryCache(false)  // Cache in memory
                 .into(holder.imgProfilePic)

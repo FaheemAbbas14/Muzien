@@ -5,6 +5,7 @@ import com.tt.muzien.data.requests.LoginRequest
 import com.tt.muzien.data.requests.RefreshTokenRequest
 import com.tt.muzien.data.requests.UpdateUser
 import com.tt.muzien.data.requests.VerifyOTPRequest
+import com.tt.muzien.data.responses.GetNotificationsResponse
 import com.tt.muzien.data.responses.GetsUsersResponse
 import com.tt.muzien.data.responses.LoginResponse
 import com.tt.muzien.data.responses.MyResponse
@@ -38,12 +39,12 @@ interface UserApi {
 
     @GET("v1/user/{userId}")
     suspend fun my(
-        @Path("userId") userId: Long
+        @Path("userId") userId: Long,
     ): MyResponse
 
     @POST("v1/auth/profile")
     suspend fun updateUser(
-        @Body requestData: UpdateUser
+        @Body requestData: UpdateUser,
     ): UpdateUserResponse
 
     @Multipart
@@ -54,15 +55,23 @@ interface UserApi {
 
     @POST("v1/auth/update-verify")
     suspend fun verifyLogin(
-        @Body requestData: VerifyOTPRequest
+        @Body requestData: VerifyOTPRequest,
     ): VerifyLoginResponse
 
     @POST("v1/auth/update")
     suspend fun sendOTP(
-        @Body requestData: LoginRequest
+        @Body requestData: LoginRequest,
     ): LoginResponse
 
     @DELETE("v1/auth/profile")
     suspend fun deleteUser(
     )
+
+    @GET("v1/notification")
+    suspend fun getNotifications(): GetNotificationsResponse
+
+    @GET("v1/notification/{type}")
+    suspend fun getNotificationsByType(
+        @Path("type") type: String,
+    ): GetNotificationsResponse
 }

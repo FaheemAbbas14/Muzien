@@ -59,5 +59,12 @@ class UserRepository(
     ) = safeApiCall {
         api.deleteUser()
     }
+    suspend fun getNotifications() = safeApiCall {
+        api.getNotifications()
+    }
+    suspend fun getNotificationsByType(type: String
+    ) = safeApiCall {
+        api.getNotificationsByType(type)
+    }
 
 }

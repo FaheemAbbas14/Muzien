@@ -24,6 +24,7 @@ import com.bumptech.glide.request.target.Target
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.MemberDto
 import com.tt.muzien.interfaces.OnStateChange
+import com.tt.muzien.ui.enable
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 
 
@@ -126,6 +127,7 @@ class MembersListAdapter(
             )
             holder.txtStatusTexts.text = context.resources.getString(R.string.invitation_sent)
             holder.mainLayout.alpha = 0.5f
+            holder.itemView.setOnClickListener(null)
         }
         // Implement the RequestListener here
         val iconRequestListener = object : RequestListener<Drawable> {

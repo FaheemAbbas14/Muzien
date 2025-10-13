@@ -187,9 +187,10 @@ class FragmentAddService :
                 id: Long,
             ) {
                 val selectedItem = parent.getItemAtPosition(position) as String
-                if (!selectedServices.contains(selectedItem) && selectedItem != "Select Service") {
+                if (!selectedServices.contains(selectedItem) && selectedItem != "Select Service" && !addedServicesList.contains(selectedItem)) {
                     selectedServices.add(selectedItem)
                 }
+                adapter.setSelectedPosition(position)
                 setServicesAdapter()
             }
 

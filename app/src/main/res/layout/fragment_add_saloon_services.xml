@@ -145,6 +145,7 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="5dp"
                         android:layout_weight="1"
+                        android:spinnerMode="dialog"
                         android:background="@android:color/transparent"
                         android:fontFamily="@font/manrope_regular"
                         android:gravity="center|left"
@@ -267,13 +268,13 @@
                         android:layout_gravity="center"
                         android:layout_marginLeft="5dp"
                         android:layout_weight="1"
+                        android:spinnerMode="dialog"
                         android:background="@android:color/transparent"
                         android:popupBackground="@android:color/white"
                         android:paddingEnd="10dp"
                         android:textAlignment="viewStart"
                         android:gravity="center|left"
-                        android:textDirection="locale"
-                        android:spinnerMode="dropdown" />
+                        android:textDirection="locale" />
 
                     <ImageView
                         android:id="@+id/ddlDuration"

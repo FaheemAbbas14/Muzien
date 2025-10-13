@@ -34,6 +34,7 @@ import com.tt.muzien.data.requests.AddSaloonService
 import com.tt.muzien.data.requests.AddServiceSaloonRequest
 import com.tt.muzien.data.requests.UpdateServiceRequest
 import com.tt.muzien.databinding.FragmentAddSaloonServicesBinding
+import com.tt.muzien.ui.adapters.ServiceSpinnerAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
@@ -78,8 +79,7 @@ class FragmentAddSaloonServices :
         super.onViewCreated(view, savedInstanceState)
         viewModel.setSaloonRepo((activity as HomeActivity?)?.getSaloonRepo()!!)
         val durations = listOf("15 mins", "30 mins", "45 mins", "60 mins", "75 mins", "90 mins", "105 mins", "120 mins")
-        val adapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, durations)
+        val adapter = ServiceSpinnerAdapter(requireContext(), durations,false)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinnerDuration.adapter = adapter
         binding.spinnerDuration.onItemSelectedListener =
@@ -386,7 +386,7 @@ class FragmentAddSaloonServices :
     }
 
     private fun setCategoryAdopter() {
-        val adapter = ArrayAdapter(requireContext(), R.layout.custom_spinner_item, services)
+        val adapter = ServiceSpinnerAdapter(requireContext(), services,false)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spnCategory.adapter = adapter
         binding.spnCategory.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {

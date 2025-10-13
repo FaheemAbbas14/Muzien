@@ -20,7 +20,6 @@ import com.moyasar.android.sdkdriver.customui.creditcard.CustomUIPaymentFragment
 import com.moyasar.android.sdkdriver.customui.stcpay.EnterMobileNumberCustomUIFragment
 import com.tt.muzien.Application
 import com.tt.muzien.BuildConfig
-import com.tt.muzien.R
 import com.tt.muzien.data.dto.LoggedInInfo
 import com.tt.muzien.data.dto.PayDto
 import com.tt.muzien.data.network.Resource
@@ -62,14 +61,15 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
         super.onViewCreated(view, savedInstanceState)
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
-           // (activity as HomeActivity?)?.popFragment()
+            // (activity as HomeActivity?)?.popFragment()
         }
+        var discount = (payDto?.discount ?: 0) / 100
         payDto?.discount?.let {
             if (it > 0) {
                 binding.llDiscount.visibility = View.VISIBLE
                 binding.txtActualFee.visibility = View.VISIBLE
                 binding.txtDiscount.text =
-                    "${(payDto?.discount ?: 0) / 100} ${payDto?.currency} OFF"
+                    "${discount} ${payDto?.currency} OFF"
             } else {
                 binding.llDiscount.visibility = View.GONE
                 binding.txtActualFee.visibility = View.GONE
@@ -78,8 +78,10 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
         binding.llGooglePay.setOnClickListener {
 
         }
+        var actualFee = (payDto?.actualPrice ?: 0) / 100
+        var totalFee =actualFee-discount
         binding.txtTotalFee.text =
-            "$${(payDto?.discountedPrice ?: 0) / 100} ${payDto?.currency}"
+            "${totalFee} ${payDto?.currency}"
         binding.txtActualFee.text =
             "${(payDto?.actualPrice ?: 0) / 100} ${payDto?.currency}"
         binding.llPayNow.setOnClickListener {
@@ -200,7 +202,7 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
     private fun handlePaymentResult(result: PaymentResult) {
         when (result) {
             is PaymentResult.Completed -> {
-                Log.d("MuzienPayment","Payment success ${result.payment}")
+                Log.d("MuzienPayment", "Payment success ${result.payment}")
                 handleCompletedPayment(result.payment)
             }
 
@@ -208,11 +210,11 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
                 (activity as HomeActivity?)?.hideLoadingIndicator()
                 // Show error
                 val error = result.error
-                Log.d("MuzienPayment","Payment failed with ${error}")
+                Log.d("MuzienPayment", "Payment failed with ${error}")
                 // Handle the error (e.g., Toast or dialog)
                 Toast.makeText(requireContext(), "Payment failed with ${error}", Toast.LENGTH_SHORT)
                     .show()
-                if (isStcPayment){
+                if (isStcPayment) {
                     (activity as HomeActivity?)?.popFragment()
                 }
                 (activity as HomeActivity?)?.popFragment()
@@ -220,12 +222,12 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
             }
 
             PaymentResult.Canceled -> {
-                Log.d("MuzienPayment","Payment cancelled")
+                Log.d("MuzienPayment", "Payment cancelled")
                 (activity as HomeActivity?)?.hideLoadingIndicator()
                 Toast.makeText(requireContext(), "Payment cancelled", Toast.LENGTH_SHORT).show()
                 (activity as HomeActivity?)?.popFragment()
                 (activity as HomeActivity?)?.popFragment()
-                if (isStcPayment){
+                if (isStcPayment) {
                     (activity as HomeActivity?)?.popFragment()
                 }
             }
@@ -234,7 +236,7 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
                 (activity as HomeActivity?)?.hideLoadingIndicator()
                 (activity as HomeActivity?)?.popFragment()
                 (activity as HomeActivity?)?.popFragment()
-                if (isStcPayment){
+                if (isStcPayment) {
                     (activity as HomeActivity?)?.popFragment()
                 }
             }
@@ -245,9 +247,9 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
     private fun handleCompletedPayment(payment: PaymentResponse) {
         when (payment.status) {
             "paid" -> {
-             //   (activity as HomeActivity?)?.popFragment()
+                //   (activity as HomeActivity?)?.popFragment()
                 transactionId = payment.id ?: ""
-                if (subscriptionId != null && subscriptionId!=0) {
+                if (subscriptionId != null && subscriptionId != 0) {
                     updateSubscriptions()
                 } else {
                     addSubscriptions()
@@ -374,9 +376,14 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
                     Appelement.reload = true
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
-                        Toast.makeText(requireContext(), "Subscription added successfully", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Subscription added successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else {
-                        Toast.makeText(requireContext(), it.value.message, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), it.value.message, Toast.LENGTH_SHORT)
+                            .show()
 
                     }
                     (activity as HomeActivity?)?.popFragment()
@@ -403,7 +410,7 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
             payDto?.saloonId ?: 0,
             AddSubscriptionRequest(
                 transactionId,
-                payDto?.discountedPrice?:0,
+                payDto?.discountedPrice ?: 0,
                 startDate,
                 endDate,
                 payDto?.planId ?: 0

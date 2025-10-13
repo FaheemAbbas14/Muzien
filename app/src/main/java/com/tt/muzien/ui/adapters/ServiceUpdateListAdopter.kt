@@ -14,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.ServiceSaloon
@@ -56,8 +57,7 @@ class ServiceUpdateListAdopter(
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val salon = salons[position]
         val durations = listOf("15 mins", "30 mins", "45 mins", "60 mins", "75 mins", "90 mins", "105 mins", "120 mins")
-        val adapter =
-            ArrayAdapter(context, android.R.layout.simple_spinner_item, durations)
+        val adapter = ServiceSpinnerAdapter(context, durations,false)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         holder.spinnerDuration.adapter = adapter
         holder.spinnerDuration.onItemSelectedListener =

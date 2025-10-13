@@ -279,8 +279,8 @@
     <string name="invitation_sent">ارسلت الدعوة</string>
     <string name="on_leave">لايعمل اليوم</string>
     <string name="working_today">يعمل اليوم</string>
-    <string name="remove_invitation">Remove Invitation</string>
-    <string name="remove_manager">Remove Manager</string>
+    <string name="remove_invitation">إزالة الدعوة</string>
+    <string name="remove_manager">إزالة المدير</string>
     <string name="arabic">عربي</string>
     <string name="days_remaining">الأيام المتبقية</string>
     <string name="all_bookings">كل الحجوزات</string>
@@ -305,4 +305,5 @@
     <string name="write_about_your_saloon">اكتب حول صالونك.</string>
     <string name="closing_time_must_be_after_opening_time">يجب أن يكون وقت الإغلاق بعد وقت الافتتاح</string>
     <string name="didn_t_receive_code_resend">لم تستلم الرمز؟ أعد الإرسال </string>
+    <string name="mark_as_manager">وضع علامة كمدير</string>
 </resources>

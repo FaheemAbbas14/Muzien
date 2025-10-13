@@ -39,29 +39,31 @@
 
     <TextView
         android:id="@+id/txtHeading"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="5dp"
         android:fontFamily="@font/manrope_regular"
         android:text="@string/faheem_abbas"
         android:textColor="@color/colorTextLabelDefault"
-        android:textSize="14sp"
         android:textFontWeight="400"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/imageView7"
         app:layout_constraintStart_toEndOf="@+id/imgProfilePic"
         app:layout_constraintTop_toTopOf="@+id/imgProfilePic" />
 
     <TextView
         android:id="@+id/txtDescription"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="2dp"
         android:fontFamily="@font/manrope_regular"
         android:text="@string/owner"
         android:textColor="@color/lightblack"
-        android:textSize="11sp"
         android:textFontWeight="500"
+        android:textSize="11sp"
+        app:layout_constraintEnd_toStartOf="@+id/imageView7"
         app:layout_constraintStart_toEndOf="@+id/imgProfilePic"
         app:layout_constraintTop_toBottomOf="@+id/txtHeading" />
 

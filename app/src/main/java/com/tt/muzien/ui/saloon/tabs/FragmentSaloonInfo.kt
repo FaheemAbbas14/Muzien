@@ -570,9 +570,9 @@ class FragmentSaloonInfo :
                                         plan.id.toInt(),
                                         selectedSaloon?.name ?: "",
                                         plan.name,
-                                        plan.actualFee.toInt() * 100,
-                                        (plan.actualFee - plan.discountedFee).toInt() * 100,
-                                        plan.discountedFee.toInt() * 100,
+                                        plan.actualFee.toInt(),
+                                        (plan.actualFee - plan.discountedFee).toInt(),
+                                        plan.discountedFee.toInt(),
                                         plan.currency,
                                         plan.durationInDays.toInt()
                                     )

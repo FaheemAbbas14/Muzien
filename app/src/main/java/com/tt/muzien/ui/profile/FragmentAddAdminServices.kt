@@ -21,6 +21,7 @@ import com.tt.muzien.data.repository.MemberRepository
 import com.tt.muzien.data.requests.AddMemberService
 import com.tt.muzien.databinding.FragmentAddAdminServicesBinding
 import com.tt.muzien.ui.adapters.HolidayListAdapter
+import com.tt.muzien.ui.adapters.ServiceSpinnerAdapter
 import com.tt.muzien.ui.base.BaseFragment
 import com.tt.muzien.ui.enable
 import com.tt.muzien.ui.handleApiError
@@ -80,9 +81,7 @@ class FragmentAddAdminServices :
 
     private fun setServicesListAdaptor() {
         // Adapter to link the list with AutoCompleteTextView
-        val adapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, services)
-
+      val adapter = ServiceSpinnerAdapter(requireContext(), services,false)
         // Set adapter to AutoCompleteTextView
         binding.txtSearch.setAdapter(adapter)
 

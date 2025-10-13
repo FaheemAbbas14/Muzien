@@ -9,4 +9,4 @@ import com.tt.muzien.enums.EnumNotificationType
  * faheemabbas60@yahoo.com
  * +923115284424
  */
-data class NotificationDto(val profileUrl: String?=null,val icon: Int?=null,val heading: String,val description: String,val type: EnumNotificationType,val isSeen: Boolean)
+data class NotificationDto(val profileUrl: String?=null,val icon: Int?=null,val type: String,val heading: String,val description: String,val enumType: EnumNotificationType,val isSeen: Boolean,val itemId: Long?)

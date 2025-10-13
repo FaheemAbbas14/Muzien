@@ -136,9 +136,9 @@ class FragmentViewMember :
         val option3: TextView = menuView.findViewById(R.id.delete_user)
         val option4: TextView = menuView.findViewById(R.id.delete_Invitation)
         val option5: TextView = menuView.findViewById(R.id.remove_manager)
-        option1.text = "Mark as Manager"
-        option2.text = "Inactivate User"
-        option3.text = "Delete User"
+        option1.text = getString(R.string.mark_as_manager)
+        option2.text = getString(R.string.inactivate_user)
+        option3.text = getString(R.string.delete_user)
 
         if (memberDetails?.isMember == true) {
             if (member?.isManger == true) {

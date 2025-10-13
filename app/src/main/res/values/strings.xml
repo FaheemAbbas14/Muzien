@@ -305,4 +305,5 @@
     <string name="write_about_your_saloon">Write about your Saloon.</string>
     <string name="closing_time_must_be_after_opening_time">Closing Time must be after Opening Time</string>
     <string name="didn_t_receive_code_resend">Didn’t receive code? Resend %1$s</string>
+    <string name="mark_as_manager">Mark as Manager</string>
 </resources>

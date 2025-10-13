@@ -64,7 +64,6 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="10dp"
-        android:background="@color/light_grey"
         android:scrollbars="none"
         app:layout_constraintBottom_toTopOf="@+id/llApply"
         app:layout_constraintEnd_toEndOf="parent"
@@ -437,6 +436,7 @@
                     android:layout_marginEnd="15dp"
                     android:layout_marginBottom="10dp"
                     android:calendarViewShown="true"
+                    android:spinnerMode="dialog"
                     android:spinnersShown="true"
                     android:visibility="gone" />
 

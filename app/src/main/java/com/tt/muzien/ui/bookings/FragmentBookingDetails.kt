@@ -40,6 +40,7 @@ import com.zabihah.ui.ui.interfaces.OnItemClickListner
 class FragmentBookingDetails :
     BaseFragment<BookingViewModel, FragmentBookingDetailsBinding, BookingRepository>() {
     var bookingDto: SaloonBookingData? = null
+    var bookingId: String? = null
     private val bookingServices = arrayListOf<BookingServiceDto>()
     var getBookingDetailsResponse: BookingDetailsData? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,6 +55,7 @@ class FragmentBookingDetails :
         binding.imgBarcode.setOnClickListener {
             showPopupDialog()
         }
+        bookingDto?.let { bookingId= it.bookingId }
         getBookingDetails()
     }
 
@@ -84,7 +86,7 @@ class FragmentBookingDetails :
                 else -> {}
             }
         }
-        viewModel.getBookingDetails(bookingDto?.bookingId!!)
+        viewModel.getBookingDetails(bookingId?:"")
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 

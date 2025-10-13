@@ -146,6 +146,7 @@
                         android:layout_gravity="center|right"
                         android:layout_marginLeft="5dp"
                         android:layout_weight="1"
+                        android:spinnerMode="dialog"
                         android:background="@android:color/transparent"
                         android:fontFamily="@font/manrope_regular"
                         android:gravity="center|left"

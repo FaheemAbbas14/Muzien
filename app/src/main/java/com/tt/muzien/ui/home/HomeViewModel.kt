@@ -11,6 +11,7 @@ import com.tt.muzien.data.requests.UpdateUser
 import com.tt.muzien.data.requests.VerifyOTPRequest
 import com.tt.muzien.data.responses.GetAnalyticsResponse
 import com.tt.muzien.data.responses.GetBookingResponse
+import com.tt.muzien.data.responses.GetNotificationsResponse
 import com.tt.muzien.data.responses.GetRevenueResponse
 import com.tt.muzien.data.responses.LoginResponse
 import com.tt.muzien.data.responses.MyResponse
@@ -27,7 +28,7 @@ import okhttp3.MultipartBody
  * @property repository [UserRepository] class to persist user information
  */
 class HomeViewModel(
-    private val repository: HomeRepository
+    private val repository: HomeRepository,
 ) : BaseViewModel(repository) {
     private var userRepository: UserRepository? = null
     private val _user: MutableLiveData<Resource<LoginResponse>> = SingleEventLiveData()
@@ -51,6 +52,9 @@ class HomeViewModel(
     val logout: LiveData<Resource<LoginResponse>> get() = _logout
     private val _deleteUser: MutableLiveData<Resource<Unit>> = SingleEventLiveData()
     val deleteUser: LiveData<Resource<Unit>> get() = _deleteUser
+    private val _getNotifications: MutableLiveData<Resource<GetNotificationsResponse>> =
+        SingleEventLiveData()
+    val getNotifications: LiveData<Resource<GetNotificationsResponse>> get() = _getNotifications
 
     private val _getAnalytics: MutableLiveData<Resource<GetAnalyticsResponse>> =
         SingleEventLiveData()
@@ -83,7 +87,8 @@ class HomeViewModel(
     fun my(request: Long) = viewModelScope.launch {
         _my.value = userRepository?.my(request)
     }
-    fun updateUser( request: UpdateUser) = viewModelScope.launch {
+
+    fun updateUser(request: UpdateUser) = viewModelScope.launch {
         _updateUser.value = userRepository?.updateUser(request)
     }
 
@@ -100,7 +105,7 @@ class HomeViewModel(
     fun getAnalytics(
         saloonIds: String? = null,
         startDate: String? = null,
-        endDate: String? = null
+        endDate: String? = null,
     ) = viewModelScope.launch {
         _getAnalytics.value = repository.getAnalytics(saloonIds, startDate, endDate)
     }
@@ -108,7 +113,7 @@ class HomeViewModel(
     fun getWeeklyRevenue(
         saloonIds: String? = null,
         startDate: String? = null,
-        endDate: String? = null
+        endDate: String? = null,
     ) = viewModelScope.launch {
         _getWeeklyRevenue.value = repository.getWeeklyRevenue(saloonIds, startDate, endDate)
     }
@@ -116,8 +121,16 @@ class HomeViewModel(
     fun getMonthlyRevenue(
         saloonIds: String? = null,
         startDate: String? = null,
-        endDate: String? = null
+        endDate: String? = null,
     ) = viewModelScope.launch {
         _getMonthlyRevenue.value = repository.getMonthlyRevenue(saloonIds, startDate, endDate)
+    }
+
+    fun getNotifications() = viewModelScope.launch {
+        _getNotifications.value = userRepository?.getNotifications()
+    }
+
+    fun getNotificationsByType(type: String) = viewModelScope.launch {
+        _getNotifications.value = userRepository?.getNotificationsByType(type)
     }
 }

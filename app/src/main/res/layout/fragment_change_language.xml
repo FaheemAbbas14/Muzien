@@ -58,6 +58,7 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
+            android:spinnerMode="dialog"
             android:background="@drawable/spinner_background_with_icon"
             android:dropDownWidth="match_parent"
             android:entries="@array/language_options" />

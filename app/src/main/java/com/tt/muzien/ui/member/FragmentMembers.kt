@@ -35,9 +35,9 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
         super.onViewCreated(view, savedInstanceState)
         viewModel.setSaloonRepo((activity as HomeActivity?)?.getSaloonRepo()!!)
         binding.swipeRefresh.recyclerView = binding.rcyMembers
-        rolesMap.put("salon-manager","Manager")
-        rolesMap.put("service-provider","Service Provider")
-        tag=resources.getString(R.string.members)
+        rolesMap.put("salon-manager", "Manager")
+        rolesMap.put("service-provider", "Service Provider")
+        tag = resources.getString(R.string.members)
         binding.swipeRefresh.setOnRefreshListener {
             // binding.swipeRefresh.isRefreshing = false
             // page=1
@@ -48,10 +48,10 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
                 binding.imgFilter.setImageResource(
                     R.drawable.filter_icon
                 )
-                tag=resources.getString(R.string.members)
+                tag = resources.getString(R.string.members)
                 status = null
                 getMembers(false)
-                filterApplied=false
+                filterApplied = false
             } else {
 
                 var nextFragment = FragmentFilter()
@@ -125,33 +125,37 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
 
             when (it) {
                 is Resource.Success -> {
-                    Log.d("response", "success " + it.toString())
-                    binding.swipeRefresh.isRefreshing = false
-                    (activity as HomeActivity?)?.hideLoadingIndicator()
-                    if (it.value.status != 0) {
-                        membersList.clear()
-                        for (member in it.value.data) {
-                            membersList.add(
-                                MemberDto(
-                                    member.id.toInt(),
-                                    member.User.id.toInt(),
-                                    member.User.picture,
-                                    member.isActive,
-                                    member.User.fullName ?: "",
-                                    rolesMap[member.User.role]!!,
-                                    "${member.tRating} (${member.numReviews} ${
-                                        if (member.numReviews.toInt() == 1) "review" else "reviews"
-                                    })",
-                                    member.Saloon.name,
-                                    member.todayBookings,
-                                    member.isAdmin,
-                                    member.isMember
+                    try {
+                        Log.d("response", "success " + it.toString())
+                        binding.swipeRefresh.isRefreshing = false
+                        (activity as HomeActivity?)?.hideLoadingIndicator()
+                        if (it.value.status != 0) {
+                            membersList.clear()
+                            for (member in it.value.data) {
+                                membersList.add(
+                                    MemberDto(
+                                        member.id.toInt(),
+                                        member.User.id.toInt(),
+                                        member.User.picture,
+                                        member.isActive,
+                                        member.User.fullName ?: "",
+                                        rolesMap[member.User.role]!!,
+                                        "${member.tRating} (${member.numReviews} ${
+                                            if (member.numReviews.toInt() == 1) "review" else "reviews"
+                                        })",
+                                        member.Saloon.name,
+                                        member.todayBookings,
+                                        member.isAdmin,
+                                        member.isMember
+                                    )
                                 )
-                            )
+                            }
+                            setMemberAdopter()
+                        } else {
+                            requireView().snackbar(it.value.message)
                         }
-                        setMemberAdopter()
-                    } else {
-                        requireView().snackbar(it.value.message)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
                     }
                 }
 
@@ -355,23 +359,21 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
                 if (FilterSelection.filterData != null) {
                     if (FilterSelection.filterData!!.status != null && FilterSelection.filterData!!.status != "") {
                         if (FilterSelection.filterData!!.status == "Active") {
-                            tag="Active members"
+                            tag = "Active members"
                             isActive = true
                             status = null
                         } else if (FilterSelection.filterData!!.status == "InActive") {
-                            tag="Inactive members"
+                            tag = "Inactive members"
                             isActive = false
                             status = null
                         } else {
                             status = FilterSelection.filterData!!.status
-                            if (status=="0"){
-                                tag=resources.getString(R.string.invitation_sent)
-                            }
-                           else if (status=="1"){
-                                tag=resources.getString(R.string.working_today)
-                            }
-                            else if (status=="2"){
-                                tag=resources.getString(R.string.on_leave_today)
+                            if (status == "0") {
+                                tag = resources.getString(R.string.invitation_sent)
+                            } else if (status == "1") {
+                                tag = resources.getString(R.string.working_today)
+                            } else if (status == "2") {
+                                tag = resources.getString(R.string.on_leave_today)
                             }
 
                             isActive = null

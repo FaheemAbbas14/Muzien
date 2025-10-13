@@ -35,8 +35,7 @@
             android:fontFamily="@font/manrope_bold"
             android:maxLines="1"
             android:text=""
-
-            android:gravity="end"
+            android:gravity="center|right"
             android:textColor="@color/colorTextDefault"
             android:textSize="14sp"
             android:textFontWeight="700"

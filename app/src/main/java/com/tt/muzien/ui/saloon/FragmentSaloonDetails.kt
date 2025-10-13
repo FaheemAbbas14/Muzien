@@ -3,11 +3,11 @@ package com.tt.muzien.ui.saloon
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
@@ -16,27 +16,30 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.SaloonDto
-import com.tt.muzien.data.network.HomeApi
-import com.tt.muzien.data.repository.HomeRepository
+import com.tt.muzien.data.network.Resource
+import com.tt.muzien.data.network.SaloonApi
+import com.tt.muzien.data.repository.SaloonRepository
 import com.tt.muzien.databinding.FragmentSaloonDetailsBinding
 import com.tt.muzien.ui.adapters.ViewPagerAdapter
 import com.tt.muzien.ui.base.BaseFragment
+import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
-import com.tt.muzien.ui.home.HomeViewModel
 import com.tt.muzien.ui.saloon.tabs.FragmentSaloonAnalytics
 import com.tt.muzien.ui.saloon.tabs.FragmentSaloonBookings
 import com.tt.muzien.ui.saloon.tabs.FragmentSaloonInfo
 import com.tt.muzien.ui.saloon.tabs.FragmentSaloonMembers
 import com.tt.muzien.ui.saloon.tabs.FragmentSaloonReviews
 import com.tt.muzien.ui.saloon.tabs.FragmentSaloonServices
+import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.FilterSelection
 import com.tt.muzien.utilities.TimeHelper
 
 
 class FragmentSaloonDetails :
-    BaseFragment<HomeViewModel, FragmentSaloonDetailsBinding, HomeRepository>() {
+    BaseFragment<SaloonViewModel, FragmentSaloonDetailsBinding, SaloonRepository>() {
 
     var selectedSaloon: SaloonDto? = null
+    var saloonId: Int? = null
     private lateinit var fragmentManager: FragmentManager
 
     @RequiresApi(Build.VERSION_CODES.R)
@@ -45,7 +48,7 @@ class FragmentSaloonDetails :
         // setStatusBar(view)
         fragmentManager = requireActivity().supportFragmentManager
         // setStatusBar(view)
-
+        selectedSaloon?.let { saloonId = it.id }
         binding.imgMore.visibility = View.GONE
         binding.imgCamera.visibility = View.GONE
         binding.imgMore.setOnClickListener {
@@ -156,7 +159,11 @@ class FragmentSaloonDetails :
 //            fragmentManager.beginTransaction().replace(R.id.tab_container, fragment).commit()
             showFragment(fragment)
         }
-        setData()
+        if (selectedSaloon != null) {
+            setData()
+        } else {
+            getSaloons()
+        }
     }
 
     fun showFragment(fragment: Fragment) {
@@ -181,13 +188,17 @@ class FragmentSaloonDetails :
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setData() {
-        binding.txtItemName.text = selectedSaloon?.name
-        binding.txtLocation.text = selectedSaloon?.location
-        binding.txtRating.text = selectedSaloon?.ratings
-        var timing = TimeHelper.getCurrentDayTiming(selectedSaloon?.timing)
-        binding.txtTiming.text = timing
-        updateStatus(selectedSaloon?.isActive!!, selectedSaloon?.isOpened!!)
-        setViewPager()
+        try {
+            binding.txtItemName.text = selectedSaloon?.name
+            binding.txtLocation.text = selectedSaloon?.location
+            binding.txtRating.text = selectedSaloon?.ratings
+            var timing = TimeHelper.getCurrentDayTiming(selectedSaloon?.timing)
+            binding.txtTiming.text = timing
+            updateStatus(selectedSaloon?.isActive!!, selectedSaloon?.isOpened!!)
+            setViewPager()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     fun updateStatus(isActive: Boolean, isOpened: Boolean) {
@@ -280,8 +291,8 @@ class FragmentSaloonDetails :
         }
     }
 
-    override fun getViewModel(): Class<HomeViewModel> {
-        return HomeViewModel::class.java
+    override fun getViewModel(): Class<SaloonViewModel> {
+        return SaloonViewModel::class.java
     }
 
     override fun getFragmentBinding(
@@ -290,9 +301,8 @@ class FragmentSaloonDetails :
     ) = FragmentSaloonDetailsBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
-        HomeRepository(
-            remoteDataSource.buildApi(HomeApi::class.java, requireContext()),
-            userPreferences
+        SaloonRepository(
+            remoteDataSource.buildApi(SaloonApi::class.java, requireContext())
         )
 
     @RequiresApi(Build.VERSION_CODES.M)
@@ -344,5 +354,48 @@ class FragmentSaloonDetails :
         layoutParams.height = 0
         binding.tabContainer.layoutParams = layoutParams
 
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getSaloons() {
+        viewModel.getSaloonDetails.observe(viewLifecycleOwner) {
+
+            when (it) {
+                is Resource.Success -> {
+                    Log.d("response", "success " + it.toString())
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    if (it.value.status != 0) {
+                        selectedSaloon = SaloonDto(
+                            it.value.data.id.toInt(),
+                            it.value.data.saloonImages,
+                            it.value.data.name,
+                            true,
+                            it.value.data.isActive,
+                            it.value.data.address ?: "",
+                            "${it.value.data.tRating} (${it.value.data.numReviews} ${
+                                if (it.value.data.numReviews.toInt() == 1) "review" else "reviews"
+                            })",
+                            it.value.data.SaloonWorkHours,
+                            it.value.data.locationLat.toDouble(),
+                            it.value.data.locationLong.toDouble()
+                        )
+                        setData()
+                    } else {
+                        requireView().snackbar(it.value.message)
+                    }
+                }
+
+                is Resource.Failure -> {
+                    Log.d("response", "failure " + it.toString())
+
+                    (activity as HomeActivity?)?.hideLoadingIndicator()
+                    handleApiError(it)
+                }
+
+                else -> {}
+            }
+        }
+        viewModel.getSaloonsDetails(selectedSaloon?.id ?: 0)
+        (activity as HomeActivity?)?.showLoadingIndicator()
     }
 }

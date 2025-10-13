@@ -13,8 +13,7 @@ import com.tt.muzien.data.dto.NotificationDto
 import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.HomeRepository
-import com.tt.muzien.data.responses.NotificationItem
-import com.tt.muzien.databinding.FragmentNotificationsBinding
+import com.tt.muzien.databinding.FragmentNotificationsByTypeBinding
 import com.tt.muzien.enums.EnumNotificationType
 import com.tt.muzien.ui.adapters.NotificationListAdapter
 import com.tt.muzien.ui.base.BaseFragment
@@ -27,11 +26,10 @@ import com.tt.muzien.ui.snackbar
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 
 
-class FragmentNotifications :
-    BaseFragment<HomeViewModel, FragmentNotificationsBinding, HomeRepository>() {
+class FragmentNotificationsByType :
+    BaseFragment<HomeViewModel, FragmentNotificationsByTypeBinding, HomeRepository>() {
     private val notificationList = arrayListOf<NotificationDto>()
-    var types = ArrayList<String>()
-    val byType: HashMap<String, MutableList<NotificationItem>> = HashMap()
+    var types: String? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setUserRepo((activity as HomeActivity?)?.getUserRepo()!!)
@@ -49,29 +47,20 @@ class FragmentNotifications :
                     Log.d("response", "success " + it.toString())
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status != 0) {
-                        types.clear()
                         for (item in it.value.data.items) {
-                            if (!types.contains(item.type)) {
-                                types.add(item.type)
-                                notificationList.add(
-                                    NotificationDto(
-                                        item.image,
-                                        R.drawable.salon_icon,
-                                        item.type,
-                                        item.title,
-                                        item.message,
-                                        if (item.image != null && item.image != "") EnumNotificationType.Plan else EnumNotificationType.Category,
-                                        if (item.notifType == 0) false else true,
-                                        item.itemId
-                                    )
-
+                            notificationList.add(
+                                NotificationDto(
+                                    item.image,
+                                    R.drawable.salon_icon,
+                                    item.type,
+                                    item.title,
+                                    item.message,
+                                    if (item.image != null && item.image != "") EnumNotificationType.Plan else EnumNotificationType.Category,
+                                    if (item.notifType == 0) false else true,
+                                    item.itemId
                                 )
-                            }
-                        }
-                        for (item in it.value.data.items) {
-                            // normalize/guard (lowercase & trim; fallback "unknown" if blank)
-                            val key = item.type.trim().lowercase().ifEmpty { "unknown" }
-                            byType.getOrPut(key) { mutableListOf() }.add(item)
+                            )
+
                         }
                         setNotificationAdopter()
                     } else {
@@ -89,7 +78,7 @@ class FragmentNotifications :
                 else -> {}
             }
         }
-        viewModel.getNotifications()
+        viewModel.getNotificationsByType(types ?: "")
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 
@@ -111,15 +100,12 @@ class FragmentNotifications :
                         (activity as HomeActivity?)?.loadFragment(nextFragment)
                     }
 
+
                 } else {
                     var nextFragment = FragmentNotificationsByType()
                     nextFragment.types = notificationList.get(position).type
                     (activity as HomeActivity?)?.loadFragment(nextFragment)
                 }
-//                var nextFragment = FragmentPlaceDetails()
-//                nextFragment.itemId = featuredItemsList[position].id
-//                nextFragment.placeType = EnumItemListType.Featured
-//                (activity as DashboardActivity?)?.loadFragment(nextFragment)
 
             }
         }
@@ -140,7 +126,7 @@ class FragmentNotifications :
     override fun getFragmentBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
-    ) = FragmentNotificationsBinding.inflate(inflater, container, false)
+    ) = FragmentNotificationsByTypeBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
         HomeRepository(

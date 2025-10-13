@@ -176,11 +176,16 @@ class HomeActivity : AppCompatActivity() {
             ?.firstOrNull()
             ?: ""
         binding.txtUserName.text = "Welcome ${firstName}"
-        binding.txtRole.text = "${LoggedInInfo.user?.role}"
-        if (isServiceProvider) {
-            binding.txtRole.text = "${LoggedInInfo.user?.nationality}"
+        if (LoggedInInfo.user?.role == "salon-manager") {
+            binding.txtRole.text = "Manager"
         }
-        Glide.with(binding.imgProfilePic)
+        else  if (isServiceProvider) {
+            binding.txtRole.text = "Service Provider"
+        }
+        else{
+            binding.txtRole.text = "Owner"
+        }
+      Glide.with(binding.imgProfilePic)
             .load(LoggedInInfo.user?.picture)
             .circleCrop()
             .placeholder(R.drawable.user_placeholder)
