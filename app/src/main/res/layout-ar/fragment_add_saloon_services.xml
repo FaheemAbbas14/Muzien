@@ -138,18 +138,17 @@
                     app:layout_constraintTop_toBottomOf="@+id/divider">
 
 
-
                     <Spinner
                         android:id="@+id/spnCategory"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center|right"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:layout_marginLeft="5dp"
                         android:layout_weight="1"
                         android:spinnerMode="dialog"
                         android:background="@android:color/transparent"
                         android:fontFamily="@font/manrope_regular"
-                        android:gravity="center|left"
+                        android:gravity="center|right"
                         android:hint="@string/hair_service"
                         android:inputType="text"
                         android:paddingEnd="10dp"
@@ -164,6 +163,7 @@
                         android:padding="8dp"
                         android:visibility="gone"
                         app:srcCompat="@drawable/ddl_icon" />
+
 
                 </LinearLayout>
 
@@ -261,21 +261,20 @@
                     app:layout_constraintTop_toBottomOf="@+id/llServiceName">
 
 
-
                     <Spinner
                         android:id="@+id/spinnerDuration"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginLeft="5dp"
                         android:layout_weight="1"
+                        android:spinnerMode="dialog"
                         android:background="@android:color/transparent"
                         android:popupBackground="@android:color/white"
                         android:paddingEnd="10dp"
                         android:textAlignment="viewStart"
-                        android:gravity="center|right"
-                        android:textDirection="locale"
-                        android:spinnerMode="dropdown" />
+                        android:gravity="center|left"
+                        android:textDirection="locale" />
 
                     <ImageView
                         android:id="@+id/ddlDuration"
@@ -346,7 +345,7 @@
                         android:fontFamily="@font/manrope_regular"
                         android:gravity="center|right"
                         android:hint="@string/_20"
-                        android:inputType="text"
+                        android:inputType="number"
                         android:paddingStart="5dp"
                         android:textColor="@color/colorTextDefault"
                         android:textFontWeight="400"
@@ -448,14 +447,14 @@
 
                     <AutoCompleteTextView
                         android:id="@+id/edtSaloon"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_gravity="center|right"
+                        android:layout_gravity="center"
                         android:layout_marginLeft="5dp"
-                        android:gravity="center|right"
                         android:layout_weight="1"
                         android:background="@android:color/transparent"
                         android:fontFamily="@font/manrope_regular"
+                        android:gravity="center|left"
                         android:hint="@string/saloon_name"
                         android:inputType="text"
                         android:paddingEnd="10dp"
@@ -483,8 +482,8 @@
                     android:text="@string/select_a_salon_optional"
                     android:textColor="@color/colorTextLabelDefault"
                     android:textSize="11sp"
-                    android:textFontWeight="500"
                     android:visibility="gone"
+                    android:textFontWeight="500"
                     app:layout_constraintBottom_toTopOf="@+id/llSaloon"
                     app:layout_constraintStart_toStartOf="@+id/llSaloon" />
 
@@ -499,10 +498,10 @@
                     android:paddingEnd="30dp"
                     android:paddingBottom="15dp"
                     android:scaleType="centerCrop"
-                    app:layout_constraintEnd_toEndOf="@+id/llSaloon"
-                    app:layout_constraintStart_toStartOf="@+id/llSaloon"
-                    app:layout_constraintTop_toBottomOf="@+id/llSaloon"
-                    app:srcCompat="@drawable/add_image_placeholder" />
+                    app:layout_constraintEnd_toEndOf="@+id/llPrice"
+                    app:layout_constraintStart_toStartOf="@+id/llPrice"
+                    app:layout_constraintTop_toBottomOf="@+id/llPrice"
+                    app:srcCompat="@drawable/add_service_placeholder" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>

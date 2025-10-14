@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.ArrayAdapter
 import androidx.annotation.RequiresApi
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.FilterData
@@ -27,6 +26,8 @@ import com.tt.muzien.ui.views.CustomCalendar
 import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.FilterSelection
 import com.tt.muzien.utilities.TimeHelper
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 
@@ -173,9 +174,13 @@ class FragmentBookingFilter :
             binding.txtFromError.visibility = View.GONE
             binding.llTo.visibility = View.GONE
             isFrom = true
+            val todayString = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+            binding.customCalendar.setDate(todayString)
             binding.customCalendar.visibility = View.VISIBLE
         }
         binding.txtTo.setOnClickListener {
+            val todayString = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+            binding.customCalendar.setDate(todayString)
             isFrom = false
             binding.customCalendar.visibility = View.VISIBLE
         }
@@ -413,7 +418,7 @@ class FragmentBookingFilter :
 
     private fun setServiceProviderAdopter() {
         // Adapter to link the list with AutoCompleteTextView
-        val adapter = ServiceSpinnerAdapter(requireContext(), serviceProviderList,false)
+        val adapter = ServiceSpinnerAdapter(requireContext(), serviceProviderList, false)
 
         // Set adapter to AutoCompleteTextView
         binding.edtProvider.setAdapter(adapter)

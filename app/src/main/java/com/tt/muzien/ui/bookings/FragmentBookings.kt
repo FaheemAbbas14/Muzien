@@ -106,6 +106,11 @@ class FragmentBookings :
                 binding.imgBookingFilter.setImageResource(
                     R.drawable.filter_icon
                 )
+                page=1
+                val currentDate = LocalDate.now()
+                val formattedDate = currentDate.format(DateTimeFormatter.ISO_DATE)
+                fromDate = formattedDate
+                toDate = formattedDate
                 binding.cnstData.layoutParams as ViewGroup.MarginLayoutParams
                 layoutParams.topMargin = Helper.dpToPx(binding.cnstData.context, 100)
                 binding.cnstData.layoutParams = layoutParams
@@ -355,6 +360,9 @@ class FragmentBookings :
                         }
                         totalPage = it.value.data.totalPages.toInt()
                         for (booking in it.value.data.items) {
+                            var status=booking.status
+                            //var status="pending-approval"
+                            Log.d("BookingStatus", "status $status")
                             var services = ""
                             for (service in booking.bookingServices) {
                                 services += service.serviceDetails.name
@@ -379,7 +387,7 @@ class FragmentBookings :
                                     services,
                                     booking.date,
                                     booking.time,
-                                    booking.status,
+                                    status,
                                     booking.duration,
                                     cancelledBy,
                                     cancelledReason,

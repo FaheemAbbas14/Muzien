@@ -18,6 +18,8 @@ import com.tt.muzien.ui.views.CustomCalendar
 import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.FilterSelection
 import com.tt.muzien.utilities.TimeHelper
+import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 
@@ -109,12 +111,16 @@ class FragmentSaloonFilter :
             }
         }
         binding.txtFrom.setOnClickListener {
+            val todayString = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+            binding.customCalendar.setDate(todayString)
             binding.txtFromError.visibility = View.GONE
             binding.llTo.visibility = View.GONE
             isFrom = true
             binding.customCalendar.visibility = View.VISIBLE
         }
         binding.txtTo.setOnClickListener {
+            val todayString = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+            binding.customCalendar.setDate(todayString)
             isFrom = false
             binding.customCalendar.visibility = View.VISIBLE
         }
