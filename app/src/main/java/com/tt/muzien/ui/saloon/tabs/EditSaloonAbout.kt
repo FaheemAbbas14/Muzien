@@ -1,5 +1,6 @@
 package com.tt.muzien.ui.saloon.tabs
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -7,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.setFragmentResult
 import com.tt.muzien.R
@@ -40,8 +42,16 @@ class EditSaloonAbout :
             }
 
         }
+        binding.root?.setOnClickListener {
+            hideKeyboard()
+            binding.edtAbout.clearFocus()
+        }
     }
-
+    private fun hideKeyboard() {
+        val imm = requireContext()
+            .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
+    }
     private fun updateSaloon() {
         viewModel.addSaloon.observe(viewLifecycleOwner) {
 

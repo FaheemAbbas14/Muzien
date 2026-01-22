@@ -50,8 +50,8 @@ class EnterMobileNumberFragment : Fragment() {
         parentActivity = requireActivity()
         binding = FragmentEnterMobileNumberBinding.inflate(inflater, container, false)
         initView()
-        setupObservers()
-        binding.setupListeners()
+       // setupObservers()
+       // binding.setupListeners()
         return binding.root
     }
 

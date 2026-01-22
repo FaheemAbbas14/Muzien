@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
@@ -52,10 +53,18 @@ class SaloonManagerDashboard :
 
             //  uploadImage()
         }
-        binding.imgBack.setOnClickListener {
-            FilterSelection.filterData = null
-            (activity as HomeActivity?)?.popFragment()
-        }
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    requireActivity().finishAffinity()
+                }
+            }
+        )
+//        binding.imgBack.setOnClickListener {
+//            FilterSelection.filterData = null
+//            (activity as HomeActivity?)?.popFragment()
+//        }
         //  (activity as HomeActivity?)?.loadFragment(FragmentSaloonAnalytics(), R.id.tab_container)
         var nextFragment = FragmentSaloonAnalytics()
         nextFragment.selectedSaloon = selectedSaloon

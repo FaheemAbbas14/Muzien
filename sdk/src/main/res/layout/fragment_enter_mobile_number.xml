@@ -28,14 +28,13 @@
             app:errorEnabled="true"
             app:hintEnabled="false">
 
-            <EditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etMobileNumberInput"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/moyasar_view_height_s"
                 android:background="@drawable/moyasar_et_background"
-                android:digits="0123456789 "
                 android:hint="@string/lbl_mobile_number_hint"
-                android:inputType="phone"
+                android:inputType="number"
                 android:layoutDirection="ltr"
                 android:paddingStart="@dimen/moyasar_spacing_small"
                 android:paddingEnd="@dimen/moyasar_spacing_small" />

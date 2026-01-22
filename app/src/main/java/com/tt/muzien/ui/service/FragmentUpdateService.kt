@@ -8,7 +8,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import androidx.annotation.RequiresApi
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -49,6 +52,17 @@ class FragmentUpdateService :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.nestedScrollView) { view, insets ->
+            val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
+            view.setPadding(
+                view.paddingLeft,
+                view.paddingTop,
+                view.paddingRight,
+                imeInsets.bottom
+            )
+            insets
+        }
+
         viewModel.setSaloonRepo((activity as HomeActivity?)?.getSaloonRepo()!!)
         binding.imgBack.setOnClickListener {
             //Appelement.reload=true
@@ -160,6 +174,9 @@ class FragmentUpdateService :
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onResume() {
         super.onResume()
+        requireActivity().window.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+        )
         (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, false)
         (activity as HomeActivity?)?.setSystemWindow(false)
         (activity as HomeActivity?)?.changeStatusBarColor(Color.TRANSPARENT)
@@ -184,6 +201,9 @@ class FragmentUpdateService :
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onPause() {
         super.onPause()
+        requireActivity().window.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN
+        )
         (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, true)
         (activity as HomeActivity?)?.setSystemWindow(true)
         (activity as HomeActivity?)?.changeStatusBarColor(Color.WHITE)

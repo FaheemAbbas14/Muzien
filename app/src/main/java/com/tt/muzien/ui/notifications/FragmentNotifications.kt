@@ -25,6 +25,8 @@ import com.tt.muzien.ui.home.HomeViewModel
 import com.tt.muzien.ui.saloon.FragmentSaloonDetails
 import com.tt.muzien.ui.snackbar
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 
 class FragmentNotifications :
@@ -32,6 +34,8 @@ class FragmentNotifications :
     private val notificationList = arrayListOf<NotificationDto>()
     var types = ArrayList<String>()
     val byType: HashMap<String, MutableList<NotificationItem>> = HashMap()
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setUserRepo((activity as HomeActivity?)?.getUserRepo()!!)
@@ -41,6 +45,7 @@ class FragmentNotifications :
         getNotifications()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun getNotifications() {
         viewModel.getNotifications.observe(viewLifecycleOwner) {
 
@@ -51,7 +56,7 @@ class FragmentNotifications :
                     if (it.value.status != 0) {
                         types.clear()
                         for (item in it.value.data.items) {
-                            if (!types.contains(item.type)) {
+                            if (!types.contains(item.type) || item.type.equals("booking-item")) {
                                 types.add(item.type)
                                 notificationList.add(
                                     NotificationDto(
@@ -89,11 +94,21 @@ class FragmentNotifications :
                 else -> {}
             }
         }
-        viewModel.getNotifications()
+        val offsetSeconds = ZonedDateTime.now(ZoneId.systemDefault()).offset.totalSeconds
+        Log.d("offsetSeconds", "offsetSeconds " + offsetSeconds)
+        viewModel.getNotifications(offsetSeconds,1,50)
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 
     private fun setNotificationAdopter() {
+        if (notificationList.size>0){
+            binding.llNoData.visibility=View.GONE
+            binding.rcyNotifications.visibility=View.VISIBLE
+        }
+        else{
+            binding.llNoData.visibility=View.VISIBLE
+            binding.rcyNotifications.visibility=View.GONE
+        }
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(position: Int) {
                 if (notificationList.get(position).type.contains("item")) {
@@ -104,7 +119,10 @@ class FragmentNotifications :
                         //saloon details
                     } else if (notificationList.get(position).type == "invite-item") {
                         //invites details
-                    } else if (notificationList.get(position).type == "booking-item" || notificationList.get(position).type == "booking-reminder-item") {
+                    } else if (notificationList.get(
+                            position
+                        ).type == "booking-reminder-item"
+                    ) {
                         //booking details
                         var nextFragment = FragmentBookingDetails()
                         nextFragment.bookingId = notificationList.get(position).itemId.toString()
@@ -112,9 +130,13 @@ class FragmentNotifications :
                     }
 
                 } else {
-                    var nextFragment = FragmentNotificationsByType()
-                    nextFragment.types = notificationList.get(position).type
-                    (activity as HomeActivity?)?.loadFragment(nextFragment)
+                    if (notificationList.get(position).type == "bookings") {
+                        (activity as HomeActivity?)?.loadFragment(FragmentNewBookings())
+                    } else {
+                        var nextFragment = FragmentNotificationsByType()
+                        nextFragment.types = notificationList.get(position).type
+                        (activity as HomeActivity?)?.loadFragment(nextFragment)
+                    }
                 }
 //                var nextFragment = FragmentPlaceDetails()
 //                nextFragment.itemId = featuredItemsList[position].id

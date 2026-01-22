@@ -37,13 +37,19 @@ class FragmentMyAccount : BaseFragment<HomeViewModel, FragmentMyAccountBinding, 
             (activity as HomeActivity?)?.popFragment()
         }
         if (LoggedInInfo.user?.phoneNumber != null) {
-            var (countryCode, phoneNumber) = splitString(LoggedInInfo.user?.phoneNumber!!)
-            binding.txtCountryCode.text = countryCode
+            val result = splitCountryCode(LoggedInInfo.user?.phoneNumber!!)
 
-            countryCode = countryCode.replace("+", "")
-            binding.edtPhoneNumber.text =
-                Editable.Factory.getInstance().newEditable(phoneNumber)
-            binding.countrySpinner.setCountryForPhoneCode(Integer.parseInt(countryCode))
+            result?.let {
+                var countryCode = it.first   // "+92"
+                val localNumber = it.second  // "3451234567"
+                binding.txtCountryCode.text = countryCode
+
+                countryCode = countryCode.replace("+", "")
+                binding.edtPhoneNumber.text =
+                    Editable.Factory.getInstance().newEditable(localNumber)
+                binding.countrySpinner.setCountryForPhoneCode(Integer.parseInt(countryCode))
+            }
+
             binding.edtPhoneNumber.hint =
                 Editable.Factory.getInstance()
                     .newEditable(InputValidator.getPhoneNumberPlaceholder(binding.countrySpinner.selectedCountryNameCode))
@@ -149,7 +155,7 @@ class FragmentMyAccount : BaseFragment<HomeViewModel, FragmentMyAccountBinding, 
         var isValid = false
 
         if (binding.edtPhoneNumber.text.isNotEmpty() && InputValidator.isValidPhoneNumber(
-                country, binding.edtPhoneNumber.text.toString().replace(" ", "")
+                binding.txtCountryCode.text.toString(), binding.edtPhoneNumber.text.toString().replace(" ", "")
             ) && LoggedInInfo.user?.phoneNumber != binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString()
                 .replace(" ", "")
         ) {
@@ -197,17 +203,33 @@ class FragmentMyAccount : BaseFragment<HomeViewModel, FragmentMyAccountBinding, 
         //  (activity as HomeActivity?)?.showTabs()
     }
 
-    fun splitString(input: String): Pair<String, String> {
-        return if (input.length >= 3) {
-            val firstPart = input.substring(0, 3)  // Get first 3 characters
-            val remainingPart = input.drop(3)      // Get the rest of the string
-            Pair(firstPart, remainingPart)
-        } else {
-            Pair(
-                input,
-                ""
-            )  // If input has less than 3 characters, return the full string and empty
+    fun splitCountryCode(phone: String): Pair<String, String>? {
+        if (!phone.startsWith("+") || phone.length < 5) return null
+
+        val normalized = phone.replace(" ", "").replace("-", "")
+
+        // Try 4-digit country code first
+        val code4 = normalized.substring(1, minOf(5, normalized.length))
+        if (isValidCountryCode(code4)) {
+            return "+$code4" to normalized.substring(5)
         }
+
+        // Fallback to 3-digit country code
+        val code3 = normalized.substring(1, minOf(4, normalized.length))
+        if (isValidCountryCode(code3)) {
+            return "+$code3" to normalized.substring(4)
+        }
+
+        return null
+    }
+    private fun isValidCountryCode(code: String): Boolean {
+        val knownCodes = setOf(
+            "91", "92", "971", "966", "1", "44", "49", "33",
+            "234", "880", "977", "852", "965", "964", "974",
+            "965", "973", "962", "968", "970", "972", "971"
+        )
+
+        return knownCodes.contains(code)
     }
 
     private fun sendOtpNormal(data: String) {

@@ -16,7 +16,7 @@ object InputValidator {
     fun isValidPhoneNumber(country: String, phoneNumber: String): Boolean {
         val phoneUtil = PhoneNumberUtil.getInstance()
         try {
-            if (phoneNumber.length==10){
+            if (country.length+phoneNumber.length==13 || country.length+phoneNumber.length==12 ){
                 return  true
             }
             else{

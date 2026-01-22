@@ -20,8 +20,9 @@ class BookingRepository(
         endDate: String? = null,
         status: String? = null,
         page: String? = null,
+        isNewBooking: String? = null,
     ) = safeApiCall {
-        api.getBookings(saloonIds, serviceProviderId, startDate, endDate, status, page)
+        api.getBookings(saloonIds, serviceProviderId, startDate, endDate, status, page,isNewBooking)
     }
 
     suspend fun getDailyBookings(

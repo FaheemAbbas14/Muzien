@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -89,6 +90,14 @@ class ServiceProviderDashboard :
                 toDate = FilterSelection.filterData!!.to
             }
         }
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    requireActivity().finishAffinity()
+                }
+            }
+        )
         binding.customCalendarView.setOnMonthChangedListener { startDate, endDate ->
             Log.d("CalendarFragment", "Month range: $startDate to $endDate")
             // Fetch data or update UI based on date range

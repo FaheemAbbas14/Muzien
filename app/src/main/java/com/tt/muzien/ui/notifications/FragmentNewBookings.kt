@@ -1,4 +1,4 @@
-package com.tt.muzien.ui.bookings
+package com.tt.muzien.ui.notifications
 
 import android.graphics.Color
 import android.os.Build
@@ -8,30 +8,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.tt.muzien.R
 import com.tt.muzien.data.SaloonBookingData
 import com.tt.muzien.data.dto.BookingsCountData
 import com.tt.muzien.data.dto.CalendarDay
-import com.tt.muzien.data.dto.FilterData
 import com.tt.muzien.data.network.BookingApi
 import com.tt.muzien.data.network.Resource
 import com.tt.muzien.data.repository.BookingRepository
 import com.tt.muzien.data.requests.UpdateBookingRequest
 import com.tt.muzien.data.responses.ReviewDetails
-import com.tt.muzien.databinding.FragmentBookingsBinding
+import com.tt.muzien.databinding.FragmentNewBookingsBinding
 import com.tt.muzien.interfaces.IBookingStatusUpdate
 import com.tt.muzien.interfaces.IbookingCancel
 import com.tt.muzien.ui.adapters.SaloonBookingAdapter
 import com.tt.muzien.ui.base.BaseFragment
+import com.tt.muzien.ui.bookings.BookingViewModel
+import com.tt.muzien.ui.bookings.FragmentBookingDetails
 import com.tt.muzien.ui.handleApiError
 import com.tt.muzien.ui.home.HomeActivity
 import com.tt.muzien.ui.snackbar
 import com.tt.muzien.utilities.Appelement
 import com.tt.muzien.utilities.FilterSelection
-import com.tt.muzien.utilities.Helper
 import com.zabihah.ui.ui.interfaces.OnItemClickListner
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -40,8 +38,8 @@ import java.util.Calendar
 import java.util.Locale
 
 
-class FragmentBookings :
-    BaseFragment<BookingViewModel, FragmentBookingsBinding, BookingRepository>() {
+class FragmentNewBookings :
+    BaseFragment<BookingViewModel, FragmentNewBookingsBinding, BookingRepository>() {
     private val saloonsBookingList = arrayListOf<SaloonBookingData>()
     private var fromDate: String? = null
     private var toDate: String? = null
@@ -61,72 +59,10 @@ class FragmentBookings :
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val layoutParams =
-            binding.cnstData.layoutParams as ViewGroup.MarginLayoutParams
-        layoutParams.topMargin = Helper.dpToPx(binding.cnstData.context, 100)
-        binding.cnstData.layoutParams = layoutParams
-        if (FilterSelection.filterData == null) {
-            val currentDate = LocalDate.now()
-            val formattedDate = currentDate.format(DateTimeFormatter.ISO_DATE)
-            fromDate = formattedDate
-            toDate = formattedDate
-            val dayOfMonth = LocalDate.now().dayOfMonth
-            binding.customCalendarView.setCurrentDay(dayOfMonth - 1)
-        } else {
-            if (FilterSelection.filterData!!.from != null) {
-                fromDate = FilterSelection.filterData!!.from
-                toDate = FilterSelection.filterData!!.to
-            }
-        }
-        binding.customCalendarView.setOnMonthChangedListener { startDate, endDate ->
-            Log.d("CalendarFragment", "Month range: $startDate to $endDate")
-            // Fetch data or update UI based on date range
-//            if (!isFromSelection) {
-//                // binding.customCalendarView.setCurrentDay(-1)
-//                fromDate = startDate
-//                toDate = endDate
-//                FilterSelection.filterData = FilterData("", fromDate, toDate, false)
-//                page = 1
-//                getCalendarbar()
-//            } else {
-//                isFromSelection = false
-//            }
-        }
-        binding.customCalendarView.setOnDaySelectedListener { selectedDay ->
-            // Toast.makeText(requireContext(), "Selected: ${selectedDay}", Toast.LENGTH_SHORT).show()
-            fromDate = selectedDay
-            toDate = selectedDay
-            FilterSelection.filterData = FilterData("", fromDate, toDate, false)
-            page = 1
-            getBooking()
-        }
 
-        binding.imgBookingFilter.setOnClickListener {
-            if (( bookingStatus != null && bookingStatus != "") || (bookingDuration!=null && bookingDuration!="")) {
-                binding.imgBookingFilter.setImageResource(
-                    R.drawable.filter_icon
-                )
-                page=1
-                val currentDate = LocalDate.now()
-                val formattedDate = currentDate.format(DateTimeFormatter.ISO_DATE)
-                fromDate = formattedDate
-                toDate = formattedDate
-                binding.cnstData.layoutParams as ViewGroup.MarginLayoutParams
-                layoutParams.topMargin = Helper.dpToPx(binding.cnstData.context, 100)
-                binding.cnstData.layoutParams = layoutParams
-                binding.customCalendarView.visibility = View.VISIBLE
-                binding.txtBookingStatus.visibility = View.GONE
-                bookingStatus = null
-                bookingDuration = null
-                FilterSelection.filterData!!.bookingStatus = null
-               // setMargins(false)
-                getCalendarbar(false)
-            } else {
-                var nextFragment = FragmentBookingFilter()
-                (activity as HomeActivity?)?.loadFragment(nextFragment)
-            }
+        binding.llBack.setOnClickListener {
+            (activity as HomeActivity?)?.popFragment()
         }
-
         getCalendarbar(false)
         binding.swipeRefresh.setOnRefreshListener {
             //binding.swipeRefresh.isRefreshing = false
@@ -135,43 +71,14 @@ class FragmentBookings :
         }
     }
 
-    private fun setMargins(show: Boolean) {
-        val layoutParams = binding.rcyBookings.layoutParams as ConstraintLayout.LayoutParams
-
-        layoutParams.width = 0  // match constraints
-        layoutParams.height = 0
-
-        layoutParams.marginStart = Helper.dpToPx(requireContext(), 10)
-        layoutParams.marginEnd = Helper.dpToPx(requireContext(), 10)
-        layoutParams.bottomMargin = Helper.dpToPx(requireContext(), 10)
-
-        layoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-        layoutParams.endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
-        layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID
-        layoutParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
-        if (show) {
-            layoutParams.setMargins(20, 100, 20, 0) // Left, Top, Right, Bottom in pixels
-        } else {
-            layoutParams.setMargins(20, 0, 20, 0) // Left, Top, Right, Bottom in pixels
-        }
-
-        binding.rcyBookings.layoutParams = layoutParams
-    }
 
     private fun setBookingsAdopter() {
-        binding.customCalendarView.setDays(generateDaysWithEvents())
-        if (saloonsBookingList.isNotEmpty()) {
-            binding.cnstData.visibility = View.VISIBLE
-            binding.llNoDta.visibility = View.GONE
-        } else {
-            binding.cnstData.visibility = View.GONE
-            binding.llNoDta.visibility = View.VISIBLE
-        }
+
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(position: Int) {
                 var nextFragment = FragmentBookingDetails()
                 nextFragment.bookingId = saloonsBookingList.get(position).bookingId
-                //nextFragment.isFromNotifications=true
+                nextFragment.isFromNotifications=true
                 (activity as HomeActivity?)?.loadFragment(nextFragment)
 
             }
@@ -241,7 +148,7 @@ class FragmentBookings :
     override fun getFragmentBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
-    ) = FragmentBookingsBinding.inflate(inflater, container, false)
+    ) = FragmentNewBookingsBinding.inflate(inflater, container, false)
 
     override fun getFragmentRepository() =
         BookingRepository(remoteDataSource.buildApi(BookingApi::class.java, requireContext()))
@@ -361,7 +268,7 @@ class FragmentBookings :
                         }
                         totalPage = it.value.data.totalPages.toInt()
                         for (booking in it.value.data.items) {
-                            var status=booking.status
+                            var status = booking.status
                             //var status="pending-approval"
                             Log.d("BookingStatus", "status $status")
                             var services = ""
@@ -420,7 +327,8 @@ class FragmentBookings :
             page = page.toString(),
             status = bookingStatus,
             startDate = fromDate,
-            endDate = toDate
+            endDate = toDate,
+            isNewBooking = "true"
         )
         //  (activity as HomeActivity?)?.showLoadingIndicator()
     }
@@ -466,8 +374,8 @@ class FragmentBookings :
                         toDate = FilterSelection.filterData!!.to
                     } else {
                         isFromSelection = true
-                        fromDate=null
-                        toDate=null
+                        fromDate = null
+                        toDate = null
                     }
                     if (FilterSelection.filterData!!.saloonId != null) {
                         bookingSaloonId = FilterSelection.filterData!!.saloonId.toString()
@@ -484,50 +392,18 @@ class FragmentBookings :
                         isFromSelection = true
                         bookingDuration = FilterSelection.filterData!!.selection.toString()
                         if (bookingDuration == "Custom") {
-                            bookingDuration="\n$fromDate To ${toDate}"
+                            bookingDuration = "\n$fromDate To ${toDate}"
                             //  binding.txtMonth.text = "$fromDate To ${toDate}"
                         } else {
                             // binding.txtMonth.text = bookingDuration
                         }
 
                     }
-                    binding.txtBookingStatus.visibility = View.VISIBLE
-                    val layoutParams =
-                        binding.cnstData.layoutParams as ViewGroup.MarginLayoutParams
-                    layoutParams.topMargin = Helper.dpToPx(binding.cnstData.context, 20)
-                    binding.cnstData.layoutParams = layoutParams
-                    if (( bookingStatus != null && bookingStatus != "") || (bookingDuration!=null && bookingDuration!="")) {
-                        page = 1
-                        binding.imgBookingFilter.setImageResource(
-                            R.drawable.blue_cancel
-                        )
-                        if (bookingDuration != "" && bookingStatus != "" && bookingStatus != null && bookingDuration != null) {
-                            binding.txtBookingStatus.setText(
-                                "${
-                                    Helper.capitalizeFirstWord(
-                                        bookingStatus!!
-                                    )
-                                } Bookings/${bookingDuration}"
-                            )
-                        } else if (bookingStatus != "" && bookingStatus != null) {
-                            binding.txtBookingStatus.setText(
-                                "${
-                                    Helper.capitalizeFirstWord(
-                                        bookingStatus!!
-                                    )
-                                } Bookings"
-                            )
 
-                        } else {
-                            binding.txtBookingStatus.setText("${bookingDuration}")
-                        }
-                        binding.customCalendarView.visibility = View.GONE
-                       // setMargins(true)
 
-                    }
                     adopter?.setBookingStatus(bookingStatus)
                     adopter?.notifyDataSetChanged()
-                    binding.customCalendarView.setMonthFromDate(fromDate ?: "")
+
                     // Toast.makeText(requireContext(), "data received", Toast.LENGTH_SHORT).show()
                     getCalendarbar(false)
                 } else {

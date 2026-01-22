@@ -20,6 +20,7 @@ import android.view.Window
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -122,7 +123,10 @@ class FragmentAddSaloonServices :
             uploadImage()
         }
         binding.llSave.setOnClickListener {
-
+if (binding.edtPrice.text.toString().equals("")){
+    Toast.makeText(requireContext(),"Please enter price", Toast.LENGTH_SHORT).show()
+    return@setOnClickListener
+}
             if (checkValidation()) {
                 if (service != null) {
                     updateService()

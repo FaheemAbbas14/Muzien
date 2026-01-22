@@ -165,7 +165,9 @@ object TimeHelper {
         if (timings != null) {
             for (hour in timings) {
                 if (hour?.day == day.toLowerCase()) {
-                    timing = "${hour.openingTime}-${hour.closingTime}"
+                    timing = "${convertUtcToLocalTime(hour.openingTime)}-${convertUtcToLocalTime(
+                        hour.closingTime
+                    )}"
                 }
             }
         }

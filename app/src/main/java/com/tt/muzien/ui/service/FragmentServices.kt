@@ -175,6 +175,8 @@ class FragmentServices :
     override fun onHiddenChanged(hidden: Boolean) {
         super.onHiddenChanged(hidden)
         (activity as HomeActivity?)?.showTabs()
+        (activity as HomeActivity?)?.setSystemWindow(true)
+        (activity as HomeActivity?)?.setStatusBarIconColor(requireActivity().window, true)
         if (!hidden) {
             if (Appelement.reload) {
                 Appelement.reload = false

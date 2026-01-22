@@ -215,9 +215,7 @@ class FragmentAddSaloon :
         var phone =
             binding.txtCountryCode.text.toString() + binding.edtPhoneNumber.text.toString()
                 .replace(" ", "")
-        if (AddSaloonData.addressLng != 0.0 && AddSaloonData.addressLat != 0.0 && binding.edtName.text.toString() != "" && binding.edtDescription.text.toString() != "" && phone != "" && InputValidator.isValidPhoneNumber(
-                country, binding.edtPhoneNumber.text.toString().replace(" ", "")
-            )
+        if (AddSaloonData.addressLng != 0.0 && AddSaloonData.addressLat != 0.0 && binding.edtName.text.toString() != "" && binding.edtDescription.text.toString() != "" && phone != ""
         ) {
             isValid = true
         }

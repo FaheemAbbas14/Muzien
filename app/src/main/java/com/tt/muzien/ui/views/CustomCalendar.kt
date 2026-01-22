@@ -77,35 +77,55 @@ class CustomCalendar @JvmOverloads constructor(
 
     private fun getDaysInMonth(): List<String> {
         val daysList = mutableListOf<String>()
+
+        // Your header (kept exactly as you want)
         var daysOfWeek = listOf("SAT", "SUN", "MON", "TUE", "WED", "THU", "FRI")
         if (Locale.getDefault().language == "ar") {
             daysOfWeek = listOf("السبت", "الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة")
         }
         daysList.addAll(daysOfWeek)
 
-        // Start from the 1st of the current month
+        // Move calendar to 1st of month
         calendar.set(Calendar.DAY_OF_MONTH, 1)
 
-        val firstDayOfMonth = calendar.get(Calendar.DAY_OF_WEEK) - 1 // original behavior retained
         val daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH)
 
-        // Leading blanks before the first day cell
-        for (i in 0 until firstDayOfMonth) {
+        // Get first day of month (1 = Sunday ... 7 = Saturday)
+        val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
+
+        // Convert Calendar day to your SAT-based index
+        val firstDayIndex = when (dayOfWeek) {
+            Calendar.SATURDAY -> 0
+            Calendar.SUNDAY -> 1
+            Calendar.MONDAY -> 2
+            Calendar.TUESDAY -> 3
+            Calendar.WEDNESDAY -> 4
+            Calendar.THURSDAY -> 5
+            Calendar.FRIDAY -> 6
+            else -> 0
+        }
+
+        // Add leading blanks so 1st lands under correct weekday
+        repeat(firstDayIndex) {
             daysList.add("")
         }
 
-        // Add yyyy-MM-dd entries for each day
+        // Format dates as yyyy-MM-dd
         val monthFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
         for (day in 1..daysInMonth) {
             val dayString = String.format("%02d", day)
+
             val date = monthFormatter
                 .format(calendar.time)
                 .replace(Regex("-\\d{2}$"), "-$dayString")
+
             daysList.add(date)
         }
 
         return daysList
     }
+
 
     // === Public APIs ===
 

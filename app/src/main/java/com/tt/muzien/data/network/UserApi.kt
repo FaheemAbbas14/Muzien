@@ -21,6 +21,7 @@ import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface UserApi {
 
@@ -68,7 +69,7 @@ interface UserApi {
     )
 
     @GET("v1/notification")
-    suspend fun getNotifications(): GetNotificationsResponse
+    suspend fun getNotifications(@Query("page") page: Int?,@Query("limit") limit: Int?,): GetNotificationsResponse
 
     @GET("v1/notification/{type}")
     suspend fun getNotificationsByType(

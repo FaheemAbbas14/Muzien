@@ -41,6 +41,7 @@ class FragmentBookingDetails :
     BaseFragment<BookingViewModel, FragmentBookingDetailsBinding, BookingRepository>() {
     var bookingDto: SaloonBookingData? = null
     var bookingId: String? = null
+    var isFromNotifications=false
     private val bookingServices = arrayListOf<BookingServiceDto>()
     var getBookingDetailsResponse: BookingDetailsData? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -119,7 +120,9 @@ class FragmentBookingDetails :
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onPause() {
         super.onPause()
-        (activity as HomeActivity?)?.showTopBar()
+        if (!isFromNotifications) {
+            (activity as HomeActivity?)?.showTabs()
+        }
     }
 
     private fun setData() {

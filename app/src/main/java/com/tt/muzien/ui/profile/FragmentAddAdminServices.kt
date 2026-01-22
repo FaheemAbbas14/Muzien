@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.annotation.RequiresApi
 import com.google.android.flexbox.FlexDirection
@@ -54,39 +55,35 @@ class FragmentAddAdminServices :
                 addService()
             }
         }
-        binding.txtSearch.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
-            }
-
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (s.isNotEmpty()) {
-                    selectedService = s.toString()
-                    binding.llSave.enable(true)
-                } else {
-                    binding.llSave.enable(false)
-                }
-                //checkValidation()
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-
-            }
-        })
         if (LoggedInInfo.user != null && LoggedInInfo.user?.saloonId != null) {
             getServices()
         }
     }
 
     private fun setServicesListAdaptor() {
-        // Adapter to link the list with AutoCompleteTextView
-      val adapter = ServiceSpinnerAdapter(requireContext(), services,false)
-        // Set adapter to AutoCompleteTextView
-        binding.txtSearch.setAdapter(adapter)
+        val adapter = ServiceSpinnerAdapter(requireContext(), services,false)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.txtSearch.adapter = adapter
+        binding.txtSearch.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>,
+                    view: View?,
+                    position: Int,
+                    id: Long,
+                ) {
+                    var service = services[position]
+                    if (service.isNotEmpty()) {
+                        selectedService = service.toString()
+                        binding.llSave.enable(true)
+                    } else {
+                        binding.llSave.enable(false)
+                    }
+                }
 
-        // Optional: Set the threshold (number of characters before suggestions appear)
-        binding.txtSearch.threshold = 1
+                override fun onNothingSelected(parent: AdapterView<*>) {}
+            }
     }
 
     private fun checkServices() {
@@ -246,9 +243,13 @@ class FragmentAddAdminServices :
                 }
 
                 is Resource.Failure -> {
-                    Log.d("response", "failure " + it.toString())
-
                     (activity as HomeActivity?)?.hideLoadingIndicator()
+                    Log.d("response", "failure " + it.toString())
+if (it.errorCode== 403){
+    requireView().snackbar("Operation not allowed for you")
+    return@observe
+}
+
                     handleApiError(it)
                 }
 

@@ -148,7 +148,7 @@ class EditSaloonContact :
         var isValid = false
 
         if (binding.edtPhoneNumber.text.isNotEmpty() && InputValidator.isValidPhoneNumber(
-                selectedCountry, binding.edtPhoneNumber.text.toString().replace(" ", "")
+                binding.txtCountryCode.text.toString(), binding.edtPhoneNumber.text.toString().replace(" ", "")
             )
         ) {
             isValid = true

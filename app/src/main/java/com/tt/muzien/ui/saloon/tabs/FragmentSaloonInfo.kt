@@ -330,6 +330,15 @@ class FragmentSaloonInfo :
                 deleteWorkingHour(workingHourList[pos].title)
             }
         }
+        workingHourList.size.let {
+            if (it > 0) {
+                binding.txtWorkData.visibility = View.GONE
+                binding.rcyWorkingHours.visibility = View.VISIBLE
+            } else {
+                binding.txtWorkData.visibility = View.VISIBLE
+                binding.rcyWorkingHours.visibility = View.GONE
+            }
+        }
         binding.rcyWorkingHours.layoutManager =
             LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
         workingHoursAdopter = WorkingHoursAdapter(
@@ -371,7 +380,7 @@ class FragmentSaloonInfo :
                         selectedSaloonDetails = it.value.data
                         val fragmentB =
                             requireActivity().supportFragmentManager.findFragmentById(R.id.fragment_container) as? FragmentSaloonDetails
-                        fragmentB?.updateStatus(it.value.data.isActive, true)
+                        fragmentB?.updateStatus(it.value.data.isActive, selectedSaloon?.isOpened!!)
                         setData()
                     } else {
                         requireView().snackbar(it.value.message)

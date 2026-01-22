@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.MemberDto
@@ -85,7 +86,12 @@ class FragmentMembers : BaseFragment<MemberViewModel, FragmentMembersBinding, Me
 
             override fun onStateChange(position: Int, state: Int) {
                 if (state == 1) {
-                    makeManger(membersList[position].id)
+                    if (!membersList[position].isManger) {
+                        makeManger(membersList[position].id)
+                    }
+                    else{
+                        Toast.makeText(requireContext(), "You are already manager", Toast.LENGTH_SHORT).show()
+                    }
                 } else if (state == 2) {
                     inActiveMember(membersList[position].id)
                 } else if (state == 3) {

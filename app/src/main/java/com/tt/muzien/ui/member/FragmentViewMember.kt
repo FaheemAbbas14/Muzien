@@ -317,8 +317,12 @@ class FragmentViewMember :
             holidaysList.clear()
             holidaysMap.clear()
             for (holiday in memberDetails?.UserHolidays!!) {
-                holidaysMap.put(holiday?.startDate ?: "", holiday?.id ?: 0)
-                holidaysList.add(holiday?.startDate ?: "")
+                var startDate = holiday!!.startDate
+                if (startDate.contains("T")) {
+                    startDate = startDate.split("T")[0]
+                }
+                holidaysMap.put(startDate, holiday.id)
+                holidaysList.add(startDate)
             }
             val clickListener = object : OnItemClickListner {
                 override fun onItemClick(pos: Int) {
@@ -386,6 +390,15 @@ class FragmentViewMember :
             override fun onItemClick(pos: Int) {
                 position = pos
                 deleteWorkingHour(workingHourList[pos].title)
+            }
+        }
+        workingHourList.size.let {
+            if (it > 0) {
+                binding.txtWorkData.visibility = View.GONE
+                binding.rcyWorkingHours.visibility = View.VISIBLE
+            } else {
+                binding.txtWorkData.visibility = View.VISIBLE
+                binding.rcyWorkingHours.visibility = View.GONE
             }
         }
         binding.rcyWorkingHours.layoutManager =

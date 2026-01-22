@@ -410,7 +410,7 @@ class FragmentPayNow : BaseFragment<SaloonViewModel, FragmentPayNowBinding, Salo
             payDto?.saloonId ?: 0,
             AddSubscriptionRequest(
                 transactionId,
-                payDto?.discountedPrice ?: 0,
+                (payDto?.discountedPrice ?: 0),
                 startDate,
                 endDate,
                 payDto?.planId ?: 0

@@ -27,6 +27,7 @@ interface BookingApi {
         @Query("endDate") endDate: String? = null,
         @Query("status") status: String? = null,
         @Query("page") page: String? = null,
+        @Query("isNewBooking") isNewBooking: String? = null,
     ): GetBookingResponse
 
     @GET("v1/app/calendarbar")

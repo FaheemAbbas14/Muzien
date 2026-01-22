@@ -70,28 +70,32 @@
         app:layout_constraintTop_toBottomOf="@+id/llBack">
 
 
-        <AutoCompleteTextView
-            android:id="@+id/txtSearch"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:fontFamily="@font/manrope_regular"
-            android:gravity="center|left"
-            android:hint="@string/search"
-            android:padding="10dp"
-            android:textColor="@color/black_shade1"
-            android:textColorHint="@color/black_shade1"
-            android:textFontWeight="400"
-            android:textSize="16sp" />
+            <Spinner
+                android:id="@+id/txtSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:spinnerMode="dialog"
+                android:background="@android:color/transparent"
+                android:popupBackground="@android:color/white"
+                android:paddingEnd="10dp"
+                android:textAlignment="viewStart"
+                android:gravity="center|left"
+                android:textDirection="locale" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginEnd="10dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/search_icon" />
+            <ImageView
+                android:id="@+id/ddlDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:padding="8dp"
+                app:srcCompat="@drawable/ddl_icon" />
+
+
+
+
     </LinearLayout>
 
     <TextView

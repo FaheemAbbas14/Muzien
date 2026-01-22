@@ -126,8 +126,8 @@ class HomeViewModel(
         _getMonthlyRevenue.value = repository.getMonthlyRevenue(saloonIds, startDate, endDate)
     }
 
-    fun getNotifications() = viewModelScope.launch {
-        _getNotifications.value = userRepository?.getNotifications()
+    fun getNotifications(tzOffset: Int,page: Int,limit: Int) = viewModelScope.launch {
+        _getNotifications.value = userRepository?.getNotifications(tzOffset,page,limit)
     }
 
     fun getNotificationsByType(type: String) = viewModelScope.launch {
