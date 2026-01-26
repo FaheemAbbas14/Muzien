@@ -75,7 +75,12 @@ class FragmentProfile : BaseFragment<HomeViewModel, FragmentProfileBinding, Home
                 binding.llServices.visibility = View.GONE
                 binding.llHolidays.visibility = View.GONE
             }
-        } else {
+        }
+       else if (LoggedInInfo.user?.role == "salon-manager") {
+            binding.llServices.visibility = View.VISIBLE
+            binding.llHolidays.visibility = View.VISIBLE
+        }
+        else {
             binding.llServices.visibility = View.GONE
             binding.llHolidays.visibility = View.GONE
         }

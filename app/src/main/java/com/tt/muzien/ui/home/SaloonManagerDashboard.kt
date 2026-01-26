@@ -14,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.tt.muzien.R
+import com.tt.muzien.data.dto.LoggedInInfo
 import com.tt.muzien.data.dto.SaloonDto
 import com.tt.muzien.data.network.HomeApi
 import com.tt.muzien.data.repository.HomeRepository
@@ -186,6 +187,7 @@ class SaloonManagerDashboard :
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setData() {
         if (selectedSaloon != null) {
+            LoggedInInfo.user?.saloonId= selectedSaloon!!.id
             binding.llNoSaloon.visibility = View.GONE
             binding.llSaloonData.visibility = View.VISIBLE
             binding.txtItemName.text = selectedSaloon?.name

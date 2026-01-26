@@ -56,7 +56,7 @@ class FragmentNotifications :
                     if (it.value.status != 0) {
                         types.clear()
                         for (item in it.value.data.items) {
-                            if (!types.contains(item.type) || item.type.equals("booking-item")) {
+                            if (!types.contains(item.type) || item.type.equals("booking-item") ) {
                                 types.add(item.type)
                                 notificationList.add(
                                     NotificationDto(

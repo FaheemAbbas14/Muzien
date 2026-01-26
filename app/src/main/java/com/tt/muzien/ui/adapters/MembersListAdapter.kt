@@ -177,80 +177,75 @@ class MembersListAdapter(
         isManger: Boolean,
     ) {
 
-        // Inflate the custom menu layout
-        val inflater = LayoutInflater.from(context)
+        val inflater = LayoutInflater.from(anchor.context)
         val menuView = inflater.inflate(R.layout.invite_layout, null)
 
-        // Initialize the PopupWindow
         val popupWindow = PopupWindow(
             menuView,
-            ViewGroup.LayoutParams.WRAP_CONTENT, // Width matches the anchor view width
-            ViewGroup.LayoutParams.WRAP_CONTENT, // Height wraps the content
-            true // Focusable to handle clicks outside the menu
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
         )
 
-        // Set click listeners for menu options
         val option1: TextView = menuView.findViewById(R.id.invite_salon)
         val option2: TextView = menuView.findViewById(R.id.invite_user)
         val option3: TextView = menuView.findViewById(R.id.delete_user)
         val option4: TextView = menuView.findViewById(R.id.delete_Invitation)
         val option5: TextView = menuView.findViewById(R.id.remove_manager)
+
         option1.text = "Mark as Manager"
         option2.text = "Inactivate User"
         option3.text = "Delete User"
+
         if (isMember) {
-            if (isManger){
+            option4.visibility = View.GONE
+            option2.visibility = View.VISIBLE
+            option3.visibility = View.VISIBLE
+
+            if (isManger) {
                 option5.visibility = View.VISIBLE
                 option1.visibility = View.GONE
-            }
-            else{
+            } else {
                 option1.visibility = View.VISIBLE
                 option5.visibility = View.GONE
             }
-            //option1.visibility = View.VISIBLE
-            option2.visibility = View.VISIBLE
-            option3.visibility = View.VISIBLE
-            option4.visibility = View.GONE
         } else {
             option1.visibility = View.GONE
             option2.visibility = View.GONE
             option3.visibility = View.GONE
             option4.visibility = View.VISIBLE
-        }
-//        option1.text = "Mark as Manager"
-//        option2.text = "Inactivate User"
-//        option3.text = "Delete User"
-        option1.setOnClickListener {
-            stateChange.onStateChange(position, 1)
-            // Handle Option 1 click
-            popupWindow.dismiss()
+            option5.visibility = View.GONE
         }
 
-        option2.setOnClickListener {
-            stateChange.onStateChange(position, 2)
-            // Handle Option 2 click
-            popupWindow.dismiss()
-        }
+        option1.setOnClickListener { stateChange.onStateChange(position, 1); popupWindow.dismiss() }
+        option2.setOnClickListener { stateChange.onStateChange(position, 2); popupWindow.dismiss() }
+        option3.setOnClickListener { stateChange.onStateChange(position, 3); popupWindow.dismiss() }
+        option4.setOnClickListener { stateChange.onStateChange(position, 4); popupWindow.dismiss() }
+        option5.setOnClickListener { stateChange.onStateChange(position, 5); popupWindow.dismiss() }
 
-        option3.setOnClickListener {
-            stateChange.onStateChange(position, 3)
-            // Handle Option 3 click
-            popupWindow.dismiss()
-        }
-        option4.setOnClickListener {
-            stateChange.onStateChange(position, 4)
-            // Handle Option 3 click
-            popupWindow.dismiss()
-        }
-        option5.setOnClickListener {
-            stateChange.onStateChange(position, 5)
-            // Handle Option 3 click
-            popupWindow.dismiss()
-        }
+        // ---- 🔑 Positioning logic ----
+        menuView.measure(
+            View.MeasureSpec.UNSPECIFIED,
+            View.MeasureSpec.UNSPECIFIED
+        )
+        val popupHeight = menuView.measuredHeight
 
-        // Show the PopupWindow below the anchor view
-        popupWindow.showAsDropDown(anchor, 0, 10) // Adjust offset as needed
+        val location = IntArray(2)
+        anchor.getLocationOnScreen(location)
+        val anchorY = location[1]
+        val anchorHeight = anchor.height
+        val screenHeight = anchor.context.resources.displayMetrics.heightPixels
+
+        val spaceBelow = screenHeight - (anchorY + anchorHeight)
+        val spaceAbove = anchorY
+
+        if (spaceBelow < popupHeight && spaceAbove > popupHeight) {
+            popupWindow.showAsDropDown(anchor, 0, -(popupHeight + anchorHeight))
+        } else {
+            popupWindow.showAsDropDown(anchor, 0, 10)
+        }
     }
+
 
     override fun getItemCount() = itemList.size
 }

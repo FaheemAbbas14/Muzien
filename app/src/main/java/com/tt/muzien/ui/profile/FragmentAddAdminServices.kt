@@ -2,14 +2,11 @@ package com.tt.muzien.ui.profile
 
 import android.os.Build
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import androidx.annotation.RequiresApi
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
@@ -38,8 +35,9 @@ class FragmentAddAdminServices :
     private val userServices = arrayListOf<String>()
     var ServicesMap = HashMap<String, Int>()
     private var holidayListAdapter: HolidayListAdapter? = null
-    private var selectedService: String? = null
+    private val selectedService = arrayListOf<String>()
     var position = 0
+    var isInit = false
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.setServiceRepo((activity as HomeActivity?)?.getServiceRepo()!!)
@@ -47,11 +45,14 @@ class FragmentAddAdminServices :
             (activity as HomeActivity?)?.popFragment()
         }
         binding.llSave.enable(false)
+        binding.ddlAdd.setOnClickListener {
+            binding.txtSearch.performClick()
+        }
         binding.llSave.setOnClickListener {
 //            services.add(selectedService ?: "")
 //            holidayListAdapter?.notifyDataSetChanged()
 //            checkServices()
-            if (ServicesMap[selectedService] != null) {
+            if (selectedService.size > 0) {
                 addService()
             }
         }
@@ -62,7 +63,7 @@ class FragmentAddAdminServices :
     }
 
     private fun setServicesListAdaptor() {
-        val adapter = ServiceSpinnerAdapter(requireContext(), services,false)
+        var adapter = ServiceSpinnerAdapter(requireContext(), services, false)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.txtSearch.adapter = adapter
         binding.txtSearch.onItemSelectedListener =
@@ -74,10 +75,17 @@ class FragmentAddAdminServices :
                     id: Long,
                 ) {
                     var service = services[position]
-                    if (service.isNotEmpty()) {
-                        selectedService = service.toString()
-                        binding.llSave.enable(true)
+                    if (service.isNotEmpty() && service !="Service") {
+                        if (!selectedService.contains(service.toString()) && !userServices.contains(
+                                service
+                            )
+                        ) {
+                            selectedService.add(service.toString())
+                            setServicesAdopter(false)
+                            binding.llSave.enable(true)
+                        }
                     } else {
+
                         binding.llSave.enable(false)
                     }
                 }
@@ -96,14 +104,33 @@ class FragmentAddAdminServices :
         }
     }
 
-    private fun setServicesAdopter() {
-        setServicesListAdaptor()
+    private fun setServicesAdopter(setList: Boolean = true) {
+        if (setList) {
+            setServicesListAdaptor()
+        }
         checkServices()
+        var userSelectedServices = arrayListOf<String>()
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(pos: Int) {
                 position = pos
-                deleteService()
+                var service = userSelectedServices[position]
+                if (!selectedService.contains(service) && userServices.contains(service)) {
+                    if (pos < ServicesMap.size) {
+                        deleteService(service)
+                    }
+                } else {
+                    isInit = false
+                    selectedService.removeAt(pos)
+                    setServicesAdopter(false)
+                }
+
             }
+        }
+        for (service in selectedService) {
+            userSelectedServices.add(service)
+        }
+        for (service in userServices) {
+            userSelectedServices.add(service)
         }
         // Set up the FlexboxLayoutManager
         val flexboxLayoutManager = FlexboxLayoutManager(requireActivity()).apply {
@@ -113,7 +140,7 @@ class FragmentAddAdminServices :
         }
         binding.rcyServices.layoutManager = flexboxLayoutManager
         holidayListAdapter = HolidayListAdapter(
-            userServices, true, clickListener
+            userSelectedServices, true, clickListener
         )
         binding.rcyServices.adapter = holidayListAdapter
 
@@ -167,7 +194,7 @@ class FragmentAddAdminServices :
                             }
 
                         }
-                        setServicesAdopter()
+                        setServicesAdopter(true)
                     } else {
                         requireView().snackbar(it.value.message)
                     }
@@ -196,6 +223,7 @@ class FragmentAddAdminServices :
                     if (it.value.status != 0) {
                         services.clear()
                         ServicesMap.clear()
+                        services.add("Service")
                         for (categories in it.value.data) {
                             for (service in categories?.services!!) {
                                 if (!services.contains(service?.name)) {
@@ -234,7 +262,8 @@ class FragmentAddAdminServices :
                 is Resource.Success -> {
                     Log.d("response", "success " + it.toString())
                     if (it.value.status == 1) {
-                        getServices()
+                        (activity as HomeActivity?)?.hideLoadingIndicator()
+                        (activity as HomeActivity?)?.popFragment()
                     } else {
                         (activity as HomeActivity?)?.hideLoadingIndicator()
                         requireView().snackbar(it.value.message)
@@ -245,10 +274,10 @@ class FragmentAddAdminServices :
                 is Resource.Failure -> {
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     Log.d("response", "failure " + it.toString())
-if (it.errorCode== 403){
-    requireView().snackbar("Operation not allowed for you")
-    return@observe
-}
+                    if (it.errorCode == 403) {
+                        requireView().snackbar("Operation not allowed for you")
+                        return@observe
+                    }
 
                     handleApiError(it)
                 }
@@ -257,18 +286,18 @@ if (it.errorCode== 403){
             }
         }
         var selectedServicesFinal = arrayListOf<Int>()
-//        for (service in services) {
-        selectedServicesFinal.add(ServicesMap[selectedService] ?: 0)
+        for (service in selectedService) {
+            selectedServicesFinal.add(ServicesMap[service] ?: 0)
 
-        //}
+        }
         viewModel.addService(
             LoggedInInfo.user?.id?.toInt()!!,
-            AddMemberService(serviceId = ServicesMap[selectedService].toString() ?: "0")
+            AddMemberService(selectedServicesFinal)
         )
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
 
-    private fun deleteService() {
+    private fun deleteService(service: String) {
         viewModel.remove.observe(viewLifecycleOwner) {
 
             when (it) {
@@ -277,7 +306,7 @@ if (it.errorCode== 403){
                     (activity as HomeActivity?)?.hideLoadingIndicator()
                     if (it.value.status == 1) {
                         userServices.removeAt(position)
-                        setServicesAdopter()
+                        setServicesAdopter(false)
                     } else {
                         requireView().snackbar(it.value.message)
                     }
@@ -285,9 +314,13 @@ if (it.errorCode== 403){
                 }
 
                 is Resource.Failure -> {
-                    Log.d("response", "failure " + it.toString())
 
                     (activity as HomeActivity?)?.hideLoadingIndicator()
+                    Log.d("response", "failure " + it.toString())
+                    if (it.errorCode == 403) {
+                        requireView().snackbar("Operation not allowed for you")
+                        return@observe
+                    }
                     handleApiError(it)
                 }
 
@@ -297,7 +330,7 @@ if (it.errorCode== 403){
 
         viewModel.deleteService(
             LoggedInInfo.user?.id?.toInt()!!,
-            ServicesMap[userServices[position]]!!
+            ServicesMap[service]!!
         )
         (activity as HomeActivity?)?.showLoadingIndicator()
     }
