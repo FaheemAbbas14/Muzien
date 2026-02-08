@@ -9,5 +9,5 @@ package com.tt.muzien.interfaces
  * +923115284424
  */
 interface IbookingCancel {
-    fun onItemClick(position: Int, reason: String)
+    fun onItemClick(position: Int, reason: String,isReject: Boolean)
 }

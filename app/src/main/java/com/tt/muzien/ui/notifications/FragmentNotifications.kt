@@ -131,7 +131,9 @@ class FragmentNotifications :
 
                 } else {
                     if (notificationList.get(position).type == "bookings") {
-                        (activity as HomeActivity?)?.loadFragment(FragmentNewBookings())
+                        var nextFragment = FragmentNewBookings()
+                        nextFragment.type=notificationList.get(position).heading
+                        (activity as HomeActivity?)?.loadFragment(nextFragment)
                     } else {
                         var nextFragment = FragmentNotificationsByType()
                         nextFragment.types = notificationList.get(position).type

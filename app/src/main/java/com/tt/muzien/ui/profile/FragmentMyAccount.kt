@@ -11,6 +11,8 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import com.google.i18n.phonenumbers.PhoneNumberUtil
+import com.google.i18n.phonenumbers.Phonenumber
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.LoggedInInfo
 import com.tt.muzien.data.network.HomeApi
@@ -203,34 +205,21 @@ class FragmentMyAccount : BaseFragment<HomeViewModel, FragmentMyAccountBinding, 
         //  (activity as HomeActivity?)?.showTabs()
     }
 
-    fun splitCountryCode(phone: String): Pair<String, String>? {
-        if (!phone.startsWith("+") || phone.length < 5) return null
+    fun splitCountryCode(phone: String, defaultRegion: String = "ZZ"): Pair<String, String>? {
+        return try {
+            val phoneUtil = PhoneNumberUtil.getInstance()
+            val number: Phonenumber.PhoneNumber =
+                phoneUtil.parse(phone, defaultRegion)
 
-        val normalized = phone.replace(" ", "").replace("-", "")
+            val countryCode = "+${number.countryCode}"
+            val nationalNumber = number.nationalNumber.toString()
 
-        // Try 4-digit country code first
-        val code4 = normalized.substring(1, minOf(5, normalized.length))
-        if (isValidCountryCode(code4)) {
-            return "+$code4" to normalized.substring(5)
+            countryCode to nationalNumber
+        } catch (e: Exception) {
+            null
         }
-
-        // Fallback to 3-digit country code
-        val code3 = normalized.substring(1, minOf(4, normalized.length))
-        if (isValidCountryCode(code3)) {
-            return "+$code3" to normalized.substring(4)
-        }
-
-        return null
     }
-    private fun isValidCountryCode(code: String): Boolean {
-        val knownCodes = setOf(
-            "91", "92", "971", "966", "1", "44", "49", "33",
-            "234", "880", "977", "852", "965", "964", "974",
-            "965", "973", "962", "968", "970", "972", "971"
-        )
 
-        return knownCodes.contains(code)
-    }
 
     private fun sendOtpNormal(data: String) {
         LoggedInInfo.phoneNumber = data

@@ -36,6 +36,7 @@ class FragmentNotificationsByType :
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
         }
+        binding.txtHeading.text=types
         getNotifications()
     }
 
@@ -83,6 +84,13 @@ class FragmentNotificationsByType :
     }
 
     private fun setNotificationAdopter() {
+        if (notificationList.isEmpty) {
+            binding.llNoData.visibility = View.VISIBLE
+            binding.rcyNotifications.visibility = View.INVISIBLE
+        } else {
+            binding.llNoData.visibility = View.GONE
+            binding.rcyNotifications.visibility = View.VISIBLE
+        }
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(position: Int) {
                 if (notificationList.get(position).type.contains("item")) {

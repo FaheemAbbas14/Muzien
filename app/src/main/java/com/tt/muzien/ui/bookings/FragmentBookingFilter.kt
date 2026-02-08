@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.tt.muzien.R
 import com.tt.muzien.data.dto.FilterData
 import com.tt.muzien.data.dto.LoggedInInfo
@@ -53,6 +55,17 @@ class FragmentBookingFilter :
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.llMain) { view, insets ->
+            val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
+            view.setPadding(
+                view.paddingLeft,
+                view.paddingTop,
+                view.paddingRight,
+                imeInsets.bottom
+            )
+            insets
+        }
+
         viewModel.setMemberRepo((activity as HomeActivity?)?.getMemberRepo()!!)
         if (!showSaloon) {
             binding.llMainSaloon.visibility = View.GONE

@@ -22,6 +22,7 @@ import java.time.temporal.ChronoUnit
 import java.time.temporal.TemporalAdjusters
 import java.util.Locale
 import java.util.TimeZone
+import kotlin.math.round
 
 
 /**
@@ -255,23 +256,19 @@ object TimeHelper {
 
     fun getDisplayTime(mins: Long): String {
         val hours = mins / 60.0
-        if (hours >= 2) {
-            return "$hours hrs"
-        } else {
-            return "$hours hr"
-
-        }
-        return ""
+        val rounded = round(hours * 100) / 100   // 2 decimal places
+        val suffix = if (rounded == 1.0) "hr" else "hrs"
+        return "$rounded $suffix"
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun convertTo12Hours(timeStr: String): String {
+    fun convertTo12Hours(timeStr: String,format: String): String {
         var timeFinal = timeStr
         val isArabic = Locale.getDefault().language == "ar"
         if (isArabic) {
             timeFinal = convertArabicDigitsToEnglish(timeFinal ?: "")
         }
-        val inputFormatter = DateTimeFormatter.ofPattern("HH:mm")
+        val inputFormatter = DateTimeFormatter.ofPattern(format)
         val outputFormatter = DateTimeFormatter.ofPattern("hh:mm a")
 
         val time = LocalTime.parse(timeFinal, inputFormatter)

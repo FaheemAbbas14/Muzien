@@ -213,7 +213,7 @@ class FragmentAddWorkingDay :
                         endTime = convertArabicDigitsToEnglish(endTime ?: "")
                     }
                 }
-                textView.text = TimeHelper.convertTo12Hours(formattedTime)
+                textView.text = TimeHelper.convertTo12Hours(formattedTime,"HH:mm")
                 if (startTime != "" && endTime != "") {
                     val inputFormatter = DateTimeFormatter.ofPattern("HH:mm")
                     val startTime = LocalTime.parse(startTime, inputFormatter)

@@ -102,6 +102,7 @@ class SaloonBookingAdapter(
         return MyViewHolder(itemView)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         try {
             if (isFromServiceProvider) {
@@ -132,6 +133,8 @@ class SaloonBookingAdapter(
                 holder.llReview.visibility = View.GONE
                 holder.llCancel.visibility = View.GONE
                 holder.llPending.visibility = View.GONE
+                holder.imgBarCode.visibility = View.GONE
+                holder.txtCancel.visibility = View.GONE
                 holder.mainCard.setBackgroundDrawable(context.resources.getDrawable(R.drawable.rounded_overdue))
             }
             if (item.service==""){
@@ -145,8 +148,8 @@ class SaloonBookingAdapter(
 //            if (isFromMain) {
 //                holder.llMainView.visibility = View.VISIBLE
 //            }
-            holder.txtDateTime.text = "${item.date} - ${item.time} - ${TimeHelper.getDisplayTime(item.duration)}"
-            holder.txtDateTime2.text = "${item.date} - ${item.time} - ${TimeHelper.getDisplayTime(item.duration)}"
+            holder.txtDateTime.text = "${item.date} - ${TimeHelper.convertTo12Hours(item.time,"HH:mm:ss")} - ${TimeHelper.getDisplayTime(item.duration)}"
+            holder.txtDateTime2.text = "${item.date} - ${TimeHelper.convertTo12Hours(item.time,"HH:mm:ss")} - ${TimeHelper.getDisplayTime(item.duration)}"
             holder.txtName.text = item.name
             holder.txtStyle.text = item.style
             holder.txtUserName.text = item.personName
@@ -158,13 +161,13 @@ class SaloonBookingAdapter(
                 holder.llMainView.visibility = View.GONE
             }
             holder.txtReject.setOnClickListener {
-                iBookingStatusUpdate.onBookingClick(position, "cancelled")
+                showPopupDialog(position,true)
             }
             holder.txtApprove.setOnClickListener {
                 iBookingStatusUpdate.onBookingClick(position, "scheduled")
             }
             holder.txtCancel.setOnClickListener {
-                showPopupDialog(position)
+                showPopupDialog(position, false)
             }
             // Implement the RequestListener here
             val iconRequestListener = object : RequestListener<Drawable> {
@@ -228,7 +231,7 @@ class SaloonBookingAdapter(
         bookingStatus = status
     }
 
-    private fun showPopupDialog(position: Int) {
+    private fun showPopupDialog(position: Int, isReject: Boolean) {
         // Create Dialog
         val dialog = Dialog(context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -248,8 +251,13 @@ class SaloonBookingAdapter(
 
         proceedButton.setOnClickListener {
             if (edtReason.text.toString() != "") {
-                ibookingCancel.onItemClick(position, edtReason.text.toString())
-                // Add your logic here (e.g., enable the service)
+                if (isReject){
+                    ibookingCancel.onItemClick(position, edtReason.text.toString(),true)
+                }
+                else {
+                    ibookingCancel.onItemClick(position, edtReason.text.toString(),false)
+                }
+                    // Add your logic here (e.g., enable the service)
                 dialog.dismiss()
             }
         }

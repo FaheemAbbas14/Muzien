@@ -55,11 +55,12 @@ class FragmentNewBookings :
     private var isLoading: Boolean = false
     private val bookingMap = HashMap<Int, BookingsCountData>()
     private var isFromSelection = false
+    var type: String? = null
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        binding.txtHeading.text = type
         binding.llBack.setOnClickListener {
             (activity as HomeActivity?)?.popFragment()
         }
@@ -73,12 +74,18 @@ class FragmentNewBookings :
 
 
     private fun setBookingsAdopter() {
-
+        if (saloonsBookingList.isEmpty) {
+            binding.llNoData.visibility = View.VISIBLE
+            binding.cnstData.visibility = View.INVISIBLE
+        } else {
+            binding.llNoData.visibility = View.GONE
+            binding.cnstData.visibility = View.VISIBLE
+        }
         val clickListener = object : OnItemClickListner {
             override fun onItemClick(position: Int) {
                 var nextFragment = FragmentBookingDetails()
                 nextFragment.bookingId = saloonsBookingList.get(position).bookingId
-                nextFragment.isFromNotifications=true
+                nextFragment.isFromNotifications = true
                 (activity as HomeActivity?)?.loadFragment(nextFragment)
 
             }

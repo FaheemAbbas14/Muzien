@@ -224,7 +224,7 @@ class ServiceProviderDashboard :
         }
         val ibookingCancel = object : IbookingCancel {
 
-            override fun onItemClick(position: Int, reason: String) {
+            override fun onItemClick(position: Int, reason: String,isReject: Boolean) {
                 updateBooking(saloonsBookingList[position].bookingId, reason, "cancelled")
             }
         }
@@ -395,6 +395,7 @@ class ServiceProviderDashboard :
                         binding.llSendInvite.visibility = View.GONE
                         saloonId = it.value.data.saloonId.toInt()
                         LoggedInInfo.user?.status = "member"
+                        LoggedInInfo.user?.saloonId= it.value.data.saloonId.toInt()
                         getAnalytics(false)
                     } else {
                         requireView().snackbar(it.value.message)

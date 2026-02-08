@@ -241,8 +241,10 @@ class FragmentSaloonBookings :
         }
         val ibookingCancel = object : IbookingCancel {
 
-            override fun onItemClick(position: Int, reason: String) {
-                updateBooking(saloonsBookingList[position].bookingId, reason, "cancelled")
+            override fun onItemClick(position: Int, reason: String,isReject: Boolean) {
+
+                    updateBooking(saloonsBookingList[position].bookingId, reason, "cancelled")
+
             }
         }
         val iBookingStatusUpdate = object : IBookingStatusUpdate {
@@ -275,8 +277,11 @@ class FragmentSaloonBookings :
                 val totalItemCount = layoutManager.itemCount
                 val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
 
-                if (visibleItemCount + firstVisibleItemPosition >= totalItemCount && totalItemCount > 0) {
-                    // Reached the end of the list
+                if (!isLoading &&
+                    page < totalPage &&
+                    dy > 0 &&
+                    firstVisibleItemPosition + visibleItemCount >= totalItemCount - 1
+                ) {
                     loadMoreData()
                 }
             }
@@ -285,17 +290,18 @@ class FragmentSaloonBookings :
     }
 
     fun loadMoreData() {
-        if (!isLoading && saloonsBookingList.size > 0) {
-            if (page < totalPage) {
-                page = page + 1
-                selection = saloonsBookingList.size - 1
-                (activity as HomeActivity?)?.showLoadingIndicator()
-                getBooking()
+        if (isLoading) return
+        if (page >= totalPage) return
+        if (saloonsBookingList.isEmpty()) return
 
-            }
-        }
+        isLoading = true   // 🔑 SET FIRST
+        page++
+        selection = saloonsBookingList.size - 1
 
+        (activity as HomeActivity?)?.showLoadingIndicator()
+        getBooking()
     }
+
 
     override fun getViewModel(): Class<BookingViewModel> {
         return BookingViewModel::class.java
